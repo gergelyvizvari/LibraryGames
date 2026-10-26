@@ -17,6 +17,8 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; background: var(--bg); min-height: 100%; }
+/* Always reserve the scrollbar space, so screens that fit (like the countdown) do not shift sideways. */
+html { scrollbar-gutter: stable; }
 body { overscroll-behavior: none; }
 button { font: inherit; color: inherit; cursor: pointer; border: 0; touch-action: manipulation; }
 h1, h2 { margin: 0; line-height: 1.1; }
