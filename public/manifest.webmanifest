@@ -1,0 +1,9 @@
+{
+  "name": "Library Games",
+  "short_name": "Games",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff8ec",
+  "theme_color": "#6c5ce7",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
