@@ -12,9 +12,20 @@ import whatNext from './what-next'
 import oddOne from './odd-one'
 import blindMap from './blind-map'
 import towerStack from './tower-stack'
+import gridGlow from './grid-glow'
+import molePop from './mole-pop'
+import anagramRace from './anagram-race'
+import simonSays from './simon-says'
+import howMany from './how-many'
+import sentenceBuilder from './sentence-builder'
+import letterPop from './letter-pop'
+import mazeDash from './maze-dash'
+import mirrorMatch from './mirror-match'
+import capitalMatch from './capital-match'
 
 // One line per game. New games go at the end.
 export const games: GameDef[] = [sequenceEcho, lightsOut, wordCatch, stroopClash, numberNinja, flashRead, pairRush, typeDefender,
-  shapeSpin, whatNext, oddOne, blindMap, towerStack]
+  shapeSpin, whatNext, oddOne, blindMap, towerStack,
+  gridGlow, molePop, anagramRace, simonSays, howMany, sentenceBuilder, letterPop, mazeDash, mirrorMatch, capitalMatch]
 
 export const gameById = (id: string) => games.find((g) => g.meta.id === id)
