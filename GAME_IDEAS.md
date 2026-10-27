@@ -5,7 +5,6 @@ Edit freely: reorder, add, or delete ideas.
 
 ## Up next
 
-- **Rhythm Copy** (memory): the drum plays a short beat; tap it back in time.
 - **Feed the Monster** (maths): drag number blocks so the monster eats exactly the number on its belly.
 - **Animal Sounds** (memory): hear a series of animal sounds, tap the animals in the same order.
 - **Rhyme Time** (language): tap the word that rhymes with the picture.
@@ -54,3 +53,4 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-10-27 | Maze Dash | logic |
 | 2026-10-27 | Mirror Match | spatial |
 | 2026-10-27 | Capital Match | geography |
+| 2026-10-27 | Rhythm Copy | memory |
