@@ -1,7 +1,7 @@
 # Library Games
 
 Short, fun learning games for kids: memory, reflexes, words, focus, maths, reading, typing and more.
-Each game takes about a minute, adapts its difficulty to the player, and tracks records, stars, XP and daily streaks.
+Each game takes about a minute, adapts its difficulty to the player, and tracks records and stars.
 A new small game is added every day.
 
 ## Run it

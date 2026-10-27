@@ -1,6 +1,5 @@
 const en = {
   appName: 'Library Games',
-  tagline: 'Play, learn, get better every day!',
   todaysGame: "Today's game",
   allGames: 'All games',
   all: 'All',
@@ -21,7 +20,6 @@ const en = {
   niceTry: 'Nice try!',
   keepGoing: 'Keep going!',
   levelUp: 'Level up! Now level {level}',
-  streak: '{days} day streak',
   stars: 'Stars',
   sound: 'Sound',
   pause: 'Pause',

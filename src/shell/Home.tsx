@@ -26,15 +26,11 @@ export function Home({ onPlay }: { onPlay: (id: string, daily?: boolean) => void
   const dailyT = makeGameT(daily.strings, locale)
   const usedSkills = skills.filter((s) => games.some((g) => g.meta.skill === s))
   const shown = filter === 'all' ? games : games.filter((g) => g.meta.skill === filter)
-  const totalXp = Object.values(progress.xp).reduce((a, b) => a + (b ?? 0), 0)
 
   return (
     <div className="home">
       <header className="home-head">
-        <div>
-          <h1>{t('appName')}</h1>
-          <p className="muted">{t('tagline')}</p>
-        </div>
+        <h1>{t('appName')}</h1>
         <button
           className="icon-btn"
           aria-label={t('sound')}
@@ -46,11 +42,6 @@ export function Home({ onPlay }: { onPlay: (id: string, daily?: boolean) => void
           {muted ? '🔇' : '🔊'}
         </button>
       </header>
-
-      <div className="badges">
-        {progress.streak.days > 0 && <span className="badge">🔥 {t('streak', { days: progress.streak.days })}</span>}
-        {totalXp > 0 && <span className="badge">⭐ {totalXp} XP</span>}
-      </div>
 
       <button className="daily" style={{ background: daily.meta.color }} onClick={() => onPlay(daily.meta.id, true)}>
         <span className="daily-label">{t('todaysGame')}</span>
