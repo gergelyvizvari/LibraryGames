@@ -5,26 +5,27 @@ Edit freely: reorder, add, or delete ideas.
 
 ## Up next
 
-- **How Many?** (maths): dots flash for a moment; guess how many. Builds number sense and estimation.
 - **Rhythm Copy** (memory): the drum plays a short beat; tap it back in time.
-- **Anagram Race** (language): scrambled letters of a picture word; tap letters in order to spell it.
-- **Capital Match** (geography): a flag and a country appear; tap its capital city from three choices.
 - **Feed the Monster** (maths): drag number blocks so the monster eats exactly the number on its belly.
 - **Animal Sounds** (memory): hear a series of animal sounds, tap the animals in the same order.
 - **Rhyme Time** (language): tap the word that rhymes with the picture.
-- **Mirror Draw** (spatial): copy a simple shape on a dot grid, mirrored.
 - **Blind Map: Your Country** (geography): a zoomed blind map of one country (start with Hungary); tap the named city or region.
 - **Clock Catch** (maths): match analogue clocks to times.
 - **Busy Bees** (focus): track one bee among moving bees, then tap it when they stop.
-- **Simon Says Tap** (focus): tap only when the instruction starts with "Simon says".
-- **Sentence Builder** (reading): tap words in order to build the sentence that matches a picture.
 - **Continent Sort** (geography): animals and landmarks pop up; drag each to the continent it belongs to on a blind world map.
 - **River & Mountain Hunt** (geography): a blind map of one continent; tap where the named river, mountain range or sea is.
 - **Flag Friends** (memory): match country flags to their names, grouped by continent.
-- **Bubble Spell** (typing): letters float up in bubbles; pop them in order to spell the word.
-- **Maze Dash** (logic): swipe to guide a mouse through a small maze to the cheese before time runs out.
 - **Opposites** (language): match word pairs like hot/cold, big/small.
 - **Even Odd Sort** (maths): numbers fall; swipe left for even, right for odd.
+- **Number Line Jump** (maths): a frog jumps along a number line; tap where it lands after +3, −2 and so on.
+- **Word Families** (language): sort words into the right group (animals, food, colours) as they slide in.
+- **Story Order** (reading): three or four picture cards from a tiny story; put them in the right order.
+- **Copy Cat Typing** (typing): type a short sentence before the cat finishes its nap; mistakes wake it up.
+- **Shadow Match** (spatial): match each object to its shadow.
+- **Odd Sound Out** (focus): three sounds play; tap the one that was different.
+- **Balloon Pop Pairs** (memory): balloons show numbers briefly; pop them from smallest to largest.
+- **Traffic Light Tap** (reflexes): tap on green, freeze on red, and never tap on yellow.
+- **Sudoku Junior** (logic): 4x4 picture sudoku.
 
 ## Shipped
 
@@ -43,3 +44,13 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-10-27 | Spot the Odd One | focus |
 | 2026-10-27 | Blind Map | geography |
 | 2026-10-27 | Tower Stack | reflexes |
+| 2026-10-27 | Grid Glow | memory |
+| 2026-10-27 | Mole Pop | reflexes |
+| 2026-10-27 | Anagram Race | language |
+| 2026-10-27 | Simon Says | focus |
+| 2026-10-27 | How Many? | maths |
+| 2026-10-27 | Sentence Builder | reading |
+| 2026-10-27 | Letter Pop | typing |
+| 2026-10-27 | Maze Dash | logic |
+| 2026-10-27 | Mirror Match | spatial |
+| 2026-10-27 | Capital Match | geography |
