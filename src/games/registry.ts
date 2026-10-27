@@ -22,10 +22,12 @@ import letterPop from './letter-pop'
 import mazeDash from './maze-dash'
 import mirrorMatch from './mirror-match'
 import capitalMatch from './capital-match'
+import rhythmCopy from './rhythm-copy'
 
 // One line per game. New games go at the end.
 export const games: GameDef[] = [sequenceEcho, lightsOut, wordCatch, stroopClash, numberNinja, flashRead, pairRush, typeDefender,
   shapeSpin, whatNext, oddOne, blindMap, towerStack,
-  gridGlow, molePop, anagramRace, simonSays, howMany, sentenceBuilder, letterPop, mazeDash, mirrorMatch, capitalMatch]
+  gridGlow, molePop, anagramRace, simonSays, howMany, sentenceBuilder, letterPop, mazeDash, mirrorMatch, capitalMatch,
+  rhythmCopy]
 
 export const gameById = (id: string) => games.find((g) => g.meta.id === id)
