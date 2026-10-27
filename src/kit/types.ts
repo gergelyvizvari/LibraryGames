@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react'
 import type { GameStrings, T } from '../i18n'
 
-export const skills = ['memory', 'reflexes', 'language', 'focus', 'maths', 'reading', 'typing', 'logic', 'spatial'] as const
+export const skills = ['memory', 'reflexes', 'language', 'focus', 'maths', 'reading', 'typing', 'logic', 'spatial', 'geography'] as const
 export type Skill = (typeof skills)[number]
 
 export interface RoundResult {

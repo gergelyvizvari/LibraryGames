@@ -36,6 +36,7 @@ const en = {
   'skill.typing': 'Typing',
   'skill.logic': 'Logic',
   'skill.spatial': 'Shapes',
+  'skill.geography': 'Maps',
 }
 
 export default en

@@ -186,3 +186,43 @@ h1, h2 { margin: 0; line-height: 1.1; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
+
+/* Shape Spin */
+.ss-target { display: grid; place-items: center; min-height: 170px; background: var(--card); border-radius: 28px; box-shadow: var(--shadow); animation: spinIn 0.4s ease-out; }
+.ss-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.ss-option { display: grid; place-items: center; aspect-ratio: 1; background: var(--card); border-radius: 20px; border: 3px solid var(--line); box-shadow: 0 5px 0 var(--line); }
+.ss-option:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--line); }
+@keyframes spinIn { from { transform: rotate(-90deg) scale(0.6); opacity: 0; } }
+
+/* What Comes Next? */
+.wn-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; background: var(--card); border-radius: 28px; padding: 22px 12px; box-shadow: var(--shadow); min-height: 160px; align-content: center; }
+.wn-item { font-size: 2.4rem; animation: zoom 0.3s both; }
+.wn-slot { display: inline-grid; place-items: center; width: 3.2rem; height: 3.2rem; border-radius: 14px; border: 3px dashed var(--game-color); color: var(--game-color); font-weight: 800; font-size: 2rem; }
+.wn-solved { border-style: solid; background: #e6fff4; animation: pulse 0.3s 2 alternate; }
+.wn-choice { font-size: 2.6rem; padding: 10px 8px; }
+
+/* Spot the Odd One */
+.oo-wrap { position: relative; }
+.oo-grid { display: grid; gap: 6px; width: min(100%, 460px); margin: 0 auto; animation: zoom 0.25s; }
+.oo-cell { aspect-ratio: 1; display: grid; place-items: center; background: var(--card); border-radius: 14px; box-shadow: 0 3px 0 var(--line); font-size: inherit; line-height: 1; padding: 0; }
+.oo-cell:active { transform: scale(0.92); }
+
+/* Blind Map */
+.bm-prompt { animation: zoom 0.3s; }
+.bm-flag { font-size: 1.8rem; vertical-align: middle; }
+.bm-hint { text-align: center; margin: -6px 0 0; min-height: 1.6rem; font-weight: 700; color: var(--muted); }
+.bm-sea { position: relative; background: #a8dcf0; border-radius: 24px; overflow: hidden; box-shadow: var(--shadow); }
+.bm-svg { display: block; width: 100%; height: auto; touch-action: manipulation; }
+.bm-land { fill: #f3e9c6; stroke: #fff; stroke-width: 0.8; transition: fill 0.2s; }
+.bm-found { fill: var(--good); }
+.bm-reveal { fill: #feca57; animation: pulse 0.4s 3 alternate; }
+.bm-wrong { fill: var(--bad); }
+.bm-loading { padding: 80px 0; text-align: center; font-weight: 700; color: #2d6a85; }
+
+/* Tower Stack */
+.ts-sky { position: relative; flex: 1; min-height: 440px; border-radius: 28px; background: linear-gradient(#ffeaa7, #fab1a0); overflow: hidden; touch-action: manipulation; cursor: pointer; }
+.ts-block { position: absolute; border-radius: 8px; box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.15); transition: top 0.25s ease-out; }
+.ts-moving { transition: none; }
+.ts-falling { background: #b2bec3; animation: dropAway 0.8s ease-in forwards; transition: none; }
+.ts-tap { position: absolute; top: 18%; width: 100%; text-align: center; font-size: 1.8rem; font-weight: 800; color: #6c5ce7; animation: pulse 0.6s infinite alternate; }
+@keyframes dropAway { to { transform: translateY(400px) rotate(25deg); opacity: 0; } }
