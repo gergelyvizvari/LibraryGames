@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import worldData from 'world-atlas/countries-110m.json'
 import { makeRng } from '../../kit/random'
-import { countries } from './content'
+import { countries, names } from './content'
 import { pickQuestions, pointsFor } from './logic'
 
 describe('blind map', () => {
@@ -12,6 +12,8 @@ describe('blind map', () => {
       ),
     )
     countries.forEach((c) => expect(atlas.has(c.atlas), c.atlas).toBe(true))
+    // A wrong tap can land on any country, so Hungarian names every one of them.
+    atlas.forEach((name) => expect(names.hu?.[name], name).toBeTruthy())
   })
   it('picks ten different countries', () => {
     const rng = makeRng(2)

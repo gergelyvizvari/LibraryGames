@@ -1,12 +1,13 @@
 import { createContext, useContext } from 'react'
 import en from './en'
+import hu from './hu'
 
-// Add a locale: create `xx.ts` with the same keys as `en.ts`, add it to `dictionaries`,
-// and add an `xx` block to each game's `strings.ts` (missing keys fall back to English).
-export const dictionaries = { en } as const
+// Add a locale: create `xx.ts` with the same keys as `en.ts`, add it to `dictionaries` and to `lang.*` in every
+// dictionary, then add an `xx` block to each game's `strings.ts` and `content.ts` (missing keys fall back to English).
+export const dictionaries = { en, hu } as const
+export type AppKey = keyof typeof en
 export type Locale = keyof typeof dictionaries
 export const locales = Object.keys(dictionaries) as Locale[]
-export type AppKey = keyof typeof en
 
 export type Dict = Record<string, string>
 /** Per-game strings: English is required, other locales are optional and partial. */
@@ -23,6 +24,11 @@ export function detectLocale(): Locale {
   }
   const nav = typeof navigator !== 'undefined' ? navigator.language.slice(0, 2) : 'en'
   return (nav in dictionaries ? nav : 'en') as Locale
+}
+
+/** The next language in the list, for the language button on the home screen. */
+export function nextLocale(locale: Locale): Locale {
+  return locales[(locales.indexOf(locale) + 1) % locales.length]
 }
 
 export function saveLocale(locale: Locale) {

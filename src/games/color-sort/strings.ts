@@ -18,6 +18,23 @@ const strings: GameStrings = {
     solved: 'Sorted! 🎉',
     tubeDone: 'Done!',
   },
+  hu: {
+    title: 'Színválogató',
+    howTo: 'Koppints egy kémcsőre, aztán egy másikra: a felső szín átfolyik ugyanarra a színre vagy egy üres kémcsőbe. Legyen minden kémcső egyszínű!',
+    score: 'Pont',
+    puzzle: 'Feladvány',
+    moves: 'Öntés',
+    undo: 'Vissza',
+    restart: 'Újra',
+    tube: '{n}. kémcső',
+    pickTube: 'Koppints egy kémcsőre, hogy felvedd',
+    pourIt: 'Most koppints oda, ahová önteni akarsz',
+    noFit: 'Ez a szín nem illik oda!',
+    full: 'Ez a kémcső tele van!',
+    stuck: 'Nincs több lépés! Próbáld a Vissza vagy az Újra gombot.',
+    solved: 'Kész! 🎉',
+    tubeDone: 'Kész!',
+  },
 }
 
 export default strings

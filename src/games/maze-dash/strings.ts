@@ -9,6 +9,14 @@ const strings: GameStrings = {
     time: 'Time',
     yum: 'Yum!',
   },
+  hu: {
+    title: 'Labirintus',
+    howTo: 'Segíts az egérnek megtalálni a sajtot! A nyilakkal (vagy húzással) mozogj a labirintusban. Minden labirintus egy kicsit nagyobb.',
+    score: 'Pont',
+    mazes: 'Labirintusok',
+    time: 'Idő',
+    yum: 'Nyami!',
+  },
 }
 
 export default strings

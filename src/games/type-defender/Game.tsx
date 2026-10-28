@@ -77,7 +77,7 @@ export default function TypeDefender({ level, seed, t, onFinish }: GameProps) {
 
   const onType = (value: string) => {
     if (over) return
-    const v = value.toLowerCase().replace(/[^a-z]/g, '')
+    const v = value.normalize('NFC').toLowerCase().replace(/[^\p{L}]/gu, '')
     const s = state.current
     const target = s.enemies.find((e) => e.word.startsWith(v))
     if (!target || v === '') {

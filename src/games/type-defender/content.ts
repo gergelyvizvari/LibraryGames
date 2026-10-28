@@ -27,6 +27,37 @@ export const wordLists: { en: string[] } & Partial<Record<Locale, string[]>> = {
     'unicorn', 'volcano', 'wizard', 'yellow', 'zipper', 'balloon', 'chicken', 'dolphin', 'giraffe', 'penguin',
     'rainbow', 'teacher', 'library', 'octopus', 'blanket', 'sandwich', 'elephant', 'dinosaur', 'treasure', 'umbrella',
   ],
+  // Accented letters are part of the word: Hungarian keyboards and phones type them directly.
+  hu: [
+    // 3 letters
+    'agy', 'arc', 'apa', 'bab', 'baj', 'bal', 'bot', 'cél', 'cet', 'dal', 'dió', 'dob', 'egy', 'eső',
+    'erő', 'ész', 'fal', 'fej', 'fog', 'fut', 'fül', 'fúj', 'fél', 'fiú', 'gól', 'gép', 'hab', 'hal',
+    'ház', 'hét', 'híd', 'hív', 'hol', 'ing', 'ima', 'író', 'jég', 'jár', 'jön', 'kéz', 'kés', 'kör',
+    'kos', 'kék', 'kis', 'kép', 'kar', 'kút', 'láb', 'lát', 'lap', 'méh', 'méz', 'mák', 'mos', 'nap',
+    'név', 'nem', 'néz', 'orr', 'oda', 'óra', 'öcs', 'ősz', 'pad', 'pék', 'pók', 'rák', 'rét', 'rúd',
+    'sas', 'sál', 'sok', 'sün', 'sor', 'tej', 'tél', 'tök', 'tíz', 'tud', 'tűz', 'ujj', 'üst', 'ügy',
+    'vaj', 'vár', 'víz', 'vad', 'vas', 'zab', 'zaj', 'zár',
+    // 4 letters
+    'alma', 'anya', 'béka', 'baba', 'bika', 'cica', 'cipő', 'domb', 'ebéd', 'erdő', 'este', 'étel', 'édes', 'fánk',
+    'föld', 'gomb', 'gyík', 'hold', 'hegy', 'igen', 'ital', 'ízes', 'írás', 'jobb', 'kert', 'kapu', 'lufi', 'lila',
+    'lány', 'maci', 'mese', 'nyár', 'nagy', 'nyúl', 'olló', 'öböl', 'répa', 'rizs', 'róka', 'ruha', 'rajz', 'sajt',
+    'süti', 'szem', 'szél', 'szív', 'teve', 'toll', 'tyúk', 'utca', 'üveg', 'vers', 'zene', 'zöld', 'zseb', 'papa',
+    'pite', 'álom', 'fiók',
+    // 5 letters
+    'labda', 'malac', 'kutya', 'tehén', 'mókus', 'medve', 'zebra', 'majom', 'panda', 'koala', 'bálna', 'polip', 'kakas', 'kígyó',
+    'csiga', 'virág', 'felhő', 'vonat', 'mentő', 'kulcs', 'sátor', 'robot', 'gitár', 'zokni', 'kabát', 'kalap', 'táska', 'sapka',
+    'doboz', 'tojás', 'fagyi', 'csoki', 'perec', 'pizza', 'kifli', 'körte', 'szőlő', 'banán', 'gomba', 'kanál', 'könyv', 'kocka',
+    'lámpa', 'ecset', 'torta', 'eszik', 'orvos', 'óvoda', 'óriás', 'óceán', 'őzike', 'ünnep', 'ugrál', 'játék', 'hinta', 'kréta',
+    'lecke', 'piros', 'sárga', 'vihar', 'dalol', 'gyors', 'nevet', 'ablak', 'ébred', 'ezüst', 'füzet',
+    // 6+ letters
+    'farkas', 'tigris', 'zsiráf', 'bagoly', 'hattyú', 'kecske', 'bárány', 'teknős', 'katica', 'hangya', 'delfin', 'villám', 'vulkán', 'rakéta',
+    'repülő', 'korona', 'csengő', 'ceruza', 'csésze', 'térkép', 'muffin', 'kenyér', 'dinnye', 'citrom', 'barack', 'iskola', 'kórház', 'sziget',
+    'mágnes', 'bolygó', 'nyuszi', 'zászló', 'uborka', 'levegő', 'palack', 'ebédel', 'énekel', 'ölelés', 'ősember', 'pingvin', 'papagáj', 'szarvas',
+    'elefánt', 'sárkány', 'denevér', 'kenguru', 'hörcsög', 'tulipán', 'kaktusz', 'hóember', 'csillag', 'bicikli', 'király', 'gyertya', 'horgony', 'ajándék',
+    'gyémánt', 'cukorka', 'telefon', 'narancs', 'ananász', 'krumpli', 'templom', 'krokodil', 'oroszlán', 'pillangó', 'flamingó', 'királynő', 'vitorlás', 'kukorica',
+    'brokkoli', 'kalapács', 'esernyő', 'üstökös', 'játszótér', 'unikornis', 'szendvics', 'teherautó', 'szivárvány', 'napraforgó', 'paradicsom', 'palacsinta', 'cseresznye', 'focilabda',
+    'őszibarack',
+  ],
 }
 
 /** Short words at low levels; from level 7 the shortest drop out so high levels feel different. */

@@ -110,6 +110,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 /* Home */
 .home-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .home-tools { display: flex; gap: 8px; }
+.lang-btn { font-size: 1rem; font-weight: 800; color: var(--ink); letter-spacing: 0.04em; }
 .home-head h1 { font-size: 2.2rem; font-weight: 700; color: var(--accent); }
 .home .filters { margin-top: 20px; }
 .daily {

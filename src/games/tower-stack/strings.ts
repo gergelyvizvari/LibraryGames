@@ -10,6 +10,15 @@ const strings: GameStrings = {
     perfect: 'Perfect!',
     tap: 'Tap to drop!',
   },
+  hu: {
+    title: 'Toronyépítő',
+    howTo: 'Egy kocka csúszik oda-vissza. Koppints, és ejtsd rá a toronyra! Ami lelóg a széléről, leesik. Ha tökéletesen illeszted, újra nagyobb lesz.',
+    floors: 'Emelet',
+    score: 'Pont',
+    lives: 'Életek',
+    perfect: 'Tökéletes!',
+    tap: 'Koppints, és ejtsd le!',
+  },
 }
 
 export default strings

@@ -11,6 +11,16 @@ const strings: GameStrings = {
     correct: 'Yes! {capital}',
     itIs: 'It is {capital}',
   },
+  hu: {
+    title: 'Fővárosvadász',
+    howTo: 'Minden országnak van fővárosa. Nézd meg a zászlót, és koppints az ország fővárosára!',
+    question: 'Mi {country} fővárosa?',
+    score: 'Pont',
+    question_n: 'Kérdés',
+    combo: 'Kombó',
+    correct: 'Igen! {capital}',
+    itIs: 'A helyes válasz: {capital}',
+  },
 }
 
 export default strings

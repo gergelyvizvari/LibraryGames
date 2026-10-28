@@ -10,6 +10,15 @@ const strings: GameStrings = {
     time: 'Time',
     newTarget: 'New number!',
   },
+  hu: {
+    title: 'Számnindzsa',
+    howTo: 'Buborékok szállnak fel, bennük összeadások. Pukkaszd ki mindegyiket, amelyiknek az eredménye a célszám. A többit hagyd!',
+    target: 'Cél',
+    score: 'Pont',
+    combo: 'Kombó',
+    time: 'Idő',
+    newTarget: 'Új szám!',
+  },
 }
 
 export default strings

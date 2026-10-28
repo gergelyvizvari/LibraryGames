@@ -17,6 +17,22 @@ const strings: GameStrings = {
     time: 'Time',
     flip: 'Rule flip!',
   },
+  hu: {
+    title: 'Színzavar',
+    howTo: 'Egy szín neve jelenik meg, valamilyen színnel írva. Koppints a BETŰK színére, ne arra, amit a szó mond! Vigyázz: néha megfordul a szabály.',
+    tapInk: 'Koppints a BETŰK színére',
+    tapWord: 'Koppints arra, amit a SZÓ mond',
+    red: 'PIROS',
+    blue: 'KÉK',
+    green: 'ZÖLD',
+    yellow: 'SÁRGA',
+    purple: 'LILA',
+    orange: 'NARANCS',
+    score: 'Pont',
+    combo: 'Kombó',
+    time: 'Idő',
+    flip: 'Fordul a szabály!',
+  },
 }
 
 export default strings

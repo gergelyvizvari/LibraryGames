@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { gameById } from '../games/registry'
-import { detectLocale, LocaleContext } from '../i18n'
+import { detectLocale, LocaleContext, saveLocale, type Locale } from '../i18n'
 import { GameFrame } from '../kit/GameFrame'
 import { daySeed } from '../kit/random'
 import { Home } from './Home'
@@ -13,7 +13,16 @@ function parse(hash: string) {
 
 export function App() {
   const [route, setRoute] = useState(() => parse(location.hash))
-  const [locale] = useState(detectLocale)
+  const [locale, setLocale] = useState(detectLocale)
+
+  useEffect(() => {
+    document.documentElement.lang = locale
+  }, [locale])
+
+  const changeLocale = (next: Locale) => {
+    saveLocale(next)
+    setLocale(next)
+  }
 
   useEffect(() => {
     const onHash = () => setRoute(parse(location.hash))
@@ -37,7 +46,7 @@ export function App() {
             onHome={() => go('/')}
           />
         ) : (
-          <Home onPlay={(id, daily) => go(`/${daily ? 'daily' : 'play'}/${id}`)} />
+          <Home onPlay={(id, daily) => go(`/${daily ? 'daily' : 'play'}/${id}`)} onLocale={changeLocale} />
         )}
       </main>
     </LocaleContext.Provider>
