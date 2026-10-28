@@ -12,9 +12,8 @@ const pads = [
   { color: '#feca57', note: 1047 },
 ]
 const LIVES = 2
-const TAP_MS = 180
-/** Let the last tapped note ring out before the success chime. */
-const CHEER_DELAY_MS = TAP_MS + 120
+/** Gap after the last tapped note before the success chime. */
+const CHEER_GAP_MS = 120
 
 export function stepMs(level: number) {
   return clamp(700 - level * 45, 260, 700)
@@ -33,17 +32,19 @@ export default function SequenceEcho({ level, seed, t, onFinish }: GameProps) {
   const [boardRef, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
   const ms = stepMs(level)
+  // Taps play the same note length as the demo, so both sound alike.
+  const noteMs = ms * 0.7
 
   const flash = (i: number, duration: number) => {
     setLit(i)
     sound.tone(pads[i].note, duration / 1000, 'triangle', 0.22)
-    later(() => setLit(null), duration)
+    later(() => setLit((cur) => (cur === i ? null : cur)), duration)
   }
 
   // Play the sequence back whenever we enter "show".
   useEffect(() => {
     if (mode !== 'show') return
-    sequence.forEach((p, i) => later(() => flash(p, ms * 0.7), 600 + i * ms))
+    sequence.forEach((p, i) => later(() => flash(p, noteMs), 600 + i * ms))
     later(() => {
       setPos(0)
       setMode('input')
@@ -52,7 +53,7 @@ export default function SequenceEcho({ level, seed, t, onFinish }: GameProps) {
 
   const press = (i: number) => {
     if (mode !== 'input') return
-    flash(i, TAP_MS)
+    flash(i, noteMs)
     if (i !== sequence[pos]) {
       sound.bad()
       vibrate(60)
@@ -80,11 +81,11 @@ export default function SequenceEcho({ level, seed, t, onFinish }: GameProps) {
     later(() => {
       sound.good(sequence.length)
       addPop(`+${gained}`, 50, 45)
-    }, CHEER_DELAY_MS)
+    }, noteMs + CHEER_GAP_MS)
     later(() => {
       setSequence((s) => [...s, rng.int(0, 3)])
       setMode('show')
-    }, CHEER_DELAY_MS + 500)
+    }, noteMs + CHEER_GAP_MS + 500)
   }
 
   return (
