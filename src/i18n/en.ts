@@ -30,7 +30,7 @@ const en = {
   resume: 'Keep playing',
   quit: 'Stop game',
   forGrownUps: 'For grown-ups',
-  madeBy: 'Made with love by {name}',
+  madeBy: 'Made by {name}',
   support: 'Buy me a tea',
   supportHint: 'Enjoying Library Games? Support it (opens a new tab)',
   'skill.memory': 'Memory',
