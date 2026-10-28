@@ -4,7 +4,7 @@ import { clamp, makeRng } from '../../kit/random'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
 import { Hud, Pops, TimerBar } from '../../kit/ui'
-import { answerFor, colours, makeCard } from './logic'
+import { answerFor, colourCount, colours, makeCard } from './logic'
 
 const DURATION = 45
 
@@ -70,7 +70,7 @@ export default function StroopClash({ level, seed, t, onFinish }: GameProps) {
         {t(colours[card.word].key)}
       </div>
       <div className="sc-buttons">
-        {colours.map((c, i) => (
+        {colours.slice(0, colourCount(level)).map((c, i) => (
           <button key={c.key} className="sc-btn" style={{ background: c.css }} aria-label={t(c.key)} onPointerDown={() => choose(i)} />
         ))}
       </div>

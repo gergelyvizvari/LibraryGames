@@ -17,6 +17,10 @@ Never punish harshly: a mistake costs a combo or a heart, with a soft sound, nev
 5. **A score worth beating**: report a meaningful `score` and an honest `accuracy` (0 to 1).
 6. **Learn in 5 seconds**: `howTo` is one or two short sentences a child can follow.
 7. **Works on a phone**: touch first (`onPointerDown` for fast taps), fits a 390 px wide screen, no hover-only UI.
+8. **Plenty of content**: a kid should not see the same question twice in a few rounds. Word, story, country or
+   picture lists need at least 20 items available at every level (50+ in total is a good start), and higher levels
+   should swap in harder items, not only add them. Add a `content.test.ts` that checks the pool size per level and
+   that there are no duplicates.
 
 ## Folder layout
 

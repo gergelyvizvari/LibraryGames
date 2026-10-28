@@ -255,11 +255,13 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .sim-timer div { height: 100%; background: var(--game-color); }
 .sim-animals { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .sim-animal { aspect-ratio: 1.3; border-radius: 24px; background: var(--card); font-size: 3.4rem; box-shadow: 0 6px 0 var(--line); }
+.sim-six { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.sim-six .sim-animal { aspect-ratio: 1; font-size: 2.6rem; }
 .sim-animal:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--line); }
 
 /* How Many? */
 .hm-board { position: relative; aspect-ratio: 1; width: min(100%, 420px); margin: 0 auto; background: var(--card); border-radius: 28px; box-shadow: var(--shadow); }
-.hm-dot { position: absolute; width: 9%; aspect-ratio: 1; border-radius: 50%; transform: translate(-50%, -50%); animation: zoom 0.2s; }
+.hm-dot { position: absolute; width: 11%; aspect-ratio: 1; display: grid; place-items: center; font-size: clamp(1.4rem, 7.5vw, 2.4rem); line-height: 1; transform: translate(-50%, -50%); animation: zoom 0.2s; }
 .hm-question { position: absolute; inset: 0; display: grid; place-items: center; font-size: 6rem; font-weight: 800; color: var(--game-color); }
 .hm-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .hm-options .choice-btn:disabled { opacity: 0.6; }

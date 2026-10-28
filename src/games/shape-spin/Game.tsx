@@ -78,7 +78,7 @@ export default function ShapeSpin({ level, seed, t, onFinish }: GameProps) {
         <Shape cells={puzzle.target} color="var(--game-color)" size={34} />
       </div>
       <p className="prompt">{t('which')}</p>
-      <div className="ss-options" ref={ref}>
+      <div className="ss-options" ref={ref} style={{ gridTemplateColumns: `repeat(${puzzle.options.length === 4 ? 2 : 3}, 1fr)` }}>
         {puzzle.options.map((o, i) => (
           <button key={`${spin}-${i}`} className="ss-option" onPointerDown={() => choose(i)}>
             <Shape cells={o} color="#54a0ff" size={20} />

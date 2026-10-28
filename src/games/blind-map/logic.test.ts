@@ -22,6 +22,10 @@ describe('blind map', () => {
       q.forEach((c) => expect(c.minLevel).toBeLessThanOrEqual(level))
     }
   })
+  it('has no duplicates and enough countries that level 1 is not the same every time', () => {
+    expect(new Set(countries.map((c) => c.atlas)).size).toBe(countries.length)
+    expect(countries.filter((c) => c.minLevel <= 1).length).toBeGreaterThanOrEqual(15)
+  })
   it('rewards first tries', () => {
     expect(pointsFor(0, 1)).toBeGreaterThan(pointsFor(1, 1))
     expect(pointsFor(3, 1)).toBe(0)

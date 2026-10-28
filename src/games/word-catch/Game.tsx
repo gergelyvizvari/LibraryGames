@@ -20,9 +20,11 @@ export default function WordCatch({ level, seed, t, onFinish }: GameProps) {
   const locale = useLocale()
   const rng = useRef(makeRng(seed)).current
   const pool = wordsForLevel(words[locale] ?? words.en, level)
+  // Deal words from a shuffled deck so none repeats until the whole pool has been seen.
+  const deck = useRef<Word[]>([])
   const makeDrop = (prev?: Word): Drop => {
-    let answer = rng.pick(pool)
-    while (answer === prev) answer = rng.pick(pool)
+    if (deck.current.length === 0) deck.current = rng.shuffle(pool.filter((w) => w !== prev))
+    const answer = deck.current.pop()!
     const others = rng.shuffle(pool.filter((w) => w !== answer))
     // From level 5, prefer distractors that start with the same letter, so kids must really read.
     const similar = level >= 5 ? others.filter((w) => w.word[0] === answer.word[0]) : []

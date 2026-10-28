@@ -23,11 +23,12 @@ describe('game registry', () => {
 describe('every game mounts and runs', () => {
   afterEach(() => vi.useRealTimers())
 
-  it.each(games.map((g) => [g.meta.id, g] as const))('%s renders and survives 5 seconds of play', (_, g) => {
+  // Level 1 and level 10 both run, so content and rules that only unlock at high levels are covered too.
+  it.each(games.flatMap((g) => [1, 10].map((level) => [g.meta.id, level, g] as const)))('%s renders and survives 5 seconds of play at level %i', (_, level, g) => {
     vi.useFakeTimers()
     const onFinish = vi.fn()
     const { container, unmount } = render(
-      <g.Component level={1} seed={42} t={makeGameT(g.strings, 'en')} onFinish={onFinish} />,
+      <g.Component level={level} seed={42} t={makeGameT(g.strings, 'en')} onFinish={onFinish} />,
     )
     expect(container.querySelector('.game')).not.toBeNull()
     act(() => {

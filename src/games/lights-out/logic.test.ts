@@ -10,8 +10,10 @@ describe('lights out scoring', () => {
     expect(animalKey(200)).toBe('cheetah')
     expect(animalKey(900)).toBe('turtle')
   })
-  it('gives full accuracy at 300 ms average', () => {
-    expect(accuracyFor([300, 300])).toBe(1)
-    expect(accuracyFor([800])).toBe(0)
+  it('is forgiving for young players and sharper at high levels', () => {
+    expect(accuracyFor([500, 500], 1)).toBe(1)
+    expect(accuracyFor([1100], 1)).toBe(0)
+    expect(accuracyFor([500, 500], 10)).toBeLessThan(0.6)
+    expect(accuracyFor([260], 10)).toBe(1)
   })
 })

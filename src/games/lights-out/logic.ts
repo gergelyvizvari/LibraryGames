@@ -6,18 +6,22 @@ export function pointsFor(ms: number) {
   return Math.max(0, Math.round(1000 - ms))
 }
 
+// Thresholds are set for children: a 6-year-old tapping a phone is usually around half a second.
 export function animalKey(ms: number) {
-  if (ms < 260) return 'cheetah'
-  if (ms < 360) return 'rabbit'
-  if (ms < 500) return 'cat'
+  if (ms < 300) return 'cheetah'
+  if (ms < 420) return 'rabbit'
+  if (ms < 580) return 'cat'
   return 'turtle'
 }
 
-/** 300 ms average or faster is a perfect round, 700 ms or slower counts as weak. */
-export function accuracyFor(times: number[]) {
+/** The average that counts as a perfect round: forgiving at level 1, sharper as the level rises. */
+export const perfectMs = (level: number) => clamp(540 - level * 28, 260, 540)
+
+/** Perfect average or faster is full accuracy; 450 ms slower than that counts as weak. */
+export function accuracyFor(times: number[], level = 1) {
   if (times.length === 0) return 0
   const avg = times.reduce((a, b) => a + b, 0) / times.length
-  return clamp((700 - avg) / 400, 0, 1)
+  return clamp(1 - (avg - perfectMs(level)) / 450, 0, 1)
 }
 
 /** Higher levels make the wait less predictable. */

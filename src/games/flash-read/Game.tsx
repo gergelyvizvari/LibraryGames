@@ -5,16 +5,16 @@ import { clamp, makeRng } from '../../kit/random'
 import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
 import { Hud, Pops } from '../../kit/ui'
-import { stories } from './content'
+import { stories, storiesForLevel } from './content'
 
 const STORIES_PER_ROUND = 4
 
 export default function FlashRead({ level, seed, t, onFinish }: GameProps) {
   const locale = useLocale()
   const rng = useRef(makeRng(seed)).current
-  const picked = useMemo(() => rng.shuffle(stories[locale] ?? stories.en).slice(0, STORIES_PER_ROUND), [rng, locale])
+  const picked = useMemo(() => rng.shuffle(storiesForLevel(stories[locale] ?? stories.en, level)).slice(0, STORIES_PER_ROUND), [rng, locale, level])
   const [index, setIndex] = useState(0)
-  const [wpm, setWpm] = useState(() => clamp(80 + level * 20, 80, 300))
+  const [wpm, setWpm] = useState(() => clamp(50 + level * 20, 70, 300))
   const [phase, setPhase] = useState<'reading' | 'question' | 'feedback'>('reading')
   const [word, setWord] = useState(0)
   const [score, setScore] = useState(0)
