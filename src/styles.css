@@ -107,6 +107,14 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .icon-btn { width: 46px; height: 46px; border-radius: 14px; background: var(--card); font-size: 1.2rem; box-shadow: var(--shadow); flex: none; margin-bottom: 5px; }
 .icon-btn:active { transform: translateY(3px); box-shadow: 0 0 0 2px var(--line), 0 2px 0 var(--line); }
 
+/* Game icons: drawn stickers, every part in its own colour with a chunky ink outline (see kit/icon.tsx).
+   The outline stays dark in every theme, because the icons always sit on a game colour or a sticker-friendly card. */
+.game-icon { display: block; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.22)); }
+.game-icon g { stroke: var(--ink-fixed); stroke-width: 2.2; stroke-linejoin: round; stroke-linecap: round; paint-order: stroke; }
+.game-icon text { font-family: inherit; stroke-width: 0.6; }
+.game-icon .gi-shine { stroke: none; opacity: 0.75; }
+[data-theme='contrast'] .game-icon g:not(.gi-shine) { stroke-width: 2.6; }
+
 /* Home */
 .home-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .home-tools { display: flex; gap: 8px; }
@@ -128,7 +136,8 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .daily-label { grid-area: label; align-self: end; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.7rem; opacity: 0.9; }
 .daily-title { grid-area: title; align-self: start; font-size: 1.3rem; font-weight: 700; line-height: 1.15; }
 .daily-play { grid-area: play; background: #fff; color: var(--game-surface); font-weight: 700; font-size: 1rem; border-radius: 12px; padding: 4px 16px; box-shadow: 0 3px 0 var(--game-edge); }
-.daily-icon { grid-area: icon; position: relative; display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); font-size: 1.9rem; animation: bob 2s ease-in-out infinite; }
+.daily-icon { grid-area: icon; position: relative; display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); animation: bob 2s ease-in-out infinite; }
+.daily-icon .game-icon { width: 38px; height: 38px; }
 .daily-sparkle { position: absolute; top: -4px; right: -6px; font-size: 0.9rem; font-style: normal; animation: twinkle 1.6s ease-in-out infinite; }
 .filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
 .chip { background: var(--card); border-radius: 14px; padding: 5px 14px; font-weight: 600; color: var(--muted); white-space: nowrap; border: 2px solid var(--line); border-bottom-width: 4px; }
@@ -139,7 +148,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
   display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 4px; box-shadow: 0 5px 0 var(--game-edge); transition: transform 0.1s;
 }
 .game-card:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--game-edge); }
-.game-card-icon { font-size: 2.6rem; line-height: 1.1; }
+.game-card-icon { width: 56px; height: 56px; }
 /* Every card has the same layout: icon, a title area two lines tall, then skill and best score on one line. */
 .game-card-title { display: grid; place-items: center; min-height: 2.3em; font-weight: 700; font-size: 1.15rem; line-height: 1.15; text-align: center; }
 .game-card-foot { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; }
@@ -160,10 +169,11 @@ h1, h2 { margin: 0; line-height: 1.1; }
 /* Game frame */
 .frame { display: flex; flex-direction: column; min-height: calc(100dvh - 40px); }
 .frame-bar { display: flex; align-items: center; gap: 12px; }
+.frame-icon { display: inline-block; width: 1.5em; height: 1.5em; vertical-align: -0.4em; margin-right: 2px; }
 .frame-title { flex: 1; font-weight: 700; font-size: 1.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .frame-level { background: var(--game-surface); color: var(--on-color); border-radius: 12px; padding: 2px 12px; box-shadow: 0 3px 0 var(--game-edge); font-weight: 700; font-size: 0.9rem; }
 .card { position: relative; background: var(--card); border-radius: 26px; padding: 28px 22px; margin-top: 24px; text-align: center; box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; gap: 12px; overflow: hidden; }
-.intro-icon { font-size: 5rem; animation: bob 2s ease-in-out infinite; }
+.intro-icon { width: 96px; height: 96px; animation: bob 2s ease-in-out infinite; }
 .intro h1 { font-size: 2.2rem; }
 .howto { font-size: 1.2rem; max-width: 32ch; margin: 0; }
 .countdown { flex: 1; display: grid; place-items: center; font-size: 8rem; font-weight: 700; color: var(--game-text); animation: zoom 0.6s ease-out; }
@@ -297,7 +307,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 /* Spot the Odd One */
 .oo-wrap { position: relative; }
 .oo-grid { display: grid; gap: 6px; width: min(100%, 460px); margin: 0 auto; animation: zoom 0.25s; }
-.oo-cell { aspect-ratio: 1; display: grid; place-items: center; background: var(--card); border-radius: 14px; box-shadow: 0 3px 0 var(--line); font-size: inherit; line-height: 1; padding: 0; }
+.oo-cell { aspect-ratio: 1; display: grid; place-items: center; background: var(--card); border-radius: 14px; box-shadow: 0 0 0 2px var(--line), 0 3px 0 var(--line); font-size: inherit; line-height: 1; padding: 0; }
 .oo-cell:active { transform: scale(0.92); }
 
 /* Blind Map */
@@ -322,7 +332,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 
 /* Grid Glow */
 .gg-grid { display: grid; gap: 10px; width: min(100%, 420px); margin: 0 auto; }
-.gg-cell { aspect-ratio: 1; border-radius: 18px; background: var(--card); box-shadow: 0 5px 0 var(--line); transition: background 0.15s, transform 0.1s; }
+.gg-cell { aspect-ratio: 1; border-radius: 18px; background: var(--card); box-shadow: var(--shadow); transition: background 0.15s, transform 0.1s; }
 .gg-lit { background: var(--game-color); transform: scale(1.04); box-shadow: 0 0 22px var(--game-color); }
 .gg-wrong { background: var(--bad); }
 
@@ -349,10 +359,10 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .sim-timer { width: 100%; height: 8px; background: var(--line); border-radius: 999px; overflow: hidden; }
 .sim-timer div { height: 100%; background: var(--game-color); }
 .sim-animals { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.sim-animal { aspect-ratio: 1.3; border-radius: 24px; background: var(--card); font-size: 3.4rem; box-shadow: 0 6px 0 var(--line); }
+.sim-animal { aspect-ratio: 1.3; border-radius: 24px; background: var(--card); font-size: 3.4rem; box-shadow: 0 0 0 2px var(--line), 0 6px 0 var(--line); }
 .sim-six { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .sim-six .sim-animal { aspect-ratio: 1; font-size: 2.6rem; }
-.sim-animal:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--line); }
+.sim-animal:active { transform: translateY(4px); box-shadow: 0 0 0 2px var(--line), 0 2px 0 var(--line); }
 
 /* How Many? */
 .hm-board { position: relative; aspect-ratio: 1; width: min(100%, 420px); margin: 0 auto; background: var(--card); border-radius: 28px; box-shadow: var(--shadow); }
@@ -377,14 +387,14 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .md-cell { display: grid; place-items: center; font-size: clamp(0.9rem, 5vw, 1.6rem); line-height: 1; aspect-ratio: 1; }
 .md-trail { background: var(--highlight-strong); }
 .md-pad { display: grid; grid-template-columns: repeat(3, 64px); gap: 8px; justify-content: center; }
-.md-btn { height: 56px; border-radius: 16px; background: var(--card); font-size: 1.6rem; box-shadow: 0 5px 0 var(--line); }
-.md-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--line); }
+.md-btn { height: 56px; border-radius: 16px; background: var(--card); font-size: 1.6rem; box-shadow: var(--shadow); }
+.md-btn:active { transform: translateY(3px); box-shadow: 0 0 0 2px var(--line), 0 2px 0 var(--line); }
 
 /* Mirror Match */
 .mm-board { display: flex; gap: 6px; justify-content: center; align-items: stretch; animation: zoom 0.3s; }
 .mm-side { flex: 1; max-width: 200px; display: grid; gap: 6px; }
 .mm-mirror { width: 6px; border-radius: 999px; background: linear-gradient(#dfe6e9, #74b9ff, #dfe6e9); }
-.mm-cell { aspect-ratio: 1; border-radius: 10px; background: var(--card); box-shadow: 0 3px 0 var(--line); padding: 0; }
+.mm-cell { aspect-ratio: 1; border-radius: 10px; background: var(--card); box-shadow: 0 0 0 2px var(--line), 0 3px 0 var(--line); padding: 0; }
 .mm-on { background: var(--game-color); }
 .mm-wrong { background: var(--bad); }
 

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { games } from '../games/registry'
 import { makeGameT, nextLocale, useLocale, useT, type Locale } from '../i18n'
+import { Icon } from '../kit/icon'
 import { gameProgress, loadProgress } from '../kit/progress'
 import { daySeed, makeRng } from '../kit/random'
 import { sound } from '../kit/sound'
@@ -90,7 +91,7 @@ export function Home({ onPlay, onLocale }: { onPlay: (id: string, daily?: boolea
       <button className="daily" style={gameColorVars(daily.meta.color)} onClick={() => onPlay(daily.meta.id, true)}>
         <span className="daily-label">⭐ {t('todaysGame')}</span>
         <span className="daily-icon" aria-hidden>
-          {daily.meta.icon}
+          <Icon icon={daily.meta.icon} />
           <i className="daily-sparkle">✨</i>
         </span>
         <span className="daily-title">{dailyT('title')}</span>
@@ -112,7 +113,9 @@ export function Home({ onPlay, onLocale }: { onPlay: (id: string, daily?: boolea
           return (
             <button key={g.meta.id} className="game-card" style={gameColorVars(g.meta.color)} onClick={() => onPlay(g.meta.id)}>
               {fresh.has(g.meta.id) && <span className="new-tag">{t('new')}</span>}
-              <span className="game-card-icon">{g.meta.icon}</span>
+              <span className="game-card-icon">
+                <Icon icon={g.meta.icon} />
+              </span>
               <span className="game-card-title">{gt('title')}</span>
               <span className="game-card-foot">
                 <span className="game-card-skill">{t(`skill.${g.meta.skill}`)}</span>

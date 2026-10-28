@@ -1,9 +1,10 @@
 import type { GameDef } from '../../kit/types'
 import Game from './Game'
+import { icon } from './icon'
 import strings from './strings'
 
 const game: GameDef = {
-  meta: { id: 'pair-rush', skill: 'memory', icon: '🃏', color: '#ff9ff3', added: '2026-10-26' },
+  meta: { id: 'pair-rush', skill: 'memory', icon, color: '#ff9ff3', added: '2026-10-26' },
   strings,
   Component: Game,
 }

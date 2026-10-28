@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react'
 import type { GameStrings, T } from '../i18n'
+import type { GameIcon } from './icon'
 
 export const skills = ['memory', 'reflexes', 'language', 'focus', 'maths', 'reading', 'typing', 'logic', 'spatial', 'geography'] as const
 export type Skill = (typeof skills)[number]
@@ -25,8 +26,8 @@ export interface GameMeta {
   /** Folder name, kebab-case. Also the URL: #/play/<id>. */
   id: string
   skill: Skill
-  /** One emoji shown on the card. */
-  icon: string
+  /** Drawn sticker icon from the game's `icon.tsx`, see "Icons" in ADDING_A_GAME.md. */
+  icon: GameIcon
   /** Card colour (CSS colour). */
   color: string
   /** ISO date the game was added. Newest games are marked "New". */

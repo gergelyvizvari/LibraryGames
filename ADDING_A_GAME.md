@@ -5,7 +5,7 @@ The shared kit handles the intro card, the 3-2-1 countdown, results, stars, reco
 
 ## Who it's for
 
-Kids (roughly 5 to 11). Big buttons, emoji, bright colours, short words, friendly feedback.
+Kids (roughly 5 to 11). Big buttons, drawn sticker icons and emoji, bright colours, short words, friendly feedback.
 Never punish harshly: a mistake costs a combo or a heart, with a soft sound, never a scary one.
 
 ## The fun checklist (every game must pass)
@@ -28,6 +28,7 @@ Never punish harshly: a mistake costs a combo or a heart, with a soft sound, nev
 ```
 src/games/<id>/
   index.ts      GameDef: meta + strings + Component
+  icon.tsx      the game's drawn icon (see Icons below)
   Game.tsx      the round (default export)
   strings.ts    every piece of text, keyed, under `en` and `hu`
   content.ts    word lists, stories, levels (optional, keyed by locale)
@@ -42,8 +43,10 @@ Copy an existing game that is closest to your idea (e.g. `stroop-clash` for a ta
 
 ```ts
 // index.ts
+import { icon } from './icon'
+
 const game: GameDef = {
-  meta: { id: 'my-game', skill: 'logic', icon: '🧩', color: '#ff9f43', added: '2026-10-27' },
+  meta: { id: 'my-game', skill: 'logic', icon, color: '#ff9f43', added: '2026-10-27' },
   strings,
   Component: Game,
 }
@@ -57,6 +60,38 @@ const game: GameDef = {
   For language-specific content (`content.ts`), read the language with `useLocale()` and pick `list[locale] ?? list.en`.
 - `onFinish({ score, accuracy })`: call exactly once, then stop timers and ignore input.
   `accuracy >= 0.8` raises the level, `< 0.45` lowers it.
+
+## Icons
+
+Every game has a drawn icon in `icon.tsx`, not an emoji, so icons look the same on every phone and match the
+chunky toy look. The style is **toy stickers**: flat, bright shapes with a dark ink outline, like the buttons.
+The kit (`kit/icon.tsx`, CSS under `/* Game icons */` in `styles.css`) adds the outline and the drop shadow,
+so an icon file only lists shapes and colours:
+
+```tsx
+import { ink, type GameIcon } from '../../kit/icon'
+
+// Drawn on a 48 × 48 grid, see "Icons" in ADDING_A_GAME.md.
+export const icon: GameIcon = [
+  ['accent', '#8d6e63', <rect x="29" y="26" width="7" height="19" rx="3.5" transform="rotate(-45 32.5 35.5)" />],
+  ['base', '#feca57', <circle cx="20" cy="20" r="15" />],
+  ['detail', '#c7ecee', <circle cx="20" cy="20" r="10" />],
+  ['shine', '#fff', <path d="M13 19 A7 7 0 0 1 19 13 L19 16 A4 4 0 0 0 16 19 Z" />],
+]
+```
+
+- **Grid**: 48 × 48, keep shapes inside 3 to 45 so the outline is not cut off. Parts are painted in order, back to front.
+- **One object, bold shapes**: draw the thing the game is about (a drum, a monster, a map), as 3 to 6 simple
+  shapes. No thin lines and no tiny details: the icon is 38 px on the daily card. Letters only when the game is about letters.
+- **Roles**: `base` is the main shape, `detail` sits on top of it (eyes, holes, lights), `accent` is a secondary
+  shape beside or behind it (a leaf, a handle, sticks), `shine` is a small white highlight with no outline.
+- **Colours**: fixed, bright fills from the shared palette: `#ff6b6b` red, `#feca57` yellow, `#1dd1a1` green,
+  `#54a0ff` blue, `#a29bfe` purple, `#ff9f43` orange, `#8d6e63` brown, `#fff` white, `#c7ecee` glass,
+  and `ink` for eyes, dots and text lines. The main shape must stand out from the game's own card colour
+  (a yellow cheese on a mustard card needs its outline, a blue shape on a blue card does not work).
+- **Themes**: icons always sit on the game colour (cards, daily challenge) or on the intro card, and the outline
+  stays dark, so the same icon works in light, dark and high contrast without changes. High contrast thickens the outline.
+- Check it on the home screen in all three themes. The registry test checks every game has an icon with valid roles and colours.
 
 ## Kit pieces (`src/kit`)
 
