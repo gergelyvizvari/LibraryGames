@@ -4,6 +4,7 @@ import { useTimeouts } from './hooks'
 import { gameProgress, loadProgress, recordRound, stars, type RecordOutcome } from './progress'
 import { randomSeed } from './random'
 import { sound } from './sound'
+import { gameColorVars } from './theme'
 import type { GameDef, RoundResult } from './types'
 import { Confetti } from './ui'
 
@@ -57,7 +58,7 @@ export function GameFrame({ game, seed, onHome }: { game: GameDef; seed?: number
 
   const { Component } = game
   return (
-    <div className="frame" style={{ ['--game-color' as string]: game.meta.color }}>
+    <div className="frame" style={gameColorVars(game.meta.color)}>
       <header className="frame-bar">
         <button className="icon-btn" onClick={onHome} aria-label={t('home')}>
           ✕
