@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { loadTheme, nextTheme, setTheme, themes, type Theme } from './theme'
+import { loadTheme, nextTheme, setTheme, textOn, themes, type Theme } from './theme'
 
 describe('theme', () => {
   beforeEach(() => localStorage.clear())
@@ -25,5 +25,12 @@ describe('theme', () => {
     }
     expect(seen.size).toBe(themes.length)
     expect(t).toBe(themes[0])
+  })
+})
+
+describe('textOn', () => {
+  it('picks dark text on light colours and white on dark ones', () => {
+    expect(textOn('#feca57')).not.toBe('#fff')
+    expect(textOn('#3c6382')).toBe('#fff')
   })
 })

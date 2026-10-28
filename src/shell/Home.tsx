@@ -4,7 +4,7 @@ import { makeGameT, useLocale, useT } from '../i18n'
 import { gameProgress, loadProgress } from '../kit/progress'
 import { daySeed, makeRng } from '../kit/random'
 import { sound } from '../kit/sound'
-import { loadTheme, nextTheme, setTheme, themeIcons } from '../kit/theme'
+import { gameColorVars, loadTheme, nextTheme, setTheme, themeIcons } from '../kit/theme'
 import { skills, type GameDef, type Skill } from '../kit/types'
 
 const NEW_DAYS = 7
@@ -59,7 +59,7 @@ export function Home({ onPlay }: { onPlay: (id: string, daily?: boolean) => void
         </div>
       </header>
 
-      <button className="daily" style={{ background: daily.meta.color }} onClick={() => onPlay(daily.meta.id, true)}>
+      <button className="daily" style={gameColorVars(daily.meta.color)} onClick={() => onPlay(daily.meta.id, true)}>
         <span className="daily-label">{t('todaysGame')}</span>
         <span className="daily-icon">{daily.meta.icon}</span>
         <span className="daily-title">{dailyT('title')}</span>
@@ -79,7 +79,7 @@ export function Home({ onPlay }: { onPlay: (id: string, daily?: boolean) => void
           const gp = gameProgress(progress, g.meta.id)
           const gt = makeGameT(g.strings, locale)
           return (
-            <button key={g.meta.id} className="game-card" style={{ ['--game-color' as string]: g.meta.color }} onClick={() => onPlay(g.meta.id)}>
+            <button key={g.meta.id} className="game-card" style={gameColorVars(g.meta.color)} onClick={() => onPlay(g.meta.id)}>
               {isNew(g) && <span className="new-tag">NEW</span>}
               <span className="game-card-icon">{g.meta.icon}</span>
               <span className="game-card-title">{gt('title')}</span>
