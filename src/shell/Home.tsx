@@ -103,10 +103,10 @@ export function Home({ onPlay }: { onPlay: (id: string, daily?: boolean) => void
               {fresh.has(g.meta.id) && <span className="new-tag">{t('new')}</span>}
               <span className="game-card-icon">{g.meta.icon}</span>
               <span className="game-card-title">{gt('title')}</span>
-              <span className="game-card-skill">{t(`skill.${g.meta.skill}`)}</span>
-              {gp.plays > 0 && (
-                <span className="game-card-best">🏆 {gp.best}</span>
-              )}
+              <span className="game-card-foot">
+                <span className="game-card-skill">{t(`skill.${g.meta.skill}`)}</span>
+                {gp.plays > 0 && <span className="game-card-best">🏆 {gp.best}</span>}
+              </span>
             </button>
           )
         })}

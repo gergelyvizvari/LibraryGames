@@ -139,9 +139,11 @@ h1, h2 { margin: 0; line-height: 1.1; }
 }
 .game-card:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--game-edge); }
 .game-card-icon { font-size: 2.6rem; line-height: 1.1; }
-.game-card-title { font-weight: 700; font-size: 1.15rem; line-height: 1.15; text-align: center; }
+/* Every card has the same layout: icon, a title area two lines tall, then skill and best score on one line. */
+.game-card-title { display: grid; place-items: center; min-height: 2.3em; font-weight: 700; font-size: 1.15rem; line-height: 1.15; text-align: center; }
+.game-card-foot { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; }
 .game-card-skill { font-size: 0.8rem; font-weight: 600; background: rgba(0, 0, 0, 0.12); border-radius: 999px; padding: 0 10px; }
-.game-card-best { font-size: 0.85rem; font-weight: 700; }
+.game-card-best { font-size: 0.8rem; font-weight: 700; }
 .new-tag { position: absolute; top: 8px; right: 8px; background: #feca57; color: var(--ink-fixed); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; border-radius: 999px; padding: 1px 8px; transform: rotate(6deg); }
 
 /* Game frame */
