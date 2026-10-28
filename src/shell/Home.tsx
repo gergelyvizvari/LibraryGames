@@ -36,9 +36,14 @@ export function Home({ onPlay }: { onPlay: (id: string, daily?: boolean) => void
   const progress = useMemo(loadProgress, [])
   const daily = dailyGame()
   const fresh = useMemo(() => newGameIds(), [])
+  // New games come first, newest first, so kids spot them straight away.
+  const rank = (g: GameDef) => {
+    const i = [...fresh].indexOf(g.meta.id)
+    return i < 0 ? fresh.size : i
+  }
+  const shown = (filter === 'all' ? games : games.filter((g) => g.meta.skill === filter)).slice().sort((a, b) => rank(a) - rank(b))
   const dailyT = makeGameT(daily.strings, locale)
   const usedSkills = skills.filter((s) => games.some((g) => g.meta.skill === s))
-  const shown = filter === 'all' ? games : games.filter((g) => g.meta.skill === filter)
 
   return (
     <div className="home">

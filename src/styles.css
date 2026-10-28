@@ -135,7 +135,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px 14px; margin-top: 12px; }
 .game-card {
   position: relative; background: var(--game-surface); color: var(--on-color); border-radius: var(--radius); padding: 16px 10px 12px;
-  display: flex; flex-direction: column; align-items: center; gap: 4px; box-shadow: 0 5px 0 var(--game-edge); transition: transform 0.1s;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 4px; box-shadow: 0 5px 0 var(--game-edge); transition: transform 0.1s;
 }
 .game-card:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--game-edge); }
 .game-card-icon { font-size: 2.6rem; line-height: 1.1; }
