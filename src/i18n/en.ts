@@ -1,6 +1,7 @@
 const en = {
   appName: 'Library Games',
-  todaysGame: "Today's game",
+  todaysGame: 'Daily challenge',
+  new: 'New',
   allGames: 'All games',
   all: 'All',
   play: 'Play!',

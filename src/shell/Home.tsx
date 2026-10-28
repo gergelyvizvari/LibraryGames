@@ -8,13 +8,23 @@ import { gameColorVars, loadTheme, nextTheme, setTheme, themeIcons } from '../ki
 import { skills, type GameDef, type Skill } from '../kit/types'
 
 const NEW_DAYS = 7
+/** A NEW label on every card means nothing, so only the few most recently added games get one. */
+const MAX_NEW = 3
 
 export function dailyGame(date = new Date()) {
   return makeRng(daySeed(date)).pick(games)
 }
 
-function isNew(g: GameDef, today = new Date()) {
-  return (today.getTime() - new Date(g.meta.added).getTime()) / 86_400_000 < NEW_DAYS
+/** Ids of the games that get a NEW label: added in the last week, newest first (later in the registry wins ties). */
+export function newGameIds(list: GameDef[] = games, today = new Date()) {
+  return new Set(
+    list
+      .map((g, i) => ({ g, i }))
+      .filter(({ g }) => (today.getTime() - new Date(g.meta.added).getTime()) / 86_400_000 < NEW_DAYS)
+      .sort((a, b) => b.g.meta.added.localeCompare(a.g.meta.added) || b.i - a.i)
+      .slice(0, MAX_NEW)
+      .map(({ g }) => g.meta.id),
+  )
 }
 
 export function Home({ onPlay }: { onPlay: (id: string, daily?: boolean) => void }) {
@@ -25,6 +35,7 @@ export function Home({ onPlay }: { onPlay: (id: string, daily?: boolean) => void
   const [theme, setThemeState] = useState(loadTheme)
   const progress = useMemo(loadProgress, [])
   const daily = dailyGame()
+  const fresh = useMemo(() => newGameIds(), [])
   const dailyT = makeGameT(daily.strings, locale)
   const usedSkills = skills.filter((s) => games.some((g) => g.meta.skill === s))
   const shown = filter === 'all' ? games : games.filter((g) => g.meta.skill === filter)
@@ -60,9 +71,13 @@ export function Home({ onPlay }: { onPlay: (id: string, daily?: boolean) => void
       </header>
 
       <button className="daily" style={gameColorVars(daily.meta.color)} onClick={() => onPlay(daily.meta.id, true)}>
-        <span className="daily-label">{t('todaysGame')}</span>
-        <span className="daily-icon">{daily.meta.icon}</span>
+        <span className="daily-label">⭐ {t('todaysGame')}</span>
+        <span className="daily-icon" aria-hidden>
+          {daily.meta.icon}
+          <i className="daily-sparkle">✨</i>
+        </span>
         <span className="daily-title">{dailyT('title')}</span>
+        <span className="daily-play">{t('play')}</span>
       </button>
 
       <h2>{t('allGames')}</h2>
@@ -80,7 +95,7 @@ export function Home({ onPlay }: { onPlay: (id: string, daily?: boolean) => void
           const gt = makeGameT(g.strings, locale)
           return (
             <button key={g.meta.id} className="game-card" style={gameColorVars(g.meta.color)} onClick={() => onPlay(g.meta.id)}>
-              {isNew(g) && <span className="new-tag">NEW</span>}
+              {fresh.has(g.meta.id) && <span className="new-tag">{t('new')}</span>}
               <span className="game-card-icon">{g.meta.icon}</span>
               <span className="game-card-title">{gt('title')}</span>
               <span className="game-card-skill">{t(`skill.${g.meta.skill}`)}</span>
