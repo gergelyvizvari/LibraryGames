@@ -54,3 +54,4 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-10-27 | Capital Match | geography |
 | 2026-10-27 | Rhythm Copy | memory |
 | 2026-10-28 | Feed the Monster | maths |
+| 2026-10-28 | Colour Sort | logic |
