@@ -12,6 +12,17 @@ const strings: GameStrings = {
     loading: 'Unfolding the map…',
     hereItIs: 'Here it is!',
   },
+  hu: {
+    title: 'Vaktérkép',
+    howTo: 'Nincsenek nevek a térképen! Keresd meg a kért országot, és koppints rá. Először a nagy országok jönnek, aztán Európa is.',
+    find: 'Hol van {name}?',
+    thatIs: 'Ez itt: {name}',
+    score: 'Pont',
+    country: 'Ország',
+    combo: 'Kombó',
+    loading: 'Kiterítjük a térképet…',
+    hereItIs: 'Itt van!',
+  },
 }
 
 export default strings

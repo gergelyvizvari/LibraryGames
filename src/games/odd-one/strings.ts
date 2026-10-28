@@ -9,6 +9,14 @@ const strings: GameStrings = {
     found: 'Found',
     time: 'Time',
   },
+  hu: {
+    title: 'Melyik a kakukktojás?',
+    howTo: 'Minden kép egyforma, kivéve egyet! Keresd meg a kakukktojást, és koppints rá, amilyen gyorsan csak tudsz.',
+    find: 'Keresd a kakukktojást!',
+    score: 'Pont',
+    found: 'Megvan',
+    time: 'Idő',
+  },
 }
 
 export default strings

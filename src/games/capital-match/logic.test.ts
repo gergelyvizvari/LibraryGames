@@ -30,4 +30,9 @@ describe('capital match', () => {
       expect(near.length).toBeGreaterThanOrEqual(3)
     })
   })
+  it.each(Object.entries(countries))('has every country and a different capital for each in %s', (_, list) => {
+    expect(list.map((c) => c.iso)).toEqual(countries.en.map((c) => c.iso))
+    expect(new Set(list.map((c) => c.name)).size).toBe(list.length)
+    expect(new Set(list.map((c) => c.capital)).size).toBe(list.length)
+  })
 })

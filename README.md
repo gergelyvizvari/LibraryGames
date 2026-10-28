@@ -20,6 +20,6 @@ npm run build     # output in dist/, deployable as a static site (e.g. Vercel)
 - Installable on a phone (web app manifest).
 - `src/kit`: shared building blocks (game frame, timers, sounds, progress, UI pieces).
 - `src/games/<id>`: one folder per game, listed in `src/games/registry.ts`.
-- `src/i18n`: English today, ready for more languages.
+- `src/i18n`: English and Hungarian (EN/HU button on the home screen), ready for more languages.
 
 See [ADDING_A_GAME.md](ADDING_A_GAME.md) to add a game and [GAME_IDEAS.md](GAME_IDEAS.md) for what's next.

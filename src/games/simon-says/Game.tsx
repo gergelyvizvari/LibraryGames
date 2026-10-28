@@ -78,7 +78,9 @@ export default function SimonSays({ level, seed, t, onFinish }: GameProps) {
   }, [index, ms])
 
   const order = orders[index]
-  const animal = t(animals[order.animal].key)
+  const key = animals[order.animal].key
+  // Some languages change the word after "tap" (Hungarian: kutya → kutyára), so `<animal>.tap` wins when a language has it.
+  const animal = t(`${key}.tap`) === `${key}.tap` ? t(key) : t(`${key}.tap`)
 
   return (
     <div className="game simon-says">

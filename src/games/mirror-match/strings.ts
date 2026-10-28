@@ -9,6 +9,14 @@ const strings: GameStrings = {
     time: 'Time',
     perfect: 'Perfect mirror!',
   },
+  hu: {
+    title: 'Tükörkép',
+    howTo: 'A bal oldalon van egy minta. Csináld meg a jobb oldalon a tükörképét, mintha középen egy tükör állna!',
+    score: 'Pont',
+    patterns: 'Minták',
+    time: 'Idő',
+    perfect: 'Tökéletes tükörkép!',
+  },
 }
 
 export default strings

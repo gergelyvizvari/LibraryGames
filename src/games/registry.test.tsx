@@ -1,6 +1,6 @@
 import { act, render } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { makeGameT } from '../i18n'
+import { LocaleContext, locales, makeGameT } from '../i18n'
 import { skills } from '../kit/types'
 import { games } from './registry'
 
@@ -32,11 +32,14 @@ describe('every game mounts and runs', () => {
   afterEach(() => vi.useRealTimers())
 
   // Level 1 and level 10 both run, so content and rules that only unlock at high levels are covered too.
-  it.each(games.flatMap((g) => [1, 10].map((level) => [g.meta.id, level, g] as const)))('%s renders and survives 5 seconds of play at level %i', (_, level, g) => {
+  // Every language runs too, so each language's word lists and stories are played.
+  it.each(games.flatMap((g) => locales.flatMap((locale) => [1, 10].map((level) => [g.meta.id, locale, level, g] as const))))('%s (%s) renders and survives 5 seconds of play at level %i', (_, locale, level, g) => {
     vi.useFakeTimers()
     const onFinish = vi.fn()
     const { container, unmount } = render(
-      <g.Component level={level} seed={42} t={makeGameT(g.strings, 'en')} onFinish={onFinish} />,
+      <LocaleContext.Provider value={locale}>
+        <g.Component level={level} seed={42} t={makeGameT(g.strings, locale)} onFinish={onFinish} />
+      </LocaleContext.Provider>,
     )
     expect(container.querySelector('.game')).not.toBeNull()
     act(() => {
