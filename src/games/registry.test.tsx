@@ -18,6 +18,14 @@ describe('game registry', () => {
     expect(g.strings.en.title).toBeTruthy()
     expect(g.strings.en.howTo).toBeTruthy()
   })
+
+  it.each(games.map((g) => [g.meta.id, g] as const))('%s has a drawn icon', (_, g) => {
+    expect(g.meta.icon.length).toBeGreaterThan(0)
+    g.meta.icon.forEach(([role, color]) => {
+      expect(['base', 'detail', 'accent', 'shine']).toContain(role)
+      expect(color).toMatch(/^#[0-9a-f]{3,6}$/i)
+    })
+  })
 })
 
 describe('every game mounts and runs', () => {
