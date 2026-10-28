@@ -24,11 +24,12 @@ import mirrorMatch from './mirror-match'
 import capitalMatch from './capital-match'
 import rhythmCopy from './rhythm-copy'
 import feedMonster from './feed-monster'
+import colorSort from './color-sort'
 
 // One line per game. New games go at the end.
 export const games: GameDef[] = [sequenceEcho, lightsOut, wordCatch, stroopClash, numberNinja, flashRead, pairRush, typeDefender,
   shapeSpin, whatNext, oddOne, blindMap, towerStack,
   gridGlow, molePop, anagramRace, simonSays, howMany, sentenceBuilder, letterPop, mazeDash, mirrorMatch, capitalMatch,
-  rhythmCopy, feedMonster]
+  rhythmCopy, feedMonster, colorSort]
 
 export const gameById = (id: string) => games.find((g) => g.meta.id === id)
