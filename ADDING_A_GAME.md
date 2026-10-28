@@ -65,7 +65,12 @@ const game: GameDef = {
 - `random.ts`: `makeRng(seed)` with `int`, `pick`, `shuffle`, `chance`; `clamp`.
 - Shared CSS classes in `src/styles.css`: `.game`, `.prompt`, `.choices`, `.choice-btn`, `.big-btn`.
   Game-specific CSS goes at the end of `styles.css` under a `/* <Game title> */` comment, with a short class prefix.
-  Use `var(--game-color)` for the game's accent.
+  Use `var(--game-color)` for the game's accent, and `var(--game-text)` when the accent colours text.
+- `theme.ts`: light, dark and high contrast themes. Never hard-code page colours: use the theme variables at
+  the top of `styles.css` (`--bg`, `--ink`, `--muted`, `--card`, `--line`, `--good`, `--bad`, `--good-soft`,
+  `--bad-soft`, `--highlight`, `--on-color` for text on coloured buttons, `--press` for button edges).
+  Fixed colours are fine inside a game's own scene (a sky, a pond, game pieces); text on a surface that stays
+  light in every theme uses `--ink-fixed`. Check your game in all three themes with the ☀️ button on the home screen.
 
 ## Translations
 

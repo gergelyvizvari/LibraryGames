@@ -4,6 +4,7 @@ import { makeGameT, useLocale, useT } from '../i18n'
 import { gameProgress, loadProgress } from '../kit/progress'
 import { daySeed, makeRng } from '../kit/random'
 import { sound } from '../kit/sound'
+import { loadTheme, nextTheme, setTheme, themeIcons } from '../kit/theme'
 import { skills, type GameDef, type Skill } from '../kit/types'
 
 const NEW_DAYS = 7
@@ -21,6 +22,7 @@ export function Home({ onPlay }: { onPlay: (id: string, daily?: boolean) => void
   const locale = useLocale()
   const [filter, setFilter] = useState<Skill | 'all'>('all')
   const [muted, setMuted] = useState(sound.isMuted())
+  const [theme, setThemeState] = useState(loadTheme)
   const progress = useMemo(loadProgress, [])
   const daily = dailyGame()
   const dailyT = makeGameT(daily.strings, locale)
@@ -31,16 +33,30 @@ export function Home({ onPlay }: { onPlay: (id: string, daily?: boolean) => void
     <div className="home">
       <header className="home-head">
         <h1>{t('appName')}</h1>
-        <button
-          className="icon-btn"
-          aria-label={t('sound')}
-          onClick={() => {
-            sound.setMuted(!muted)
-            setMuted(!muted)
-          }}
-        >
-          {muted ? '🔇' : '🔊'}
-        </button>
+        <div className="home-tools">
+          <button
+            className="icon-btn"
+            aria-label={t('theme', { name: t(`theme.${theme}`) })}
+            title={t('theme', { name: t(`theme.${theme}`) })}
+            onClick={() => {
+              const next = nextTheme(theme)
+              setTheme(next)
+              setThemeState(next)
+            }}
+          >
+            {themeIcons[theme]}
+          </button>
+          <button
+            className="icon-btn"
+            aria-label={t('sound')}
+            onClick={() => {
+              sound.setMuted(!muted)
+              setMuted(!muted)
+            }}
+          >
+            {muted ? '🔇' : '🔊'}
+          </button>
+        </div>
       </header>
 
       <button className="daily" style={{ background: daily.meta.color }} onClick={() => onPlay(daily.meta.id, true)}>
