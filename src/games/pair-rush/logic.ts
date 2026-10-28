@@ -1,6 +1,16 @@
 import type { Rng } from '../../kit/random'
 
-export const faces = ['🐶', '🐱', '🦊', '🐼', '🐸', '🐵', '🦁', '🐯', '🐷', '🐮', '🐰', '🐨', '🐙', '🦄', '🐝', '🐢', '🦋', '🐳']
+// Every board picks one theme, so each new board looks fresh. Each theme has at least 10 faces (the biggest board).
+export const themes: string[][] = [
+  ['🐶', '🐱', '🦊', '🐼', '🐸', '🐵', '🦁', '🐯', '🐷', '🐮', '🐰', '🐨'],
+  ['🐙', '🐳', '🐬', '🐟', '🐠', '🦀', '🦈', '🐢', '🦞', '🐚', '🦑', '🐡'],
+  ['🍎', '🍌', '🍇', '🍓', '🍊', '🍉', '🍒', '🍍', '🥝', '🍋', '🍑', '🥥'],
+  ['🚗', '🚌', '🚒', '🚓', '🚑', '🚜', '🚲', '🚀', '✈️', '🚁', '⛵', '🚂'],
+  ['⚽', '🏀', '🎾', '🏈', '⚾', '🏐', '🎱', '🏓', '🥊', '⛸️', '🛹', '🎳'],
+  ['🍕', '🍔', '🌭', '🍟', '🌮', '🍩', '🍪', '🎂', '🍦', '🍿', '🥨', '🧁'],
+  ['🦄', '🐉', '🧚', '🧜', '🧞', '👑', '🔮', '🏰', '🧝', '🧙', '🌈', '⭐'],
+  ['🐝', '🦋', '🐞', '🐛', '🐌', '🐜', '🕷️', '🦗', '🦂', '🦟', '🐸', '🦎'],
+]
 
 /** Number of cards per board, smallest first. Each cleared board moves to the next size. */
 export const boardSizes = [4, 6, 8, 12, 16, 20]
@@ -20,6 +30,6 @@ export interface Card {
 }
 
 export function deal(rng: Rng, cards: number): Card[] {
-  const chosen = rng.shuffle(faces).slice(0, cards / 2)
+  const chosen = rng.shuffle(rng.pick(themes)).slice(0, cards / 2)
   return rng.shuffle([...chosen, ...chosen]).map((face, id) => ({ id, face, matched: false }))
 }

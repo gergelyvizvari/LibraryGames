@@ -4,7 +4,7 @@ import { makeRng } from '../../kit/random'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
 import { Hud, Pops } from '../../kit/ui'
-import { animalKeys, animals, judge, makeOrders, windowMs, type Outcome } from './logic'
+import { judge, makeOrders, pickAnimals, windowMs, type Outcome } from './logic'
 
 const messages: Record<Exclude<Outcome, 'right'>, string> = {
   wrongAnimal: 'wrong',
@@ -15,7 +15,8 @@ const messages: Record<Exclude<Outcome, 'right'>, string> = {
 
 export default function SimonSays({ level, seed, t, onFinish }: GameProps) {
   const rng = useRef(makeRng(seed)).current
-  const orders = useRef(makeOrders(rng, level)).current
+  const animals = useRef(pickAnimals(rng, level)).current
+  const orders = useRef(makeOrders(rng, level, animals.length)).current
   const [index, setIndex] = useState(0)
   const [active, setActive] = useState(false)
   const [score, setScore] = useState(0)
@@ -77,7 +78,7 @@ export default function SimonSays({ level, seed, t, onFinish }: GameProps) {
   }, [index, ms])
 
   const order = orders[index]
-  const animal = t(animalKeys[order.animal])
+  const animal = t(animals[order.animal].key)
 
   return (
     <div className="game simon-says">
@@ -95,10 +96,10 @@ export default function SimonSays({ level, seed, t, onFinish }: GameProps) {
           <div style={{ width: `${(active ? progress : 0) * 100}%` }} />
         </div>
       </div>
-      <div className="sim-animals" ref={ref}>
+      <div className={`sim-animals${animals.length > 4 ? ' sim-six' : ''}`} ref={ref}>
         {animals.map((a, i) => (
-          <button key={a} className="sim-animal" onPointerDown={() => resolve(i)} aria-label={t(animalKeys[i])}>
-            {a}
+          <button key={a.key} className="sim-animal" onPointerDown={() => resolve(i)} aria-label={t(a.key)}>
+            {a.emoji}
           </button>
         ))}
       </div>

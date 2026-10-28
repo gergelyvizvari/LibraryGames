@@ -18,3 +18,17 @@ describe('shape spin', () => {
     }
   })
 })
+
+describe('shape spin pool', () => {
+  it('no shape is a turn or flip of another, so there is never a second right answer', () => {
+    shapes.forEach((a, i) =>
+      shapes.forEach((b, j) => {
+        if (i !== j) {
+          expect(sameShape(a, b)).toBe(false)
+          expect(sameShape(a, mirror(b))).toBe(false)
+        }
+      }),
+    )
+  })
+  it('has plenty of shapes', () => expect(shapes.length).toBeGreaterThanOrEqual(15))
+})

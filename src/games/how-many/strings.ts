@@ -3,9 +3,9 @@ import type { GameStrings } from '../../i18n'
 const strings: GameStrings = {
   en: {
     title: 'How Many?',
-    howTo: 'Dots flash up for a moment. No time to count them one by one! Guess how many there were.',
+    howTo: 'Pictures flash up for a moment. No time to count them one by one! Guess how many there were.',
     look: 'Look!',
-    howMany: 'How many dots?',
+    howMany: 'How many were there?',
     score: 'Score',
     round: 'Round',
     exact: 'Exactly!',

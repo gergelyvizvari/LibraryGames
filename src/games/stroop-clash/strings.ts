@@ -10,6 +10,8 @@ const strings: GameStrings = {
     blue: 'BLUE',
     green: 'GREEN',
     yellow: 'YELLOW',
+    purple: 'PURPLE',
+    orange: 'ORANGE',
     score: 'Score',
     combo: 'Combo',
     time: 'Time',

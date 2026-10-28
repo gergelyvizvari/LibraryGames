@@ -71,7 +71,7 @@ export default function LightsOut({ level, seed, t, onFinish }: GameProps) {
     setMessage(`${t('ms', { ms })} · ${t(animalKey(ms))}`)
     if (next.length >= ROUNDS) {
       setState('done')
-      onFinish({ score: score + pts, accuracy: accuracyFor(next) })
+      onFinish({ score: score + pts, accuracy: accuracyFor(next, level) })
     } else {
       setState('result')
     }

@@ -6,13 +6,14 @@ import type { GameProps } from '../../kit/types'
 import { Hud, Pops } from '../../kit/ui'
 import { ROUNDS, countRange, flashMs, makeDots, options, pointsFor } from './logic'
 
-const dotColors = ['#ff6b6b', '#feca57', '#1dd1a1', '#48dbfb', '#a29bfe']
+// Something different to count every round.
+const things = ['🍎', '🐟', '⭐', '🐞', '🎈', '🍓', '🐥', '🌸', '⚽', '🍪', '🐸', '🦋', '🍩', '🐝', '💎', '🧁', '🐠', '🍄', '🌟', '🍒']
 
 export default function HowMany({ level, seed, t, onFinish }: GameProps) {
   const rng = useRef(makeRng(seed)).current
   const makeRound = () => {
     const n = rng.int(...countRange(level))
-    return { n, dots: makeDots(rng, n), options: options(rng, n), color: rng.pick(dotColors) }
+    return { n, dots: makeDots(rng, n), options: options(rng, n), thing: rng.pick(things) }
   }
   const [round, setRound] = useState(makeRound)
   const [index, setIndex] = useState(0)
@@ -71,7 +72,11 @@ export default function HowMany({ level, seed, t, onFinish }: GameProps) {
       <p className="prompt">{phase === 'show' ? t('look') : phase === 'guess' ? t('howMany') : message}</p>
       <div className="hm-board">
         {(phase === 'show' || phase === 'result') &&
-          round.dots.map((d, i) => <span key={`${index}-${i}`} className="hm-dot" style={{ left: `${d.x}%`, top: `${d.y}%`, background: round.color }} />)}
+          round.dots.map((d, i) => (
+            <span key={`${index}-${i}`} className="hm-dot" style={{ left: `${d.x}%`, top: `${d.y}%` }}>
+              {round.thing}
+            </span>
+          ))}
         {phase === 'guess' && <span className="hm-question">?</span>}
         <Pops pops={pops} />
       </div>
