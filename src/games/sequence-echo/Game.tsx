@@ -12,6 +12,9 @@ const pads = [
   { color: '#feca57', note: 1047 },
 ]
 const LIVES = 2
+const TAP_MS = 180
+/** Let the last tapped note ring out before the success chime. */
+const CHEER_DELAY_MS = TAP_MS + 120
 
 export function stepMs(level: number) {
   return clamp(700 - level * 45, 260, 700)
@@ -49,7 +52,7 @@ export default function SequenceEcho({ level, seed, t, onFinish }: GameProps) {
 
   const press = (i: number) => {
     if (mode !== 'input') return
-    flash(i, 180)
+    flash(i, TAP_MS)
     if (i !== sequence[pos]) {
       sound.bad()
       vibrate(60)
@@ -73,13 +76,15 @@ export default function SequenceEcho({ level, seed, t, onFinish }: GameProps) {
     const gained = sequence.length * 10
     setScore((s) => s + gained)
     setLongest(Math.max(longest, sequence.length))
-    sound.good(sequence.length)
-    addPop(`+${gained}`, 50, 45)
     setMode('done')
+    later(() => {
+      sound.good(sequence.length)
+      addPop(`+${gained}`, 50, 45)
+    }, CHEER_DELAY_MS)
     later(() => {
       setSequence((s) => [...s, rng.int(0, 3)])
       setMode('show')
-    }, 500)
+    }, CHEER_DELAY_MS + 500)
   }
 
   return (
