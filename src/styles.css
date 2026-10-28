@@ -145,6 +145,15 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .game-card-skill { font-size: 0.8rem; font-weight: 600; background: rgba(0, 0, 0, 0.12); border-radius: 999px; padding: 0 10px; }
 .game-card-best { font-size: 0.8rem; font-weight: 700; }
 .new-tag { position: absolute; top: 8px; right: 8px; background: #feca57; color: var(--ink-fixed); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; border-radius: 999px; padding: 1px 8px; transform: rotate(6deg); }
+/* A quiet footer for parents: small, muted and well below the games, so kids are not drawn to it. */
+.home-foot { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 40px; padding-top: 16px; border-top: 2px dashed var(--line); }
+.home-foot-label { font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.support-link {
+  display: inline-flex; align-items: center; gap: 6px; background: var(--card); color: var(--muted); font-weight: 600; font-size: 0.9rem; text-decoration: none;
+  padding: 5px 14px; border-radius: 14px; border: 2px solid var(--line); border-bottom-width: 4px; margin-bottom: 4px;
+}
+.support-link:hover { color: var(--ink); }
+.support-link:active { transform: translateY(2px); border-bottom-width: 2px; margin-bottom: 6px; }
 
 /* Game frame */
 .frame { display: flex; flex-direction: column; min-height: calc(100dvh - 40px); }
