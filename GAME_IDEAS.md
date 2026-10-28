@@ -5,7 +5,6 @@ Edit freely: reorder, add, or delete ideas.
 
 ## Up next
 
-- **Feed the Monster** (maths): drag number blocks so the monster eats exactly the number on its belly.
 - **Animal Sounds** (memory): hear a series of animal sounds, tap the animals in the same order.
 - **Rhyme Time** (language): tap the word that rhymes with the picture.
 - **Blind Map: Your Country** (geography): a zoomed blind map of one country (start with Hungary); tap the named city or region.
@@ -54,3 +53,4 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-10-27 | Mirror Match | spatial |
 | 2026-10-27 | Capital Match | geography |
 | 2026-10-27 | Rhythm Copy | memory |
+| 2026-10-28 | Feed the Monster | maths |
