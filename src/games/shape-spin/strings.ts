@@ -10,6 +10,15 @@ const strings: GameStrings = {
     time: 'Time',
     flipped: 'That one is flipped!',
   },
+  hu: {
+    title: 'Forgó formák',
+    howTo: 'Nézd meg a fenti formát. Melyik ugyanaz lent, csak elforgatva? Vigyázz: a tükrözöttek csak becsapnak!',
+    which: 'Melyik ugyanaz a forma, elforgatva?',
+    score: 'Pont',
+    combo: 'Kombó',
+    time: 'Idő',
+    flipped: 'Ez tükrözve van!',
+  },
 }
 
 export default strings

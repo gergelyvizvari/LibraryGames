@@ -8,6 +8,13 @@ const strings: GameStrings = {
     words: 'Words',
     time: 'Time',
   },
+  hu: {
+    title: 'Betűkeverő',
+    howTo: 'Összekeveredtek a betűk! Koppints rájuk jó sorrendben, és rakd ki a képen látható szót.',
+    score: 'Pont',
+    words: 'Szavak',
+    time: 'Idő',
+  },
 }
 
 export default strings

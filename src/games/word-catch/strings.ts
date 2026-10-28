@@ -10,6 +10,15 @@ const strings: GameStrings = {
     great: 'Great!',
     oops: 'Oops!',
   },
+  hu: {
+    title: 'Szófogó',
+    howTo: 'Képek hullanak az égből. Koppints a képhez illő szóra, mielőtt leér!',
+    score: 'Pont',
+    combo: 'Kombó',
+    time: 'Idő',
+    great: 'Szuper!',
+    oops: 'Hoppá!',
+  },
 }
 
 export default strings

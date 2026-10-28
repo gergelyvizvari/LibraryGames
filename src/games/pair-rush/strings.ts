@@ -10,6 +10,15 @@ const strings: GameStrings = {
     board: 'Board',
     cleared: 'Board cleared!',
   },
+  hu: {
+    title: 'Párkereső',
+    howTo: 'Fordíts fel két kártyát, és keresd meg az egyforma állatokat. Ha kiürül a tábla, jön egy nagyobb. Hányat tudsz kiüríteni?',
+    score: 'Pont',
+    combo: 'Kombó',
+    time: 'Idő',
+    board: 'Tábla',
+    cleared: 'Kiürült a tábla!',
+  },
 }
 
 export default strings

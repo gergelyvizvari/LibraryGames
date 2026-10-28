@@ -9,6 +9,14 @@ const strings: GameStrings = {
     time: 'Time',
     bunny: 'Not the bunny!',
   },
+  hu: {
+    title: 'Vakondcsapda',
+    howTo: 'Vakondok bújnak elő a lyukakból. Koppints rájuk gyorsan! Az aranyvakond többet ér. A nyuszit soha ne bántsd!',
+    score: 'Pont',
+    combo: 'Kombó',
+    time: 'Idő',
+    bunny: 'A nyuszit ne!',
+  },
 }
 
 export default strings

@@ -10,6 +10,15 @@ const strings: GameStrings = {
     squares: 'Squares',
     lives: 'Lives',
   },
+  hu: {
+    title: 'Villanó négyzetek',
+    howTo: 'Néhány négyzet egy pillanatra felvillan. Jegyezd meg őket, aztán koppints mindegyikre, amelyik világított!',
+    watch: 'Jegyezd meg a világító négyzeteket…',
+    yourTurn: 'Koppints a négyzetekre, amelyek világítottak!',
+    score: 'Pont',
+    squares: 'Négyzetek',
+    lives: 'Életek',
+  },
 }
 
 export default strings

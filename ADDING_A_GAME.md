@@ -20,7 +20,8 @@ Never punish harshly: a mistake costs a combo or a heart, with a soft sound, nev
 8. **Plenty of content**: a kid should not see the same question twice in a few rounds. Word, story, country or
    picture lists need at least 20 items available at every level (50+ in total is a good start), and higher levels
    should swap in harder items, not only add them. Add a `content.test.ts` that checks the pool size per level and
-   that there are no duplicates.
+   that there are no duplicates, for every language (`describe.each(Object.entries(words))`).
+9. **Every language**: the game ships in English and Hungarian. See "Translations" below.
 
 ## Folder layout
 
@@ -28,7 +29,7 @@ Never punish harshly: a mistake costs a combo or a heart, with a soft sound, nev
 src/games/<id>/
   index.ts      GameDef: meta + strings + Component
   Game.tsx      the round (default export)
-  strings.ts    every piece of text, keyed, under `en`
+  strings.ts    every piece of text, keyed, under `en` and `hu`
   content.ts    word lists, stories, levels (optional, keyed by locale)
   logic.ts      pure rules and scoring (optional but preferred)
   logic.test.ts tests for logic.ts
@@ -52,7 +53,8 @@ const game: GameDef = {
 
 - `level`: 1..10, from the player's history. Scale speed, size, number range, etc.
 - `seed`: use `makeRng(seed)` for every random choice (the daily challenge relies on it).
-- `t(key, vars?)`: translates keys from `strings.ts`. Never hard-code visible text.
+- `t(key, vars?)`: translates keys from `strings.ts` into the player's language. Never hard-code visible text.
+  For language-specific content (`content.ts`), read the language with `useLocale()` and pick `list[locale] ?? list.en`.
 - `onFinish({ score, accuracy })`: call exactly once, then stop timers and ignore input.
   `accuracy >= 0.8` raises the level, `< 0.45` lowers it.
 
@@ -74,16 +76,28 @@ const game: GameDef = {
 
 ## Translations
 
-UI language is English for now, but everything goes through keys so other languages can be added:
-add `xx.ts` next to `src/i18n/en.ts`, register it in `src/i18n/index.ts`, then add an `xx` block to each game's
-`strings.ts` and `content.ts`. Missing keys fall back to English.
+The app speaks English (`en`) and Hungarian (`hu`); kids switch with the EN/HU button on the home screen.
+Every new game must ship both:
+
+- `strings.ts` has an `en` and a `hu` block with the same keys and the same `{placeholders}`. Write natural,
+  child-friendly Hungarian (tegezés: "Koppints…", "Keresd…"), not word-for-word English. `src/i18n/i18n.test.ts`
+  fails if a key is missing.
+- Hungarian grammar changes words: avoid gluing suffixes onto placeholders (`{n}-t`), rephrase instead
+  ("Pontosan ennyit kérek: {n}!"). When a word must be inflected, add a separate key for that form (see
+  `simon-says`: `dog.tap` = "kutyára"). Names that need an article carry it ("az USA", "a Fülöp-szigetek").
+- Word, picture, sentence, story or country content gets its own `hu` list in `content.ts`, written for Hungarian
+  kids, not translated letter for letter. It needs the same amount per level as English (the fun checklist rule 8),
+  and level rules based on word length must still give enough Hungarian words at every level. Accented letters
+  (á, é, ő, ű…) are fine; keep text NFC normalised.
+- A brand-new language: add `xx.ts` next to `src/i18n/en.ts`, register it in `src/i18n/index.ts`, add `lang.xx`
+  to every dictionary, then an `xx` block to every game's `strings.ts` and `content.ts`.
 
 ## Before opening a PR
 
 ```
-npm test          # registry test mounts every game and taps every button
+npm test          # registry test mounts every game in every language and taps every button
 npm run build     # type-check + production build
 ```
 
-Then play it in `npm run dev` on a phone-sized window. If it isn't fun, change it before shipping.
+Then play it in `npm run dev` on a phone-sized window, in English and in Hungarian. If it isn't fun, change it before shipping.
 Finally, move the idea from "Up next" to "Shipped" in `GAME_IDEAS.md`.

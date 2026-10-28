@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { games } from '../games/registry'
-import { makeGameT, useLocale, useT } from '../i18n'
+import { makeGameT, nextLocale, useLocale, useT, type Locale } from '../i18n'
 import { gameProgress, loadProgress } from '../kit/progress'
 import { daySeed, makeRng } from '../kit/random'
 import { sound } from '../kit/sound'
@@ -31,7 +31,7 @@ export function newGameIds(list: GameDef[] = games, today = new Date()) {
   )
 }
 
-export function Home({ onPlay }: { onPlay: (id: string, daily?: boolean) => void }) {
+export function Home({ onPlay, onLocale }: { onPlay: (id: string, daily?: boolean) => void; onLocale: (locale: Locale) => void }) {
   const t = useT()
   const locale = useLocale()
   const [filter, setFilter] = useState<Skill | 'all'>('all')
@@ -54,6 +54,14 @@ export function Home({ onPlay }: { onPlay: (id: string, daily?: boolean) => void
       <header className="home-head">
         <h1>{t('appName')}</h1>
         <div className="home-tools">
+          <button
+            className="icon-btn lang-btn"
+            aria-label={t('language', { name: t(`lang.${locale}`) })}
+            title={t('language', { name: t(`lang.${locale}`) })}
+            onClick={() => onLocale(nextLocale(locale))}
+          >
+            {locale.toUpperCase()}
+          </button>
           <button
             className="icon-btn"
             aria-label={t('theme', { name: t(`theme.${theme}`) })}

@@ -11,6 +11,16 @@ const strings: GameStrings = {
     zap: 'Zap!',
     ouch: 'Ouch!',
   },
+  hu: {
+    title: 'Gépelő védő',
+    howTo: 'Szavak repülnek a várad felé. Gépeld be a szót, és lőd le, mielőtt leér! Három pajzsod van.',
+    score: 'Pont',
+    shields: 'Pajzsok',
+    time: 'Idő',
+    typeHere: 'Ide gépelj…',
+    zap: 'Bumm!',
+    ouch: 'Jaj!',
+  },
 }
 
 export default strings

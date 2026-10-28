@@ -12,6 +12,17 @@ const strings: GameStrings = {
     notQuite: 'Not quite! It was: {answer}',
     next: 'Next story',
   },
+  hu: {
+    title: 'Villámolvasó',
+    howTo: 'Egy rövid történet villan fel, szóról szóra. Olvasd el, aztán válaszolj a kérdésre! Ha jól válaszolsz, gyorsulnak a szavak.',
+    story: 'Történet',
+    speed: 'Szó/perc',
+    score: 'Pont',
+    wpm: '{wpm}',
+    correct: 'Helyes!',
+    notQuite: 'Nem egészen! A jó válasz: {answer}',
+    next: 'Következő történet',
+  },
 }
 
 export default strings
