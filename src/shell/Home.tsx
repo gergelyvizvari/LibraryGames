@@ -85,7 +85,6 @@ export function Home({ onPlay }: { onPlay: (id: string, daily?: boolean) => void
         <span className="daily-play">{t('play')}</span>
       </button>
 
-      <h2>{t('allGames')}</h2>
       <div className="filters">
         {(['all', ...usedSkills] as const).map((s) => (
           <button key={s} className={`chip${filter === s ? ' chip-on' : ''}`} onClick={() => setFilter(s)}>

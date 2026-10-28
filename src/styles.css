@@ -111,7 +111,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .home-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .home-tools { display: flex; gap: 8px; }
 .home-head h1 { font-size: 2.2rem; font-weight: 700; color: var(--accent); }
-.home h2 { margin: 24px 0 10px; font-size: 1.4rem; }
+.home .filters { margin-top: 20px; }
 .daily {
   position: relative; margin-top: 16px; width: 100%; border-radius: var(--radius); padding: 16px 20px 18px; background: var(--game-surface); color: var(--on-color); text-align: left;
   display: grid; grid-template-columns: 1fr auto; grid-template-areas: 'label icon' 'title icon' 'play icon'; align-items: center; row-gap: 4px;
