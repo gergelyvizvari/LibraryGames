@@ -7,6 +7,10 @@ import { sound } from '../kit/sound'
 import { gameColorVars, loadTheme, nextTheme, setTheme, themeIcons } from '../kit/theme'
 import { skills, type GameDef, type Skill } from '../kit/types'
 
+/** Shown in a quiet footer for parents, below the games, never inside a game. */
+export const SUPPORT_URL = 'https://buymeacoffee.com/gergelyvizvari'
+export const AUTHOR = 'Gergely Vizvári'
+
 const NEW_DAYS = 7
 /** A NEW label on every card means nothing, so only the few most recently added games get one. */
 const MAX_NEW = 3
@@ -110,6 +114,14 @@ export function Home({ onPlay }: { onPlay: (id: string, daily?: boolean) => void
           )
         })}
       </div>
+
+      <footer className="home-foot">
+        <span className="home-foot-label">{t('forGrownUps')}</span>
+        <a className="support-link" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer" title={t('supportHint')} aria-label={t('supportHint')}>
+          <span aria-hidden>🍵</span> {t('support')}
+        </a>
+        <span className="home-foot-credit">{t('madeBy', { name: AUTHOR })}</span>
+      </footer>
     </div>
   )
 }
