@@ -76,11 +76,11 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Anything that sets --game-color also gets a readable text version of it and a darker pressable edge.
-   --game-on (set from TS) is white or dark, whichever reads better on the game colour. */
+/* Anything that sets --game-color (from TS, with --game-surface: the colour deepened so white text reads on it)
+   also gets a readable text version of it and a darker pressable edge. */
 .frame, .game-card, .daily {
-  --game-text: color-mix(in srgb, var(--game-color), var(--game-tint) var(--game-tint-amount));
-  --game-edge: color-mix(in srgb, var(--game-color), #000 22%);
+  --game-text: color-mix(in srgb, var(--game-surface), var(--game-tint) var(--game-tint-amount));
+  --game-edge: color-mix(in srgb, var(--game-surface), #000 22%);
 }
 
 * { box-sizing: border-box; }
@@ -97,7 +97,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 
 /* Buttons */
 .big-btn {
-  background: var(--game-color, var(--accent)); color: var(--game-on, var(--on-color)); font-size: 1.5rem; font-weight: 700;
+  background: var(--game-surface, var(--accent)); color: var(--on-color); font-size: 1.5rem; font-weight: 700;
   padding: 14px 44px; border-radius: 18px; box-shadow: 0 5px 0 var(--game-edge, var(--press));
   transition: transform 0.08s;
 }
@@ -113,7 +113,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .home-head h1 { font-size: 2.2rem; font-weight: 700; color: var(--accent); }
 .home h2 { margin: 24px 0 10px; font-size: 1.4rem; }
 .daily {
-  margin-top: 16px; width: 100%; border-radius: var(--radius); padding: 18px 20px; background: var(--game-color); color: var(--game-on, var(--on-color)); text-align: left;
+  margin-top: 16px; width: 100%; border-radius: var(--radius); padding: 18px 20px; background: var(--game-surface); color: var(--on-color); text-align: left;
   display: grid; grid-template-columns: 1fr auto; grid-template-areas: 'label icon' 'title icon';
   box-shadow: 0 6px 0 var(--game-edge); transition: transform 0.1s; margin-bottom: 6px;
 }
@@ -126,7 +126,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .chip-on { background: var(--accent); color: var(--on-color); border-color: color-mix(in srgb, var(--accent), #000 22%); }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px 14px; margin-top: 12px; }
 .game-card {
-  position: relative; background: var(--game-color); color: var(--game-on, var(--on-color)); border-radius: var(--radius); padding: 16px 10px 12px;
+  position: relative; background: var(--game-surface); color: var(--on-color); border-radius: var(--radius); padding: 16px 10px 12px;
   display: flex; flex-direction: column; align-items: center; gap: 4px; box-shadow: 0 5px 0 var(--game-edge); transition: transform 0.1s;
 }
 .game-card:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--game-edge); }
@@ -140,7 +140,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .frame { display: flex; flex-direction: column; min-height: calc(100dvh - 40px); }
 .frame-bar { display: flex; align-items: center; gap: 12px; }
 .frame-title { flex: 1; font-weight: 700; font-size: 1.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.frame-level { background: var(--game-color); color: var(--game-on, var(--on-color)); border-radius: 12px; padding: 2px 12px; box-shadow: 0 3px 0 var(--game-edge); font-weight: 700; font-size: 0.9rem; }
+.frame-level { background: var(--game-surface); color: var(--on-color); border-radius: 12px; padding: 2px 12px; box-shadow: 0 3px 0 var(--game-edge); font-weight: 700; font-size: 0.9rem; }
 .card { position: relative; background: var(--card); border-radius: 26px; padding: 28px 22px; margin-top: 24px; text-align: center; box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; gap: 12px; overflow: hidden; }
 .intro-icon { font-size: 5rem; animation: bob 2s ease-in-out infinite; }
 .intro h1 { font-size: 2.2rem; }
@@ -231,7 +231,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .pr-inner { position: relative; display: block; width: 100%; height: 100%; transition: transform 0.3s; transform-style: preserve-3d; }
 .pr-up .pr-inner { transform: rotateY(180deg); }
 .pr-front, .pr-back { position: absolute; inset: 0; display: grid; place-items: center; border-radius: 16px; backface-visibility: hidden; box-shadow: 0 5px 0 rgba(0, 0, 0, 0.12); }
-.pr-back { background: var(--game-color); color: var(--game-on, var(--on-color)); font-size: 2rem; font-weight: 700; }
+.pr-back { background: var(--game-surface); color: var(--on-color); font-size: 2rem; font-weight: 700; }
 .pr-front { background: var(--card); font-size: clamp(1.8rem, 9vw, 3rem); transform: rotateY(180deg); }
 .pr-matched .pr-front { background: var(--good-soft); animation: pulse 0.3s 2 alternate; }
 
@@ -317,7 +317,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .ar-next { border-color: var(--game-color); }
 .ar-filled { border-style: solid; border-color: var(--good); background: var(--good-soft); animation: zoom 0.15s; }
 .ar-tiles, .sb-tiles { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-.ar-tile { width: 58px; height: 58px; border-radius: 16px; background: var(--game-color); color: var(--game-on, var(--on-color)); font-size: 1.9rem; font-weight: 700; text-transform: uppercase; box-shadow: 0 5px 0 var(--press); }
+.ar-tile { width: 58px; height: 58px; border-radius: 16px; background: var(--game-surface); color: var(--on-color); font-size: 1.9rem; font-weight: 700; text-transform: uppercase; box-shadow: 0 5px 0 var(--press); }
 .ar-used, .sb-used { opacity: 0.2; pointer-events: none; }
 
 /* Simon Says */
@@ -343,7 +343,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .sb-done { background: var(--good-soft); }
 .sb-word { animation: zoom 0.15s; }
 .sb-cursor { width: 3px; height: 1.6rem; background: var(--game-color); animation: pulse 0.5s infinite alternate; }
-.sb-tile { padding: 10px 16px; border-radius: 16px; background: var(--game-color); color: var(--game-on, var(--on-color)); font-size: 1.35rem; font-weight: 700; box-shadow: 0 5px 0 var(--press); }
+.sb-tile { padding: 10px 16px; border-radius: 16px; background: var(--game-surface); color: var(--on-color); font-size: 1.35rem; font-weight: 700; box-shadow: 0 5px 0 var(--press); }
 
 /* Letter Pop */
 .lp-water { position: relative; flex: 1; min-height: 380px; border-radius: 28px; background: linear-gradient(#74b9ff, #0984e3); overflow: hidden; }

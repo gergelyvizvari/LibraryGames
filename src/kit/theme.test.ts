@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { loadTheme, nextTheme, setTheme, textOn, themes, type Theme } from './theme'
+import { games } from '../games/registry'
+import { gameSurface, loadTheme, nextTheme, setTheme, themes, whiteContrast, type Theme } from './theme'
 
 describe('theme', () => {
   beforeEach(() => localStorage.clear())
@@ -28,9 +29,12 @@ describe('theme', () => {
   })
 })
 
-describe('textOn', () => {
-  it('picks dark text on light colours and white on dark ones', () => {
-    expect(textOn('#feca57')).not.toBe('#fff')
-    expect(textOn('#3c6382')).toBe('#fff')
+describe('gameSurface', () => {
+  it('keeps white text readable on every game colour', () => {
+    games.forEach((g) => expect(whiteContrast(gameSurface(g.meta.color))).toBeGreaterThanOrEqual(3.3))
+  })
+
+  it('leaves colours that are already dark enough alone', () => {
+    expect(gameSurface('#5f27cd')).toBe('#5f27cd')
   })
 })
