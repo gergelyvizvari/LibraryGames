@@ -38,7 +38,7 @@ const synth: Record<Animal, () => void> = {
 
 export const preloadVoices = (animals: readonly Animal[]) => animals.forEach((a) => preloadClip(clips[a]))
 
-/** Each animal's call: at most about a second, so it ends before the next one starts. */
+/** Each animal's call: about a second (the cow's moo a little longer), so it ends before the next one starts. */
 export const voices = Object.fromEntries(
   ANIMALS.map((a) => [a, () => playClip(clips[a], 0.6) || synth[a]()]),
 ) as Record<Animal, () => void>
