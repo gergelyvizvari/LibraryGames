@@ -4,15 +4,16 @@ import { ANIMALS, ROUNDS, animalCount, makeSequence, roundPoints, seqLength, sho
 
 describe('animal sounds', () => {
   it('starts small and easy', () => {
-    expect(animalCount(1)).toBe(3)
-    expect(seqLength(1, 0)).toBe(2)
+    expect(animalCount(1)).toBe(6)
+    expect(animalCount(8)).toBe(9)
+    expect(seqLength(1, 0)).toBe(3)
     expect(showLights(1)).toBe(true)
     expect(showLights(8)).toBe(false)
   })
   it('never asks for more animals than exist', () => {
     for (let level = 1; level <= 10; level++) {
       expect(animalCount(level)).toBeLessThanOrEqual(ANIMALS.length)
-      for (let r = 0; r < ROUNDS; r++) expect(seqLength(level, r)).toBeLessThanOrEqual(7)
+      for (let r = 0; r < ROUNDS; r++) expect(seqLength(level, r)).toBeLessThanOrEqual(8)
     }
   })
   it('makes sequences with no triple repeats', () => {

@@ -7,7 +7,7 @@ import { Hearts, Hud, Pops } from '../../kit/ui'
 import { ANIMALS, LIVES, ROUNDS, animalCount, makeSequence, roundPoints, seqLength, showLights, stepMs } from './logic'
 import { preloadVoices, voices } from './voices'
 
-const faces = { cat: '🐱', dog: '🐶', cow: '🐮', duck: '🦆', bird: '🐦', frog: '🐸' }
+const faces = { cat: '🐱', dog: '🐶', cow: '🐮', duck: '🦆', bird: '🐦', frog: '🐸', sheep: '🐑', pig: '🐷', rooster: '🐓', horse: '🐴' }
 
 type Phase = 'listen' | 'input' | 'between' | 'done'
 
@@ -95,7 +95,8 @@ export default function AnimalSounds({ level, seed, t, onFinish }: GameProps) {
       nextRound(score, left)
       return
     }
-    voices[farm[i]]()
+    // A soft tick, not the call again: hearing every sequence twice gets tiring fast.
+    sound.tap()
     setLit(i)
     later(() => setLit((c) => (c === i ? null : c)), 300)
     if (pos + 1 < seq.length) {

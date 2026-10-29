@@ -18,6 +18,10 @@ const strings: GameStrings = {
     duck: 'duck',
     bird: 'bird',
     frog: 'frog',
+    sheep: 'sheep',
+    pig: 'pig',
+    rooster: 'rooster',
+    horse: 'horse',
   },
   hu: {
     title: 'Állathangok',
@@ -36,6 +40,10 @@ const strings: GameStrings = {
     duck: 'kacsa',
     bird: 'madár',
     frog: 'béka',
+    sheep: 'bárány',
+    pig: 'malac',
+    rooster: 'kakas',
+    horse: 'ló',
   },
 }
 

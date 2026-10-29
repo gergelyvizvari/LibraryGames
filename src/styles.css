@@ -473,8 +473,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .as-ear { height: 56px; display: grid; place-items: center; font-size: 1.6rem; font-weight: 800; color: var(--muted); }
 .as-calling { animation: pulse 0.2s infinite alternate; font-size: 2.4rem; }
 .as-farm { position: relative; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: min(100%, 380px); margin: 0 auto; }
-.as-farm-3 { grid-template-columns: repeat(3, 1fr); }
-.as-farm-6 { grid-template-columns: repeat(3, 1fr); }
+.as-farm-6, .as-farm-9 { grid-template-columns: repeat(3, 1fr); }
 .as-animal { aspect-ratio: 1; border-radius: 28px; background: var(--card); border: 3px solid var(--line); box-shadow: 0 6px 0 var(--press); display: grid; place-items: center; transition: transform 0.1s, background 0.1s; }
 .as-animal:disabled { opacity: 1; }
 .as-face { font-size: clamp(2.6rem, 14vw, 4rem); line-height: 1; }
