@@ -98,7 +98,7 @@ export const icon: GameIcon = [
 - `hooks.ts`: `useCountdown(seconds, onEnd, running)`, `useGameLoop(dt => …, running)`, `useTimeouts()`,
   `usePops()`, `useShake()`, `useInterval()`.
 - `ui.tsx`: `<Hud items>`, `<TimerBar>`, `<Pops>`, `<Hearts>`, `<Confetti>`.
-- `sound.ts`: `sound.good(combo)`, `bad`, `pop`, `tap`, `tick`, `win`, `tone(freq, dur)`, `vibrate(ms)`.
+- `sound.ts`: `sound.good(combo)`, `bad`, `pop`, `tap`, `tick`, `win`, `tone(freq, dur)`, `vibrate(ms)`. Real recordings: `preloadClip(url)` + `playClip(url)` (import the file from the game folder; keep clips tiny and list their source and licence in a `sounds/CREDITS.md`).
 - `random.ts`: `makeRng(seed)` with `int`, `pick`, `shuffle`, `chance`; `clamp`.
 - Shared CSS classes in `src/styles.css`: `.game`, `.prompt`, `.choices`, `.choice-btn`, `.big-btn`.
   Game-specific CSS goes at the end of `styles.css` under a `/* <Game title> */` comment, with a short class prefix.

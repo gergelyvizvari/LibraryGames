@@ -5,7 +5,7 @@ import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
 import { Hearts, Hud, Pops } from '../../kit/ui'
 import { ANIMALS, LIVES, ROUNDS, animalCount, makeSequence, roundPoints, seqLength, showLights, stepMs } from './logic'
-import { voices } from './voices'
+import { preloadVoices, voices } from './voices'
 
 const faces = { cat: '🐱', dog: '🐶', cow: '🐮', duck: '🦆', bird: '🐦', frog: '🐸' }
 
@@ -34,6 +34,8 @@ export default function AnimalSounds({ level, seed, t, onFinish }: GameProps) {
   const [pops, addPop] = usePops()
   const [boardRef, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
+
+  useEffect(() => preloadVoices(farm), [])
 
   const call = (i: number, glow: boolean) => {
     voices[farm[i]]()
