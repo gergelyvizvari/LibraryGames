@@ -145,9 +145,9 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
           )
         })}
       </div>
-      {/* The rhythm stays a secret until it is judged: before that only the beats show, so it has to be heard. */}
+      {/* The rhythm shows while the drum plays it, then hides on the player's turn so it has to be remembered. */}
       <div className="rc-bar">
-        {credits
+        {phase === 'count' || phase === 'listen' || phase === 'result'
           ? pattern.cells.map((c, ci) => {
               const from = cellStart
               cellStart += cellBeats[c]
@@ -157,13 +157,13 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
               return (
                 <span
                   key={`${round}-${ci}`}
-                  className={`rc-cell rc-c-${c}${from > 0 && from % BAR === 0 ? ' rc-newbar' : ''}`}
+                  className={`rc-cell rc-c-${c}${current >= from && current < from + cellBeats[c] ? ' rc-now' : ''}${from > 0 && from % BAR === 0 ? ' rc-newbar' : ''}`}
                   style={{ flexGrow: cellBeats[c] }}
                 >
                   {dots === 0 ? (
                     <span className="rc-rest" />
                   ) : (
-                    Array.from({ length: dots }, (_, k) => <span key={k} className={`rc-dot ${credits[first + k] >= 0.5 ? 'rc-good' : 'rc-miss'}`} />)
+                    Array.from({ length: dots }, (_, k) => <span key={k} className={`rc-dot${credits ? (credits[first + k] >= 0.5 ? ' rc-good' : ' rc-miss') : ''}`} />)
                   )}
                 </span>
               )
