@@ -407,11 +407,25 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .cm-wrong { background: var(--bad-soft); border-color: var(--bad); }
 
 /* Rhythm Copy */
-.rc-dots { display: flex; justify-content: center; gap: 10px; }
-.rc-dot { width: 18px; height: 18px; border-radius: 50%; background: var(--line); transition: background 0.1s; }
-.rc-on { background: var(--game-color); }
+.rc-count { flex: none; display: flex; justify-content: center; gap: 14px; }
+.rc-num { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; font-weight: 800; font-size: 1.2rem; color: var(--muted); background: var(--card); box-shadow: 0 3px 0 var(--line); transition: transform 0.08s, background 0.08s; }
+.rc-num-count { color: var(--ink); }
+.rc-num-on { background: var(--game-color); color: var(--on-color); transform: scale(1.15); }
+.rc-bar { flex: none; display: flex; gap: 6px; align-self: center; width: min(92vw, 520px); }
+.rc-cell { flex-basis: 0; min-width: 0; height: 56px; display: flex; align-items: center; justify-content: space-evenly; padding: 0 6px; border-radius: 14px; background: var(--card); box-shadow: 0 3px 0 var(--line); transition: background 0.08s; }
+.rc-newbar { margin-left: 10px; }
+.rc-faded .rc-dot, .rc-faded .rc-rest, .rc-faded::after { opacity: 0.35; }
+.rc-now { background: var(--highlight-strong); transform: translateY(-3px); }
+.rc-dot { width: 22px; height: 22px; flex: none; border-radius: 50%; background: var(--muted); transition: background 0.1s; }
+.rc-c-titi .rc-dot { width: 16px; height: 16px; }
+.rc-c-taa { justify-content: flex-start; padding-left: 14px; }
+.rc-c-taa .rc-dot { box-shadow: 0 0 0 4px var(--card), 0 0 0 7px var(--muted); background: transparent; }
+.rc-c-taa::after { content: ''; flex: 1; height: 6px; margin-left: 12px; border-radius: 999px; background: var(--line); }
+.rc-rest { width: 18px; height: 4px; border-radius: 999px; background: var(--line); }
+.rc-good, .rc-c-taa .rc-good { background: var(--good); }
+.rc-miss, .rc-c-taa .rc-miss { background: var(--bad); }
 .rc-drum { align-self: center; width: min(78vw, 300px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 50% 40%, #fff7e6, #f5d6a0 60%, #e67e22); font-size: 7rem; box-shadow: 0 10px 0 rgba(0, 0, 0, 0.18); transition: transform 0.06s; touch-action: manipulation; }
-.rc-ready { animation: pulse 0.8s infinite alternate; }
+.rc-ready { box-shadow: 0 10px 0 rgba(0, 0, 0, 0.18), 0 0 0 8px var(--game-color); }
 .rc-hit { transform: scale(0.92); box-shadow: 0 4px 0 rgba(0, 0, 0, 0.18); animation: none; }
 
 /* Feed the Monster */

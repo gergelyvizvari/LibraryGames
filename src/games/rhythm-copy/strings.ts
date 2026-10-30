@@ -3,9 +3,11 @@ import type { GameStrings } from '../../i18n'
 const strings: GameStrings = {
   en: {
     title: 'Rhythm Copy',
-    howTo: 'Listen to the drum beat, then tap the drum to play it back. Copy the rhythm: fast and slow beats!',
+    howTo: 'Count along: 1, 2, 3, 4. Listen to the drum and watch the rhythm, then the clicks count you in again. The rhythm hides: tap the drum on the beat to play it back from memory!',
     listen: 'Listen…',
-    yourTurn: 'Your turn! Tap {n} beats',
+    getReady: 'Get ready…',
+    yourTurn: 'Your turn! Tap along',
+    drum: 'Drum',
     score: 'Score',
     beat: 'Beat',
     combo: 'Combo',
@@ -13,13 +15,14 @@ const strings: GameStrings = {
     great: 'Great!',
     good: 'Good!',
     oops: 'Oops! Listen again next time',
-    hits: '{done} / {n}',
   },
   hu: {
     title: 'Ritmusmásoló',
-    howTo: 'Hallgasd meg a dobot, aztán koppints a dobra, és játszd vissza! Másold le a ritmust: gyors és lassú ütések is lesznek!',
+    howTo: 'Számolj velünk: 1, 2, 3, 4. Hallgasd a dobot és nézd a ritmust, aztán a kattogás újra beszámol. A ritmus elbújik: üsd a dobot az ütemre, és játszd vissza fejből!',
     listen: 'Figyelj…',
-    yourTurn: 'Te jössz! Üss ennyit: {n}',
+    getReady: 'Készülj…',
+    yourTurn: 'Te jössz! Üsd együtt!',
+    drum: 'Dob',
     score: 'Pont',
     beat: 'Ütem',
     combo: 'Kombó',
@@ -27,7 +30,6 @@ const strings: GameStrings = {
     great: 'Szuper!',
     good: 'Jó!',
     oops: 'Hoppá! Legközelebb figyelj jobban',
-    hits: '{done} / {n}',
   },
 }
 

@@ -19,9 +19,10 @@ function audio() {
   return ctx
 }
 
+/** Plays one note; returns its oscillator so a scheduled (`delay`) note can be stopped early. */
 export function tone(freq: number, duration = 0.15, type: OscillatorType = 'sine', volume = 0.2, delay = 0) {
   const ac = audio()
-  if (!ac) return
+  if (!ac) return undefined
   const start = ac.currentTime + delay
   const osc = ac.createOscillator()
   const gain = ac.createGain()
@@ -33,6 +34,7 @@ export function tone(freq: number, duration = 0.15, type: OscillatorType = 'sine
   osc.connect(gain).connect(ac.destination)
   osc.start(start)
   osc.stop(start + duration + 0.02)
+  return osc
 }
 
 export const sound = {

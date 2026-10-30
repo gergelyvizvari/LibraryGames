@@ -1,23 +1,33 @@
 import { useEffect, useRef, useState } from 'react'
-import { usePops, useShake, useTimeouts } from '../../kit/hooks'
+import { useLatest, usePops, useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
 import { Hud, Pops } from '../../kit/ui'
-import { ROUNDS, grade, makePattern, rhythmScore } from './logic'
+import { BAR, ROUNDS, beatMs, cellBeats, grade, judge, makePattern, showWhilePlaying } from './logic'
 
-function drum(accent = false) {
-  sound.tone(accent ? 160 : 200, 0.18, 'sine', 0.35)
-  sound.tone(accent ? 90 : 110, 0.25, 'triangle', 0.25)
+/** Pause before the first count-in tick, in ms. */
+const LEAD = 600
+
+/** Plays a drum hit `delay` seconds from now; returns the notes so they can be cut off. */
+function drum(accent = false, delay = 0) {
+  return [sound.tone(accent ? 160 : 200, 0.18, 'sine', 0.35, delay), sound.tone(accent ? 90 : 110, 0.25, 'triangle', 0.25, delay)]
+}
+
+/** The metronome: a soft click on every beat, a brighter one on beat 1. */
+function click(down: boolean, delay: number) {
+  return sound.tone(down ? 1500 : 1100, 0.03, 'square', down ? 0.07 : 0.04, delay)
 }
 
 export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
   const rng = useRef(makeRng(seed)).current
+  const beat = beatMs(level)
   const [round, setRound] = useState(0)
   const [pattern, setPattern] = useState(() => makePattern(rng, level, 0))
-  const [mode, setMode] = useState<'listen' | 'play' | 'result'>('listen')
+  // Beat counter for the whole pass: count-in, the pattern, count-in, the player's turn.
+  const [pos, setPos] = useState(-1)
   const [hit, setHit] = useState(false)
-  const [taps, setTaps] = useState<number[]>([])
+  const [credits, setCredits] = useState<number[] | null>(null)
   const [score, setScore] = useState(0)
   const [combo, setCombo] = useState(0)
   const [total, setTotal] = useState(0)
@@ -25,41 +35,32 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
   const [pops, addPop] = usePops()
   const [ref, shake] = useShake<HTMLButtonElement>()
   const later = useTimeouts()
-  const idle = useRef<number | null>(null)
+  const start = useRef(0)
+  const tapTimes = useRef<number[]>([])
+  const notes = useRef<(OscillatorNode | undefined)[]>([])
+
+  const B = pattern.beats
+  const playFrom = BAR * 2 + B
+  const phase = credits ? 'result' : pos < BAR ? 'count' : pos < BAR + B ? 'listen' : pos < playFrom ? 'ready' : 'play'
 
   const bounce = () => {
     setHit(true)
     later(() => setHit(false), 110)
   }
 
-  // Play the pattern back whenever a round starts.
-  useEffect(() => {
-    if (mode !== 'listen') return
-    pattern.forEach((ms, i) =>
-      later(() => {
-        drum(i === 0)
-        bounce()
-      }, 700 + ms),
-    )
-    later(() => {
-      setTaps([])
-      setMode('play')
-    }, 700 + pattern[pattern.length - 1] + 500)
-  }, [mode, pattern])
-
-  const finishRound = (got: number[]) => {
-    if (idle.current) clearTimeout(idle.current)
-    const s = rhythmScore(pattern, got)
-    const g = grade(s)
+  const finishRound = useLatest(() => {
+    const hits = pattern.hits.map((h) => (playFrom + h) * beat)
+    const j = judge(hits, tapTimes.current, beat, level)
+    const g = grade(j.score)
     const nc = g === 'oops' ? 0 : combo + 1
-    const gained = Math.round(s * pattern.length * 10) + (g === 'perfect' ? 10 + Math.min(nc, 5) * 2 : 0)
+    const gained = Math.round(j.score * pattern.hits.length * 10) + (g === 'perfect' ? 10 + Math.min(nc, 5) * 2 : 0)
     const newScore = score + gained
-    const newTotal = total + s
+    const newTotal = total + j.score
     setScore(newScore)
     setTotal(newTotal)
     setCombo(nc)
+    setCredits(j.credits)
     setMessage(t(g))
-    setMode('result')
     if (g === 'oops') {
       sound.bad()
       shake()
@@ -74,31 +75,52 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
       }
       setRound(round + 1)
       setPattern(makePattern(rng, level, round + 1))
-      setMessage('')
-      setMode('listen')
-    }, 1300)
-  }
+    }, 2200)
+  })
+
+  // Each round is one unbroken pulse, scheduled on the audio clock so it never drifts.
+  useEffect(() => {
+    setPos(-1)
+    setCredits(null)
+    setMessage('')
+    tapTimes.current = []
+    start.current = performance.now() + LEAD
+    const beats = playFrom + B
+    for (let b = 0; b < beats; b++) {
+      notes.current.push(click(b % BAR === 0, (LEAD + b * beat) / 1000))
+      later(() => setPos(b), LEAD + b * beat)
+    }
+    pattern.hits.forEach((h, i) => {
+      notes.current.push(...drum(i === 0, (LEAD + (BAR + h) * beat) / 1000))
+      later(bounce, LEAD + (BAR + h) * beat)
+    })
+    // Half a beat of grace after the bar for a late last tap.
+    later(() => finishRound.current(), LEAD + (beats + 0.5) * beat)
+    // Leaving mid-round must silence the notes already queued up.
+    return () =>
+      notes.current.splice(0).forEach((n) => {
+        try {
+          n?.stop()
+        } catch {
+          // already finished
+        }
+      })
+  }, [pattern])
 
   const tap = () => {
-    if (mode !== 'play') return
-    drum(taps.length === 0)
+    const at = performance.now() - start.current
+    // Taps count from half a beat before the player's bar, so an eager first tap still lands.
+    if (credits || at < (playFrom - 0.5) * beat) return
+    drum(tapTimes.current.length === 0)
     bounce()
     vibrate(15)
-    const now = performance.now()
-    const next = [...taps, now]
-    setTaps(next)
-    if (idle.current) clearTimeout(idle.current)
-    if (next.length >= pattern.length) {
-      finishRound(next)
-      return
-    }
-    // If the player stops tapping, judge what they have.
-    idle.current = window.setTimeout(() => finishRound(next), 2500)
+    tapTimes.current.push(at)
   }
 
-  useEffect(() => () => {
-    if (idle.current) clearTimeout(idle.current)
-  }, [])
+  // Which beat of the pattern is sounding now, to light up its cell.
+  const current = phase === 'listen' ? pos - BAR : phase === 'play' ? pos - playFrom : -1
+  let hitIndex = 0
+  let cellStart = 0
 
   return (
     <div className="game rhythm-copy">
@@ -109,13 +131,52 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
           { label: t('combo'), value: `×${combo}`, highlight: combo >= 3 },
         ]}
       />
-      <p className="prompt">{mode === 'listen' ? t('listen') : mode === 'play' ? t('yourTurn', { n: pattern.length }) : message}</p>
-      <div className="rc-dots">
-        {pattern.map((_, i) => (
-          <span key={`${round}-${i}`} className={`rc-dot${mode !== 'listen' && i < taps.length ? ' rc-on' : ''}`} />
-        ))}
+      <p className="prompt">
+        {phase === 'result' ? message : phase === 'count' || phase === 'listen' ? t('listen') : phase === 'ready' ? t('getReady') : t('yourTurn')}
+      </p>
+      <div className="rc-count" aria-hidden>
+        {Array.from({ length: BAR }, (_, i) => {
+          const counting = phase === 'count' ? pos : phase === 'ready' ? pos - BAR - B : -1
+          const onBeat = phase === 'listen' || phase === 'play' ? (current % BAR) === i : counting === i
+          return (
+            <span key={i} className={`rc-num${onBeat ? ' rc-num-on' : ''}${counting >= 0 ? ' rc-num-count' : ''}`}>
+              {i + 1}
+            </span>
+          )
+        })}
       </div>
-      <button ref={ref} className={`rc-drum${hit ? ' rc-hit' : ''}${mode === 'play' ? ' rc-ready' : ''}`} onPointerDown={tap} aria-label="drum">
+      {/* The rhythm shows while the drum plays it, then hides on the player's turn so it has to be remembered. */}
+      <div className="rc-bar">
+        {phase === 'count' || phase === 'listen' || phase === 'result' || showWhilePlaying(level)
+          ? pattern.cells.map((c, ci) => {
+              const from = cellStart
+              cellStart += cellBeats[c]
+              const dots = c === 'titi' ? 2 : c === 'rest' ? 0 : 1
+              const first = hitIndex
+              hitIndex += dots
+              return (
+                <span
+                  key={`${round}-${ci}`}
+                  className={`rc-cell rc-c-${c}${phase === 'ready' || phase === 'play' ? ' rc-faded' : ''}${current >= from && current < from + cellBeats[c] ? ' rc-now' : ''}${from > 0 && from % BAR === 0 ? ' rc-newbar' : ''}`}
+                  style={{ flexGrow: cellBeats[c] }}
+                >
+                  {dots === 0 ? (
+                    <span className="rc-rest" />
+                  ) : (
+                    Array.from({ length: dots }, (_, k) => <span key={k} className={`rc-dot${credits ? (credits[first + k] >= 0.5 ? ' rc-good' : ' rc-miss') : ''}`} />)
+                  )}
+                </span>
+              )
+            })
+          : Array.from({ length: B }, (_, b) => (
+              <span
+                key={`${round}-${b}`}
+                className={`rc-cell${b === current ? ' rc-now' : ''}${b > 0 && b % BAR === 0 ? ' rc-newbar' : ''}`}
+                style={{ flexGrow: 1 }}
+              />
+            ))}
+      </div>
+      <button ref={ref} className={`rc-drum${hit ? ' rc-hit' : ''}${phase === 'play' ? ' rc-ready' : ''}`} onPointerDown={tap} aria-label={t('drum')}>
         🥁
       </button>
       <Pops pops={pops} />
