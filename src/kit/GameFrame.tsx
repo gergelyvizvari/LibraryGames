@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { makeGameT, useLocale, useT } from '../i18n'
 import { useTimeouts } from './hooks'
+import { Icon } from './icon'
 import { gameProgress, loadProgress, recordRound, stars, type RecordOutcome } from './progress'
 import { randomSeed } from './random'
 import { sound } from './sound'
@@ -64,14 +65,16 @@ export function GameFrame({ game, seed, onHome }: { game: GameDef; seed?: number
           ✕
         </button>
         <span className="frame-title">
-          {game.meta.icon} {gt('title')}
+          <Icon icon={game.meta.icon} className="frame-icon" /> {gt('title')}
         </span>
         <span className="frame-level">{t('level', { level: progress.level })}</span>
       </header>
 
       {phase === 'intro' && (
         <div className="card intro">
-          <div className="intro-icon">{game.meta.icon}</div>
+          <div className="intro-icon">
+            <Icon icon={game.meta.icon} />
+          </div>
           <h1>{gt('title')}</h1>
           <p className="howto">{gt('howTo')}</p>
           <p className="muted">{progress.best > 0 ? t('best', { score: progress.best }) : t('noBestYet')}</p>

@@ -16,6 +16,20 @@ const strings: GameStrings = {
     good: 'Good!',
     oops: 'Oops! Listen again next time',
   },
+  hu: {
+    title: 'Ritmusmásoló',
+    howTo: 'Hallgasd meg a dobot, aztán koppints a dobra, és játszd vissza! Másold le a ritmust: gyors és lassú ütések is lesznek!',
+    listen: 'Figyelj…',
+    yourTurn: 'Te jössz! Üss ennyit: {n}',
+    score: 'Pont',
+    beat: 'Ütem',
+    combo: 'Kombó',
+    perfect: 'Tökéletes ritmus!',
+    great: 'Szuper!',
+    good: 'Jó!',
+    oops: 'Hoppá! Legközelebb figyelj jobban',
+    hits: '{done} / {n}',
+  },
 }
 
 export default strings

@@ -14,6 +14,19 @@ const strings: GameStrings = {
     smart: 'Smart! Fewest blocks!',
     stuck: 'Hmm, a fresh monster!',
   },
+  hu: {
+    title: 'Etesd a szörnyet!',
+    howTo: 'A szörny pontosan annyit akar enni, amennyi a hasán áll. Koppints a számkockákra, amíg jóllakik. Ha túl sokat adsz, kiköpi! Minél kevesebb kockából adod ki, annál több a bónusz.',
+    score: 'Pont',
+    fed: 'Jóllakott',
+    time: 'Idő',
+    feed: 'Pontosan ennyit kérek: {n}!',
+    more: 'Még {n}!',
+    tooMuch: 'Ez túl sok! Csak {n} kell',
+    yum: 'Nyami!',
+    smart: 'Ügyes! A legkevesebb kocka!',
+    stuck: 'Hmm, jöjjön egy új szörny!',
+  },
 }
 
 export default strings

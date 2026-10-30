@@ -8,6 +8,13 @@ const strings: GameStrings = {
     sentences: 'Sentences',
     time: 'Time',
   },
+  hu: {
+    title: 'Mondatépítő',
+    howTo: 'Nézd meg a képet! Koppints a szavakra jó sorrendben, és rakd össze a mondatot!',
+    score: 'Pont',
+    sentences: 'Mondatok',
+    time: 'Idő',
+  },
 }
 
 export default strings
