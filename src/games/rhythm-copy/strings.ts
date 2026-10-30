@@ -18,9 +18,11 @@ const strings: GameStrings = {
   },
   hu: {
     title: 'Ritmusmásoló',
-    howTo: 'Hallgasd meg a dobot, aztán koppints a dobra, és játszd vissza! Másold le a ritmust: gyors és lassú ütések is lesznek!',
+    howTo: 'Számolj velünk: 1, 2, 3, 4. Hallgasd meg a dobot, aztán a kattogás újra beszámol. Üsd a dobot az ütemre, és játszd vissza a ritmust!',
     listen: 'Figyelj…',
-    yourTurn: 'Te jössz! Üss ennyit: {n}',
+    getReady: 'Készülj…',
+    yourTurn: 'Te jössz! Üsd együtt!',
+    drum: 'Dob',
     score: 'Pont',
     beat: 'Ütem',
     combo: 'Kombó',
@@ -28,7 +30,6 @@ const strings: GameStrings = {
     great: 'Szuper!',
     good: 'Jó!',
     oops: 'Hoppá! Legközelebb figyelj jobban',
-    hits: '{done} / {n}',
   },
 }
 
