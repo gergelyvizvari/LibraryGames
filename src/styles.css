@@ -1,3 +1,13 @@
+/* Fredoka has no ő or ű; these four letters are built from Fredoka's own glyphs (scripts/build-fredoka-hu.py). */
+@font-face {
+  font-family: 'Fredoka HU';
+  src: url('/fonts/fredoka-hu.woff2') format('woff2');
+  font-weight: 300 700;
+  font-stretch: 75% 125%;
+  font-display: swap;
+  unicode-range: U+0150-0151, U+0170-0171;
+}
+
 :root, [data-theme='light'] {
   color-scheme: light;
   --bg: #ffffff;
@@ -71,7 +81,7 @@
   --radius: 22px;
   /* Chunky toy look: every surface has a thin outline and a thicker bottom edge, like a pressable button. */
   --shadow: 0 0 0 2px var(--line), 0 5px 0 var(--line);
-  font-family: 'Fredoka', 'Baloo 2', ui-rounded, system-ui, sans-serif;
+  font-family: 'Fredoka', 'Fredoka HU', ui-rounded, system-ui, sans-serif;
   color: var(--ink);
   -webkit-tap-highlight-color: transparent;
 }
