@@ -27,7 +27,6 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
   // Beat counter for the whole pass: count-in, the pattern, count-in, the player's turn.
   const [pos, setPos] = useState(-1)
   const [hit, setHit] = useState(false)
-  const [taps, setTaps] = useState(0)
   const [credits, setCredits] = useState<number[] | null>(null)
   const [score, setScore] = useState(0)
   const [combo, setCombo] = useState(0)
@@ -76,13 +75,12 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
       }
       setRound(round + 1)
       setPattern(makePattern(rng, level, round + 1))
-    }, 1600)
+    }, 2200)
   })
 
   // Each round is one unbroken pulse, scheduled on the audio clock so it never drifts.
   useEffect(() => {
     setPos(-1)
-    setTaps(0)
     setCredits(null)
     setMessage('')
     tapTimes.current = []
@@ -117,7 +115,6 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
     bounce()
     vibrate(15)
     tapTimes.current.push(at)
-    setTaps(tapTimes.current.length)
   }
 
   // Which beat of the pattern is sounding now, to light up its cell.
@@ -148,28 +145,36 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
           )
         })}
       </div>
+      {/* The rhythm stays a secret until it is judged: before that only the beats show, so it has to be heard. */}
       <div className="rc-bar">
-        {pattern.cells.map((c, ci) => {
-          const from = cellStart
-          cellStart += cellBeats[c]
-          const dots = c === 'titi' ? 2 : c === 'rest' ? 0 : 1
-          const first = hitIndex
-          hitIndex += dots
-          const dot = (k: number) => {
-            const i = first + k
-            const state = credits ? (credits[i] >= 0.5 ? ' rc-good' : ' rc-miss') : phase === 'play' && i < taps ? ' rc-on' : ''
-            return <span key={k} className={`rc-dot${state}`} />
-          }
-          return (
-            <span
-              key={`${round}-${ci}`}
-              className={`rc-cell rc-c-${c}${current >= from && current < from + cellBeats[c] ? ' rc-now' : ''}${from > 0 && from % BAR === 0 ? ' rc-newbar' : ''}`}
-              style={{ flexGrow: cellBeats[c] }}
-            >
-              {dots === 0 ? <span className="rc-rest" /> : Array.from({ length: dots }, (_, k) => dot(k))}
-            </span>
-          )
-        })}
+        {credits
+          ? pattern.cells.map((c, ci) => {
+              const from = cellStart
+              cellStart += cellBeats[c]
+              const dots = c === 'titi' ? 2 : c === 'rest' ? 0 : 1
+              const first = hitIndex
+              hitIndex += dots
+              return (
+                <span
+                  key={`${round}-${ci}`}
+                  className={`rc-cell rc-c-${c}${from > 0 && from % BAR === 0 ? ' rc-newbar' : ''}`}
+                  style={{ flexGrow: cellBeats[c] }}
+                >
+                  {dots === 0 ? (
+                    <span className="rc-rest" />
+                  ) : (
+                    Array.from({ length: dots }, (_, k) => <span key={k} className={`rc-dot ${credits[first + k] >= 0.5 ? 'rc-good' : 'rc-miss'}`} />)
+                  )}
+                </span>
+              )
+            })
+          : Array.from({ length: B }, (_, b) => (
+              <span
+                key={`${round}-${b}`}
+                className={`rc-cell${b === current ? ' rc-now' : ''}${b > 0 && b % BAR === 0 ? ' rc-newbar' : ''}`}
+                style={{ flexGrow: 1 }}
+              />
+            ))}
       </div>
       <button ref={ref} className={`rc-drum${hit ? ' rc-hit' : ''}${phase === 'play' ? ' rc-ready' : ''}`} onPointerDown={tap} aria-label={t('drum')}>
         🥁

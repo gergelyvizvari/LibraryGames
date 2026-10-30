@@ -421,8 +421,6 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .rc-c-taa .rc-dot { box-shadow: 0 0 0 4px var(--card), 0 0 0 7px var(--muted); background: transparent; }
 .rc-c-taa::after { content: ''; flex: 1; height: 6px; margin-left: 12px; border-radius: 999px; background: var(--line); }
 .rc-rest { width: 18px; height: 4px; border-radius: 999px; background: var(--line); }
-.rc-on { background: var(--game-color); }
-.rc-c-taa .rc-on { background: var(--game-color); }
 .rc-good, .rc-c-taa .rc-good { background: var(--good); }
 .rc-miss, .rc-c-taa .rc-miss { background: var(--bad); }
 .rc-drum { align-self: center; width: min(78vw, 300px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 50% 40%, #fff7e6, #f5d6a0 60%, #e67e22); font-size: 7rem; box-shadow: 0 10px 0 rgba(0, 0, 0, 0.18); transition: transform 0.06s; touch-action: manipulation; }
