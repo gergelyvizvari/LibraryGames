@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { makeRng } from '../../kit/random'
-import { BAR, cellBeats, grade, hitTimes, judge, makePattern } from './logic'
+import { BAR, cellBeats, cellsFor, grade, hitTimes, judge, makePattern } from './logic'
 
 describe('rhythm copy', () => {
   it('makes patterns that fill whole 4/4 bars and start on beat 1', () => {
@@ -18,18 +18,21 @@ describe('rhythm copy', () => {
       }
     }
   })
-  it('keeps half notes off the middle of the bar and rests out of the easiest levels', () => {
+  it('keeps little ones to ta and ti-ti, adds rests from level 3 and ta-a only at the top', () => {
     const rng = makeRng(8)
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 400; i++) {
       const level = 1 + (i % 10)
       const p = makePattern(rng, level, i % 8)
       let at = 0
       for (const c of p.cells) {
         if (c === 'taa') expect(at % 2).toBe(0)
-        if (level < 3) expect(c).not.toBe('rest')
+        if (level < 3) expect(['ta', 'titi']).toContain(c)
+        if (level < 8) expect(c).not.toBe('taa')
         at += cellBeats[c]
       }
+      expect(p.cells[p.cells.length - 1]).not.toBe('rest')
     }
+    expect(cellsFor(8)).toContain('taa')
   })
   it('turns cells into hit times', () => {
     expect(hitTimes(['ta', 'titi', 'rest', 'ta'])).toEqual([0, 1, 1.5, 3])
@@ -37,26 +40,27 @@ describe('rhythm copy', () => {
   })
 
   const beat = 500
-  const hits = [0, 500, 750, 1500].map((h) => h + 4000)
-  it('scores taps on the beat as perfect, and forgives a steady lag', () => {
-    expect(judge(hits, hits, beat).score).toBe(1)
-    expect(judge(hits, hits.map((h) => h + 90), beat).score).toBe(1)
+  const hits = [0, 1, 1.5, 3]
+  const at = (start: number, ms: number) => hits.map((h) => start + h * ms)
+  it('scores an even copy as perfect, whenever it starts and a little off the drum tempo', () => {
+    expect(judge(hits, at(12345, beat), beat).score).toBe(1)
+    expect(judge(hits, at(0, beat * 1.15), beat).score).toBe(1)
+    expect(judge(hits, at(0, beat * 0.88), beat).score).toBe(1)
   })
-  it('scores taps that drift off the pulse lower', () => {
-    // Same count, but the gaps wander: the old gap-only scoring would have passed parts of this.
-    const drift = [4000, 4650, 4950, 5250]
-    expect(judge(hits, drift, beat).score).toBeLessThan(0.7)
+  it('scores taps that break the pulse lower', () => {
+    // Right count, but the second hit is rushed and the ti comes far too late.
+    expect(judge(hits, [0, 300, 950, 1500], beat).score).toBeLessThan(0.7)
   })
   it('gives partial credit for a missed hit and charges for extra taps', () => {
-    const missOne = judge(hits, [hits[0], hits[1], hits[3]], beat)
+    const missOne = judge(hits, [0, 500, 1500], beat)
     expect(missOne.score).toBeCloseTo(0.75)
     expect(missOne.credits).toEqual([1, 1, 0, 1])
-    expect(judge(hits, [...hits, 6000, 6200], beat).score).toBeCloseTo(4 / 6)
+    expect(judge(hits, [...at(0, beat), 2000, 2200], beat).score).toBeCloseTo(4 / 6)
     expect(judge(hits, [], beat).score).toBe(0)
   })
   it('is roomier with timing on easy levels than on hard ones', () => {
     // One tap a fifth of a beat early, the rest on time.
-    const taps = [hits[0], hits[1] - 100, hits[2], hits[3]]
+    const taps = [0, 400, 750, 1500]
     expect(judge(hits, taps, beat, 1).score).toBe(1)
     expect(judge(hits, taps, beat, 10).score).toBeLessThan(1)
   })
