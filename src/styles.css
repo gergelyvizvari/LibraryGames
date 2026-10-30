@@ -414,6 +414,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .rc-bar { flex: none; display: flex; gap: 6px; align-self: center; width: min(92vw, 520px); }
 .rc-cell { flex-basis: 0; min-width: 0; height: 56px; display: flex; align-items: center; justify-content: space-evenly; padding: 0 6px; border-radius: 14px; background: var(--card); box-shadow: 0 3px 0 var(--line); transition: background 0.08s; }
 .rc-newbar { margin-left: 10px; }
+.rc-faded .rc-dot, .rc-faded .rc-rest, .rc-faded::after { opacity: 0.35; }
 .rc-now { background: var(--highlight-strong); transform: translateY(-3px); }
 .rc-dot { width: 22px; height: 22px; flex: none; border-radius: 50%; background: var(--muted); transition: background 0.1s; }
 .rc-c-titi .rc-dot { width: 16px; height: 16px; }

@@ -4,7 +4,7 @@ import { makeRng } from '../../kit/random'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
 import { Hud, Pops } from '../../kit/ui'
-import { BAR, ROUNDS, beatMs, cellBeats, grade, judge, makePattern } from './logic'
+import { BAR, ROUNDS, beatMs, cellBeats, grade, judge, makePattern, showWhilePlaying } from './logic'
 
 /** Pause before the first count-in tick, in ms. */
 const LEAD = 600
@@ -50,7 +50,7 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
 
   const finishRound = useLatest(() => {
     const hits = pattern.hits.map((h) => (playFrom + h) * beat)
-    const j = judge(hits, tapTimes.current, beat)
+    const j = judge(hits, tapTimes.current, beat, level)
     const g = grade(j.score)
     const nc = g === 'oops' ? 0 : combo + 1
     const gained = Math.round(j.score * pattern.hits.length * 10) + (g === 'perfect' ? 10 + Math.min(nc, 5) * 2 : 0)
@@ -147,7 +147,7 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
       </div>
       {/* The rhythm shows while the drum plays it, then hides on the player's turn so it has to be remembered. */}
       <div className="rc-bar">
-        {phase === 'count' || phase === 'listen' || phase === 'result'
+        {phase === 'count' || phase === 'listen' || phase === 'result' || showWhilePlaying(level)
           ? pattern.cells.map((c, ci) => {
               const from = cellStart
               cellStart += cellBeats[c]
@@ -157,7 +157,7 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
               return (
                 <span
                   key={`${round}-${ci}`}
-                  className={`rc-cell rc-c-${c}${current >= from && current < from + cellBeats[c] ? ' rc-now' : ''}${from > 0 && from % BAR === 0 ? ' rc-newbar' : ''}`}
+                  className={`rc-cell rc-c-${c}${phase === 'ready' || phase === 'play' ? ' rc-faded' : ''}${current >= from && current < from + cellBeats[c] ? ' rc-now' : ''}${from > 0 && from % BAR === 0 ? ' rc-newbar' : ''}`}
                   style={{ flexGrow: cellBeats[c] }}
                 >
                   {dots === 0 ? (

@@ -54,6 +54,12 @@ describe('rhythm copy', () => {
     expect(judge(hits, [...hits, 6000, 6200], beat).score).toBeCloseTo(4 / 6)
     expect(judge(hits, [], beat).score).toBe(0)
   })
+  it('is roomier with timing on easy levels than on hard ones', () => {
+    // One tap a fifth of a beat early, the rest on time.
+    const taps = [hits[0], hits[1] - 100, hits[2], hits[3]]
+    expect(judge(hits, taps, beat, 1).score).toBe(1)
+    expect(judge(hits, taps, beat, 10).score).toBeLessThan(1)
+  })
   it('grades scores', () => {
     expect(grade(1)).toBe('perfect')
     expect(grade(0.1)).toBe('oops')

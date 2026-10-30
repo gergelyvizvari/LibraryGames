@@ -20,10 +20,21 @@ export interface Pattern {
   hits: number[]
 }
 
-/** Milliseconds per beat: 100 bpm at level 1, about 130 bpm at level 10. */
+/** Milliseconds per beat: 90 bpm at level 1, about 130 bpm at level 10. */
 export function beatMs(level: number) {
-  return clamp(620 - level * 17, 450, 600)
+  return clamp(690 - level * 23, 460, 667)
 }
+
+/**
+ * How far off the beat a tap may land, as a share of a beat: full credit within `spot`,
+ * nothing from `spot + 0.25`. Roomy for beginners, tighter as the level rises.
+ */
+export function tolerance(level: number) {
+  return clamp(0.26 - level * 0.014, 0.12, 0.25)
+}
+
+/** On the easiest levels the rhythm stays on screen (faded) while the player copies it. */
+export const showWhilePlaying = (level: number) => level <= 3
 
 export function barsFor(level: number, round: number) {
   return level >= 5 || (level >= 3 && round >= ROUNDS / 2) ? 2 : 1
@@ -77,7 +88,8 @@ const median = (xs: number[]) => {
  * `hits` and `taps` are in ms on the same clock. A steady lag (slow screens, Bluetooth speakers)
  * is forgiven, so what counts is keeping the pulse, not reaction time.
  */
-export function judge(hits: number[], taps: number[], beat: number) {
+export function judge(hits: number[], taps: number[], beat: number, level = 5) {
+  const spot = tolerance(level)
   if (taps.length === 0) return { score: 0, credits: hits.map(() => 0) }
   const nearest = (t: number) => hits.reduce((best, h) => (Math.abs(t - h) < Math.abs(t - best) ? h : best))
   const lag = clamp(median(taps.map((t) => t - nearest(t))), -beat / 4, beat / 4)
@@ -89,8 +101,8 @@ export function judge(hits: number[], taps: number[], beat: number) {
     })
     if (pick < 0) return 0
     const off = Math.abs(taps[pick] - lag - h) / beat
-    // Within 15% of a beat is spot on; 35% off or worse is a miss (and leaves the tap free for another hit).
-    const credit = clamp(1 - (off - 0.15) / 0.2, 0, 1)
+    // A miss leaves the tap free for another hit.
+    const credit = clamp(1 - (off - spot) / 0.25, 0, 1)
     if (credit > 0) used.add(pick)
     return credit
   })
