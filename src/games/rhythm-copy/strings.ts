@@ -3,10 +3,9 @@ import type { GameStrings } from '../../i18n'
 const strings: GameStrings = {
   en: {
     title: 'Rhythm Copy',
-    howTo: 'Count along: 1, 2, 3, 4. Listen to the drum and watch the rhythm, then the clicks count you in again. The rhythm hides: tap the drum on the beat to play it back from memory!',
+    howTo: 'Listen to the drum and watch the rhythm. Then it hides: tap the drum to play the same rhythm back, nice and even!',
     listen: 'Listen…',
-    getReady: 'Get ready…',
-    yourTurn: 'Your turn! Tap along',
+    yourTurn: 'Your turn! Play it back',
     drum: 'Drum',
     score: 'Score',
     beat: 'Beat',
@@ -18,10 +17,9 @@ const strings: GameStrings = {
   },
   hu: {
     title: 'Ritmusmásoló',
-    howTo: 'Számolj velünk: 1, 2, 3, 4. Hallgasd a dobot és nézd a ritmust, aztán a kattogás újra beszámol. A ritmus elbújik: üsd a dobot az ütemre, és játszd vissza fejből!',
+    howTo: 'Hallgasd a dobot és nézd a ritmust! Utána elbújik: koppints a dobra, és játszd vissza ugyanazt a ritmust, szép egyenletesen!',
     listen: 'Figyelj…',
-    getReady: 'Készülj…',
-    yourTurn: 'Te jössz! Üsd együtt!',
+    yourTurn: 'Te jössz! Játszd vissza!',
     drum: 'Dob',
     score: 'Pont',
     beat: 'Ütem',

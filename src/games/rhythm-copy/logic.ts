@@ -1,7 +1,7 @@
 import { clamp, type Rng } from '../../kit/random'
 
 export const ROUNDS = 8
-/** Beats in a bar (4/4) and in the count-in before each pass. */
+/** Beats in a bar (4/4). */
 export const BAR = 4
 
 /**
@@ -14,7 +14,7 @@ export const cellBeats: Record<Cell, number> = { ta: 1, titi: 1, taa: 2, rest: 1
 
 export interface Pattern {
   cells: Cell[]
-  /** Length in beats: always whole bars, so the pulse never breaks. */
+  /** Length in beats: always whole bars, so the rhythm carries a steady pulse inside it. */
   beats: number
   /** When each drum hit falls, in beats from the start of the pattern. */
   hits: number[]
@@ -51,9 +51,16 @@ export function hitTimes(cells: Cell[]) {
   return hits
 }
 
-function makeBar(rng: Rng, level: number, first: boolean): Cell[] {
-  // Rests come in from level 3; ti-ti gets more common as the level rises.
-  const pool: Cell[] = level < 3 ? ['ta', 'ta', 'titi', 'taa'] : level < 6 ? ['ta', 'titi', 'taa', 'rest'] : ['ta', 'titi', 'titi', 'taa', 'rest']
+/**
+ * Which cells a level may use. Little ones only get ta and ti-ti; rests (szün) come in from level 3.
+ * Music teachers find ta-a hard even for 8-year-olds, so it waits for the top levels.
+ */
+export function cellsFor(level: number): Cell[] {
+  return level < 3 ? ['ta', 'ta', 'titi'] : level < 8 ? ['ta', 'titi', 'titi', 'rest'] : ['ta', 'titi', 'titi', 'taa', 'rest']
+}
+
+function makeBar(rng: Rng, level: number, first: boolean, last: boolean): Cell[] {
+  const pool = cellsFor(level)
   for (;;) {
     const cells: Cell[] = []
     let beat = 0
@@ -61,8 +68,8 @@ function makeBar(rng: Rng, level: number, first: boolean): Cell[] {
       const c = rng.pick(pool)
       // A half note sits on beat 1 or 3, never across the middle of the bar.
       if (c === 'taa' && beat % 2 !== 0) continue
-      // The pattern starts on beat 1 and two rests in a row lose the thread.
-      if (c === 'rest' && ((first && beat === 0) || cells[cells.length - 1] === 'rest')) continue
+      // Start on beat 1, never two rests in a row, and no rest at the very end: with no click, nobody can hear it.
+      if (c === 'rest' && ((first && beat === 0) || (last && beat === BAR - 1) || cells[cells.length - 1] === 'rest')) continue
       cells.push(c)
       beat += cellBeats[c]
     }
@@ -74,39 +81,44 @@ function makeBar(rng: Rng, level: number, first: boolean): Cell[] {
 export function makePattern(rng: Rng, level: number, round: number): Pattern {
   const bars = barsFor(level, round)
   const cells: Cell[] = []
-  for (let b = 0; b < bars; b++) cells.push(...makeBar(rng, level, b === 0))
+  for (let b = 0; b < bars; b++) cells.push(...makeBar(rng, level, b === 0, b === bars - 1))
   return { cells, beats: bars * BAR, hits: hitTimes(cells) }
 }
 
-const median = (xs: number[]) => {
-  const s = [...xs].sort((a, b) => a - b)
-  return s.length % 2 ? s[(s.length - 1) / 2] : (s[s.length / 2 - 1] + s[s.length / 2]) / 2
-}
-
 /**
- * How well the taps land on the pattern's beats, 0..1, plus a credit per hit.
- * `hits` and `taps` are in ms on the same clock. A steady lag (slow screens, Bluetooth speakers)
- * is forgiven, so what counts is keeping the pulse, not reaction time.
+ * How well the taps copy the rhythm, 0..1, plus a credit per hit.
+ * `hits` are in beats (the first is always 0), `taps` in ms. There is no click to play along to,
+ * so the first tap sets where the rhythm starts, and a steady tempo a little slower or faster
+ * than the drum's is fine: what counts is that the taps keep one even pulse.
+ * (The first hit is always on beat 1, so the first tap is the anchor.)
  */
 export function judge(hits: number[], taps: number[], beat: number, level = 5) {
-  const spot = tolerance(level)
   if (taps.length === 0) return { score: 0, credits: hits.map(() => 0) }
-  const nearest = (t: number) => hits.reduce((best, h) => (Math.abs(t - h) < Math.abs(t - best) ? h : best))
-  const lag = clamp(median(taps.map((t) => t - nearest(t))), -beat / 4, beat / 4)
+  // Try every tempo from 20% slower to 25% faster than the drum and keep the kindest reading.
+  let best = { score: -1, credits: [] as number[] }
+  for (let f = 0.8; f <= 1.25; f += 0.01) {
+    const r = judgeAt(hits, taps, beat * f, tolerance(level))
+    if (r.score > best.score) best = r
+  }
+  return best
+}
+
+function judgeAt(hits: number[], taps: number[], own: number, spot: number) {
   const used = new Set<number>()
   const credits = hits.map((h) => {
+    const want = taps[0] + h * own
     let pick = -1
     taps.forEach((t, i) => {
-      if (!used.has(i) && (pick < 0 || Math.abs(t - lag - h) < Math.abs(taps[pick] - lag - h))) pick = i
+      if (!used.has(i) && (pick < 0 || Math.abs(t - want) < Math.abs(taps[pick] - want))) pick = i
     })
     if (pick < 0) return 0
-    const off = Math.abs(taps[pick] - lag - h) / beat
+    const off = Math.abs(taps[pick] - want) / own
     // A miss leaves the tap free for another hit.
     const credit = clamp(1 - (off - spot) / 0.25, 0, 1)
     if (credit > 0) used.add(pick)
     return credit
   })
-  // Banging away at every beat must not beat listening, so taps beyond the pattern cost points.
+  // Banging away must not beat listening, so taps beyond the pattern cost points.
   const extra = Math.max(0, taps.length - hits.length)
   return { score: credits.reduce((a, b) => a + b, 0) / (hits.length + extra), credits }
 }
