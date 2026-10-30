@@ -6,7 +6,6 @@ Edit freely: reorder, add, or delete ideas.
 ## Up next
 
 - **Animal Sounds** (memory): hear a series of animal sounds, tap the animals in the same order.
-- **Rhyme Time** (language): tap the word that rhymes with the picture.
 - **Blind Map: Your Country** (geography): a zoomed blind map of one country (start with Hungary); tap the named city or region.
 - **Clock Catch** (maths): match analogue clocks to times.
 - **Busy Bees** (focus): track one bee among moving bees, then tap it when they stop.
@@ -55,3 +54,4 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-10-27 | Rhythm Copy | memory |
 | 2026-10-28 | Feed the Monster | maths |
 | 2026-10-28 | Colour Sort | logic |
+| 2026-10-30 | Rhyme Time | language |
