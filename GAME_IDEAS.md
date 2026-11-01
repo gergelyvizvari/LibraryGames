@@ -6,7 +6,6 @@ Edit freely: reorder, add, or delete ideas.
 ## Up next
 
 - **Animal Sounds** (memory): hear a series of animal sounds, tap the animals in the same order.
-- **Clock Catch** (maths): match analogue clocks to times.
 - **Busy Bees** (focus): track one bee among moving bees, then tap it when they stop.
 - **Continent Sort** (geography): animals and landmarks pop up; drag each to the continent it belongs to on a blind world map.
 - **River & Mountain Hunt** (geography): a blind map of one continent; tap where the named river, mountain range or sea is.
@@ -55,3 +54,4 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-10-28 | Colour Sort | logic |
 | 2026-10-30 | Rhyme Time | language |
 | 2026-10-31 | Hungary Map Hunt | geography |
+| 2026-11-01 | Clock Catch | maths |
