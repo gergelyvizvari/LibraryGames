@@ -100,6 +100,8 @@ export const icon: GameIcon = [
 - `ui.tsx`: `<Hud items>`, `<TimerBar>`, `<Pops>`, `<Hearts>`, `<Confetti>`.
 - `sound.ts`: `sound.good(combo)`, `bad`, `pop`, `tap`, `tick`, `win`, `tone(freq, dur)`, `vibrate(ms)`.
 - `random.ts`: `makeRng(seed)` with `int`, `pick`, `shuffle`, `chance`; `clamp`.
+- `MapHuntGame.tsx` + `mapHunt.ts`: a whole "find the place on a blind map" round. A map game only supplies its map,
+  places, projection and km bands (see `country-map` and `uk-map`).
 - Shared CSS classes in `src/styles.css`: `.game`, `.prompt`, `.choices`, `.choice-btn`, `.big-btn`.
   Game-specific CSS goes at the end of `styles.css` under a `/* <Game title> */` comment, with a short class prefix.
   Use `var(--game-color)` for the game's accent, and `var(--game-text)` when the accent colours text.

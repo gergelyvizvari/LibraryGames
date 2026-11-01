@@ -1,10 +1,9 @@
-import { geoDistance, geoMercator } from 'd3-geo'
-import { clamp, type Rng } from '../../kit/random'
-import type { Place } from './content'
+import { geoMercator } from 'd3-geo'
+import { dotChoices as spreadDots, pointsForKm as scoreKm, type KmBands, type MapPlace } from '../../kit/mapHunt'
+import type { Rng } from '../../kit/random'
 import { SCALE, TRANSLATE } from './outline'
 
-export const ROUNDS = 10
-const EARTH_KM = 6371
+export { ROUNDS, dotCount, kmBetween, pickRound, placesFor, showDots } from '../../kit/mapHunt'
 
 export const projection = geoMercator().scale(SCALE).translate(TRANSLATE)
 
@@ -12,36 +11,15 @@ export function toMap(at: [number, number]): [number, number] {
   return projection(at) ?? [0, 0]
 }
 
-/** Up to level 3 the towns show as dots and you pick one; after that the map is blind. */
-export const showDots = (level: number) => level <= 3
-/** How many dots are on the map when they are shown. */
-export const dotCount = (level: number) => clamp(4 + level * 2, 6, 10)
-
-export const placesFor = (places: Place[], level: number) => places.filter((p) => p.minLevel <= level)
-
-/** Ten different places for one round. */
-export function pickRound(rng: Rng, places: Place[], level: number) {
-  return rng.shuffle([...placesFor(places, level)]).slice(0, ROUNDS)
+export function fromMap(xy: [number, number]): [number, number] | null {
+  return (projection.invert?.(xy) as [number, number] | null | undefined) ?? null
 }
 
-/** The asked place plus other towns as dot choices, nearest-first spread so dots don't overlap. */
-export function dotChoices(rng: Rng, places: Place[], target: Place, count: number) {
-  const chosen = [target]
-  for (const p of rng.shuffle(places.filter((q) => q !== target))) {
-    if (chosen.length >= count) break
-    if (chosen.every((c) => kmBetween(c.at, p.at) > 30)) chosen.push(p)
-  }
-  return chosen
-}
+/** Towns closer than this are never both dots. */
+export const DOT_GAP_KM = 30
+export const BANDS: KmBands = [20, 45, 80]
 
-export function kmBetween(a: [number, number], b: [number, number]) {
-  return geoDistance(a, b) * EARTH_KM
-}
+export const dotChoices = <P extends MapPlace>(rng: Rng, places: P[], target: P, count: number) =>
+  spreadDots(rng, places, target, count, DOT_GAP_KM)
 
-/** Points for a blind tap, by how far off it was. */
-export function pointsForKm(km: number) {
-  if (km <= 20) return 30
-  if (km <= 45) return 20
-  if (km <= 80) return 10
-  return 0
-}
+export const pointsForKm = (km: number) => scoreKm(km, BANDS)

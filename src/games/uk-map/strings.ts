@@ -1,0 +1,38 @@
+import type { GameStrings } from '../../i18n'
+
+const strings: GameStrings = {
+  en: {
+    title: 'UK Map Hunt',
+    howTo: 'A place name pops up. Find it on the map of the UK and tap it! The lines split England, Scotland, Wales and Northern Ireland.',
+    score: 'Score',
+    round: 'Place',
+    where: 'Where is {place}?',
+    spotOn: 'Spot on!',
+    close: 'Close!',
+    near: 'Nearly there!',
+    miss: 'It was here!',
+    off: '{km} km off',
+    england: 'England',
+    scotland: 'Scotland',
+    wales: 'Wales',
+    northernIreland: 'Northern Ireland',
+  },
+  hu: {
+    title: 'Brit vaktérkép',
+    howTo: 'Felbukkan egy hely neve. Keresd meg az Egyesült Királyság térképén, és koppints rá! A vonalak választják el Angliát, Skóciát, Walest és Észak-Írországot.',
+    score: 'Pont',
+    round: 'Hely',
+    where: 'Hol van {place}?',
+    spotOn: 'Telitalálat!',
+    close: 'Közel jártál!',
+    near: 'Majdnem!',
+    miss: 'Itt van!',
+    off: 'Eltérés: {km} km',
+    england: 'Anglia',
+    scotland: 'Skócia',
+    wales: 'Wales',
+    northernIreland: 'Észak-Írország',
+  },
+}
+
+export default strings
