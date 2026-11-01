@@ -27,12 +27,13 @@ import feedMonster from './feed-monster'
 import animalSounds from './animal-sounds'
 import colorSort from './color-sort'
 import rhymeTime from './rhyme-time'
+import countryMap from './country-map'
 import clockCatch from './clock-catch'
 
 // One line per game. New games go at the end.
 export const games: GameDef[] = [sequenceEcho, lightsOut, wordCatch, stroopClash, numberNinja, flashRead, pairRush, typeDefender,
   shapeSpin, whatNext, oddOne, blindMap, towerStack,
   gridGlow, molePop, anagramRace, simonSays, howMany, sentenceBuilder, letterPop, mazeDash, mirrorMatch, capitalMatch,
-  rhythmCopy, feedMonster, colorSort, animalSounds, rhymeTime, clockCatch]
+  rhythmCopy, feedMonster, colorSort, animalSounds, rhymeTime, clockCatch, countryMap]
 
 export const gameById = (id: string) => games.find((g) => g.meta.id === id)
