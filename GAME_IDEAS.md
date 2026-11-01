@@ -55,3 +55,4 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-10-30 | Rhyme Time | language |
 | 2026-10-31 | Hungary Map Hunt | geography |
 | 2026-11-01 | Clock Catch | maths |
+| 2026-11-01 | UK Map Hunt | geography |
