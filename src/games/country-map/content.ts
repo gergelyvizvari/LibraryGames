@@ -1,11 +1,8 @@
 import type { Locale } from '../../i18n'
+import type { MapPlace } from '../../kit/mapHunt'
 
-/** A place on the map. `minLevel` keeps small towns for older kids. Coordinates are [longitude, latitude]. */
-export interface Place {
-  name: string
-  at: [number, number]
-  minLevel: number
-}
+/** A town on the map. `minLevel` keeps small towns for older kids. Coordinates are [longitude, latitude]. */
+export type Place = MapPlace
 
 const p = (name: string, lon: number, lat: number, minLevel = 1): Place => ({ name, at: [lon, lat], minLevel })
 
