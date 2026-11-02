@@ -541,3 +541,17 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .cc-time-btn:active, .cc-clock-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--press); }
 .cc-right { background: var(--good-soft); border-color: var(--good); animation: wobble 0.4s; }
 .cc-wrong { background: var(--bad-soft); border-color: var(--bad); opacity: 0.55; }
+
+/* Busy Bees */
+.bb-yes { color: var(--good); }
+.bb-meadow { position: relative; width: min(100%, 360px); aspect-ratio: 1; margin: 0 auto; border-radius: 24px; background: radial-gradient(circle at 30% 20%, #c8f7c5, #7bd389 70%, #5cb85c); box-shadow: var(--shadow); overflow: hidden; touch-action: none; }
+.bb-flower { position: absolute; transform: translate(-50%, -50%); font-size: 26px; opacity: 0.85; pointer-events: none; }
+.bb-bee { position: absolute; width: 64px; height: 64px; transform: translate(-50%, -50%); padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.bb-face { display: block; width: 100%; height: 100%; transition: transform 0.15s; }
+.bb-bee-svg { width: 100%; height: 100%; display: block; }
+.bb-flying .bb-bee-svg { animation: bbBuzz 0.18s infinite alternate; }
+.bb-picking .bb-bee { animation: bob 1.2s infinite; }
+.bb-target { background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 30%, rgba(254, 202, 87, 0.9) 55%, transparent 72%); animation: pulse 0.35s infinite alternate !important; }
+.bb-found { background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 35%, rgba(29, 209, 161, 0.85) 60%, transparent 74%); animation: wobble 0.5s !important; }
+.bb-wrong { opacity: 0.45; filter: grayscale(0.8); }
+@keyframes bbBuzz { to { transform: translateY(-2px) rotate(3deg); } }
