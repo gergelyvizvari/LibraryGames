@@ -119,7 +119,16 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .home-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .home-tools { display: flex; gap: 8px; }
 .lang-btn { font-size: 1rem; font-weight: 800; color: var(--ink); letter-spacing: 0.04em; }
-.home-head h1 { font-size: 2.2rem; font-weight: 700; color: var(--accent); }
+.home-head h1 { font-size: 2.2rem; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 10px; line-height: 1.05; }
+.home-logo { width: 1.35em; height: 1.35em; flex: none; }
+.tea-btn { display: grid; place-items: center; text-decoration: none; }
+/* Phones: a smaller title and buttons so the logo, title and four buttons share one row; the narrowest phones wrap the buttons below. */
+@media (max-width: 480px) {
+  .home-head { flex-wrap: wrap; row-gap: 8px; }
+  .home-head h1 { font-size: 1.7rem; gap: 8px; flex: 1 1 0; }
+  .home-tools { gap: 6px; margin-left: auto; }
+  .home-tools .icon-btn { width: 40px; height: 40px; border-radius: 12px; font-size: 1.05rem; }
+}
 .home .filters { margin-top: 20px; }
 .daily {
   position: relative; margin-top: 16px; width: 100%; border-radius: 20px; padding: 10px 14px; background: var(--game-surface); color: var(--on-color); text-align: left;
