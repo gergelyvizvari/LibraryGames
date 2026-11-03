@@ -3,7 +3,7 @@ export const AUTHOR = 'Gergely Vizvári'
 export const CONTACT_EMAIL = 'vizvari.gergely@gmail.com'
 export const SUPPORT_URL = 'https://buymeacoffee.com/gergelyvizvari'
 export const PORTFOLIO_URL = 'https://www.gregsolutions.dev/'
-export const FACEBOOK_URL = 'https://www.facebook.com/profile.php?id=61596019178967'
+export const FACEBOOK_URL = 'https://www.facebook.com/librarygameshu'
 /** Bump when the privacy text changes in a way that matters. */
 export const PRIVACY_UPDATED = '2026-11-03'
 
