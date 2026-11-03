@@ -71,7 +71,7 @@
   --radius: 22px;
   /* Chunky toy look: every surface has a thin outline and a thicker bottom edge, like a pressable button. */
   --shadow: 0 0 0 2px var(--line), 0 5px 0 var(--line);
-  font-family: 'Fredoka', 'Baloo 2', ui-rounded, system-ui, sans-serif;
+  font-family: 'Fredoka Variable', 'Baloo 2 Variable', ui-rounded, system-ui, sans-serif;
   color: var(--ink);
   -webkit-tap-highlight-color: transparent;
 }
@@ -165,6 +165,22 @@ h1, h2 { margin: 0; line-height: 1.1; }
 }
 .support-link:hover { color: var(--ink); }
 .support-link:active { transform: translateY(2px); border-bottom-width: 2px; margin-bottom: 6px; }
+
+.home-foot-credit a { color: inherit; }
+.home-foot-credit a:hover { color: var(--ink); }
+
+/* Privacy & contact page (for parents) */
+.privacy { max-width: 680px; margin: 0 auto; line-height: 1.55; }
+.privacy .frame-title { margin: 0; }
+.privacy h2 { font-size: 1.05rem; margin: 22px 0 4px; }
+.privacy p { margin: 0; color: var(--muted); }
+.privacy a { color: inherit; font-weight: 600; }
+.privacy-intro { margin-top: 18px !important; font-size: 1.05rem; color: var(--ink) !important; }
+.privacy-contact { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 6px 0 0; color: var(--muted); }
+.privacy-contact dt { font-weight: 700; color: var(--ink); }
+.privacy-contact dd { margin: 0; overflow-wrap: anywhere; }
+.privacy-updated { margin: 28px 0 12px !important; font-size: 0.8rem; }
+@media (max-width: 480px) { .privacy-contact { grid-template-columns: 1fr; } .privacy-contact dd { margin-bottom: 6px; } }
 
 /* Game frame */
 .frame { display: flex; flex-direction: column; min-height: calc(100dvh - 40px); }

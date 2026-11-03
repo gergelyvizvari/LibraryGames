@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { applyTheme, loadTheme } from './kit/theme'
 import { App } from './shell/App'
+import './fonts.css'
 import './styles.css'
 
 // Before the first render, so the page never flashes the wrong theme.
