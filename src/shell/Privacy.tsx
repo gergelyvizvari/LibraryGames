@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useLocale, useT, type AppKey } from '../i18n'
-import { AUTHOR, CONTACT_EMAIL, portfolioUrl, PRIVACY_UPDATED, FACEBOOK_URL } from './contact'
+import { AUTHOR, CONTACT_EMAIL, portfolioUrl, PRIVACY_UPDATED, facebookUrl } from './contact'
 
 const sections = ['device', 'stats', 'hosting', 'links', 'rights'] as const
 
@@ -47,7 +47,7 @@ export function Privacy({ onHome }: { onHome: () => void }) {
           </dd>
           <dt>Facebook</dt>
           <dd>
-            <a href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer">
+            <a href={facebookUrl(locale)} target="_blank" rel="noopener noreferrer">
               Library Games
             </a>
           </dd>
