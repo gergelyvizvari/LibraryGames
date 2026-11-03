@@ -6,7 +6,6 @@ Edit freely: reorder, add, or delete ideas.
 ## Up next
 
 - **Animal Sounds** (memory): hear a series of animal sounds, tap the animals in the same order.
-- **Continent Sort** (geography): animals and landmarks pop up; drag each to the continent it belongs to on a blind world map.
 - **River & Mountain Hunt** (geography): a blind map of one continent; tap where the named river, mountain range or sea is.
 - **Flag Friends** (memory): match country flags to their names, grouped by continent.
 - **Opposites** (language): match word pairs like hot/cold, big/small.
@@ -56,3 +55,4 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-11-01 | Clock Catch | maths |
 | 2026-11-01 | UK Map Hunt | geography |
 | 2026-11-02 | Busy Bees | focus |
+| 2026-11-03 | Continent Sort | geography |
