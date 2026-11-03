@@ -7,10 +7,8 @@ import { daySeed, makeRng } from '../kit/random'
 import { sound } from '../kit/sound'
 import { gameColorVars, loadTheme, nextTheme, setTheme, themeIcons } from '../kit/theme'
 import { skills, type GameDef, type Skill } from '../kit/types'
+import { AUTHOR, portfolioUrl, SUPPORT_URL } from './contact'
 
-/** Shown in a quiet footer for parents, below the games, never inside a game. */
-export const SUPPORT_URL = 'https://buymeacoffee.com/gergelyvizvari'
-export const AUTHOR = 'Gergely Vizvári'
 
 const NEW_DAYS = 7
 /** A NEW label on every card means nothing, so only the few most recently added games get one. */
@@ -48,6 +46,8 @@ export function Home({ onPlay, onLocale }: { onPlay: (id: string, daily?: boolea
   }
   const shown = (filter === 'all' ? games : games.filter((g) => g.meta.skill === filter)).slice().sort((a, b) => rank(a) - rank(b))
   const dailyT = makeGameT(daily.strings, locale)
+  // The author's name is a link, so split the sentence around it (word order differs between languages).
+  const madeBy = t('madeBy', { name: '\u0000' }).split('\u0000')
   const usedSkills = skills.filter((s) => games.some((g) => g.meta.skill === s))
 
   return (
@@ -131,7 +131,15 @@ export function Home({ onPlay, onLocale }: { onPlay: (id: string, daily?: boolea
         <a className="support-link" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer" title={t('supportHint')} aria-label={t('supportHint')}>
           <span aria-hidden>🍵</span> {t('support')}
         </a>
-        <span className="home-foot-credit">{t('madeBy', { name: AUTHOR })}</span>
+        <span className="home-foot-credit">
+          {madeBy[0]}
+          <a href={portfolioUrl(locale)} target="_blank" rel="noopener noreferrer">
+            {AUTHOR}
+          </a>
+          {madeBy[1]}
+          {' · '}
+          <a href="#/privacy">{t('privacyLink')}</a>
+        </span>
       </footer>
     </div>
   )
