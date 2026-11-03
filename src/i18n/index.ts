@@ -15,7 +15,22 @@ export type GameStrings = { en: Dict } & Partial<Record<Locale, Dict>>
 
 const LOCALE_KEY = 'lg.locale'
 
+/** A `?lang=hu` link (e.g. from the Hungarian Facebook page) picks the language and remembers it. */
+function urlLocale(): Locale | null {
+  try {
+    const lang = new URLSearchParams(window.location.search).get('lang')
+    return lang && lang in dictionaries ? (lang as Locale) : null
+  } catch {
+    return null
+  }
+}
+
 export function detectLocale(): Locale {
+  const fromUrl = urlLocale()
+  if (fromUrl) {
+    saveLocale(fromUrl)
+    return fromUrl
+  }
   try {
     const saved = localStorage.getItem(LOCALE_KEY)
     if (saved && saved in dictionaries) return saved as Locale
