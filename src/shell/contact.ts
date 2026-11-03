@@ -6,7 +6,7 @@ export const PORTFOLIO_URL = 'https://www.gregsolutions.dev/'
 /** One Facebook page per language; any other language gets the English page. */
 export const FACEBOOK_URLS: Record<string, string> = {
   en: 'https://www.facebook.com/librarygamesapp',
-  hu: 'https://www.facebook.com/librarygameshu',
+  hu: 'https://www.facebook.com/librarygamesapphu',
 }
 /** Bump when the privacy text changes in a way that matters. */
 export const PRIVACY_UPDATED = '2026-11-03'
