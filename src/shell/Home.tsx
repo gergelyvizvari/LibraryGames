@@ -7,7 +7,7 @@ import { daySeed, makeRng } from '../kit/random'
 import { sound } from '../kit/sound'
 import { gameColorVars, loadTheme, nextTheme, setTheme, themeIcons } from '../kit/theme'
 import { skills, type GameDef, type Skill } from '../kit/types'
-import { AUTHOR, FACEBOOK_URL, portfolioUrl, SUPPORT_URL } from './contact'
+import { AUTHOR, facebookUrl, portfolioUrl, SUPPORT_URL } from './contact'
 import { logoIcon } from './logo'
 
 
@@ -146,7 +146,7 @@ export function Home({ onPlay, onLocale }: { onPlay: (id: string, daily?: boolea
           </a>
           {madeBy[1]}
           {' · '}
-          <a href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer">
+          <a href={facebookUrl(locale)} target="_blank" rel="noopener noreferrer">
             Facebook
           </a>
           {' · '}
