@@ -8,6 +8,7 @@ import { sound } from '../kit/sound'
 import { gameColorVars, loadTheme, nextTheme, setTheme, themeIcons } from '../kit/theme'
 import { skills, type GameDef, type Skill } from '../kit/types'
 import { AUTHOR, portfolioUrl, SUPPORT_URL } from './contact'
+import { logoIcon } from './logo'
 
 
 const NEW_DAYS = 7
@@ -53,7 +54,10 @@ export function Home({ onPlay, onLocale }: { onPlay: (id: string, daily?: boolea
   return (
     <div className="home">
       <header className="home-head">
-        <h1>{t('appName')}</h1>
+        <h1>
+          <Icon icon={logoIcon} className="home-logo" />
+          {t('appName')}
+        </h1>
         <div className="home-tools">
           <button
             className="icon-btn lang-btn"
@@ -63,6 +67,10 @@ export function Home({ onPlay, onLocale }: { onPlay: (id: string, daily?: boolea
           >
             {locale.toUpperCase()}
           </button>
+          {/* The same support link as in the footer, as a small tea button up here where grown-ups notice it. */}
+          <a className="icon-btn tea-btn" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer" title={t('supportHint')} aria-label={t('supportHint')}>
+            <span aria-hidden>🍵</span>
+          </a>
           <button
             className="icon-btn"
             aria-label={t('theme', { name: t(`theme.${theme}`) })}
