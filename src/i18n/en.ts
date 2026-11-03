@@ -57,7 +57,7 @@ const en = {
   'privacy.hosting.h': 'Hosting',
   'privacy.hosting.p': 'The site is hosted by Vercel Inc. Like any web server, it receives technical data such as your IP address and browser type in order to deliver the pages. Fonts and all other files are served from this site, not from third parties.',
   'privacy.links.h': 'Links to other sites',
-  'privacy.links.p': 'The “Buy me a tea” link opens Buy Me a Coffee in a new tab. That site has its own privacy policy.',
+  'privacy.links.p': 'The “Buy me a tea” link opens Buy Me a Coffee in a new tab. The Facebook link opens our Facebook page. Each of these sites has its own privacy policy.',
   'privacy.rights.h': 'Your rights',
   'privacy.rights.p': 'Under the GDPR you can ask what data is processed about you, and ask for it to be corrected or deleted, or object to its processing. Write to the email address below. You can also lodge a complaint with the Hungarian data protection authority (NAIH, naih.hu).',
   'privacy.contact.h': 'Contact',

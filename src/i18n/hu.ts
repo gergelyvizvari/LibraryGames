@@ -59,7 +59,7 @@ const hu: Record<keyof typeof en, string> = {
   'privacy.hosting.h': 'Tárhely',
   'privacy.hosting.p': 'Az oldal tárhelyét a Vercel Inc. biztosítja. Mint minden webszerver, az oldalak kiszolgálásához megkapja a szükséges technikai adatokat, például az IP-címet és a böngésző típusát. A betűtípusokat és minden más fájlt maga az oldal szolgál ki, nem külső szolgáltató.',
   'privacy.links.h': 'Külső hivatkozások',
-  'privacy.links.p': 'A „Hívj meg egy teára” gomb új lapon nyitja meg a Buy Me a Coffee oldalát. Arra az oldalra a saját adatvédelmi szabályai vonatkoznak.',
+  'privacy.links.p': 'A „Hívj meg egy teára” gomb új lapon nyitja meg a Buy Me a Coffee oldalát. A Facebook-link a Facebook-oldalunkat nyitja meg. Ezekre az oldalakra a saját adatvédelmi szabályaik vonatkoznak.',
   'privacy.rights.h': 'A jogaid',
   'privacy.rights.p': 'A GDPR alapján tájékoztatást kérhetsz a rólad kezelt adatokról, kérheted a helyesbítésüket vagy törlésüket, és tiltakozhatsz a kezelésük ellen. Ehhez írj az alábbi e-mail címre. Panasszal fordulhatsz a Nemzeti Adatvédelmi és Információszabadság Hatósághoz is (NAIH, naih.hu).',
   'privacy.contact.h': 'Kapcsolat és impresszum',
