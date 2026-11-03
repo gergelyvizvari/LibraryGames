@@ -476,7 +476,8 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .fm-pips { font-size: 1.1rem; letter-spacing: 1px; max-width: 60px; word-break: break-all; line-height: 1; }
 
 /* Colour Sort */
-.cs-message { text-align: center; font-size: 1.25rem; font-weight: 700; min-height: 1.6rem; margin: 4px 0; color: var(--muted); }
+/* Two lines are always reserved, so a longer hint never pushes the tubes down mid-move. */
+.cs-message { display: flex; align-items: center; justify-content: center; text-align: center; text-wrap: balance; font-size: 1.25rem; line-height: 1.25; font-weight: 700; min-height: 2.5em; margin: 4px 0; color: var(--muted); }
 .cs-rack { position: relative; display: grid; justify-content: center; gap: 22px 12px; padding: 18px 0 8px; animation: zoom 0.3s; }
 .cs-tube {
   width: 100%; min-width: 48px; display: flex; flex-direction: column-reverse; gap: 3px; padding: 6px;
