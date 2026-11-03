@@ -568,3 +568,24 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .bb-found { background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 35%, rgba(29, 209, 161, 0.85) 60%, transparent 74%); animation: wobble 0.5s !important; }
 .bb-wrong { opacity: 0.45; filter: grayscale(0.8); }
 @keyframes bbBuzz { to { transform: translateY(-2px) rotate(3deg); } }
+
+/* Continent Sort */
+.cs2-card { display: flex; align-items: center; justify-content: center; gap: 12px; align-self: center; min-width: 70%; padding: 10px 18px; border: 3px solid var(--line); border-bottom-width: 6px; border-radius: 22px; background: var(--card); color: var(--ink); cursor: grab; touch-action: none; user-select: none; animation: zoom 0.3s; }
+.cs2-card-lifted { opacity: 0.4; }
+.cs2-card-done { opacity: 0.5; }
+.cs2-emoji { font-size: 2.6rem; line-height: 1; }
+.cs2-name { font-size: 1.15rem; font-weight: 800; }
+.cs2-hint { text-align: center; margin: 0; min-height: 1.6rem; font-weight: 700; color: var(--muted); }
+.cs2-yes { color: var(--good); }
+.cs2-sea { position: relative; background: #a8dcf0; border-radius: 24px; overflow: hidden; box-shadow: var(--shadow); }
+.cs2-svg { display: block; width: 100%; height: auto; touch-action: none; }
+.cs2-land path { stroke: #2d3142; stroke-opacity: 0.22; stroke-width: 1; transition: fill 0.2s; }
+.cs2-land { cursor: pointer; transition: filter 0.2s; }
+.cs2-found { fill: var(--good) !important; }
+.cs2-reveal { animation: cs2Blink 0.35s 4 alternate; }
+.cs2-wrong { fill: #576574 !important; }
+.cs2-label { font-size: 26px; font-weight: 800; fill: #2d3142; text-anchor: middle; paint-order: stroke; stroke: #fff; stroke-width: 6px; stroke-linejoin: round; pointer-events: none; }
+.cs2-sticker { font-size: 50px; text-anchor: middle; pointer-events: none; animation: zoom 0.35s; }
+.cs2-ghost { position: fixed; z-index: 50; transform: translate(-50%, -70%); font-size: 3.4rem; pointer-events: none; filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.3)); }
+.cs2-loading { padding: 80px 0; text-align: center; font-weight: 700; color: #2d6a85; }
+@keyframes cs2Blink { to { fill: #feca57; filter: brightness(1.15); } }
