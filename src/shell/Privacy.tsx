@@ -10,7 +10,10 @@ export function Privacy({ onHome }: { onHome: () => void }) {
   const locale = useLocale()
   const date = new Date(PRIVACY_UPDATED).toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' })
 
-  useEffect(() => window.scrollTo(0, 0), [])
+  // Braces matter: newer browsers return a Promise from scrollTo, and React would call it as a cleanup.
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   return (
     <article className="privacy">
