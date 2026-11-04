@@ -602,3 +602,22 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .cs2-ghost { position: fixed; z-index: 50; transform: translate(-50%, -70%); font-size: 3.4rem; pointer-events: none; filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.3)); }
 .cs2-loading { padding: 80px 0; text-align: center; font-weight: 700; color: #2d6a85; }
 @keyframes cs2Blink { to { fill: #feca57; filter: brightness(1.15); } }
+
+/* Flag Friends */
+.ff-head { display: flex; flex-direction: column; align-items: center; gap: 4px; animation: zoom 0.3s; }
+.ff-group { padding: 2px 14px; border-radius: 999px; background: var(--game-surface); color: var(--on-color); font-weight: 800; }
+.ff-msg { min-height: 1.6rem; font-weight: 700; color: var(--muted); text-align: center; }
+.ff-yes { color: var(--good); }
+.ff-grid { display: grid; gap: 10px; width: 100%; max-width: 440px; margin: 0 auto; }
+.ff-card { aspect-ratio: 4 / 5; background: none; border: 0; padding: 0; perspective: 600px; -webkit-tap-highlight-color: transparent; }
+.ff-inner { position: relative; display: block; width: 100%; height: 100%; transition: transform 0.3s; transform-style: preserve-3d; }
+.ff-up .ff-inner { transform: rotateY(180deg); }
+.ff-front, .ff-back { position: absolute; inset: 0; display: grid; place-items: center; border-radius: 16px; backface-visibility: hidden; box-shadow: 0 5px 0 rgba(0, 0, 0, 0.12); }
+.ff-back { background: var(--game-surface); color: var(--on-color); font-size: 2rem; font-weight: 700; }
+.ff-front { background: var(--card); color: var(--ink); border: 3px solid var(--line); transform: rotateY(180deg); padding: 4px; }
+.ff-flag { font-size: clamp(2.4rem, 13vw, 3.6rem); line-height: 1; }
+.ff-name { font-size: clamp(0.8rem, 3.6vw, 1rem); font-weight: 800; text-align: center; line-height: 1.15; hyphens: auto; overflow-wrap: anywhere; }
+.ff-matched { animation: pulse 0.3s 2 alternate; }
+.ff-matched .ff-front { background: var(--good-soft); border-color: var(--good); }
+.ff-miss { animation: shake 0.35s; }
+.ff-miss .ff-front { background: var(--bad-soft); border-color: var(--bad); }
