@@ -1,0 +1,40 @@
+import type { GameStrings } from '../../i18n'
+
+const strings: GameStrings = {
+  en: {
+    title: 'Flag Friends',
+    howTo: 'Turn over two cards. Find each flag and the name of its country!',
+    score: 'Score',
+    combo: 'Combo',
+    time: 'Time',
+    peek: 'Look carefully…',
+    find: 'Find the flag and its name!',
+    yes: 'Yes! {name}',
+    cleared: 'Board clear!',
+    'group.europe': 'Europe',
+    'group.asia': 'Asia',
+    'group.africa': 'Africa',
+    'group.northAmerica': 'North America',
+    'group.southAmerica': 'South America',
+    'group.oceania': 'Oceania',
+  },
+  hu: {
+    title: 'Zászlópárok',
+    howTo: 'Fordíts fel két kártyát! Keresd meg minden zászlóhoz az ország nevét!',
+    score: 'Pont',
+    combo: 'Kombó',
+    time: 'Idő',
+    peek: 'Nézd meg jól…',
+    find: 'Keresd meg a zászlót és a nevét!',
+    yes: 'Igen! {name}',
+    cleared: 'Kész a tábla!',
+    'group.europe': 'Európa',
+    'group.asia': 'Ázsia',
+    'group.africa': 'Afrika',
+    'group.northAmerica': 'Észak-Amerika',
+    'group.southAmerica': 'Dél-Amerika',
+    'group.oceania': 'Óceánia',
+  },
+}
+
+export default strings
