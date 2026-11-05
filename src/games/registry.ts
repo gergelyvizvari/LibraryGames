@@ -32,11 +32,12 @@ import clockCatch from './clock-catch'
 import ukMap from './uk-map'
 import busyBees from './busy-bees'
 import continentSort from './continent-sort'
+import flagFriends from './flag-friends'
 
 // One line per game. New games go at the end.
 export const games: GameDef[] = [sequenceEcho, lightsOut, wordCatch, stroopClash, numberNinja, flashRead, pairRush, typeDefender,
   shapeSpin, whatNext, oddOne, blindMap, towerStack,
   gridGlow, molePop, anagramRace, simonSays, howMany, sentenceBuilder, letterPop, mazeDash, mirrorMatch, capitalMatch,
-  rhythmCopy, feedMonster, colorSort, animalSounds, rhymeTime, clockCatch, countryMap, ukMap, busyBees, continentSort]
+  rhythmCopy, feedMonster, colorSort, animalSounds, rhymeTime, clockCatch, countryMap, ukMap, busyBees, continentSort, flagFriends]
 
 export const gameById = (id: string) => games.find((g) => g.meta.id === id)

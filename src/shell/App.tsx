@@ -4,8 +4,9 @@ import { detectLocale, LocaleContext, saveLocale, type Locale } from '../i18n'
 import { GameFrame } from '../kit/GameFrame'
 import { daySeed } from '../kit/random'
 import { Home } from './Home'
+import { Privacy } from './Privacy'
 
-// Tiny hash router: #/ is home, #/play/<id> plays a game, #/daily/<id> plays the daily challenge.
+// Tiny hash router: #/ is home, #/play/<id> plays a game, #/daily/<id> plays the daily challenge, #/privacy is for parents.
 function parse(hash: string) {
   const [, mode, id] = hash.replace(/^#/, '').split('/')
   return { mode, id }
@@ -45,6 +46,8 @@ export function App() {
             seed={route.mode === 'daily' ? daySeed() : undefined}
             onHome={() => go('/')}
           />
+        ) : route.mode === 'privacy' ? (
+          <Privacy onHome={() => go('/')} />
         ) : (
           <Home onPlay={(id, daily) => go(`/${daily ? 'daily' : 'play'}/${id}`)} onLocale={changeLocale} />
         )}

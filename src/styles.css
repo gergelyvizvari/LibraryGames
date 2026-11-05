@@ -71,7 +71,7 @@
   --radius: 22px;
   /* Chunky toy look: every surface has a thin outline and a thicker bottom edge, like a pressable button. */
   --shadow: 0 0 0 2px var(--line), 0 5px 0 var(--line);
-  font-family: 'Fredoka', 'Baloo 2', ui-rounded, system-ui, sans-serif;
+  font-family: 'Fredoka Variable', 'Baloo 2 Variable', ui-rounded, system-ui, sans-serif;
   color: var(--ink);
   -webkit-tap-highlight-color: transparent;
 }
@@ -119,7 +119,16 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .home-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .home-tools { display: flex; gap: 8px; }
 .lang-btn { font-size: 1rem; font-weight: 800; color: var(--ink); letter-spacing: 0.04em; }
-.home-head h1 { font-size: 2.2rem; font-weight: 700; color: var(--accent); }
+.home-head h1 { font-size: 2.2rem; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 10px; line-height: 1.05; }
+.home-logo { width: 1.35em; height: 1.35em; flex: none; }
+.tea-btn { display: grid; place-items: center; text-decoration: none; }
+/* Phones: a smaller title and buttons so the logo, title and four buttons share one row; the narrowest phones wrap the buttons below. */
+@media (max-width: 480px) {
+  .home-head { flex-wrap: wrap; row-gap: 8px; }
+  .home-head h1 { font-size: 1.7rem; gap: 8px; flex: 1 1 0; }
+  .home-tools { gap: 6px; margin-left: auto; }
+  .home-tools .icon-btn { width: 40px; height: 40px; border-radius: 12px; font-size: 1.05rem; }
+}
 .home .filters { margin-top: 20px; }
 .daily {
   position: relative; margin-top: 16px; width: 100%; border-radius: 20px; padding: 10px 14px; background: var(--game-surface); color: var(--on-color); text-align: left;
@@ -165,6 +174,22 @@ h1, h2 { margin: 0; line-height: 1.1; }
 }
 .support-link:hover { color: var(--ink); }
 .support-link:active { transform: translateY(2px); border-bottom-width: 2px; margin-bottom: 6px; }
+
+.home-foot-credit a { color: inherit; }
+.home-foot-credit a:hover { color: var(--ink); }
+
+/* Privacy & contact page (for parents) */
+.privacy { max-width: 680px; margin: 0 auto; line-height: 1.55; }
+.privacy .frame-title { margin: 0; }
+.privacy h2 { font-size: 1.05rem; margin: 22px 0 4px; }
+.privacy p { margin: 0; color: var(--muted); }
+.privacy a { color: inherit; font-weight: 600; }
+.privacy-intro { margin-top: 18px !important; font-size: 1.05rem; color: var(--ink) !important; }
+.privacy-contact { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 6px 0 0; color: var(--muted); }
+.privacy-contact dt { font-weight: 700; color: var(--ink); }
+.privacy-contact dd { margin: 0; overflow-wrap: anywhere; }
+.privacy-updated { margin: 28px 0 12px !important; font-size: 0.8rem; }
+@media (max-width: 480px) { .privacy-contact { grid-template-columns: 1fr; } .privacy-contact dd { margin-bottom: 6px; } }
 
 /* Game frame */
 .frame { display: flex; flex-direction: column; min-height: calc(100dvh - 40px); }
@@ -451,14 +476,15 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .fm-pips { font-size: 1.1rem; letter-spacing: 1px; max-width: 60px; word-break: break-all; line-height: 1; }
 
 /* Colour Sort */
-.cs-message { text-align: center; font-size: 1.25rem; font-weight: 700; min-height: 1.6rem; margin: 4px 0; color: var(--muted); }
+/* Two lines are always reserved, so a longer hint never pushes the tubes down mid-move. */
+.cs-message { display: flex; align-items: center; justify-content: center; text-align: center; text-wrap: balance; font-size: 1.25rem; line-height: 1.25; font-weight: 700; min-height: 2.5em; margin: 4px 0; color: var(--muted); }
 .cs-rack { position: relative; display: grid; justify-content: center; gap: 22px 12px; padding: 18px 0 8px; animation: zoom 0.3s; }
 .cs-tube {
   width: 100%; min-width: 48px; display: flex; flex-direction: column-reverse; gap: 3px; padding: 6px;
   background: var(--card); border: 3px solid var(--muted); border-top: 0; border-radius: 6px 6px 28px 28px;
   box-shadow: 0 5px 0 var(--line); transition: transform 0.15s; overflow: hidden;
 }
-.cs-picked { transform: translateY(-16px); border-color: var(--game-color); box-shadow: 0 0 0 4px var(--highlight-strong), 0 5px 0 var(--line); }
+.cs-picked { transform: translateY(-16px); border-color: var(--game-color); }
 .cs-done { border-color: var(--good); animation: wobble 0.5s; }
 .cs-wobble { animation: shake 0.35s; border-color: var(--bad); }
 .cs-layer { flex: none; height: 42px; border-radius: 6px; display: grid; place-items: center; font-size: 1.1rem; color: var(--ink-fixed); box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.15); }
@@ -589,3 +615,22 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .cs2-ghost { position: fixed; z-index: 50; transform: translate(-50%, -70%); font-size: 3.4rem; pointer-events: none; filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.3)); }
 .cs2-loading { padding: 80px 0; text-align: center; font-weight: 700; color: #2d6a85; }
 @keyframes cs2Blink { to { fill: #feca57; filter: brightness(1.15); } }
+
+/* Flag Friends */
+.ff-head { display: flex; flex-direction: column; align-items: center; gap: 4px; animation: zoom 0.3s; }
+.ff-group { padding: 2px 14px; border-radius: 999px; background: var(--game-surface); color: var(--on-color); font-weight: 800; }
+.ff-msg { min-height: 1.6rem; font-weight: 700; color: var(--muted); text-align: center; }
+.ff-yes { color: var(--good); }
+.ff-grid { display: grid; gap: 10px; width: 100%; max-width: 440px; margin: 0 auto; }
+.ff-card { aspect-ratio: 4 / 5; background: none; border: 0; padding: 0; perspective: 600px; -webkit-tap-highlight-color: transparent; }
+.ff-inner { position: relative; display: block; width: 100%; height: 100%; transition: transform 0.3s; transform-style: preserve-3d; }
+.ff-up .ff-inner { transform: rotateY(180deg); }
+.ff-front, .ff-back { position: absolute; inset: 0; display: grid; place-items: center; border-radius: 16px; backface-visibility: hidden; box-shadow: 0 5px 0 rgba(0, 0, 0, 0.12); }
+.ff-back { background: var(--game-surface); color: var(--on-color); font-size: 2rem; font-weight: 700; }
+.ff-front { background: var(--card); color: var(--ink); border: 3px solid var(--line); transform: rotateY(180deg); padding: 4px; }
+.ff-flag { font-size: clamp(2.4rem, 13vw, 3.6rem); line-height: 1; }
+.ff-name { font-size: clamp(0.8rem, 3.6vw, 1rem); font-weight: 800; text-align: center; line-height: 1.15; hyphens: auto; overflow-wrap: anywhere; }
+.ff-matched { animation: pulse 0.3s 2 alternate; }
+.ff-matched .ff-front { background: var(--good-soft); border-color: var(--good); }
+.ff-miss { animation: shake 0.35s; }
+.ff-miss .ff-front { background: var(--bad-soft); border-color: var(--bad); }

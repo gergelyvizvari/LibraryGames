@@ -1,10 +1,27 @@
 import { describe, expect, it } from 'vitest'
 import { games } from '../games/registry'
-import { dictionaries, locales, makeGameT, nextLocale } from '.'
+import { detectLocale, dictionaries, locales, makeGameT, nextLocale } from '.'
 
 describe('translations', () => {
   it('every language has every app key', () => {
     locales.forEach((locale) => expect(Object.keys(dictionaries[locale]).sort()).toEqual(Object.keys(dictionaries.en).sort()))
+  })
+
+  it('a ?lang= link picks the language and remembers it', () => {
+    localStorage.clear()
+    window.history.replaceState({}, '', '/?lang=hu')
+    expect(detectLocale()).toBe('hu')
+    window.history.replaceState({}, '', '/')
+    expect(detectLocale()).toBe('hu')
+    localStorage.clear()
+  })
+
+  it('ignores an unknown ?lang= value', () => {
+    localStorage.setItem('lg.locale', 'en')
+    window.history.replaceState({}, '', '/?lang=xx')
+    expect(detectLocale()).toBe('en')
+    window.history.replaceState({}, '', '/')
+    localStorage.clear()
   })
 
   it('the language button cycles through every language', () => {
