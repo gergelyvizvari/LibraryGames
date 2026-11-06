@@ -578,6 +578,8 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .bb-flying .bb-bee-svg { animation: bbBuzz 0.18s infinite alternate; }
 .bb-picking .bb-bee { animation: bob 1.2s infinite; }
 .bb-target { background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 30%, rgba(254, 202, 87, 0.9) 55%, transparent 72%); animation: pulse 0.35s infinite alternate !important; }
+/* A dark ring with a white edge, so the bee to follow stands out from the yellow flowers and the green meadow. */
+.bb-target { box-shadow: 0 0 0 4px var(--ink-fixed), 0 0 0 8px #fff; z-index: 2; }
 .bb-found { background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 35%, rgba(29, 209, 161, 0.85) 60%, transparent 74%); animation: wobble 0.5s !important; }
 .bb-wrong { opacity: 0.45; filter: grayscale(0.8); }
 @keyframes bbBuzz { to { transform: translateY(-2px) rotate(3deg); } }
