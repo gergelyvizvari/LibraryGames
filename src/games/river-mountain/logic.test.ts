@@ -57,8 +57,8 @@ describe('river & mountain hunt logic', () => {
     expect(kindLabel(byId('etna'))).toBe('peak')
     expect(kindLabel(byId('atlantic'))).toBe('ocean')
     expect(kindLabel(byId('biscay'))).toBe('bay')
-    expect(strings.hu['kind.mountain']).toBe('Hegység')
-    for (const f of features) for (const lang of ['en', 'hu'] as const) expect(strings[lang][`kind.${kindLabel(f)}`]).toBeTruthy()
+    expect(strings.hu?.['kind.mountain']).toBe('Hegység')
+    for (const f of features) for (const lang of ['en', 'hu'] as const) expect(strings[lang]?.[`kind.${kindLabel(f)}`]).toBeTruthy()
   })
 
   it('still finds a full set of well spread dots on the easy levels', () => {
