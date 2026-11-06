@@ -621,3 +621,20 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .ff-matched .ff-front { background: var(--good-soft); border-color: var(--good); }
 .ff-miss { animation: shake 0.35s; }
 .ff-miss .ff-front { background: var(--bad-soft); border-color: var(--bad); }
+
+/* River & Mountain Hunt */
+.rm-ask { min-height: 2.6rem; animation: zoom 0.25s; }
+.rm-kind { display: inline-block; padding: 0 10px; border-radius: 999px; background: var(--game-surface); color: var(--on-color); font-size: 0.85em; }
+.rm-wrap { position: relative; background: #a9dcfb; border-radius: 24px; overflow: hidden; box-shadow: var(--shadow); }
+.rm-map { display: block; width: 100%; height: auto; touch-action: manipulation; }
+.rm-land { fill: #eef3dc; stroke: #b9c2a8; stroke-width: 1.2; stroke-linejoin: round; }
+.rm-river, .rm-lake { fill: none; stroke: #2e86de; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+.rm-lake { stroke-width: 9; }
+.rm-lake-dot { fill: #2e86de; pointer-events: none; }
+.rm-mountain { fill: none; stroke: #a0522d; stroke-width: 11; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 2 13; opacity: 0.85; pointer-events: none; }
+.rm-peak { fill: #a0522d; stroke: #fff; stroke-width: 2; pointer-events: none; }
+.rm-found { stroke: #feca57 !important; stroke-dasharray: none !important; stroke-width: 12 !important; opacity: 1; animation: rmGlow 0.4s 4 alternate; }
+.rm-found-sea { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-width: 26 !important; opacity: 0.7; }
+.rm-name { font-size: 40px; }
+.rm-loading { padding: 90px 0; text-align: center; font-weight: 700; color: #2d6a85; }
+@keyframes rmGlow { to { stroke: #ff9f43; } }
