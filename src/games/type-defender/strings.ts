@@ -13,7 +13,7 @@ const strings: GameStrings = {
   },
   hu: {
     title: 'Gépelő védő',
-    howTo: 'Szavak repülnek a várad felé. Gépeld be a szót, és lőd le, mielőtt leér! Három pajzsod van.',
+    howTo: 'Szavak repülnek a várad felé. Gépeld be a szót, és lődd le, mielőtt leér! Három pajzsod van.',
     score: 'Pont',
     shields: 'Pajzsok',
     time: 'Idő',

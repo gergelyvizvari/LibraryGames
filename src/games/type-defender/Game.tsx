@@ -5,7 +5,7 @@ import { clamp, makeRng } from '../../kit/random'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
 import { Hearts, Hud, Pops, TimerBar } from '../../kit/ui'
-import { wordLists, wordsForLevel } from './content'
+import { typedPrefix, typedWhole, wordLists, wordsForLevel } from './content'
 
 const DURATION = 60
 const SHIELDS = 3
@@ -79,14 +79,14 @@ export default function TypeDefender({ level, seed, t, onFinish }: GameProps) {
     if (over) return
     const v = value.normalize('NFC').toLowerCase().replace(/[^\p{L}]/gu, '')
     const s = state.current
-    const target = s.enemies.find((e) => e.word.startsWith(v))
+    const target = s.enemies.find((e) => typedPrefix(e.word, v, level))
     if (!target || v === '') {
       if (v !== '') sound.tap()
       setTyped(v === '' ? '' : typed)
       return
     }
     sound.pop()
-    if (v === target.word) {
+    if (typedWhole(target.word, v, level)) {
       s.enemies = s.enemies.filter((e) => e.id !== target.id)
       setEnemies(s.enemies)
       const gained = target.word.length * 5
@@ -112,12 +112,12 @@ export default function TypeDefender({ level, seed, t, onFinish }: GameProps) {
       />
       <div className="td-sky" ref={ref}>
         {enemies.map((e) => {
-          const active = typed && e.word.startsWith(typed)
+          const active = typed && typedPrefix(e.word, typed, level)
           return (
             <div key={e.id} className={`td-enemy${active ? ' td-active' : ''}`} style={{ left: `${e.x}%`, top: `${e.y}%` }}>
               {active ? (
                 <>
-                  <span className="td-done">{typed}</span>
+                  <span className="td-done">{e.word.slice(0, typed.length)}</span>
                   {e.word.slice(typed.length)}
                 </>
               ) : (

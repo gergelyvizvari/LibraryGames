@@ -21,6 +21,14 @@ describe.each(Object.entries(rhymes))('rhyme time questions (%s)', (_, groups) =
       }
     }
   })
+  it('never offers a wrong answer that ends like the target (méz / víz)', () => {
+    const last = (w: string) => w.normalize('NFD').replace(/\p{M}/gu, '').slice(-1)
+    const rng = makeRng(11)
+    for (let i = 0; i < 300; i++) {
+      const q = makeQuestion(rng, groups, i % groups.length, 4)
+      for (const o of q.options) if (o !== q.answer) expect(last(o.word)).not.toBe(last(q.target.word))
+    }
+  })
   it('does not repeat a group back to back', () => {
     const deal = makeDealer(makeRng(8), groups)
     let prev = -1

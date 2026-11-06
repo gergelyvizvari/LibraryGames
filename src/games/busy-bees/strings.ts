@@ -31,7 +31,7 @@ const strings: GameStrings = {
     oneMore: 'Még egyet keress meg!',
     yes: 'Ügyes! Sasszemed van!',
     no: 'Hoppá! Ez volt a te méhecskéd.',
-    noTwo: 'Hoppá! Ez a kettő volt a te méhecskéd.',
+    noTwo: 'Hoppá! Ezt a kettőt kellett volna megtalálni.',
   },
 }
 

@@ -1,4 +1,5 @@
-// Tiny Web Audio synth: no sound files, works offline. Safe to call anywhere (no-ops without audio).
+// Tiny Web Audio synth, plus short recorded clips for games that need real sounds.
+// Safe to call anywhere (no-ops without audio).
 
 const MUTE_KEY = 'lg.muted'
 let ctx: AudioContext | null = null
@@ -35,6 +36,56 @@ export function tone(freq: number, duration = 0.15, type: OscillatorType = 'sine
   osc.start(start)
   osc.stop(start + duration + 0.02)
   return osc
+}
+
+// Recorded clips: fetched and decoded once, then played through the same context.
+const loading = new Map<string, Promise<void>>()
+const clips = new Map<string, AudioBuffer>()
+let playing: { src: AudioBufferSourceNode; gain: GainNode } | null = null
+
+/** Starts fetching and decoding a clip so it's ready to play. */
+export function preloadClip(url: string) {
+  const ac = audio()
+  if (!ac || loading.has(url)) return
+  loading.set(
+    url,
+    fetch(url)
+      .then((r) => r.arrayBuffer())
+      .then((data) => ac.decodeAudioData(data))
+      .then((buffer) => void clips.set(url, buffer))
+      .catch(() => void loading.delete(url)),
+  )
+}
+
+/**
+ * Plays a recorded clip, cutting off the previous one so fast sequences stay clear.
+ * Returns false when the clip isn't decoded yet, so the caller can play a fallback.
+ * When muted it returns true: there's nothing to fall back to.
+ */
+export function playClip(url: string, volume = 0.9) {
+  const ac = audio()
+  if (!ac) return true
+  const buffer = clips.get(url)
+  if (!buffer) {
+    preloadClip(url)
+    return false
+  }
+  if (playing) {
+    const { src, gain } = playing
+    gain.gain.setTargetAtTime(0, ac.currentTime, 0.015)
+    src.stop(ac.currentTime + 0.08)
+  }
+  const src = ac.createBufferSource()
+  const gain = ac.createGain()
+  src.buffer = buffer
+  gain.gain.value = volume
+  src.connect(gain).connect(ac.destination)
+  src.start()
+  playing = { src, gain }
+  src.onended = () => {
+    if (playing?.src === src) playing = null
+  }
+  return true
 }
 
 export const sound = {

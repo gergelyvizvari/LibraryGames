@@ -1,0 +1,24 @@
+import { Component, type ReactNode } from 'react'
+
+/**
+ * Catches a crash inside one game round, so a bug in one game shows a friendly card instead of a blank app.
+ * Give it a new `key` to try again.
+ */
+export class ErrorBoundary extends Component<
+  { fallback: ReactNode; children: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false }
+
+  static getDerivedStateFromError() {
+    return { failed: true }
+  }
+
+  componentDidCatch(error: unknown) {
+    console.error(error)
+  }
+
+  render() {
+    return this.state.failed ? this.props.fallback : this.props.children
+  }
+}

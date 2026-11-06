@@ -31,9 +31,18 @@ export function makeQuestion(rng: Rng, groups: RhymeGroup[], index: number, coun
   const group = groups[index]
   const [target, answer] = rng.shuffle([...group.words])
   const others = groups.filter((o) => o.sound !== group.sound)
-  const wrong = rng.shuffle([...others]).slice(0, count - 1).map((o) => rng.pick(o.words))
+  // A wrong answer that ends like the target (méz / víz) sounds almost like a rhyme, so prefer ones that do not.
+  const clear = (w: Word) => lastLetter(w.word) !== lastLetter(target.word)
+  const clearGroups = others.filter((o) => o.words.some(clear))
+  const pool = clearGroups.length >= count - 1 ? clearGroups : others
+  const wrong = rng
+    .shuffle([...pool])
+    .slice(0, count - 1)
+    .map((o) => rng.pick(pool === clearGroups ? o.words.filter(clear) : o.words))
   return { target, answer, options: rng.shuffle([answer, ...wrong]) }
 }
+
+const lastLetter = (word: string) => word.normalize('NFD').replace(/\p{M}/gu, '').slice(-1).toLowerCase()
 
 /** Faster answers and longer streaks earn more. */
 export function pointsFor(seconds: number, combo: number) {

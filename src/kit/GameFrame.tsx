@@ -8,6 +8,7 @@ import { sound } from './sound'
 import { gameColorVars } from './theme'
 import type { GameDef, RoundResult } from './types'
 import { Confetti } from './ui'
+import { ErrorBoundary } from './ErrorBoundary'
 
 type Phase = 'intro' | 'countdown' | 'playing' | 'results'
 
@@ -15,7 +16,21 @@ type Phase = 'intro' | 'countdown' | 'playing' | 'results'
  * Everything around a game: intro card, 3-2-1 countdown, the round itself, results.
  * Games only render the round and call `onFinish` once.
  */
-export function GameFrame({ game, seed, onHome }: { game: GameDef; seed?: number; onHome: () => void }) {
+export function GameFrame({
+  game,
+  seed,
+  daily = false,
+  onHome,
+  onNext,
+}: {
+  game: GameDef
+  seed?: number
+  /** Playing today's daily challenge: a finished round marks it done on the home screen. */
+  daily?: boolean
+  onHome: () => void
+  /** Offers another game on the results card. */
+  onNext?: () => void
+}) {
   const locale = useLocale()
   const t = useT()
   const gt = useMemo(() => makeGameT(game.strings, locale), [game, locale])
@@ -45,7 +60,7 @@ export function GameFrame({ game, seed, onHome }: { game: GameDef; seed?: number
   }
 
   const finish = (r: RoundResult) => {
-    const outcome = recordRound(game.meta.id, game.meta.skill, r)
+    const outcome = recordRound(game.meta.id, game.meta.skill, r, new Date(), daily)
     setResult({ ...r, outcome })
     if (outcome.newRecord || stars(r.accuracy) === 3) sound.win()
     later(() => setPhase('results'), 700)
@@ -92,14 +107,35 @@ export function GameFrame({ game, seed, onHome }: { game: GameDef; seed?: number
 
       {phase === 'playing' && (
         <div className="stage">
-          <Component key={round} level={progress.level} seed={roundSeed} t={gt} onFinish={finish} />
+          <ErrorBoundary
+            key={round}
+            fallback={
+              <div className="card oops" role="alert">
+                <div className="oops-face" aria-hidden>
+                  🙈
+                </div>
+                <h1>{t('oops')}</h1>
+                <p className="muted">{t('oopsHint')}</p>
+                <div className="row">
+                  <button className="big-btn" onClick={again}>
+                    {t('playAgain')}
+                  </button>
+                  <button className="ghost-btn" onClick={onHome}>
+                    {t('home')}
+                  </button>
+                </div>
+              </div>
+            }
+          >
+            <Component level={progress.level} seed={roundSeed} t={gt} onFinish={finish} />
+          </ErrorBoundary>
         </div>
       )}
 
       {phase === 'results' && result && (
         <div className="card results">
           {(result.outcome.newRecord || stars(result.accuracy) === 3) && <Confetti />}
-          <div className="stars" aria-label={`${stars(result.accuracy)} / 3`}>
+          <div className="stars" role="img" aria-label={t('starsOf', { n: stars(result.accuracy) })}>
             {[1, 2, 3].map((n) => (
               <span key={n} className={n <= stars(result.accuracy) ? 'star on' : 'star'} style={{ animationDelay: `${n * 0.15}s` }}>
                 ★
@@ -116,6 +152,11 @@ export function GameFrame({ game, seed, onHome }: { game: GameDef; seed?: number
             <button className="big-btn" onClick={again} autoFocus>
               {t('playAgain')}
             </button>
+            {onNext && (
+              <button className="big-btn next-btn" onClick={onNext}>
+                {t('nextGame')}
+              </button>
+            )}
             <button className="ghost-btn" onClick={onHome}>
               {t('home')}
             </button>

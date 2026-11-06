@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { wordLists, wordsForLevel } from './content'
+import { typedPrefix, typedWhole, wordLists, wordsForLevel } from './content'
 
 describe.each(Object.entries(wordLists))('type defender words (%s)', (_, list) => {
   it('has no duplicates and only lowercase letters', () => {
@@ -13,5 +13,16 @@ describe.each(Object.entries(wordLists))('type defender words (%s)', (_, list) =
       expect(pool.length).toBeGreaterThanOrEqual(50)
       expect(new Set(pool.map((w) => w[0])).size).toBeGreaterThanOrEqual(20)
     }
+  })
+})
+
+describe('typing accents', () => {
+  it('accepts a word without accents at low levels only', () => {
+    expect(typedWhole('cél', 'cel', 1)).toBe(true)
+    expect(typedPrefix('őszibarack', 'osz', 4)).toBe(true)
+    expect(typedWhole('cél', 'cél', 4)).toBe(true)
+    expect(typedWhole('cél', 'cel', 5)).toBe(false)
+    expect(typedWhole('cél', 'cél', 5)).toBe(true)
+    expect(typedPrefix('fül', 'fa', 1)).toBe(false)
   })
 })

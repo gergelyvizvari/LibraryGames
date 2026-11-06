@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { games } from '../games/registry'
 import { makeGameT, nextLocale, useLocale, useT, type Locale } from '../i18n'
 import { Icon } from '../kit/icon'
-import { gameProgress, loadProgress } from '../kit/progress'
+import { currentStreak, dailyDoneToday, gameProgress, isIosBrowser, loadProgress } from '../kit/progress'
 import { daySeed, makeRng } from '../kit/random'
 import { sound } from '../kit/sound'
 import { gameColorVars, loadTheme, nextTheme, setTheme, themeIcons } from '../kit/theme'
@@ -39,6 +39,9 @@ export function Home({ onPlay, onLocale }: { onPlay: (id: string, daily?: boolea
   const [theme, setThemeState] = useState(loadTheme)
   const progress = useMemo(loadProgress, [])
   const daily = dailyGame()
+  const dailyDone = dailyDoneToday(progress)
+  const streak = currentStreak(progress)
+  const iosTip = useMemo(() => isIosBrowser(), [])
   const fresh = useMemo(() => newGameIds(), [])
   // New games come first, newest first, so kids spot them straight away.
   const rank = (g: GameDef) => {
@@ -97,13 +100,20 @@ export function Home({ onPlay, onLocale }: { onPlay: (id: string, daily?: boolea
       </header>
 
       <button className="daily" style={gameColorVars(daily.meta.color)} onClick={() => onPlay(daily.meta.id, true)}>
-        <span className="daily-label">⭐ {t('todaysGame')}</span>
+        <span className="daily-label">
+          ⭐ {t('todaysGame')}
+          {streak >= 2 && (
+            <span className="daily-streak" title={t('streakHint')}>
+              {' · '}🔥 {t('streakDays', { n: streak })}
+            </span>
+          )}
+        </span>
         <span className="daily-icon" aria-hidden>
           <Icon icon={daily.meta.icon} />
           <i className="daily-sparkle">✨</i>
         </span>
         <span className="daily-title">{dailyT('title')}</span>
-        <span className="daily-play">{t('play')}</span>
+        <span className={`daily-play${dailyDone ? ' daily-done' : ''}`}>{dailyDone ? `✓ ${t('doneToday')}` : t('play')}</span>
       </button>
 
       <div className="filters">
@@ -136,6 +146,7 @@ export function Home({ onPlay, onLocale }: { onPlay: (id: string, daily?: boolea
 
       <footer className="home-foot">
         <span className="home-foot-label">{t('forGrownUps')}</span>
+        {iosTip && <p className="home-foot-tip">{t('iosTip')}</p>}
         <a className="support-link" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer" title={t('supportHint')} aria-label={t('supportHint')}>
           <span aria-hidden>🍵</span> {t('support')}
         </a>
