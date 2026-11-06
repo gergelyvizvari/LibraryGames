@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState, type PointerEvent } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from 'react'
 import { useLocale } from '../../i18n'
 import { usePops, useShake, useTimeouts } from '../../kit/hooks'
-import { ROUNDS, dotChoices, dotCount, pickRound, placesFor as poolFor, pointsForKm, showDots } from '../../kit/mapHunt'
+import { DOT_HIT_R, DOT_R, ROUNDS, dotChoices, dotCount, dotGapFor, nearestDot, pickRound, placesFor as poolFor, pointsForKm, showDots } from '../../kit/mapHunt'
 import { makeRng } from '../../kit/random'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops } from '../../kit/ui'
+import { Hud, MapStage, Pops } from '../../kit/ui'
 import { features, type Feature } from './content'
-import { BANDS, DOT_GAP_KM, kmToFeature, placesFor, type FeaturePlace } from './logic'
+import { BANDS, DOT_GAP_KM, kindLabel, kmToFeature, placesFor, type FeaturePlace } from './logic'
 import { HEIGHT, WIDTH, fromMap, linePath, loadLand, toMap } from './map'
 
 const KIND_ICON: Record<Feature['kind'], string> = { river: '〰️', mountain: '⛰️', sea: '🌊', lake: '💧' }
@@ -33,7 +33,7 @@ export default function RiverMountain({ level, seed, t, onFinish }: GameProps) {
   const rng = useRef(makeRng(seed)).current
   const [round] = useState(() => pickRound(rng, places, level))
   const dots = showDots(level)
-  const makeDots = (target: FeaturePlace) => (dots ? dotChoices(rng, poolFor(places, level), target, dotCount(level), DOT_GAP_KM) : [])
+  const makeDots = (target: FeaturePlace) => (dots ? dotChoices(rng, poolFor(places, level), target, dotCount(level), dotGapFor(level, DOT_GAP_KM)) : [])
   const [land, setLand] = useState<string[] | null>(null)
   const [index, setIndex] = useState(0)
   const [choices, setChoices] = useState(() => makeDots(round[0]))
@@ -84,16 +84,21 @@ export default function RiverMountain({ level, seed, t, onFinish }: GameProps) {
   }
 
   const pickDot = (p: FeaturePlace) => {
-    if (result) return
     if (p === target) finishTurn(null, 30, t('spotOn'))
     else finishTurn(toMap(p.at), 0, t('miss'))
   }
 
   const tapMap = (e: PointerEvent<SVGSVGElement>) => {
-    if (result || dots || !land) return
+    if (result || !land) return
     const m = svgRef.current?.getScreenCTM()
     if (!m) return
     const pt = new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse())
+    if (dots) {
+      // The nearest dot wins, so dots close together never steal each other's taps.
+      const i = nearestDot(choices.map((p) => toMap(p.at)), [pt.x, pt.y], (DOT_HIT_R * WIDTH) / 1000)
+      if (i >= 0) pickDot(choices[i])
+      return
+    }
     const lonLat = fromMap([pt.x, pt.y])
     if (!lonLat) return
     const km = Math.round(kmToFeature(target.feature, lonLat))
@@ -121,13 +126,14 @@ export default function RiverMountain({ level, seed, t, onFinish }: GameProps) {
         ) : (
           <>
             <span className="rm-kind">
-              {KIND_ICON[target.feature.kind]} {t(`kind.${target.feature.kind}`)}
+              {KIND_ICON[target.feature.kind]} {t(`kind.${kindLabel(target.feature)}`)}
             </span>{' '}
             {t('where', { place: target.name })}
           </>
         )}
       </p>
-      <div className="rm-wrap" ref={wrapRef}>
+      <MapStage>
+      <div className="rm-wrap map-box" ref={wrapRef} style={{ '--map-ratio': WIDTH / HEIGHT } as CSSProperties}>
         {land ? (
           <svg ref={svgRef} viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className="rm-map" onPointerDown={tapMap}>
             {land.map((d, i) => (
@@ -139,10 +145,7 @@ export default function RiverMountain({ level, seed, t, onFinish }: GameProps) {
             {choices.map((p) => {
               const [x, y] = toMap(p.at)
               return (
-                <g key={`${index}-${p.name}`} className="mh-dot" onPointerDown={() => pickDot(p)}>
-                  <circle cx={x} cy={y} r={44} className="mh-hit" />
-                  <circle cx={x} cy={y} r={15} className={result && p === target ? 'mh-dot-right' : ''} />
-                </g>
+                <circle key={`${index}-${p.name}`} cx={x} cy={y} r={DOT_R} className={`mh-dot${result && p === target ? ' mh-dot-right' : ''}`} />
               )
             })}
             {result && (
@@ -165,6 +168,7 @@ export default function RiverMountain({ level, seed, t, onFinish }: GameProps) {
         )}
         <Pops pops={pops} />
       </div>
+      </MapStage>
     </div>
   )
 }

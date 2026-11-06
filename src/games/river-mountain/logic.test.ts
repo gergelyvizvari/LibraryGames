@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { makeRng } from '../../kit/random'
-import { dotChoices, kmBetween, pickRound, placesFor as poolFor, pointsForKm } from '../../kit/mapHunt'
+import { dotChoices, dotCount, dotGapFor, kmBetween, pickRound, placesFor as poolFor, pointsForKm } from '../../kit/mapHunt'
 import { features } from './content'
-import { BANDS, DOT_GAP_KM, kmToFeature, kmToSegment, placesFor } from './logic'
+import { BANDS, DOT_GAP_KM, kindLabel, kmToFeature, kmToSegment, placesFor } from './logic'
+import strings from './strings'
 
 const byId = (id: string) => features.find((f) => f.id === id)!
 
@@ -47,6 +48,28 @@ describe('river & mountain hunt logic', () => {
         expect(dots.length).toBeGreaterThanOrEqual(5)
         for (let i = 0; i < dots.length; i++)
           for (let j = i + 1; j < dots.length; j++) expect(kmBetween(dots[i].at, dots[j].at)).toBeGreaterThan(DOT_GAP_KM)
+      }
+    }
+  })
+
+  it('names ranges, peaks, the ocean and the bay with their own word, in both languages', () => {
+    expect(kindLabel(byId('alps'))).toBe('mountain')
+    expect(kindLabel(byId('etna'))).toBe('peak')
+    expect(kindLabel(byId('atlantic'))).toBe('ocean')
+    expect(kindLabel(byId('biscay'))).toBe('bay')
+    expect(strings.hu['kind.mountain']).toBe('Hegység')
+    for (const f of features) for (const lang of ['en', 'hu'] as const) expect(strings[lang][`kind.${kindLabel(f)}`]).toBeTruthy()
+  })
+
+  it('still finds a full set of well spread dots on the easy levels', () => {
+    const places = placesFor('en')
+    for (const level of [1, 2]) {
+      for (let seed = 1; seed <= 30; seed++) {
+        const rng = makeRng(seed)
+        const pool = poolFor(places, level)
+        const target = pool[seed % pool.length]
+        const dots = dotChoices(rng, pool, target, dotCount(level), dotGapFor(level, DOT_GAP_KM))
+        expect(dots.length).toBe(dotCount(level))
       }
     }
   })

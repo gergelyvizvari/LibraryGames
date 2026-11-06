@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState, type PointerEvent } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from 'react'
 import { useLocale } from '../../i18n'
 import { usePops, useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops } from '../../kit/ui'
+import { Hud, MapStage, Pops } from '../../kit/ui'
 import { displayName, flag } from './content'
 import { pickQuestions, pointsFor } from './logic'
 import { WIDTH, loadMap, nearEnough, type RegionMap } from './map'
@@ -110,7 +110,8 @@ export default function BlindMap({ level, seed, t, onFinish }: GameProps) {
       <p className="bm-hint">
         {found ? (reveal ? t('hereItIs') : '') : wrongName ? t('thatIs', { name: displayName(wrongName, locale) }) : ' '}
       </p>
-      <div className="bm-sea" ref={shakeRef}>
+      <MapStage>
+      <div className="bm-sea map-box" ref={shakeRef} style={{ '--map-ratio': map ? WIDTH / map.height : 1 } as CSSProperties}>
         {map && shapes ? (
           <svg ref={svg} viewBox={`0 0 ${WIDTH} ${map.height}`} onPointerDown={onTap} className="bm-svg">
             {shapes.map((s) => (
@@ -127,6 +128,7 @@ export default function BlindMap({ level, seed, t, onFinish }: GameProps) {
         )}
         <Pops pops={pops} />
       </div>
+      </MapStage>
     </div>
   )
 }

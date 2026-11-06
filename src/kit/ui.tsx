@@ -65,3 +65,8 @@ export function Confetti({ count = 60 }: { count?: number }) {
     </div>
   )
 }
+
+/** The space left under a map game's prompt: the map inside (a `.map-box` with `--map-ratio`) grows as big as fits, centred. */
+export function MapStage({ children }: { children: ReactNode }) {
+  return <div className="map-stage">{children}</div>
+}
