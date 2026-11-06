@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState, type PointerEvent } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from 'react'
 import { useLocale } from '../../i18n'
 import { usePops, useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops } from '../../kit/ui'
+import { Hud, MapStage, Pops } from '../../kit/ui'
 import { continentNames, names, type Item } from './content'
 import { CONTINENTS, type Continent } from './continents'
 import { coloured, pickItems, pointsFor, showLabels } from './logic'
@@ -173,7 +173,8 @@ export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
         </div>
       )}
       <p className={`cs2-hint${solved === 'yes' ? ' cs2-yes' : ''}`}>{q ? hint() : ' '}</p>
-      <div className="cs2-sea" ref={shakeRef}>
+      <MapStage>
+      <div className="cs2-sea map-box" ref={shakeRef} style={{ '--map-ratio': world ? WIDTH / world.height : 2 } as CSSProperties}>
         {world ? (
           <svg viewBox={`0 0 ${WIDTH} ${world.height}`} onPointerDown={onMapTap} className="cs2-svg">
             <defs>
@@ -207,6 +208,7 @@ export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
         )}
         <Pops pops={pops} />
       </div>
+      </MapStage>
       {drag && q && (
         <div className="cs2-ghost" style={{ left: drag.x, top: drag.y }}>
           {q.emoji}

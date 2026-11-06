@@ -33,12 +33,13 @@ describe('every game mounts and runs', () => {
 
   // Level 1 and level 10 both run, so content and rules that only unlock at high levels are covered too.
   // Every language runs too, so each language's word lists and stories are played.
-  it.each(games.flatMap((g) => locales.flatMap((locale) => [1, 10].map((level) => [g.meta.id, locale, level, g] as const))))('%s (%s) renders and survives 5 seconds of play at level %i', (_, locale, level, g) => {
+  it.each(games.flatMap((g) => locales.flatMap((locale) => [1, 10].map((level) => [g.meta.id, locale, level, g] as const))))('%s (%s) renders and survives 5 seconds of play at level %i', async (_, locale, level, g) => {
+    const { default: Game } = await g.load()
     vi.useFakeTimers()
     const onFinish = vi.fn()
     const { container, unmount } = render(
       <LocaleContext.Provider value={locale}>
-        <g.Component level={level} seed={42} t={makeGameT(g.strings, locale)} onFinish={onFinish} />
+        <Game level={level} seed={42} t={makeGameT(g.strings, locale)} onFinish={onFinish} />
       </LocaleContext.Provider>,
     )
     expect(container.querySelector('.game')).not.toBeNull()

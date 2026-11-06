@@ -17,6 +17,10 @@ const strings: GameStrings = {
     'kind.mountain': 'Mountains',
     'kind.sea': 'Sea',
     'kind.lake': 'Lake',
+    'kind.peak': 'Mountain',
+    'kind.ocean': 'Ocean',
+    'kind.bay': 'Bay',
+    'kind.channel': 'Channel',
   },
   hu: {
     title: 'Folyók és hegyek',
@@ -31,9 +35,13 @@ const strings: GameStrings = {
     off: 'Eltérés: {km} km',
     loading: 'Kiterítem a térképet…',
     'kind.river': 'Folyó',
-    'kind.mountain': 'Hegy',
+    'kind.mountain': 'Hegység',
     'kind.sea': 'Tenger',
     'kind.lake': 'Tó',
+    'kind.peak': 'Hegy',
+    'kind.ocean': 'Óceán',
+    'kind.bay': 'Öböl',
+    'kind.channel': 'Csatorna',
   },
 }
 

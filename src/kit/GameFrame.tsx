@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { Suspense, lazy, useEffect, useMemo, useState, type ComponentType } from 'react'
 import { makeGameT, useLocale, useT } from '../i18n'
 import { useTimeouts } from './hooks'
 import { Icon } from './icon'
@@ -6,9 +6,21 @@ import { gameProgress, loadProgress, recordRound, stars, type RecordOutcome } fr
 import { randomSeed } from './random'
 import { sound } from './sound'
 import { gameColorVars } from './theme'
-import type { GameDef, RoundResult } from './types'
+import type { GameDef, GameProps, RoundResult } from './types'
 import { Confetti } from './ui'
 import { ErrorBoundary } from './ErrorBoundary'
+
+// One lazy component per game, kept for the whole visit, so "play again" never shows the loading state twice.
+const lazyGames = new WeakMap<GameDef, ComponentType<GameProps>>()
+function gameComponent(game: GameDef) {
+  let c = lazyGames.get(game)
+  if (!c) {
+    // A failed download (offline) is forgotten, so "try again" downloads again.
+    const load = () => game.load().catch((e: unknown) => (lazyGames.delete(game), Promise.reject(e)))
+    lazyGames.set(game, (c = lazy(load)))
+  }
+  return c
+}
 
 type Phase = 'intro' | 'countdown' | 'playing' | 'results'
 
@@ -54,6 +66,8 @@ export function GameFrame({
   }, [phase, count, later])
 
   const start = () => {
+    // Start downloading the game now, so it is ready by the end of the countdown.
+    void game.load().catch(() => {})
     sound.tap()
     setCount(3)
     setPhase('countdown')
@@ -72,7 +86,7 @@ export function GameFrame({
     start()
   }
 
-  const { Component } = game
+  const Component = gameComponent(game)
   return (
     <div className="frame" style={gameColorVars(game.meta.color)}>
       <header className="frame-bar">
@@ -127,7 +141,9 @@ export function GameFrame({
               </div>
             }
           >
-            <Component level={progress.level} seed={roundSeed} t={gt} onFinish={finish} />
+            <Suspense fallback={<div className="game-loading">{t('loading')}</div>}>
+              <Component level={progress.level} seed={roundSeed} t={gt} onFinish={finish} />
+            </Suspense>
           </ErrorBoundary>
         </div>
       )}

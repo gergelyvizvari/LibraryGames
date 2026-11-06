@@ -71,7 +71,8 @@
   --radius: 22px;
   /* Chunky toy look: every surface has a thin outline and a thicker bottom edge, like a pressable button. */
   --shadow: 0 0 0 2px var(--line), 0 5px 0 var(--line);
-  font-family: 'Fredoka Variable', 'Baloo 2 Variable', ui-rounded, system-ui, sans-serif;
+  /* The flag font only covers flag letters and only loads where flags are missing (Windows), see main.tsx. */
+  font-family: 'Twemoji Country Flags', 'Fredoka Variable', 'Baloo 2 Variable', ui-rounded, system-ui, sans-serif;
   color: var(--ink);
   -webkit-tap-highlight-color: transparent;
 }
@@ -211,6 +212,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .howto { font-size: 1.2rem; max-width: 32ch; margin: 0; }
 .countdown { flex: 1; display: grid; place-items: center; font-size: 8rem; font-weight: 700; color: var(--game-text); animation: zoom 0.6s ease-out; }
 .stage { flex: 1; display: flex; flex-direction: column; margin-top: 12px; position: relative; }
+.game-loading { flex: 1; display: grid; place-items: center; font-weight: 700; color: var(--muted); }
 .results h1 { font-size: 2rem; }
 .oops h1 { font-size: 1.8rem; }
 .next-btn { background: var(--card); color: var(--game-text); box-shadow: 0 0 0 2px var(--line), 0 5px 0 var(--line); }
@@ -544,13 +546,17 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .rt-right { background: var(--good-soft); border-color: var(--good); animation: wobble 0.4s; }
 .rt-wrong { background: var(--bad-soft); border-color: var(--bad); opacity: 0.6; }
 
+/* Map games (kit/ui.tsx MapStage): the map grows to fill the space under the prompt, keeping its shape, centred. */
+.map-stage { flex: 1 1 0; min-height: 240px; container-type: size; display: grid; place-items: center; }
+.map-box { width: min(100cqw, 100cqh * var(--map-ratio, 1)); aspect-ratio: var(--map-ratio, 1); }
+.map-box > svg { width: 100%; height: 100%; }
+
 /* Map Hunt (kit/MapHuntGame.tsx, shared by the map hunt games) */
 .mh-ask { min-height: 2.6rem; animation: zoom 0.25s; }
 .mh-wrap { position: relative; background: #bfe6ff; border-radius: 24px; padding: 8px; box-shadow: var(--shadow); }
 .mh-map { display: block; width: 100%; height: auto; touch-action: manipulation; }
-.mh-dot circle { fill: #fff; stroke: #2d3142; stroke-width: 5; cursor: pointer; }
-.mh-dot .mh-hit { fill: transparent; stroke: none; }
-.mh-dot .mh-dot-right { fill: var(--good); }
+.mh-dot { fill: #fff; stroke: #2d3142; stroke-width: 6; cursor: pointer; }
+.mh-dot-right { fill: var(--good); }
 .mh-line { stroke: #ff6b6b; stroke-width: 5; stroke-dasharray: 12 10; }
 .mh-tap { fill: #ff6b6b; stroke: #2d3142; stroke-width: 4; }
 .mh-target { fill: #feca57; stroke: #2d3142; stroke-width: 5; animation: pulse 0.4s infinite alternate; transform-box: fill-box; transform-origin: center; }
@@ -561,7 +567,6 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .cm2-river { fill: none; stroke: #4a9fe8; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
 .cm2-lake { fill: none; stroke: #4a9fe8; stroke-width: 22; stroke-linecap: round; stroke-linejoin: round; }
 /* UK Map Hunt */
-.uk-map .mh-map { max-height: calc(100dvh - 250px); }
 .ukm-land { stroke: #2d3142; stroke-width: 3.5; stroke-linejoin: round; }
 .ukm-england { fill: #b8e994; }
 .ukm-scotland { fill: #f8d58b; }

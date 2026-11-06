@@ -1,10 +1,10 @@
-import { useRef, useState, type PointerEvent, type ReactNode } from 'react'
+import { useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from 'react'
 import { usePops, useShake, useTimeouts } from './hooks'
-import { ROUNDS, dotChoices, dotCount, kmBetween, pickRound, placesFor, pointsForKm, showDots, type KmBands, type MapPlace } from './mapHunt'
+import { DOT_HIT_R, DOT_R, ROUNDS, dotChoices, dotCount, dotGapFor, kmBetween, nearestDot, pickRound, placesFor, pointsForKm, showDots, type KmBands, type MapPlace } from './mapHunt'
 import { makeRng } from './random'
 import { sound, vibrate } from './sound'
 import type { GameProps } from './types'
-import { Hud, Pops } from './ui'
+import { Hud, MapStage, Pops } from './ui'
 
 /**
  * A blind map round: ten place names, tap where each one is (or pick a dot on low levels).
@@ -37,7 +37,7 @@ export function MapHunt({ level, seed, t, onFinish, places, width, height, toMap
   const rng = useRef(makeRng(seed)).current
   const [round] = useState(() => pickRound(rng, places, level))
   const dots = showDots(level)
-  const makeDots = (target: MapPlace) => (dots ? dotChoices(rng, placesFor(places, level), target, dotCount(level), dotGapKm) : [])
+  const makeDots = (target: MapPlace) => (dots ? dotChoices(rng, placesFor(places, level), target, dotCount(level), dotGapFor(level, dotGapKm)) : [])
   const [index, setIndex] = useState(0)
   const [choices, setChoices] = useState(() => makeDots(round[0]))
   const [result, setResult] = useState<Result | null>(null)
@@ -79,17 +79,21 @@ export function MapHunt({ level, seed, t, onFinish, places, width, height, toMap
   }
 
   const pickDot = (p: MapPlace) => {
-    if (result) return
     if (p === target) finishTurn(null, 30, t('spotOn'))
     else finishTurn(toMap(p.at), 0, t('miss'))
   }
 
+  // One handler for the whole map: on dot levels the nearest dot wins, so dots close together never steal taps.
   const tapMap = (e: PointerEvent<SVGSVGElement>) => {
-    if (result || dots) return
-    const svg = svgRef.current
-    const m = svg?.getScreenCTM()
-    if (!svg || !m) return
+    if (result) return
+    const m = svgRef.current?.getScreenCTM()
+    if (!m) return
     const pt = new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse())
+    if (dots) {
+      const i = nearestDot(choices.map((p) => toMap(p.at)), [pt.x, pt.y], (DOT_HIT_R * width) / 1000)
+      if (i >= 0) pickDot(choices[i])
+      return
+    }
     const lonLat = fromMap([pt.x, pt.y])
     if (!lonLat) return
     const km = Math.round(kmBetween(lonLat, target.at))
@@ -109,16 +113,14 @@ export function MapHunt({ level, seed, t, onFinish, places, width, height, toMap
       <p className="prompt mh-ask" key={index}>
         {result ? result.label : t('where', { place: target.name })}
       </p>
-      <div className="mh-wrap" ref={wrapRef}>
+      <MapStage>
+      <div className="mh-wrap map-box" ref={wrapRef} style={{ '--map-ratio': width / height } as CSSProperties}>
         <svg ref={svgRef} viewBox={`0 0 ${width} ${height}`} className="mh-map" onPointerDown={tapMap}>
           {scene(dots)}
           {choices.map((p) => {
             const [x, y] = toMap(p.at)
             return (
-              <g key={`${index}-${p.name}`} className="mh-dot" onPointerDown={() => pickDot(p)}>
-                <circle cx={x} cy={y} r={42} className="mh-hit" />
-                <circle cx={x} cy={y} r={15} className={result && p === target ? 'mh-dot-right' : ''} />
-              </g>
+              <circle key={`${index}-${p.name}`} cx={x} cy={y} r={DOT_R} className={`mh-dot${result && p === target ? ' mh-dot-right' : ''}`} />
             )
           })}
           {result && (
@@ -134,6 +136,7 @@ export function MapHunt({ level, seed, t, onFinish, places, width, height, toMap
         </svg>
         <Pops pops={pops} />
       </div>
+      </MapStage>
     </div>
   )
 }

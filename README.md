@@ -23,3 +23,11 @@ npm run build     # output in dist/, deployable as a static site (e.g. Vercel)
 - `src/i18n`: English and Hungarian (EN/HU button on the home screen), ready for more languages.
 
 See [ADDING_A_GAME.md](ADDING_A_GAME.md) to add a game and [GAME_IDEAS.md](GAME_IDEAS.md) for what's next.
+
+## Credits
+
+- Flag emojis on Windows come from the "Twemoji Country Flags" font of
+  [country-flag-emoji-polyfill](https://github.com/talkjs/country-flag-emoji-polyfill) (code MIT). The flag art is
+  [Twemoji](https://github.com/twitter/twemoji), © Twitter, Inc. and other contributors, licensed
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+- Animal sound credits: `src/games/animal-sounds/sounds/CREDITS.md`.

@@ -22,6 +22,7 @@ const hu: Record<keyof typeof en, string> = {
   niceTry: 'Jó próbálkozás!',
   keepGoing: 'Csak így tovább!',
   levelUp: 'Szintlépés! Most {level}. szint',
+  loading: 'Készül a játék…',
   oops: 'Hoppá, valami elromlott!',
   oopsHint: 'Ez a játék most elakadt. Próbáld újra, vagy válassz egy másikat!',
   starsOf: '{n} csillag a 3-ból',

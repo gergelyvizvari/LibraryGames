@@ -38,5 +38,6 @@ export interface GameDef {
   meta: GameMeta
   /** Must contain at least `title`, `howTo` (one or two short sentences) for `en`. */
   strings: GameStrings
-  Component: ComponentType<GameProps>
+  /** Loads the game's component on demand: `() => import('./Game')`, so the home screen stays small. */
+  load: () => Promise<{ default: ComponentType<GameProps> }>
 }

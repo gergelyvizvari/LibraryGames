@@ -16,6 +16,26 @@ const EARTH_KM = 6371
 
 /** Up to level 3 the places show as dots and you pick one; after that the map is blind. */
 export const showDots = (level: number) => level <= 3
+/** Dot size and its touch circle, in map units on a 1000-wide map: about 14 px and 42 px across on a phone. */
+export const DOT_R = 20
+export const DOT_HIT_R = 60
+/** On the first two levels dots sit further apart, so small fingers don't hit the wrong one. */
+export const dotGapFor = (level: number, gapKm: number) => (level <= 2 ? gapKm * 1.6 : gapKm)
+
+/** The dot nearest to a tap, if the tap is within its touch circle; -1 if none is. */
+export function nearestDot(dots: [number, number][], [x, y]: [number, number], hitR = DOT_HIT_R) {
+  let best = -1
+  let bestD = hitR
+  dots.forEach(([dx, dy], i) => {
+    const d = Math.hypot(dx - x, dy - y)
+    if (d <= bestD) {
+      best = i
+      bestD = d
+    }
+  })
+  return best
+}
+
 /** How many dots are on the map when they are shown. */
 export const dotCount = (level: number) => clamp(4 + level * 2, 6, 10)
 

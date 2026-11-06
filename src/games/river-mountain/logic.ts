@@ -38,3 +38,12 @@ export function kmToFeature(f: Feature, tap: [number, number]) {
 export const BANDS: KmBands = [110, 230, 400]
 /** Dots closer than this are never both shown. */
 export const DOT_GAP_KM = 260
+
+/** The word shown over the question: ranges are "Mountains", single peaks "Mountain"; the ocean, bay and channel get their own word. */
+export type KindLabel = Feature['kind'] | 'peak' | 'ocean' | 'bay' | 'channel'
+const SEA_LABEL: Record<string, KindLabel> = { atlantic: 'ocean', biscay: 'bay', channel: 'channel' }
+export function kindLabel(f: Feature): KindLabel {
+  if (f.kind === 'mountain') return f.line ? 'mountain' : 'peak'
+  if (f.kind === 'sea') return SEA_LABEL[f.id] ?? 'sea'
+  return f.kind
+}

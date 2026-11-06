@@ -20,6 +20,7 @@ const en = {
   niceTry: 'Nice try!',
   keepGoing: 'Keep going!',
   levelUp: 'Level up! Now level {level}',
+  loading: 'Getting the game ready…',
   oops: 'Oops, something went wrong!',
   oopsHint: 'This game got stuck. Try again, or pick another game.',
   starsOf: '{n} of 3 stars',
