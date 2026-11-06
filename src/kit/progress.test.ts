@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { currentStreak, dailyDoneToday, loadProgress, nextLevel, recordRound, stars } from './progress'
+import { currentStreak, dailyDoneToday, gameProgress, loadProgress, nextLevel, recordRound, setLevel, stars } from './progress'
 
 describe('progress', () => {
   beforeEach(() => localStorage.clear())
@@ -53,5 +53,15 @@ describe('progress', () => {
     expect(stars(1)).toBe(3)
     expect(stars(0.7)).toBe(2)
     expect(stars(0)).toBe(0)
+  })
+
+  it('lets the player pick a level, kept between 1 and 10, and adapts from there', () => {
+    localStorage.clear()
+    setLevel('x', 7)
+    expect(gameProgress(loadProgress(), 'x').level).toBe(7)
+    setLevel('x', 99)
+    expect(gameProgress(loadProgress(), 'x').level).toBe(10)
+    setLevel('x', 0)
+    expect(gameProgress(loadProgress(), 'x').level).toBe(1)
   })
 })
