@@ -63,6 +63,15 @@ export function gameProgress(p: Progress, id: string): GameProgress {
   return p.games[id] ?? { best: 0, plays: 0, level: 1 }
 }
 
+/** The player picks a level by hand; later rounds keep adapting from there. */
+export function setLevel(id: string, level: number) {
+  const p = loadProgress()
+  const g = gameProgress(p, id)
+  save({ ...p, games: { ...p.games, [id]: { ...g, level: clamp(Math.round(level), 1, MAX_LEVEL) } } })
+}
+
+export const MAX_LEVEL = 10
+
 /** Raise the level after a strong round, lower it after a weak one. */
 export function nextLevel(level: number, accuracy: number) {
   if (accuracy >= 0.8) return clamp(level + 1, 1, 10)

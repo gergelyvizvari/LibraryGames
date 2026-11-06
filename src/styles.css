@@ -210,6 +210,11 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .intro-icon { width: 96px; height: 96px; animation: bob 2s ease-in-out infinite; }
 .intro h1 { font-size: 2.2rem; }
 .howto { font-size: 1.2rem; max-width: 32ch; margin: 0; }
+.level-pick { display: flex; align-items: center; gap: 12px; }
+.level-now { min-width: 6.5em; text-align: center; font-weight: 800; font-size: 1.2rem; padding: 6px 14px; border-radius: 14px; background: var(--game-surface); color: var(--on-color); box-shadow: 0 3px 0 var(--game-edge); }
+.level-step { width: 52px; height: 52px; border-radius: 16px; background: var(--card); border: 3px solid var(--line); box-shadow: 0 4px 0 var(--press); font-size: 1.8rem; font-weight: 800; line-height: 1; color: var(--ink); }
+.level-step:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--press); }
+.level-step:disabled { opacity: 0.35; cursor: default; transform: none; box-shadow: 0 4px 0 var(--press); }
 .countdown { flex: 1; display: grid; place-items: center; font-size: 8rem; font-weight: 700; color: var(--game-text); animation: zoom 0.6s ease-out; }
 .stage { flex: 1; display: flex; flex-direction: column; margin-top: 12px; position: relative; }
 .game-loading { flex: 1; display: grid; place-items: center; font-weight: 700; color: var(--muted); }

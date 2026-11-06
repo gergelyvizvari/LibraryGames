@@ -2,7 +2,7 @@ import { Suspense, lazy, useEffect, useMemo, useState, type ComponentType } from
 import { makeGameT, useLocale, useT } from '../i18n'
 import { useTimeouts } from './hooks'
 import { Icon } from './icon'
-import { gameProgress, loadProgress, recordRound, stars, type RecordOutcome } from './progress'
+import { MAX_LEVEL, gameProgress, loadProgress, recordRound, setLevel, stars, type RecordOutcome } from './progress'
 import { randomSeed } from './random'
 import { sound } from './sound'
 import { gameColorVars } from './theme'
@@ -52,7 +52,13 @@ export function GameFrame({
   const [roundSeed, setRoundSeed] = useState(() => seed ?? randomSeed())
   const [result, setResult] = useState<{ score: number; accuracy: number; outcome: RecordOutcome } | null>(null)
   const later = useTimeouts()
+  const [, setPicked] = useState(0)
   const progress = gameProgress(loadProgress(), game.meta.id)
+  const pickLevel = (level: number) => {
+    sound.tap()
+    setLevel(game.meta.id, level)
+    setPicked((n) => n + 1)
+  }
 
   useEffect(() => {
     if (phase !== 'countdown') return
@@ -107,6 +113,17 @@ export function GameFrame({
           <h1>{gt('title')}</h1>
           <p className="howto">{gt('howTo')}</p>
           <p className="muted">{progress.best > 0 ? t('best', { score: progress.best }) : t('noBestYet')}</p>
+          <div className="level-pick" role="group" aria-label={t('pickLevel')}>
+            <button className="level-step" onClick={() => pickLevel(progress.level - 1)} disabled={progress.level <= 1} aria-label={t('easier')}>
+              −
+            </button>
+            <span className="level-now" aria-live="polite">
+              {t('level', { level: progress.level })}
+            </span>
+            <button className="level-step" onClick={() => pickLevel(progress.level + 1)} disabled={progress.level >= MAX_LEVEL} aria-label={t('harder')}>
+              +
+            </button>
+          </div>
           <button className="big-btn" onClick={start} autoFocus>
             {t('play')}
           </button>
