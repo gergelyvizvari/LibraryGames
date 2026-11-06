@@ -66,3 +66,18 @@ export function wordsForLevel(list: string[], level: number) {
   const pool = list.filter((w) => w.length >= min && w.length <= max)
   return pool.length >= 20 ? pool : list
 }
+
+/** Up to this level a word also counts typed without accents (cel for cél), as ő and ű are hard on many keyboards. */
+export const ACCENT_FREE_UP_TO = 4
+
+const fold = (s: string) => s.normalize('NFD').replace(/\p{M}/gu, '').normalize('NFC')
+
+/** Whether `typed` is the start of `word`; at low levels missing accents are fine. */
+export function typedPrefix(word: string, typed: string, level: number) {
+  return level <= ACCENT_FREE_UP_TO ? fold(word).startsWith(fold(typed)) : word.startsWith(typed)
+}
+
+/** Whether `typed` is the whole `word`; at low levels missing accents are fine. */
+export function typedWhole(word: string, typed: string, level: number) {
+  return typed.length === word.length && typedPrefix(word, typed, level)
+}
