@@ -212,6 +212,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .howto { font-size: 1.2rem; max-width: 32ch; margin: 0; }
 .countdown { flex: 1; display: grid; place-items: center; font-size: 8rem; font-weight: 700; color: var(--game-text); animation: zoom 0.6s ease-out; }
 .stage { flex: 1; display: flex; flex-direction: column; margin-top: 12px; position: relative; }
+.game-loading { flex: 1; display: grid; place-items: center; font-weight: 700; color: var(--muted); }
 .results h1 { font-size: 2rem; }
 .oops h1 { font-size: 1.8rem; }
 .next-btn { background: var(--card); color: var(--game-text); box-shadow: 0 0 0 2px var(--line), 0 5px 0 var(--line); }

@@ -27,7 +27,7 @@ Never punish harshly: a mistake costs a combo or a heart, with a soft sound, nev
 
 ```
 src/games/<id>/
-  index.ts      GameDef: meta + strings + Component
+  index.ts      GameDef: meta + strings + load (the Game, loaded on demand)
   icon.tsx      the game's drawn icon (see Icons below)
   Game.tsx      the round (default export)
   strings.ts    every piece of text, keyed, under `en` and `hu`
@@ -48,7 +48,7 @@ import { icon } from './icon'
 const game: GameDef = {
   meta: { id: 'my-game', skill: 'logic', icon, color: '#ff9f43', added: '2026-10-27' },
   strings,
-  Component: Game,
+  load: () => import('./Game'), // never import Game directly: each game is its own download
 }
 ```
 
