@@ -16,7 +16,21 @@ type Phase = 'intro' | 'countdown' | 'playing' | 'results'
  * Everything around a game: intro card, 3-2-1 countdown, the round itself, results.
  * Games only render the round and call `onFinish` once.
  */
-export function GameFrame({ game, seed, onHome }: { game: GameDef; seed?: number; onHome: () => void }) {
+export function GameFrame({
+  game,
+  seed,
+  daily = false,
+  onHome,
+  onNext,
+}: {
+  game: GameDef
+  seed?: number
+  /** Playing today's daily challenge: a finished round marks it done on the home screen. */
+  daily?: boolean
+  onHome: () => void
+  /** Offers another game on the results card. */
+  onNext?: () => void
+}) {
   const locale = useLocale()
   const t = useT()
   const gt = useMemo(() => makeGameT(game.strings, locale), [game, locale])
@@ -46,7 +60,7 @@ export function GameFrame({ game, seed, onHome }: { game: GameDef; seed?: number
   }
 
   const finish = (r: RoundResult) => {
-    const outcome = recordRound(game.meta.id, game.meta.skill, r)
+    const outcome = recordRound(game.meta.id, game.meta.skill, r, new Date(), daily)
     setResult({ ...r, outcome })
     if (outcome.newRecord || stars(r.accuracy) === 3) sound.win()
     later(() => setPhase('results'), 700)
@@ -138,6 +152,11 @@ export function GameFrame({ game, seed, onHome }: { game: GameDef; seed?: number
             <button className="big-btn" onClick={again} autoFocus>
               {t('playAgain')}
             </button>
+            {onNext && (
+              <button className="big-btn next-btn" onClick={onNext}>
+                {t('nextGame')}
+              </button>
+            )}
             <button className="ghost-btn" onClick={onHome}>
               {t('home')}
             </button>

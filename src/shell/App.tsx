@@ -4,6 +4,7 @@ import { detectLocale, LocaleContext, saveLocale, type Locale } from '../i18n'
 import { GameFrame } from '../kit/GameFrame'
 import { daySeed } from '../kit/random'
 import { Home } from './Home'
+import { nextGame } from './next'
 import { Privacy } from './Privacy'
 
 // Tiny hash router: #/ is home, #/play/<id> plays a game, #/daily/<id> plays the daily challenge, #/privacy is for parents.
@@ -44,7 +45,9 @@ export function App() {
             key={`${route.mode}-${game.meta.id}`}
             game={game}
             seed={route.mode === 'daily' ? daySeed() : undefined}
+            daily={route.mode === 'daily'}
             onHome={() => go('/')}
+            onNext={() => go(`/play/${nextGame(game.meta.id).meta.id}`)}
           />
         ) : route.mode === 'privacy' ? (
           <Privacy onHome={() => go('/')} />

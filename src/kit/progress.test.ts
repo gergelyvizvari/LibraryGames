@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { loadProgress, nextLevel, recordRound, stars } from './progress'
+import { currentStreak, dailyDoneToday, loadProgress, nextLevel, recordRound, stars } from './progress'
 
 describe('progress', () => {
   beforeEach(() => localStorage.clear())
@@ -29,6 +29,24 @@ describe('progress', () => {
     expect(loadProgress().streak.days).toBe(2)
     recordRound('demo', 'memory', { score: 1, accuracy: 0.5 }, new Date(2026, 9, 5))
     expect(loadProgress().streak.days).toBe(1)
+  })
+
+  it('shows a streak only while it is alive', () => {
+    recordRound('demo', 'memory', { score: 1, accuracy: 0.5 }, new Date(2026, 9, 1))
+    recordRound('demo', 'memory', { score: 1, accuracy: 0.5 }, new Date(2026, 9, 2))
+    const p = loadProgress()
+    expect(currentStreak(p, new Date(2026, 9, 2))).toBe(2)
+    expect(currentStreak(p, new Date(2026, 9, 3))).toBe(2)
+    expect(currentStreak(p, new Date(2026, 9, 4))).toBe(0)
+  })
+
+  it('remembers the day the daily challenge was done', () => {
+    const day = new Date(2026, 9, 7)
+    recordRound('demo', 'memory', { score: 1, accuracy: 0.5 }, day)
+    expect(dailyDoneToday(loadProgress(), day)).toBe(false)
+    recordRound('demo', 'memory', { score: 1, accuracy: 0.5 }, day, true)
+    expect(dailyDoneToday(loadProgress(), day)).toBe(true)
+    expect(dailyDoneToday(loadProgress(), new Date(2026, 9, 8))).toBe(false)
   })
 
   it('gives up to three stars', () => {
