@@ -669,14 +669,11 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .op-msg { min-height: 2.6em; display: grid; place-items: center; text-align: center; }
 .op-yes { color: var(--good); }
 .op-no { color: var(--bad); }
-.op-board { position: relative; display: grid; grid-template-columns: 1fr 1fr; column-gap: 26px; row-gap: 10px; width: 100%; max-width: 440px; margin: 0 auto; animation: zoom 0.25s; }
+.op-board { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 440px; margin: 0 auto; animation: zoom 0.25s; }
 .op-card { position: relative; display: grid; justify-items: center; align-content: center; gap: 2px; min-height: clamp(64px, 10vh, 96px); padding: 8px 6px; border-radius: 20px; background: var(--card); border: 3px solid var(--line); box-shadow: 0 5px 0 var(--press); color: var(--ink); -webkit-tap-highlight-color: transparent; transition: transform 0.12s, background 0.15s, border-color 0.15s; }
 .op-card:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--press); }
 .op-emoji { font-size: clamp(2rem, 5vh, 2.6rem); line-height: 1.1; }
 .op-word { font-size: clamp(1.05rem, 5vw, 1.35rem); font-weight: 800; line-height: 1.15; overflow-wrap: anywhere; }
 .op-selected { background: var(--game-surface); border-color: var(--game-surface); color: var(--on-color); transform: scale(1.05); }
-.op-left.op-selected::after, .op-right.op-selected::before { content: ''; position: absolute; top: 50%; width: 14px; height: 6px; margin-top: -3px; border-radius: 3px; background: var(--game-surface); }
-.op-left.op-selected::after { right: -20px; }
-.op-right.op-selected::before { left: -20px; }
 .op-matched { background: var(--good-soft); border-color: var(--good); box-shadow: none; opacity: 0.55; animation: pulse 0.3s 2 alternate; }
 .op-miss { background: var(--bad-soft); border-color: var(--bad); animation: shake 0.35s; }

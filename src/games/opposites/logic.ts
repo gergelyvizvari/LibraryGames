@@ -3,7 +3,7 @@ import { poolFor, type Pair } from './content'
 
 export const DURATION = 60
 
-const PAIRS = [3, 3, 4, 4, 4, 5, 5, 5, 6, 6]
+const PAIRS = [4, 4, 4, 5, 5, 5, 5, 6, 6, 6]
 export const pairCount = (level: number) => PAIRS[clamp(Math.round(level), 1, 10) - 1]
 /** Pictures help the youngest players read the words; from level 6 the words stand alone. */
 export const showPictures = (level: number) => level < 6

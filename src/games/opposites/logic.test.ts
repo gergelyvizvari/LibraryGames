@@ -43,7 +43,7 @@ describe.each(Object.entries(pairs))('opposites boards (%s)', (_, list) => {
 
 describe('opposites rules', () => {
   it('starts easy and grows', () => {
-    expect(pairCount(1)).toBe(3)
+    expect(pairCount(1)).toBe(4)
     expect(pairCount(10)).toBe(6)
     expect(showPictures(1)).toBe(true)
     expect(showPictures(6)).toBe(false)
