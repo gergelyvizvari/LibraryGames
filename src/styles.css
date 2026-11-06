@@ -204,6 +204,8 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .countdown { flex: 1; display: grid; place-items: center; font-size: 8rem; font-weight: 700; color: var(--game-text); animation: zoom 0.6s ease-out; }
 .stage { flex: 1; display: flex; flex-direction: column; margin-top: 12px; position: relative; }
 .results h1 { font-size: 2rem; }
+.oops h1 { font-size: 1.8rem; }
+.oops-face { font-size: 4rem; line-height: 1; }
 .final-score { font-size: 4.5rem; font-weight: 700; color: var(--game-text); line-height: 1; }
 .level-up { background: var(--highlight); border-radius: 999px; padding: 4px 16px; font-weight: 700; margin: 0; }
 .stars { display: flex; gap: 6px; font-size: 3.4rem; }

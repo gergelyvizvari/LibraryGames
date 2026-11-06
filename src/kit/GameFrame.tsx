@@ -8,6 +8,7 @@ import { sound } from './sound'
 import { gameColorVars } from './theme'
 import type { GameDef, RoundResult } from './types'
 import { Confetti } from './ui'
+import { ErrorBoundary } from './ErrorBoundary'
 
 type Phase = 'intro' | 'countdown' | 'playing' | 'results'
 
@@ -92,14 +93,35 @@ export function GameFrame({ game, seed, onHome }: { game: GameDef; seed?: number
 
       {phase === 'playing' && (
         <div className="stage">
-          <Component key={round} level={progress.level} seed={roundSeed} t={gt} onFinish={finish} />
+          <ErrorBoundary
+            key={round}
+            fallback={
+              <div className="card oops" role="alert">
+                <div className="oops-face" aria-hidden>
+                  🙈
+                </div>
+                <h1>{t('oops')}</h1>
+                <p className="muted">{t('oopsHint')}</p>
+                <div className="row">
+                  <button className="big-btn" onClick={again}>
+                    {t('playAgain')}
+                  </button>
+                  <button className="ghost-btn" onClick={onHome}>
+                    {t('home')}
+                  </button>
+                </div>
+              </div>
+            }
+          >
+            <Component level={progress.level} seed={roundSeed} t={gt} onFinish={finish} />
+          </ErrorBoundary>
         </div>
       )}
 
       {phase === 'results' && result && (
         <div className="card results">
           {(result.outcome.newRecord || stars(result.accuracy) === 3) && <Confetti />}
-          <div className="stars" aria-label={`${stars(result.accuracy)} / 3`}>
+          <div className="stars" role="img" aria-label={t('starsOf', { n: stars(result.accuracy) })}>
             {[1, 2, 3].map((n) => (
               <span key={n} className={n <= stars(result.accuracy) ? 'star on' : 'star'} style={{ animationDelay: `${n * 0.15}s` }}>
                 ★
