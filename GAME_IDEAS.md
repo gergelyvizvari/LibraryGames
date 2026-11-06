@@ -5,7 +5,6 @@ Edit freely: reorder, add, or delete ideas.
 
 ## Up next
 
-- **Animal Sounds** (memory): hear a series of animal sounds, tap the animals in the same order.
 - **Opposites** (language): match word pairs like hot/cold, big/small.
 - **Even Odd Sort** (maths): numbers fall; swipe left for even, right for odd.
 - **Number Line Jump** (maths): a frog jumps along a number line; tap where it lands after +3, −2 and so on.
@@ -48,6 +47,7 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-10-27 | Rhythm Copy | memory |
 | 2026-10-28 | Feed the Monster | maths |
 | 2026-10-28 | Colour Sort | logic |
+| 2026-10-29 | Animal Sounds | memory |
 | 2026-10-30 | Rhyme Time | language |
 | 2026-10-31 | Hungary Map Hunt | geography |
 | 2026-11-01 | Clock Catch | maths |

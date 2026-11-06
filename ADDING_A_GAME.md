@@ -98,7 +98,7 @@ export const icon: GameIcon = [
 - `hooks.ts`: `useCountdown(seconds, onEnd, running)`, `useGameLoop(dt => …, running)`, `useTimeouts()`,
   `usePops()`, `useShake()`, `useInterval()`.
 - `ui.tsx`: `<Hud items>`, `<TimerBar>`, `<Pops>`, `<Hearts>`, `<Confetti>`.
-- `sound.ts`: `sound.good(combo)`, `bad`, `pop`, `tap`, `tick`, `win`, `tone(freq, dur)`, `vibrate(ms)`.
+- `sound.ts`: `sound.good(combo)`, `bad`, `pop`, `tap`, `tick`, `win`, `tone(freq, dur)`, `vibrate(ms)`. Real recordings: `preloadClip(url)` + `playClip(url)` (import the file from the game folder; keep clips tiny and list their source and licence in a `sounds/CREDITS.md`).
 - `random.ts`: `makeRng(seed)` with `int`, `pick`, `shuffle`, `chance`; `clamp`.
 - `MapHuntGame.tsx` + `mapHunt.ts`: a whole "find the place on a blind map" round. A map game only supplies its map,
   places, projection and km bands (see `country-map` and `uk-map`).
