@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from 'vitest'
-import { facebookShareUrl, share, shareUrl } from './share'
+import indexHtml from '../../index.html?raw'
+import { facebookShareUrl, share, shareUrl, SITE_URL } from './share'
 
 const data = { title: 'Colour Sort', text: 'I scored 120 points!', url: 'https://example.org/?lang=en#/play/color-sort' }
 
 describe('share', () => {
-  it('builds links that keep the language and open the right screen', () => {
-    const loc = { origin: 'https://example.org', pathname: '/' }
-    expect(shareUrl('', 'hu', loc)).toBe('https://example.org/?lang=hu')
-    expect(shareUrl('#/play/color-sort', 'en', loc)).toBe('https://example.org/?lang=en#/play/color-sort')
+  it('builds links to the public site that keep the language and open the right screen', () => {
+    expect(shareUrl('', 'hu')).toBe('https://www.librarygames.app/?lang=hu')
+    expect(shareUrl('#/play/color-sort', 'en')).toBe('https://www.librarygames.app/?lang=en#/play/color-sort')
   })
 
   it('links to Facebook\'s share page with the whole link, hash included', () => {
@@ -42,5 +42,11 @@ describe('share', () => {
     expect(await share(data, {} as Navigator)).toBe('failed')
     const broken = { clipboard: { writeText: vi.fn().mockRejectedValue(new Error('no')) } }
     expect(await share(data, broken as unknown as Navigator)).toBe('failed')
+  })
+})
+
+describe('SITE_URL', () => {
+  it('matches the canonical link in index.html', () => {
+    expect(indexHtml).toContain(`<link rel="canonical" href="${SITE_URL}" />`)
   })
 })

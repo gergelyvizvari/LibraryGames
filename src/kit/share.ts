@@ -8,11 +8,17 @@ export interface ShareData {
 }
 
 /**
- * A link to this site that opens `hash` (e.g. `#/play/color-sort`) in the given language,
+ * The public site, the same as the canonical link in index.html. Shared links always point here, even from a
+ * Vercel preview: previews sit behind a Vercel login, so Facebook would show "Dashboard – Vercel" instead of our og: card.
+ */
+export const SITE_URL = 'https://www.librarygames.app/'
+
+/**
+ * A link to the public site that opens `hash` (e.g. `#/play/color-sort`) in the given language,
  * so a Hungarian parent's friends see the game in Hungarian too.
  */
-export function shareUrl(hash: string, locale: string, loc: Pick<Location, 'origin' | 'pathname'> = location) {
-  return `${loc.origin}${loc.pathname}?lang=${locale}${hash}`
+export function shareUrl(hash: string, locale: string, site = SITE_URL) {
+  return `${site}?lang=${locale}${hash}`
 }
 
 /** Facebook's share page for a link. Facebook ignores any text we suggest: the post preview comes from the page's og: tags. */
