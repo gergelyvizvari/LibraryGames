@@ -5,7 +5,6 @@ Edit freely: reorder, add, or delete ideas.
 
 ## Up next
 
-- **Even Odd Sort** (maths): numbers fall; swipe left for even, right for odd.
 - **Number Line Jump** (maths): a frog jumps along a number line; tap where it lands after +3, −2 and so on.
 - **Word Families** (language): sort words into the right group (animals, food, colours) as they slide in.
 - **Story Order** (reading): three or four picture cards from a tiny story; put them in the right order.
@@ -56,3 +55,4 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-11-04 | Flag Friends | memory |
 | 2026-11-05 | River & Mountain Hunt | geography |
 | 2026-11-06 | Opposites | language |
+| 2026-11-07 | Even or Odd? | maths |

@@ -35,11 +35,12 @@ import continentSort from './continent-sort'
 import flagFriends from './flag-friends'
 import riverMountain from './river-mountain'
 import opposites from './opposites'
+import evenOdd from './even-odd'
 
 // One line per game. New games go at the end.
 export const games: GameDef[] = [sequenceEcho, lightsOut, wordCatch, stroopClash, numberNinja, flashRead, pairRush, typeDefender,
   shapeSpin, whatNext, oddOne, blindMap, towerStack,
   gridGlow, molePop, anagramRace, simonSays, howMany, sentenceBuilder, letterPop, mazeDash, mirrorMatch, capitalMatch,
-  rhythmCopy, feedMonster, colorSort, animalSounds, rhymeTime, clockCatch, countryMap, ukMap, busyBees, continentSort, flagFriends, riverMountain, opposites]
+  rhythmCopy, feedMonster, colorSort, animalSounds, rhymeTime, clockCatch, countryMap, ukMap, busyBees, continentSort, flagFriends, riverMountain, opposites, evenOdd]
 
 export const gameById = (id: string) => games.find((g) => g.meta.id === id)
