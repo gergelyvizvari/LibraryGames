@@ -4,6 +4,8 @@ import { makeGameT, nextLocale, useLocale, useT, type Locale } from '../i18n'
 import { Icon } from '../kit/icon'
 import { currentStreak, dailyDoneToday, gameProgress, isIosBrowser, loadProgress } from '../kit/progress'
 import { daySeed, makeRng } from '../kit/random'
+import { ShareButton } from '../kit/ShareButton'
+import { shareUrl } from '../kit/share'
 import { sound } from '../kit/sound'
 import { gameColorVars, loadTheme, nextTheme, setTheme, themeIcons } from '../kit/theme'
 import { skills, type GameDef, type Skill } from '../kit/types'
@@ -74,6 +76,10 @@ export function Home({ onPlay, onLocale }: { onPlay: (id: string, daily?: boolea
           <a className="icon-btn tea-btn" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer" title={t('supportHint')} aria-label={t('supportHint')}>
             <span aria-hidden>🍵</span>
           </a>
+          <ShareButton
+            hint={t('share.page')}
+            data={() => ({ title: t('appName'), text: t('share.pageText'), url: shareUrl('', locale) })}
+          />
           <button
             className="icon-btn"
             aria-label={t('theme', { name: t(`theme.${theme}`) })}
