@@ -110,7 +110,8 @@ h1, h2 { margin: 0; line-height: 1.1; }
 
 /* Share buttons (kit/ShareButton.tsx): the phone's share sheet, or a small "Link copied!" bubble under the button. */
 .share-wrap { position: relative; display: inline-flex; flex: none; }
-.share-glyph { width: 1.25em; height: 1.25em; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; vertical-align: -0.22em; }
+.game-icon.share-glyph { display: inline-block; width: 1.5em; height: 1.5em; flex: none; vertical-align: -0.35em; }
+.share-icon-btn .game-icon.share-glyph { width: 28px; height: 28px; }
 .share-icon-btn { display: grid; place-items: center; color: var(--ink); }
 .share-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 1.05rem; padding: 10px 20px; }
 .share-btn:hover { color: var(--ink); }
@@ -133,7 +134,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
   color: var(--ink); font-weight: 700; font-size: 1rem; text-decoration: none; white-space: nowrap;
 }
 .share-menu > *:hover, .share-menu > *:focus-visible { background: var(--highlight); }
-.share-menu .share-glyph, .share-fb { width: 22px; height: 22px; flex: none; }
+.share-menu .game-icon.share-glyph, .share-fb { width: 22px; height: 22px; flex: none; }
 .share-menu > * > span[aria-hidden] { width: 22px; text-align: center; }
 @keyframes pop-in { from { opacity: 0; transform: translateY(-4px); } }
 

@@ -1,17 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import { useT } from '../i18n'
 import { useTimeouts } from './hooks'
+import { Icon, type GameIcon } from './icon'
 import { canNativeShare, copyShare, facebookShareUrl, share, type ShareData } from './share'
 import { sound } from './sound'
 
-/** A chunky "share" glyph (a box with an arrow out of it), drawn in the text colour so it works in every theme. */
+/** The share sticker: a red arrow coming out of a yellow box, in the same toy-sticker style as the game icons. */
+export const shareIcon: GameIcon = [
+  ['base', '#feca57', <path d="M7 22h9v6h16v-6h9v18a4 4 0 0 1-4 4H11a4 4 0 0 1-4-4z" />],
+  ['accent', '#ff6b6b', <path d="M24 4l12 12h-7v16H19V16h-7z" />],
+  ['shine', '#fff', <rect x="21" y="18" width="3" height="10" rx="1.5" />],
+]
+
 export function ShareGlyph() {
-  return (
-    <svg className="share-glyph" viewBox="0 0 24 24" aria-hidden focusable="false">
-      <path d="M8 10H6.5A1.5 1.5 0 0 0 5 11.5v8A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 17.5 10H16" />
-      <path d="M12 15V3M7.5 7.5 12 3l4.5 4.5" />
-    </svg>
-  )
+  return <Icon icon={shareIcon} className="share-glyph" />
 }
 
 function FacebookGlyph() {
