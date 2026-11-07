@@ -4,6 +4,8 @@ import { useTimeouts } from './hooks'
 import { Icon } from './icon'
 import { MAX_LEVEL, gameProgress, loadProgress, recordRound, setLevel, stars, type RecordOutcome } from './progress'
 import { randomSeed } from './random'
+import { shareUrl } from './share'
+import { ShareButton } from './ShareButton'
 import { sound } from './sound'
 import { gameColorVars } from './theme'
 import type { GameDef, GameProps, RoundResult } from './types'
@@ -92,6 +94,9 @@ export function GameFrame({
     start()
   }
 
+  // Shared links open the game itself (not the daily challenge, which changes every day) in the player's language.
+  const gameUrl = () => shareUrl(`#/play/${game.meta.id}`, locale)
+
   const Component = gameComponent(game)
   return (
     <div className="frame" style={gameColorVars(game.meta.color)}>
@@ -103,6 +108,10 @@ export function GameFrame({
           <Icon icon={game.meta.icon} className="frame-icon" /> {gt('title')}
         </span>
         <span className="frame-level">{t('level', { level: progress.level })}</span>
+        {/* Not while playing, so a stray tap never pulls a child out of a round. */}
+        {(phase === 'intro' || phase === 'results') && (
+          <ShareButton hint={t('share.game')} data={() => ({ title: gt('title'), text: t('share.gameText', { game: gt('title') }), url: gameUrl() })} />
+        )}
       </header>
 
       {phase === 'intro' && (
@@ -194,6 +203,12 @@ export function GameFrame({
               {t('home')}
             </button>
           </div>
+          <ShareButton
+            label={t('share.score')}
+            up
+            hint={t('share.score')}
+            data={() => ({ title: gt('title'), text: t('share.scoreText', { score: result.score, game: gt('title') }), url: gameUrl() })}
+          />
         </div>
       )}
     </div>

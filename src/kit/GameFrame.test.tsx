@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { GameFrame } from './GameFrame'
@@ -44,5 +45,32 @@ describe('GameFrame', () => {
     fireEvent.click(screen.getByText('Play again'))
     for (let i = 0; i < 5; i++) await act(async () => vi.advanceTimersByTime(700))
     expect(tries).toBeGreaterThan(before)
+  })
+
+  it('lets the player share their score from the results card', async () => {
+    vi.useFakeTimers()
+    const quick: GameDef = {
+      ...broken,
+      meta: { ...broken.meta, id: 'quick' },
+      strings: { en: { title: 'Quick', howTo: 'It ends.' } },
+      load: async () => ({
+        default: ({ onFinish }) => {
+          // Once, like a real game.
+          useEffect(() => onFinish({ score: 42, accuracy: 1 }), [])
+          return null
+        },
+      }),
+    }
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true })
+    render(<GameFrame game={quick} onHome={() => {}} />)
+    fireEvent.click(screen.getByText('Play!'))
+    for (let i = 0; i < 8; i++) await act(async () => vi.advanceTimersByTime(700))
+    fireEvent.click(screen.getByText('Share my score'))
+    const facebook = screen.getByText('Facebook').closest('a')!
+    expect(facebook.getAttribute('href')).toMatch(/^https:\/\/www\.facebook\.com\/sharer\/sharer\.php\?u=.*%3Flang%3Den%23%2Fplay%2Fquick$/)
+    await act(async () => fireEvent.click(screen.getByText('Copy link')))
+    expect(writeText.mock.calls[0][0]).toMatch(/^I scored 42 points in Quick! .*\?lang=en#\/play\/quick$/)
+    expect(screen.getByText('Link copied!').getAttribute('role')).toBe('status')
   })
 })

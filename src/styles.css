@@ -108,6 +108,36 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .icon-btn { width: 46px; height: 46px; border-radius: 14px; background: var(--card); font-size: 1.2rem; box-shadow: var(--shadow); flex: none; margin-bottom: 5px; }
 .icon-btn:active { transform: translateY(3px); box-shadow: 0 0 0 2px var(--line), 0 2px 0 var(--line); }
 
+/* Share buttons (kit/ShareButton.tsx): the phone's share sheet, or a small "Link copied!" bubble under the button. */
+.share-wrap { position: relative; display: inline-flex; flex: none; }
+.game-icon.share-glyph { display: inline-block; width: 1.5em; height: 1.5em; flex: none; vertical-align: -0.35em; }
+.share-icon-btn .game-icon.share-glyph { width: 28px; height: 28px; }
+.share-icon-btn { display: grid; place-items: center; color: var(--ink); }
+.share-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 1.05rem; padding: 10px 20px; }
+.share-btn:hover { color: var(--ink); }
+.share-note {
+  position: absolute; top: calc(100% + 6px); right: 0; z-index: 5; white-space: nowrap; pointer-events: none;
+  background: var(--ink); color: var(--bg); font-size: 0.85rem; font-weight: 700; padding: 4px 10px; border-radius: 10px;
+  opacity: 0; transform: translateY(-4px); transition: opacity 0.15s, transform 0.15s;
+}
+.share-note-on { opacity: 1; transform: none; }
+.share-note-center { right: 50%; transform: translate(50%, -4px); }
+.share-note-center.share-note-on { transform: translate(50%, 0); }
+.share-menu {
+  position: absolute; top: calc(100% + 4px); right: 0; z-index: 6; min-width: 190px; display: flex; flex-direction: column; padding: 6px;
+  background: var(--card); border-radius: 16px; box-shadow: var(--shadow); text-align: left; animation: pop-in 0.12s ease-out;
+}
+.share-menu-up { top: auto; bottom: calc(100% + 8px); }
+.share-menu-center { right: 50%; transform: translateX(50%); animation: none; }
+.share-menu > * {
+  display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 12px; border-radius: 10px; background: transparent;
+  color: var(--ink); font-weight: 700; font-size: 1rem; text-decoration: none; white-space: nowrap;
+}
+.share-menu > *:hover, .share-menu > *:focus-visible { background: var(--highlight); }
+.share-menu .game-icon.share-glyph, .share-fb { width: 22px; height: 22px; flex: none; }
+.share-menu > * > span[aria-hidden] { width: 22px; text-align: center; }
+@keyframes pop-in { from { opacity: 0; transform: translateY(-4px); } }
+
 /* Game icons: drawn stickers, every part in its own colour with a chunky ink outline (see kit/icon.tsx).
    The outline stays dark in every theme, because the icons always sit on a game colour or a sticker-friendly card. */
 .game-icon { display: block; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.22)); }
