@@ -687,3 +687,30 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .op-selected { background: var(--game-surface); border-color: var(--game-surface); color: var(--on-color); transform: scale(1.05); }
 .op-matched { background: var(--good-soft); border-color: var(--good); box-shadow: none; opacity: 0.55; animation: pulse 0.3s 2 alternate; }
 .op-miss { background: var(--bad-soft); border-color: var(--bad); animation: shake 0.35s; }
+
+/* Even or Odd? */
+.eo-msg { min-height: 2.6em; display: grid; place-items: center; font-size: 1.25rem; }
+.eo-yes { color: var(--good); }
+.eo-no { color: var(--bad); }
+.eo-field { position: relative; flex: 1; min-height: 300px; border-radius: 28px; background: var(--card); border: 3px dashed var(--line); overflow: hidden; touch-action: none; }
+.eo-drop { position: absolute; left: 50%; display: grid; justify-items: center; gap: 6px; min-width: 104px; padding: 12px 18px; border-radius: 26px; background: var(--game-surface); color: var(--on-color); box-shadow: 0 6px 0 rgba(0, 0, 0, 0.18); transform: translateX(-50%); transition: transform 0.35s ease-in, opacity 0.35s ease-in; pointer-events: none; animation: zoom 0.2s; }
+.eo-num { font-size: 3rem; font-weight: 800; line-height: 1; }
+.eo-drop-dots .eo-num { font-size: 2.4rem; }
+.eo-dots { display: grid; grid-template-rows: repeat(2, 12px); gap: 5px 7px; }
+.eo-dot { width: 12px; height: 12px; border-radius: 50%; background: #fff; }
+.eo-dot-empty { visibility: hidden; }
+.eo-dot-lone { background: #feca57; box-shadow: 0 0 0 2px #fff; }
+.eo-gone-even { transform: translate(-190%, 140%) scale(0.35); opacity: 0; }
+.eo-gone-odd { transform: translate(90%, 140%) scale(0.35); opacity: 0; }
+.eo-drop-wrong { background: var(--bad); }
+.eo-arrow { position: absolute; bottom: 10px; font-size: 1.6rem; color: var(--muted); opacity: 0.6; pointer-events: none; }
+.eo-arrow-left { left: 16px; }
+.eo-arrow-right { right: 16px; }
+.eo-bins { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.eo-bin { display: grid; justify-items: center; gap: 2px; min-height: 92px; padding: 10px 6px; border-radius: 0 0 28px 28px; background: var(--card); border: 3px solid var(--line); border-top-width: 8px; box-shadow: 0 5px 0 var(--press); color: var(--ink); font-size: 1.35rem; font-weight: 800; transition: transform 0.12s, background 0.15s; }
+.eo-bin:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--press); }
+.eo-bin-even { border-top-color: #54a0ff; }
+.eo-bin-odd { border-top-color: #ff9f43; }
+.eo-bin-dots { font-size: 0.8rem; line-height: 1; letter-spacing: 3px; color: var(--muted); }
+.eo-bin-right { background: var(--good-soft); border-color: var(--good); animation: pulse 0.2s 2 alternate; }
+.eo-bin-wrong { background: var(--bad-soft); border-color: var(--bad); animation: shake 0.35s; }
