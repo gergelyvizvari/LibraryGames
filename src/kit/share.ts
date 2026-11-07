@@ -15,6 +15,27 @@ export function shareUrl(hash: string, locale: string, loc: Pick<Location, 'orig
   return `${loc.origin}${loc.pathname}?lang=${locale}${hash}`
 }
 
+/** Facebook's share page for a link. Facebook ignores any text we suggest: the post preview comes from the page's og: tags. */
+export function facebookShareUrl(url: string) {
+  return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`
+}
+
+/** True where the browser has a share sheet (phones, Safari, some desktops). */
+export function canNativeShare(nav: Partial<Navigator> = typeof navigator === 'undefined' ? {} : navigator) {
+  return typeof nav.share === 'function'
+}
+
+/** Copies the text and the link, for pasting into any chat. */
+export async function copyShare(data: ShareData, nav: Partial<Navigator> = typeof navigator === 'undefined' ? {} : navigator): Promise<ShareOutcome> {
+  try {
+    if (!nav.clipboard) return 'failed'
+    await nav.clipboard.writeText(`${data.text} ${data.url}`)
+    return 'copied'
+  } catch {
+    return 'failed'
+  }
+}
+
 /**
  * Opens the phone's share sheet (Web Share API). Where there is none (most desktops),
  * copies the text and the link to the clipboard instead.
@@ -30,11 +51,5 @@ export async function share(data: ShareData, nav: Partial<Navigator> = typeof na
       // Anything else (no permission, not allowed here): fall back to copying.
     }
   }
-  try {
-    if (!nav.clipboard) return 'failed'
-    await nav.clipboard.writeText(`${data.text} ${data.url}`)
-    return 'copied'
-  } catch {
-    return 'failed'
-  }
+  return copyShare(data, nav)
 }

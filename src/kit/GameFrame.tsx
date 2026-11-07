@@ -205,6 +205,7 @@ export function GameFrame({
           </div>
           <ShareButton
             label={t('share.score')}
+            up
             hint={t('share.score')}
             data={() => ({ title: gt('title'), text: t('share.scoreText', { score: result.score, game: gt('title') }), url: gameUrl() })}
           />

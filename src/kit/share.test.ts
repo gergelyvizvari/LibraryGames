@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { share, shareUrl } from './share'
+import { facebookShareUrl, share, shareUrl } from './share'
 
 const data = { title: 'Colour Sort', text: 'I scored 120 points!', url: 'https://example.org/?lang=en#/play/color-sort' }
 
@@ -8,6 +8,12 @@ describe('share', () => {
     const loc = { origin: 'https://example.org', pathname: '/' }
     expect(shareUrl('', 'hu', loc)).toBe('https://example.org/?lang=hu')
     expect(shareUrl('#/play/color-sort', 'en', loc)).toBe('https://example.org/?lang=en#/play/color-sort')
+  })
+
+  it('links to Facebook\'s share page with the whole link, hash included', () => {
+    expect(facebookShareUrl('https://example.org/?lang=hu#/play/x')).toBe(
+      'https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fexample.org%2F%3Flang%3Dhu%23%2Fplay%2Fx',
+    )
   })
 
   it('opens the share sheet when the browser has one', async () => {

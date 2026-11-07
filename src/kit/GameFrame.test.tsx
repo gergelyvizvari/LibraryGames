@@ -66,7 +66,10 @@ describe('GameFrame', () => {
     render(<GameFrame game={quick} onHome={() => {}} />)
     fireEvent.click(screen.getByText('Play!'))
     for (let i = 0; i < 8; i++) await act(async () => vi.advanceTimersByTime(700))
-    await act(async () => fireEvent.click(screen.getByText('Share my score')))
+    fireEvent.click(screen.getByText('Share my score'))
+    const facebook = screen.getByText('Facebook').closest('a')!
+    expect(facebook.getAttribute('href')).toMatch(/^https:\/\/www\.facebook\.com\/sharer\/sharer\.php\?u=.*%3Flang%3Den%23%2Fplay%2Fquick$/)
+    await act(async () => fireEvent.click(screen.getByText('Copy link')))
     expect(writeText.mock.calls[0][0]).toMatch(/^I scored 42 points in Quick! .*\?lang=en#\/play\/quick$/)
     expect(screen.getByText('Link copied!').getAttribute('role')).toBe('status')
   })

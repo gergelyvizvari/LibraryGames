@@ -64,6 +64,8 @@ const en = {
   'share.gameText': 'Try this game on Library Games: {game}',
   'share.score': 'Share my score',
   'share.scoreText': 'I scored {score} points in {game}! Can you beat it?',
+  'share.copy': 'Copy link',
+  'share.more': 'More…',
   'share.copied': 'Link copied!',
   'share.failed': 'Could not share',
   privacyLink: 'Privacy & contact',

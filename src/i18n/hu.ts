@@ -66,6 +66,8 @@ const hu: Record<keyof typeof en, string> = {
   'share.gameText': 'Próbáld ki ezt a játékot a Library Games oldalán: {game}',
   'share.score': 'Megosztom a pontomat',
   'share.scoreText': '{score} pontot szereztem ebben a játékban: {game}. Te tudsz többet?',
+  'share.copy': 'Link másolása',
+  'share.more': 'Egyéb…',
   'share.copied': 'Link kimásolva!',
   'share.failed': 'Nem sikerült megosztani',
   privacyLink: 'Adatvédelem és kapcsolat',

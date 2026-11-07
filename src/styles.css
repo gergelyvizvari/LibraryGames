@@ -120,8 +120,22 @@ h1, h2 { margin: 0; line-height: 1.1; }
   opacity: 0; transform: translateY(-4px); transition: opacity 0.15s, transform 0.15s;
 }
 .share-note-on { opacity: 1; transform: none; }
-.share-btn + .share-note { right: 50%; transform: translate(50%, -4px); }
-.share-btn + .share-note.share-note-on { transform: translate(50%, 0); }
+.share-note-center { right: 50%; transform: translate(50%, -4px); }
+.share-note-center.share-note-on { transform: translate(50%, 0); }
+.share-menu {
+  position: absolute; top: calc(100% + 4px); right: 0; z-index: 6; min-width: 190px; display: flex; flex-direction: column; padding: 6px;
+  background: var(--card); border-radius: 16px; box-shadow: var(--shadow); text-align: left; animation: pop-in 0.12s ease-out;
+}
+.share-menu-up { top: auto; bottom: calc(100% + 8px); }
+.share-menu-center { right: 50%; transform: translateX(50%); animation: none; }
+.share-menu > * {
+  display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 12px; border-radius: 10px; background: transparent;
+  color: var(--ink); font-weight: 700; font-size: 1rem; text-decoration: none; white-space: nowrap;
+}
+.share-menu > *:hover, .share-menu > *:focus-visible { background: var(--highlight); }
+.share-menu .share-glyph, .share-fb { width: 22px; height: 22px; flex: none; }
+.share-menu > * > span[aria-hidden] { width: 22px; text-align: center; }
+@keyframes pop-in { from { opacity: 0; transform: translateY(-4px); } }
 
 /* Game icons: drawn stickers, every part in its own colour with a chunky ink outline (see kit/icon.tsx).
    The outline stays dark in every theme, because the icons always sit on a game colour or a sticker-friendly card. */
