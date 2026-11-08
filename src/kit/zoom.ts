@@ -5,7 +5,7 @@
  * - Phones: the viewport meta (`user-scalable=no`, which also undoes a zoom already made on Android),
  *   plus `touch-action: pan-x pan-y` on the page in styles.css for pinch and double tap.
  * - Safari (iPhone and Mac) ignores `user-scalable=no`, so its pinch `gesture*` events are cancelled.
- * - Computers: a trackpad pinch arrives as a wheel event with Ctrl held; Ctrl/Cmd with + - 0 are keys.
+ * - Computers: a trackpad pinch arrives as a wheel event with Ctrl held; Ctrl/Cmd with + and - are keys (Ctrl/Cmd 0 still works: it only undoes a zoom).
  */
 export function lockZoom(): () => void {
   const meta = document.querySelector<HTMLMetaElement>('meta[name="viewport"]')
@@ -16,7 +16,7 @@ export function lockZoom(): () => void {
     if (e.ctrlKey) e.preventDefault()
   }
   const key = (e: KeyboardEvent) => {
-    if ((e.ctrlKey || e.metaKey) && ['+', '=', '-', '_', '0'].includes(e.key)) e.preventDefault()
+    if ((e.ctrlKey || e.metaKey) && ['+', '=', '-', '_'].includes(e.key)) e.preventDefault()
   }
   const gestures = ['gesturestart', 'gesturechange', 'gestureend']
   for (const g of gestures) document.addEventListener(g, block)
