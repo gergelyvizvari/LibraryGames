@@ -27,23 +27,6 @@ function gameComponent(game: GameDef) {
 type Phase = 'intro' | 'countdown' | 'playing' | 'results'
 
 /**
- * Turns page zoom off until the returned function runs: undoes a zoom the player already made (Android),
- * and blocks pinching (Safari ignores `user-scalable=no`, so its gesture events are cancelled too).
- * The `.frame-playing` CSS stops double-tap and pinch zoom elsewhere.
- */
-function lockZoom(): () => void {
-  const meta = document.querySelector<HTMLMetaElement>('meta[name="viewport"]')
-  const before = meta?.content
-  if (meta && before) meta.content = `${before}, maximum-scale=1, user-scalable=no`
-  const block = (e: Event) => e.preventDefault()
-  document.addEventListener('gesturestart', block)
-  return () => {
-    if (meta && before) meta.content = before
-    document.removeEventListener('gesturestart', block)
-  }
-}
-
-/**
  * Everything around a game: intro card, 3-2-1 countdown, the round itself, results.
  * Games only render the round and call `onFinish` once.
  */
@@ -90,10 +73,6 @@ export function GameFrame({
     later(() => setCount((c) => c - 1), 650)
   }, [phase, count, later])
 
-  // While a round runs the page must not zoom: pinching (or a stray double tap) mid-game makes the screen jump.
-  const inRound = phase === 'countdown' || phase === 'playing'
-  useEffect(() => (inRound ? lockZoom() : undefined), [inRound])
-
   const start = () => {
     // Start downloading the game now, so it is ready by the end of the countdown.
     void game.load().catch(() => {})
@@ -120,7 +99,7 @@ export function GameFrame({
 
   const Component = gameComponent(game)
   return (
-    <div className={inRound ? 'frame frame-playing' : 'frame'} style={gameColorVars(game.meta.color)}>
+    <div className="frame" style={gameColorVars(game.meta.color)}>
       <header className="frame-bar">
         <button className="icon-btn" onClick={onHome} aria-label={t('home')}>
           ✕
