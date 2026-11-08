@@ -5,6 +5,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react'
 import { polyfillCountryFlagEmojis } from 'country-flag-emoji-polyfill'
 import flagFont from 'country-flag-emoji-polyfill/dist/TwemojiCountryFlags.woff2?url'
 import { applyTheme, loadTheme } from './kit/theme'
+import { lockZoom } from './kit/zoom'
 import { App } from './shell/App'
 import './fonts.css'
 import './styles.css'
@@ -13,6 +14,8 @@ import './styles.css'
 applyTheme(loadTheme())
 // Windows shows flag emojis as two letters ("HU"); there we load a small flag font from our own server.
 polyfillCountryFlagEmojis('Twemoji Country Flags', flagFont)
+// No zooming anywhere: kids pinch by accident, and a zoomed game screen jumps around.
+lockZoom()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

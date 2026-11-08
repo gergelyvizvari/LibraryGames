@@ -140,8 +140,10 @@ export function GameFrame({
       )}
 
       {phase === 'countdown' && (
-        <div className="countdown" key={count}>
-          {count > 0 ? count : t('go')}
+        <div className="countdown">
+          <span key={count} className="countdown-num">
+            {count > 0 ? count : t('go')}
+          </span>
         </div>
       )}
 

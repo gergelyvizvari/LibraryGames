@@ -89,6 +89,8 @@ html, body { margin: 0; background: var(--bg); min-height: 100%; }
 /* Always reserve the scrollbar space, so screens that fit (like the countdown) do not shift sideways. */
 html { scrollbar-gutter: stable; }
 body { overscroll-behavior: none; }
+/* Pinch and double tap never zoom (see kit/zoom.ts); scrolling still works. */
+html { touch-action: pan-x pan-y; }
 button { font: inherit; color: inherit; cursor: pointer; border: 0; touch-action: manipulation; }
 h1, h2 { margin: 0; line-height: 1.1; }
 .muted { color: var(--muted); }
@@ -232,6 +234,9 @@ h1, h2 { margin: 0; line-height: 1.1; }
 
 /* Game frame */
 .frame { display: flex; flex-direction: column; min-height: calc(100dvh - 40px); }
+/* Nothing a game animates (a countdown digit or basket zooming in, a dot near the edge) may widen the page:
+   on phones that makes the browser zoom the whole screen out for a moment and snap back. */
+.frame { overflow-x: clip; }
 .frame-bar { display: flex; align-items: center; gap: 12px; }
 .frame-icon { display: inline-block; width: 1.5em; height: 1.5em; vertical-align: -0.4em; margin-right: 2px; }
 .frame-title { flex: 1; font-weight: 700; font-size: 1.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -245,7 +250,9 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .level-step { width: 52px; height: 52px; border-radius: 16px; background: var(--card); border: 3px solid var(--line); box-shadow: 0 4px 0 var(--press); font-size: 1.8rem; font-weight: 800; line-height: 1; color: var(--ink); }
 .level-step:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--press); }
 .level-step:disabled { opacity: 0.35; cursor: default; transform: none; box-shadow: 0 4px 0 var(--press); }
-.countdown { flex: 1; display: grid; place-items: center; font-size: 8rem; font-weight: 700; color: var(--game-text); animation: zoom 0.6s ease-out; }
+.countdown { flex: 1; display: grid; place-items: center; overflow: clip; font-size: 8rem; font-weight: 700; color: var(--game-text); }
+/* Only the digit zooms, inside a box that clips it: zooming the whole box made the screen grow for a moment. */
+.countdown-num { animation: zoom 0.6s ease-out; }
 .stage { flex: 1; display: flex; flex-direction: column; margin-top: 12px; position: relative; }
 .game-loading { flex: 1; display: grid; place-items: center; font-weight: 700; color: var(--muted); }
 .results h1 { font-size: 2rem; }
@@ -353,6 +360,9 @@ h1, h2 { margin: 0; line-height: 1.1; }
 @keyframes twinkle { 50% { transform: scale(0.6) rotate(20deg); opacity: 0.5; } }
 @keyframes bob { 50% { transform: translateY(-8px) rotate(-4deg); } }
 @keyframes zoom { from { transform: scale(1.6); opacity: 0; } }
+/* Grows into place from smaller, so it never pokes past its box on the way in. It animates `scale`, not
+   `transform`, so it keeps an element's own centring translate instead of sliding in from the side. */
+@keyframes popIn { from { scale: 0.6; opacity: 0; } }
 @keyframes pulse { to { transform: scale(1.08); } }
 @keyframes floatUp { from { opacity: 1; transform: translate(-50%, -50%) scale(0.8); } 20% { transform: translate(-50%, -80%) scale(1.15); } to { opacity: 0; transform: translate(-50%, -220%) scale(1); } }
 @keyframes shake { 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
@@ -440,7 +450,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 
 /* How Many? */
 .hm-board { position: relative; aspect-ratio: 1; width: min(100%, 420px); margin: 0 auto; background: var(--card); border-radius: 28px; box-shadow: var(--shadow); }
-.hm-dot { position: absolute; width: 11%; aspect-ratio: 1; display: grid; place-items: center; font-size: clamp(1.4rem, 7.5vw, 2.4rem); line-height: 1; transform: translate(-50%, -50%); animation: zoom 0.2s; }
+.hm-dot { position: absolute; width: 11%; aspect-ratio: 1; display: grid; place-items: center; font-size: clamp(1.4rem, 7.5vw, 2.4rem); line-height: 1; transform: translate(-50%, -50%); animation: popIn 0.2s; }
 .hm-question { position: absolute; inset: 0; display: grid; place-items: center; font-size: 6rem; font-weight: 700; color: var(--game-text); }
 .hm-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .hm-options .choice-btn:disabled { opacity: 0.6; }
@@ -746,24 +756,24 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .eo-bin-wrong { background: var(--bad-soft); border-color: var(--bad); animation: shake 0.35s; }
 
 /* Word Families */
-.wf-msg { min-height: 2.6em; display: grid; place-items: center; font-size: 1.25rem; }
+.wf-msg { min-height: 2.4em; line-height: 1.2; display: grid; place-items: center; font-size: 1.25rem; }
 .wf-yes { color: var(--good); }
 .wf-no { color: var(--bad); }
 .wf-belt { position: relative; height: clamp(170px, 26vh, 240px); border-radius: 28px; background: var(--card); border: 3px solid var(--line); overflow: hidden; }
 .wf-rail { position: absolute; left: 0; right: 0; bottom: 18px; height: 14px; background: repeating-linear-gradient(90deg, var(--line) 0 18px, transparent 18px 30px); opacity: 0.9; }
-.wf-card { position: absolute; top: 22%; display: grid; justify-items: center; gap: 2px; min-width: 120px; max-width: 70%; padding: 10px 16px; border-radius: 22px; background: var(--game-surface); color: var(--on-color); box-shadow: 0 6px 0 rgba(0, 0, 0, 0.18); transform: translateX(-50%); transition: transform 0.4s ease-in, opacity 0.4s ease-in; animation: zoom 0.2s; }
+.wf-card { position: absolute; top: 22%; display: grid; justify-items: center; gap: 2px; width: max-content; min-width: 120px; max-width: 70%; padding: 10px 16px; border-radius: 22px; background: var(--game-surface); color: var(--on-color); box-shadow: 0 6px 0 rgba(0, 0, 0, 0.18); transform: translateX(-50%); transition: transform 0.4s ease-in, opacity 0.4s ease-in; animation: popIn 0.2s; }
 .wf-emoji { font-size: 2.6rem; line-height: 1.1; }
-.wf-word { font-size: clamp(1.3rem, 6vw, 1.7rem); font-weight: 800; line-height: 1.15; text-align: center; overflow-wrap: anywhere; }
+.wf-word { font-size: clamp(1.3rem, 6vw, 1.7rem); font-weight: 800; line-height: 1.15; text-align: center; overflow-wrap: break-word; hyphens: auto; }
 .wf-in { transform: translate(-50%, 200px) scale(0.5); opacity: 0; }
 .wf-miss { background: var(--bad); animation: shake 0.35s; }
 .wf-away { transform: translate(-160%, 0); opacity: 0; }
 .wf-baskets { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .wf-baskets-3 .wf-basket:last-child { grid-column: 1 / -1; }
-.wf-basket { display: grid; justify-items: center; align-content: center; gap: 2px; min-height: clamp(96px, 14vh, 130px); padding: 10px 6px; border-radius: 10px 10px 28px 28px; background: var(--card); border: 3px solid var(--line); border-top: 8px solid var(--game-color); box-shadow: 0 5px 0 var(--press); color: var(--ink); animation: zoom 0.25s backwards; transition: transform 0.12s, background 0.15s; }
+.wf-basket { display: grid; justify-items: center; align-content: center; gap: 2px; min-height: clamp(96px, 14vh, 130px); padding: 10px 6px; border-radius: 10px 10px 28px 28px; background: var(--card); border: 3px solid var(--line); border-top: 8px solid var(--game-color); box-shadow: 0 5px 0 var(--press); color: var(--ink); animation: popIn 0.25s backwards; transition: transform 0.12s, background 0.15s; }
 .wf-baskets-3 .wf-basket:last-child, .wf-baskets-2 .wf-basket { min-height: clamp(110px, 18vh, 160px); }
 .wf-basket:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--press); }
 .wf-basket-emoji { font-size: 2.2rem; line-height: 1.1; }
-.wf-basket-name { font-size: clamp(1.05rem, 5vw, 1.3rem); font-weight: 800; }
+.wf-basket-name { font-size: clamp(1.05rem, 5vw, 1.3rem); font-weight: 800; line-height: 1.15; text-align: center; overflow-wrap: break-word; hyphens: auto; }
 .wf-basket-right { background: var(--good-soft); border-color: var(--good); animation: pulse 0.2s 2 alternate; }
 .wf-basket-wrong { background: var(--bad-soft); border-color: var(--bad); animation: shake 0.35s; }
 .wf-basket-show { background: var(--good-soft); border-color: var(--good); animation: wobble 0.5s; }
