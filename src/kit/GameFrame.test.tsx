@@ -20,6 +20,23 @@ afterEach(() => {
 })
 
 describe('GameFrame', () => {
+  it('turns page zoom off only while a round runs', async () => {
+    vi.useFakeTimers()
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    const meta = document.createElement('meta')
+    meta.name = 'viewport'
+    meta.content = 'width=device-width, initial-scale=1.0'
+    document.head.append(meta)
+    const { unmount } = render(<GameFrame game={broken} onHome={() => {}} />)
+    expect(meta.content).not.toContain('user-scalable=no')
+    fireEvent.click(screen.getByText('Play!'))
+    expect(meta.content).toContain('maximum-scale=1, user-scalable=no')
+    expect(document.querySelector('.frame-playing')).toBeTruthy()
+    unmount()
+    expect(meta.content).toBe('width=device-width, initial-scale=1.0')
+    meta.remove()
+  })
+
   it('shows a friendly card instead of a blank screen when a game crashes', async () => {
     vi.useFakeTimers()
     vi.spyOn(console, 'error').mockImplementation(() => {})
