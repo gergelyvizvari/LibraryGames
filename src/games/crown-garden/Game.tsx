@@ -200,7 +200,7 @@ export default function CrownGarden({ level, seed, t, onFinish }: GameProps) {
           ref={boardRef}
           key={done.length}
           className={`cg-board${busy ? ' cg-solved' : ''}`}
-          style={{ gridTemplateColumns: `repeat(${n}, 1fr)`, ['--cg-n' as string]: n }}
+          style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))`, gridTemplateRows: `repeat(${n}, minmax(0, 1fr))`, ['--cg-n' as string]: n }}
         >
           {regions.map((row, r) =>
             row.map((bed, c) => {
