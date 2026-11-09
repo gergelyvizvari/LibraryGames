@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react'
-import { usePops, useShake, useTimeouts } from '../../kit/hooks'
+import { usePops, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
@@ -7,12 +7,11 @@ import { Hud, Pops } from '../../kit/ui'
 import {
   accuracyFor,
   clashes,
-  cleanBonus,
-  crownPoints,
   giftsFor,
   hintFor,
   isSolved,
   makePuzzle,
+  pointsFor,
   puzzlesFor,
   ruleBroken,
   ruleCells,
@@ -25,35 +24,34 @@ import {
   type Solved,
 } from './logic'
 
-type Tool = 'crown' | 'mark'
+type Tool = 'pup' | 'mark'
 const key = (r: number, c: number) => `${r},${c}`
 const keys = (cells: Cell[]) => new Set(cells.map(([r, c]) => key(r, c)))
 const without = (cells: Cell[], r: number, c: number) => cells.filter(([cr, cc]) => cr !== r || cc !== c)
-const CLASH_KEY: Record<Rule, string> = { row: 'clashRow', col: 'clashCol', bed: 'clashBed', touch: 'clashTouch' }
-const STUCK_KEY = { row: 'stuckRow', col: 'stuckCol', bed: 'stuckBed' } as const
-const FLOWERS = ['🌷', '🌼', '🌸']
+const CLASH_KEY: Record<Rule, string> = { row: 'clashRow', col: 'clashCol', rug: 'clashRug', touch: 'clashTouch' }
+const STUCK_KEY = { row: 'stuckRow', col: 'stuckCol', rug: 'stuckRug' } as const
 
-/** A crown that broke a rule: it wobbles for a moment, shows why, then hops back off the board. */
+/** A pup that broke a rule: both pups shake their heads, the squares that show why light up, then the new pup hops back off. */
 interface Clash {
   cell: Cell
   other: Cell
   why: Set<string>
 }
 
-export default function CrownGarden({ level, seed, t, onFinish }: GameProps) {
+export default function SleepyPups({ level, seed, t, onFinish }: GameProps) {
   const rng = useRef(makeRng(seed)).current
   const n = sizeFor(level)
   const total = puzzlesFor(level)
-  // A garden, with the crowns planted for the player (beginners only) taken from its answer.
-  const newGarden = () => {
+  // A room, with the pups planted for the player (beginners only) taken from its answer.
+  const newRoom = () => {
     const puzzle = makePuzzle(rng, n)
     const rows = rng.shuffle([...Array(n).keys()]).slice(0, giftsFor(level))
     return { puzzle, gifts: rows.map((r): Cell => [r, puzzle.solution[r]]) }
   }
-  const [garden, setGarden] = useState<{ puzzle: Puzzle; gifts: Cell[] }>(newGarden)
-  const [crowns, setCrowns] = useState<Cell[]>(garden.gifts)
+  const [room, setRoom] = useState<{ puzzle: Puzzle; gifts: Cell[] }>(newRoom)
+  const [pups, setPups] = useState<Cell[]>(room.gifts)
   const [marks, setMarks] = useState<Set<string>>(() => new Set())
-  const [tool, setTool] = useState<Tool>('crown')
+  const [tool, setTool] = useState<Tool>('pup')
   const [clash, setClash] = useState<Clash | null>(null)
   const [mistakes, setMistakes] = useState(0)
   const [hints, setHints] = useState(0)
@@ -64,23 +62,21 @@ export default function CrownGarden({ level, seed, t, onFinish }: GameProps) {
   const [busy, setBusy] = useState(false)
   const [over, setOver] = useState(false)
   const [pops, addPop] = usePops()
-  const [boardRef, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
   const clashRun = useRef(0)
-  const { puzzle, gifts } = garden
+  const { puzzle, gifts } = room
   const { regions } = puzzle
 
-  const crownAt = useMemo(() => keys(crowns), [crowns])
+  const pupAt = useMemo(() => keys(pups), [pups])
   const giftAt = useMemo(() => keys(gifts), [gifts])
-  const beds = useMemo(() => new Set(crowns.map(([r, c]) => regions[r][c])), [regions, crowns])
   const blocked = useMemo(() => {
     const out = new Set<string>()
     if (busy || !showsBlocked(level)) return out
-    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (!crownAt.has(key(r, c)) && clashes(regions, crowns, r, c)) out.add(key(r, c))
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (!pupAt.has(key(r, c)) && clashes(regions, pups, r, c)) out.add(key(r, c))
     return out
-  }, [busy, level, n, regions, crowns, crownAt])
-  // A row, column or bed with no room left for its crown blinks, so a dead end is never a mystery.
-  const stuck = useMemo(() => (busy ? null : starved(regions, crowns)), [busy, regions, crowns])
+  }, [busy, level, n, regions, pups, pupAt])
+  // A row, column or rug with no room left for its pup blinks, so a dead end is never a mystery.
+  const stuck = useMemo(() => (busy ? null : starved(regions, pups)), [busy, regions, pups])
   const stuckAt = useMemo(() => keys(stuck?.cells ?? []), [stuck])
 
   const popAt = (r: number, c: number, text: string, kind: 'good' | 'bad' | 'info' = 'good') =>
@@ -93,52 +89,39 @@ export default function CrownGarden({ level, seed, t, onFinish }: GameProps) {
     setMessage(dead ? t(STUCK_KEY[dead.kind]) : fallback)
   }
 
-  const finishGarden = (next: Cell[], m: number, h: number) => {
+  const finishRoom = (next: Cell[], m: number, h: number) => {
     const solved = { n, mistakes: m, hints: h }
     const clean = m === 0 && h === 0
     const run = clean ? streak + 1 : 0
-    const each = crownPoints(solved)
-    const bonus = cleanBonus(solved, run)
+    const gained = pointsFor(solved, run)
     const all = [...done, solved]
-    const before = score
-    const sum = before + n * each + bonus
-    setCrowns(next)
+    const sum = score + gained
+    setPups(next)
     setClash(null)
     setStreak(run)
     setDone(all)
+    setScore(sum)
     setBusy(true)
     setMessage(t(clean ? 'perfect' : 'solved'))
-    // The payoff: every crown is counted in turn, each one a note higher.
-    const order = [...next].sort((a, b) => a[0] - b[0])
-    order.forEach(([r, c], i) =>
-      later(() => {
-        sound.good(i + 1)
-        popAt(r, c, `+${each}`)
-        setScore(before + (i + 1) * each)
-      }, 150 + i * 150),
-    )
-    const counted = 150 + n * 150
-    later(() => {
-      sound.win()
-      setScore(sum)
-      if (bonus > 0) addPop(`🌟 +${bonus}`, 50, 45)
-    }, counted)
+    // A quiet ending: the pups fall asleep.
+    sound.win()
+    addPop(`+${gained}`, 50, 45)
     if (all.length >= total) {
       setOver(true)
-      later(() => onFinish({ score: sum, accuracy: accuracyFor(all) }), counted + 1100)
+      later(() => onFinish({ score: sum, accuracy: accuracyFor(all) }), 1400)
       return
     }
     later(() => {
-      const g = newGarden()
-      setGarden(g)
-      setCrowns(g.gifts)
+      const g = newRoom()
+      setRoom(g)
+      setPups(g.gifts)
       setMarks(new Set())
       setMistakes(0)
       setHints(0)
-      setTool('crown')
+      setTool('pup')
       setMessage(t('place'))
       setBusy(false)
-    }, counted + 1300)
+    }, 1600)
   }
 
   const tap = (r: number, c: number) => {
@@ -149,11 +132,11 @@ export default function CrownGarden({ level, seed, t, onFinish }: GameProps) {
       setMessage(t('gift'))
       return
     }
-    if (crownAt.has(k)) {
-      // Tapping a crown always takes it away, whichever tool is picked.
-      const next = without(crowns, r, c)
+    if (pupAt.has(k)) {
+      // Tapping a pup always takes it away, whichever tool is picked.
+      const next = without(pups, r, c)
       sound.tap()
-      setCrowns(next)
+      setPups(next)
       settle(next, t('place'))
       return
     }
@@ -165,13 +148,12 @@ export default function CrownGarden({ level, seed, t, onFinish }: GameProps) {
       setMarks(next)
       return
     }
-    const broken = ruleBroken(regions, crowns, r, c)
+    const broken = ruleBroken(regions, pups, r, c)
     if (broken) {
-      // The crown wobbles, the broken row, column, bed or pair lights up, then the crown hops back.
+      // The pups shake their heads, the row, column, rug or pair that shows why lights up, then the pup hops back.
       const run = ++clashRun.current
       sound.bad()
       vibrate(60)
-      shake()
       setMistakes((x) => x + 1)
       setStreak(0)
       setMessage(t(CLASH_KEY[broken.rule]))
@@ -181,7 +163,7 @@ export default function CrownGarden({ level, seed, t, onFinish }: GameProps) {
       }, 1100)
       return
     }
-    const next: Cell[] = [...crowns, [r, c]]
+    const next: Cell[] = [...pups, [r, c]]
     setClash(null)
     if (marks.has(k)) {
       const m = new Set(marks)
@@ -189,18 +171,17 @@ export default function CrownGarden({ level, seed, t, onFinish }: GameProps) {
       setMarks(m)
     }
     if (isSolved(regions, next)) {
-      finishGarden(next, mistakes, hints)
+      finishRoom(next, mistakes, hints)
       return
     }
     sound.tone(440 + next.length * 70, 0.1, 'triangle', 0.12)
-    popAt(r, c, '🌸', 'info')
-    setCrowns(next)
+    setPups(next)
     settle(next, t('place'))
   }
 
   const hint = () => {
     if (over || busy) return
-    const h = hintFor(puzzle, crowns)
+    const h = hintFor(puzzle, pups)
     if (!h) return
     setHints(hints + 1)
     setStreak(0)
@@ -209,30 +190,30 @@ export default function CrownGarden({ level, seed, t, onFinish }: GameProps) {
       const [r, c] = h.remove
       sound.pop()
       popAt(r, c, '💡', 'info')
-      setCrowns(without(crowns, r, c))
+      setPups(without(pups, r, c))
       setMessage(t('hintTook'))
       return
     }
     const [r, c] = h.add
-    const next: Cell[] = [...crowns, [r, c]]
+    const next: Cell[] = [...pups, [r, c]]
     const m = new Set(marks)
     m.delete(key(r, c))
     setMarks(m)
     popAt(r, c, '💡', 'info')
     if (isSolved(regions, next)) {
-      finishGarden(next, mistakes, hints + 1)
+      finishRoom(next, mistakes, hints + 1)
       return
     }
     sound.pop()
-    setCrowns(next)
+    setPups(next)
     setMessage(t('hintPut'))
   }
 
-  const canClear = crowns.length > gifts.length || marks.size > 0
+  const canClear = pups.length > gifts.length || marks.size > 0
   const clear = () => {
     if (over || busy || !canClear) return
     sound.tap()
-    setCrowns(gifts)
+    setPups(gifts)
     setMarks(new Set())
     setClash(null)
     setMessage(t('place'))
@@ -242,69 +223,59 @@ export default function CrownGarden({ level, seed, t, onFinish }: GameProps) {
     if (over || busy) return
     sound.tap()
     setTool(next)
-    setMessage(t(next === 'crown' ? 'place' : 'mark'))
+    setMessage(t(next === 'pup' ? 'place' : 'mark'))
   }
 
-  // Thick lines where two beds meet, so the garden reads without telling colours apart.
+  // Thick lines where two rugs meet, so the room reads without telling colours apart.
   const edges = (r: number, c: number) => {
-    const bed = regions[r][c]
+    const rug = regions[r][c]
     const cls = []
-    if (r > 0 && regions[r - 1][c] !== bed) cls.push('cg-et')
-    if (c > 0 && regions[r][c - 1] !== bed) cls.push('cg-el')
-    if (r < n - 1 && regions[r + 1][c] !== bed) cls.push('cg-eb')
-    if (c < n - 1 && regions[r][c + 1] !== bed) cls.push('cg-er')
+    if (r > 0 && regions[r - 1][c] !== rug) cls.push('sl-et')
+    if (c > 0 && regions[r][c - 1] !== rug) cls.push('sl-el')
+    if (r < n - 1 && regions[r + 1][c] !== rug) cls.push('sl-eb')
+    if (c < n - 1 && regions[r][c + 1] !== rug) cls.push('sl-er')
     return cls.join(' ')
   }
 
   const grid = `repeat(${n}, minmax(0, 1fr))`
   return (
-    <div className="game crown-garden">
+    <div className="game sleepy-pups">
       <Hud
         items={[
           { label: t('score'), value: score },
-          { label: t('garden'), value: `${Math.min(done.length + (over ? 0 : 1), total)} / ${total}` },
-          { label: t('crowns'), value: `${crowns.length} / ${n}`, highlight: streak > 0 },
+          { label: t('room'), value: `${Math.min(done.length + (over ? 0 : 1), total)} / ${total}` },
+          { label: t('pups'), value: `${pups.length} / ${n}`, highlight: streak > 0 },
         ]}
       />
-      {/* One pot per bed: it blooms when its bed has a crown. */}
-      <div className="cg-pots" aria-hidden>
-        {regions.map((_, bed) => (
-          <span key={`${done.length}-${bed}-${beds.has(bed)}`} className={`cg-pot cg-r${bed}${beds.has(bed) ? ' cg-bloom' : ''}`}>
-            {beds.has(bed) ? '🌸' : '🌱'}
-          </span>
-        ))}
-      </div>
-      <p className={`cg-message${clash || stuck ? ' cg-warn' : ''}`}>{message}</p>
-      <div className="cg-wrap">
+      <p className={`sl-message${clash || stuck ? ' sl-warn' : ''}`}>{message}</p>
+      <div className="sl-wrap">
         <div
-          ref={boardRef}
           key={done.length}
-          className={`cg-board${busy ? ' cg-solved' : ''}`}
-          style={{ gridTemplateColumns: grid, gridTemplateRows: grid, ['--cg-n' as string]: n }}
+          className={`sl-board${busy ? ' sl-solved' : ''}`}
+          style={{ gridTemplateColumns: grid, gridTemplateRows: grid, ['--sl-n' as string]: n }}
         >
           {regions.map((row, r) =>
-            row.map((bed, c) => {
+            row.map((rug, c) => {
               const k = key(r, c)
               const hopping = clash !== null && clash.cell[0] === r && clash.cell[1] === c
+              const other = clash !== null && clash.other[0] === r && clash.other[1] === c
               const cls = [
-                `cg-cell cg-r${bed}`,
+                `sl-cell sl-r${rug}`,
                 edges(r, c),
-                clash?.why.has(k) ? 'cg-why' : '',
-                hopping || (clash !== null && clash.other[0] === r && clash.other[1] === c) ? 'cg-bad' : '',
-                !clash && stuckAt.has(k) ? 'cg-stuck' : '',
-                blocked.has(k) ? 'cg-blocked' : '',
-                giftAt.has(k) ? 'cg-gift' : '',
+                clash?.why.has(k) ? 'sl-why' : '',
+                hopping || other ? 'sl-bad' : '',
+                !clash && stuckAt.has(k) ? 'sl-stuck' : '',
+                blocked.has(k) ? 'sl-blocked' : '',
+                giftAt.has(k) ? 'sl-gift' : '',
               ]
               return (
                 <button key={k} className={cls.filter(Boolean).join(' ')} onPointerDown={() => tap(r, c)} aria-label={t('cell', { row: r + 1, col: c + 1 })}>
-                  {crownAt.has(k) || hopping ? (
-                    <span className="cg-crown">👑</span>
-                  ) : busy ? (
-                    <span className="cg-flower" style={{ animationDelay: `${(r + c) * 60}ms` }}>
-                      {FLOWERS[(r * 2 + c) % 3]}
+                  {hopping || pupAt.has(k) ? (
+                    <span className="sl-pup">
+                      🐶{busy && <i className="sl-zz" style={{ animationDelay: `${(r + c) * 90}ms` }}>💤</i>}
                     </span>
                   ) : marks.has(k) ? (
-                    <span className="cg-mark">✖</span>
+                    <span className="sl-mark">✖</span>
                   ) : null}
                 </button>
               )
@@ -313,20 +284,20 @@ export default function CrownGarden({ level, seed, t, onFinish }: GameProps) {
         </div>
         <Pops pops={pops} />
       </div>
-      <div className="cg-tools">
-        <button className={`cg-tool${tool === 'crown' ? ' cg-on' : ''}`} onPointerDown={() => pickTool('crown')} aria-pressed={tool === 'crown'}>
-          <span>👑</span>
-          {t('toolCrown')}
+      <div className="sl-tools">
+        <button className={`sl-tool${tool === 'pup' ? ' sl-on' : ''}`} onPointerDown={() => pickTool('pup')} aria-pressed={tool === 'pup'}>
+          <span>🐶</span>
+          {t('toolPup')}
         </button>
-        <button className={`cg-tool${tool === 'mark' ? ' cg-on' : ''}`} onPointerDown={() => pickTool('mark')} aria-pressed={tool === 'mark'}>
+        <button className={`sl-tool${tool === 'mark' ? ' sl-on' : ''}`} onPointerDown={() => pickTool('mark')} aria-pressed={tool === 'mark'}>
           <span>✖</span>
           {t('toolMark')}
         </button>
-        <button className="cg-tool" onPointerDown={hint}>
+        <button className="sl-tool" onPointerDown={hint}>
           <span>💡</span>
           {t('hint')}
         </button>
-        <button className="cg-tool" onPointerDown={clear} disabled={!canClear}>
+        <button className="sl-tool" onPointerDown={clear} disabled={!canClear}>
           <span>🔄</span>
           {t('clear')}
         </button>

@@ -56,4 +56,4 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-11-07 | Even or Odd? | maths |
 | 2026-11-08 | Word Families | language |
 | 2026-11-09 | Number Line Jump | maths |
-| 2026-11-09 | Crown Garden | logic |
+| 2026-11-09 | Sleepy Pups | logic |

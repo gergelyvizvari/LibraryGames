@@ -38,12 +38,12 @@ import opposites from './opposites'
 import evenOdd from './even-odd'
 import wordFamilies from './word-families'
 import numberLine from './number-line'
-import crownGarden from './crown-garden'
+import sleepyPups from './sleepy-pups'
 
 // One line per game. New games go at the end.
 export const games: GameDef[] = [sequenceEcho, lightsOut, wordCatch, stroopClash, numberNinja, flashRead, pairRush, typeDefender,
   shapeSpin, whatNext, oddOne, blindMap, towerStack,
   gridGlow, molePop, anagramRace, simonSays, howMany, sentenceBuilder, letterPop, mazeDash, mirrorMatch, capitalMatch,
-  rhythmCopy, feedMonster, colorSort, animalSounds, rhymeTime, clockCatch, countryMap, ukMap, busyBees, continentSort, flagFriends, riverMountain, opposites, evenOdd, wordFamilies, numberLine, crownGarden]
+  rhythmCopy, feedMonster, colorSort, animalSounds, rhymeTime, clockCatch, countryMap, ukMap, busyBees, continentSort, flagFriends, riverMountain, opposites, evenOdd, wordFamilies, numberLine, sleepyPups]
 
 export const gameById = (id: string) => games.find((g) => g.meta.id === id)
