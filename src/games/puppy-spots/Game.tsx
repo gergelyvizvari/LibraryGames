@@ -38,7 +38,7 @@ interface Clash {
   why: Set<string>
 }
 
-export default function SleepyPups({ level, seed, t, onFinish }: GameProps) {
+export default function PuppySpots({ level, seed, t, onFinish }: GameProps) {
   const rng = useRef(makeRng(seed)).current
   const n = sizeFor(level)
   const total = puzzlesFor(level)
@@ -103,7 +103,7 @@ export default function SleepyPups({ level, seed, t, onFinish }: GameProps) {
     setScore(sum)
     setBusy(true)
     setMessage(t(clean ? 'perfect' : 'solved'))
-    // A quiet ending: the pups fall asleep.
+    // A quiet ending: the pups give one happy hop.
     sound.win()
     addPop(`+${gained}`, 50, 45)
     if (all.length >= total) {
@@ -235,14 +235,19 @@ export default function SleepyPups({ level, seed, t, onFinish }: GameProps) {
     const bottom = r === n - 1 || regions[r + 1][c] !== rug
     const right = c === n - 1 || regions[r][c + 1] !== rug
     return [
-      top && 'sl-et',
-      left && 'sl-el',
-      bottom && 'sl-eb',
-      right && 'sl-er',
-      top && left && 'sl-ctl',
-      top && right && 'sl-ctr',
-      bottom && left && 'sl-cbl',
-      bottom && right && 'sl-cbr',
+      top && 'ps-et',
+      left && 'ps-el',
+      bottom && 'ps-eb',
+      right && 'ps-er',
+      top && left && 'ps-ctl',
+      top && right && 'ps-ctr',
+      bottom && left && 'ps-cbl',
+      bottom && right && 'ps-cbr',
+      // An inside corner of an L-shaped rug: only the diagonal neighbour belongs to another rug.
+      !top && !left && regions[r - 1][c - 1] !== rug && 'ps-ntl',
+      !top && !right && regions[r - 1][c + 1] !== rug && 'ps-ntr',
+      !bottom && !left && regions[r + 1][c - 1] !== rug && 'ps-nbl',
+      !bottom && !right && regions[r + 1][c + 1] !== rug && 'ps-nbr',
     ]
       .filter(Boolean)
       .join(' ')
@@ -250,7 +255,7 @@ export default function SleepyPups({ level, seed, t, onFinish }: GameProps) {
 
   const grid = `repeat(${n}, minmax(0, 1fr))`
   return (
-    <div className="game sleepy-pups">
+    <div className="game puppy-spots">
       <Hud
         items={[
           { label: t('score'), value: score },
@@ -258,12 +263,12 @@ export default function SleepyPups({ level, seed, t, onFinish }: GameProps) {
           { label: t('pups'), value: `${pups.length} / ${n}`, highlight: streak > 0 },
         ]}
       />
-      <p className={`sl-message${clash || stuck ? ' sl-warn' : ''}`}>{message}</p>
-      <div className="sl-wrap">
+      <p className={`ps-message${clash || stuck ? ' ps-warn' : ''}`}>{message}</p>
+      <div className="ps-wrap">
         <div
           key={done.length}
-          className={`sl-board${busy ? ' sl-solved' : ''}`}
-          style={{ gridTemplateColumns: grid, gridTemplateRows: grid, ['--sl-n' as string]: n }}
+          className={`ps-board${busy ? ' ps-solved' : ''}`}
+          style={{ gridTemplateColumns: grid, gridTemplateRows: grid, ['--ps-n' as string]: n }}
         >
           {regions.map((row, r) =>
             row.map((rug, c) => {
@@ -271,22 +276,19 @@ export default function SleepyPups({ level, seed, t, onFinish }: GameProps) {
               const hopping = clash !== null && clash.cell[0] === r && clash.cell[1] === c
               const other = clash !== null && clash.other[0] === r && clash.other[1] === c
               const cls = [
-                `sl-cell sl-r${rug}`,
+                `ps-cell ps-r${rug}`,
                 edges(r, c),
-                clash?.why.has(k) ? 'sl-why' : '',
-                hopping || other ? 'sl-bad' : '',
-                !clash && stuckAt.has(k) ? 'sl-stuck' : '',
-                blocked.has(k) ? 'sl-blocked' : '',
-                giftAt.has(k) ? 'sl-gift' : '',
+                clash?.why.has(k) ? 'ps-why' : '',
+                hopping || other ? 'ps-bad' : '',
+                !clash && stuckAt.has(k) ? 'ps-stuck' : '',
+                blocked.has(k) ? 'ps-blocked' : '',
               ]
               return (
                 <button key={k} className={cls.filter(Boolean).join(' ')} onPointerDown={() => tap(r, c)} aria-label={t('cell', { row: r + 1, col: c + 1 })}>
                   {hopping || pupAt.has(k) ? (
-                    <span className="sl-pup">
-                      🐶{busy && <i className="sl-zz" style={{ animationDelay: `${(r + c) * 90}ms` }}>💤</i>}
-                    </span>
+                    <span className="ps-pup">🐶</span>
                   ) : marks.has(k) ? (
-                    <span className="sl-mark">✖</span>
+                    <span className="ps-mark">✖</span>
                   ) : null}
                 </button>
               )
@@ -295,20 +297,20 @@ export default function SleepyPups({ level, seed, t, onFinish }: GameProps) {
         </div>
         <Pops pops={pops} />
       </div>
-      <div className="sl-tools">
-        <button className={`sl-tool${tool === 'pup' ? ' sl-on' : ''}`} onPointerDown={() => pickTool('pup')} aria-pressed={tool === 'pup'}>
+      <div className="ps-tools">
+        <button className={`ps-tool${tool === 'pup' ? ' ps-on' : ''}`} onPointerDown={() => pickTool('pup')} aria-pressed={tool === 'pup'}>
           <span>🐶</span>
           {t('toolPup')}
         </button>
-        <button className={`sl-tool${tool === 'mark' ? ' sl-on' : ''}`} onPointerDown={() => pickTool('mark')} aria-pressed={tool === 'mark'}>
+        <button className={`ps-tool${tool === 'mark' ? ' ps-on' : ''}`} onPointerDown={() => pickTool('mark')} aria-pressed={tool === 'mark'}>
           <span>✖</span>
           {t('toolMark')}
         </button>
-        <button className="sl-tool" onPointerDown={hint}>
+        <button className="ps-tool" onPointerDown={hint}>
           <span>💡</span>
           {t('hint')}
         </button>
-        <button className="sl-tool" onPointerDown={clear} disabled={!canClear}>
+        <button className="ps-tool" onPointerDown={clear} disabled={!canClear}>
           <span>🔄</span>
           {t('clear')}
         </button>

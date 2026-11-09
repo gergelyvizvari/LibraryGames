@@ -1,7 +1,7 @@
 import { clamp, type Rng } from '../../kit/random'
 
 /**
- * Sleepy Pups: an n × n room split into n coloured rugs.
+ * Puppy Spots: an n × n room split into n coloured rugs.
  * Place one pup in every row, every column and every rug; no two pups may touch, not even at a corner.
  */
 
@@ -15,7 +15,7 @@ export interface Puzzle {
   solution: Solution
 }
 
-/** Rug colours available; the CSS defines .sl-r0 to .sl-r7. */
+/** Rug colours available; the CSS defines .ps-r0 to .ps-r7. */
 export const MAX_SIZE = 8
 
 /** Grid size: 4 × 4 for the youngest players, up to 8 × 8 at the top level. */

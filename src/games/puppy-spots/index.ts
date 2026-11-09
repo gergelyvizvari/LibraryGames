@@ -3,7 +3,7 @@ import { icon } from './icon'
 import strings from './strings'
 
 const game: GameDef = {
-  meta: { id: 'sleepy-pups', skill: 'logic', icon, color: '#9b59b6', added: '2026-11-09' },
+  meta: { id: 'puppy-spots', skill: 'logic', icon, color: '#9b59b6', added: '2026-11-09' },
   strings,
   // The game's code is only downloaded when someone opens it.
   load: () => import('./Game'),

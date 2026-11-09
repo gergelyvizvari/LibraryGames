@@ -4,7 +4,7 @@ import { accuracyFor, clashes, conflicts, giftsFor, hintFor, isSolved, makePuzzl
 
 const cellsOf = (solution: number[]): Cell[] => solution.map((c, r) => [r, c])
 
-describe('sleepy pups puzzles', () => {
+describe('puppy spots puzzles', () => {
   it('grows from 4 × 4 at level 1 to 8 × 8 at level 10', () => {
     expect(sizeFor(1)).toBe(4)
     expect(sizeFor(10)).toBe(8)
