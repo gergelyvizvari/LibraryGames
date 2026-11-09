@@ -805,12 +805,17 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .sl-message { display: flex; align-items: center; justify-content: center; text-align: center; text-wrap: balance; font-size: 1.15rem; line-height: 1.25; font-weight: 700; min-height: 2.5em; margin: 2px 0; color: var(--muted); }
 .sl-warn { color: var(--game-text); }
 .sl-wrap { position: relative; width: min(100% - 14px, 440px, 56vh); margin: 8px auto 0; }
-/* The lines between squares are the page colour: thin inside a rug, wide between two rugs. */
-.sl-board { --sl-line: var(--bg); display: grid; aspect-ratio: 1; border-radius: 26px; overflow: hidden; background: var(--sl-line); gap: 2px; box-shadow: 0 0 0 5px var(--sl-line), 0 0 0 7px var(--line), 0 12px 0 0 var(--line); animation: popIn 0.3s; }
-.sl-cell { --sl-edge: 3px; position: relative; display: grid; place-items: center; min-width: 0; min-height: 0; overflow: hidden; padding: 0; border: 0; border-radius: 6px;
+/* Lines are the page colour: wide around each rug, hair-thin between the squares inside one. */
+.sl-board { --sl-line: var(--bg); display: grid; aspect-ratio: 1; border-radius: 24px; overflow: hidden; background: var(--sl-line); padding: 3px; box-shadow: 0 0 0 2px var(--line), 0 6px 0 0 var(--line); animation: popIn 0.3s; }
+.sl-cell { --sl-edge: 3px; --sl-thin: color-mix(in srgb, var(--sl-line) 60%, transparent); position: relative; display: grid; place-items: center; min-width: 0; min-height: 0; overflow: hidden; padding: 0; border: 0; border-radius: 0;
   box-shadow: inset 0 calc(var(--sl-t, 0) * var(--sl-edge)) 0 var(--sl-line), inset calc(var(--sl-l, 0) * var(--sl-edge)) 0 0 var(--sl-line),
-    inset 0 calc(var(--sl-b, 0) * -1 * var(--sl-edge)) 0 var(--sl-line), inset calc(var(--sl-r, 0) * -1 * var(--sl-edge)) 0 0 var(--sl-line);
+    inset 0 calc(var(--sl-b, 0) * -1 * var(--sl-edge)) 0 var(--sl-line), inset calc(var(--sl-r, 0) * -1 * var(--sl-edge)) 0 0 var(--sl-line),
+    inset 0 1px 0 var(--sl-thin), inset 1px 0 0 var(--sl-thin);
   color: var(--ink-fixed); font-size: calc(min(92vw, 440px, 56vh) / var(--sl-n) * 0.56); line-height: 1; touch-action: manipulation; }
+.sl-ctl { border-top-left-radius: 16px; }
+.sl-ctr { border-top-right-radius: 16px; }
+.sl-cbl { border-bottom-left-radius: 16px; }
+.sl-cbr { border-bottom-right-radius: 16px; }
 .sl-cell:active { filter: brightness(0.94); }
 .sl-et { --sl-t: 1; }
 .sl-el { --sl-l: 1; }
@@ -841,6 +846,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .sl-tool:disabled { opacity: 0.45; cursor: default; }
 .sl-on { background: var(--game-surface); color: var(--on-color); box-shadow: 0 0 0 2px var(--press), 0 5px 0 var(--press); }
 [data-theme='contrast'] .sl-board { --sl-line: #000; }
+[data-theme='contrast'] .sl-cell { --sl-thin: #000; }
 @keyframes slGlow { 0%, 100% { opacity: 0; } 20%, 70% { opacity: 1; } }
 @keyframes slPulse { from { opacity: 0.35; } }
 @keyframes slNo { 25% { transform: rotate(-12deg); } 75% { transform: rotate(12deg); } }

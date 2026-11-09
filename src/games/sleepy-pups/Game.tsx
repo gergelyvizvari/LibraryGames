@@ -226,15 +226,26 @@ export default function SleepyPups({ level, seed, t, onFinish }: GameProps) {
     setMessage(t(next === 'pup' ? 'place' : 'mark'))
   }
 
-  // Thick lines where two rugs meet, so the room reads without telling colours apart.
+  // Each rug is one shape: a square gets a wide line on every side that faces another rug or the wall,
+  // and a round corner where two such sides meet. It reads without telling colours apart.
   const edges = (r: number, c: number) => {
     const rug = regions[r][c]
-    const cls = []
-    if (r > 0 && regions[r - 1][c] !== rug) cls.push('sl-et')
-    if (c > 0 && regions[r][c - 1] !== rug) cls.push('sl-el')
-    if (r < n - 1 && regions[r + 1][c] !== rug) cls.push('sl-eb')
-    if (c < n - 1 && regions[r][c + 1] !== rug) cls.push('sl-er')
-    return cls.join(' ')
+    const top = r === 0 || regions[r - 1][c] !== rug
+    const left = c === 0 || regions[r][c - 1] !== rug
+    const bottom = r === n - 1 || regions[r + 1][c] !== rug
+    const right = c === n - 1 || regions[r][c + 1] !== rug
+    return [
+      top && 'sl-et',
+      left && 'sl-el',
+      bottom && 'sl-eb',
+      right && 'sl-er',
+      top && left && 'sl-ctl',
+      top && right && 'sl-ctr',
+      bottom && left && 'sl-cbl',
+      bottom && right && 'sl-cbr',
+    ]
+      .filter(Boolean)
+      .join(' ')
   }
 
   const grid = `repeat(${n}, minmax(0, 1fr))`
