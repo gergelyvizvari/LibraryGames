@@ -777,3 +777,26 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .wf-basket-right { background: var(--good-soft); border-color: var(--good); animation: pulse 0.2s 2 alternate; }
 .wf-basket-wrong { background: var(--bad-soft); border-color: var(--bad); animation: shake 0.35s; }
 .wf-basket-show { background: var(--good-soft); border-color: var(--good); animation: wobble 0.5s; }
+
+/* Number Line Jump */
+.nl-jumps { display: flex; justify-content: center; gap: 10px; animation: popIn 0.25s; }
+.nl-jump { padding: 6px 18px; border-radius: 999px; font-size: 2rem; font-weight: 800; color: #fff; box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15); }
+.nl-fwd { background: #10ac84; }
+.nl-back { background: #ee5253; }
+.nl-msg { min-height: 2.6em; display: grid; place-items: center; font-size: 1.25rem; }
+.nl-yes { color: var(--good); }
+.nl-no { color: var(--bad); }
+.nl-stage { position: relative; height: clamp(230px, 34vh, 320px); margin: 0 -4px; border-radius: 28px; background: var(--card); border: 3px solid var(--line); overflow: hidden; }
+.nl-line { position: absolute; left: 4%; right: 4%; top: 62%; height: 6px; border-radius: 3px; background: var(--ink); }
+.nl-tick { position: absolute; top: calc(62% - 30px); width: 8.4%; height: 110px; padding: 0; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; background: none; border: 0; border-radius: 14px; color: var(--ink); -webkit-tap-highlight-color: transparent; }
+.nl-tick:active { background: var(--highlight); }
+.nl-mark { width: 4px; height: 28px; margin-top: 18px; border-radius: 2px; background: var(--ink); }
+.nl-num { min-height: 1.6rem; font-size: clamp(1rem, 4.6vw, 1.3rem); font-weight: 800; }
+.nl-start .nl-num { color: var(--game-text); }
+.nl-right { background: var(--good-soft); }
+.nl-right .nl-mark { background: var(--good); width: 8px; }
+.nl-wrong { background: var(--bad-soft); animation: shake 0.35s; }
+.nl-wrong .nl-mark { background: var(--bad); width: 8px; }
+.nl-frog { position: absolute; top: calc(62% - 70px); font-size: 2.6rem; line-height: 1; translate: -50% 0; transition: left 0.14s ease-out; animation: nlHop 0.16s ease-out; pointer-events: none; z-index: 1; }
+.nl-count { position: absolute; left: 50%; top: -30px; translate: -50% 0; font-size: 1.3rem; font-weight: 800; color: var(--bad); }
+@keyframes nlHop { 50% { transform: translateY(-34px); } }

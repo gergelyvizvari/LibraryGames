@@ -5,7 +5,6 @@ Edit freely: reorder, add, or delete ideas.
 
 ## Up next
 
-- **Number Line Jump** (maths): a frog jumps along a number line; tap where it lands after +3, −2 and so on.
 - **Story Order** (reading): three or four picture cards from a tiny story; put them in the right order.
 - **Copy Cat Typing** (typing): type a short sentence before the cat finishes its nap; mistakes wake it up.
 - **Shadow Match** (spatial): match each object to its shadow.
@@ -56,3 +55,4 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-11-06 | Opposites | language |
 | 2026-11-07 | Even or Odd? | maths |
 | 2026-11-08 | Word Families | language |
+| 2026-11-09 | Number Line Jump | maths |
