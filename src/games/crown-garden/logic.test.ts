@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { makeRng } from '../../kit/random'
-import { accuracyFor, clashes, conflicts, hintFor, isSolved, makePuzzle, pointsFor, puzzlesFor, sizeFor, solve, type Cell } from './logic'
+import { accuracyFor, clashes, conflicts, giftsFor, hintFor, isSolved, makePuzzle, pointsFor, puzzlesFor, ruleBroken, ruleCells, sizeFor, solve, starved, type Cell } from './logic'
 
 const cellsOf = (solution: number[]): Cell[] => solution.map((c, r) => [r, c])
 
@@ -60,6 +60,42 @@ describe('crown garden puzzles', () => {
     expect(clashes(regions, [[0, 1]], 1, 2)).toBe(true)
     expect(clashes(regions, [[0, 1]], 2, 3)).toBe(false)
     expect(clashes(regions, [[0, 1]], 0, 1)).toBe(false) // a crown does not clash with itself
+  })
+
+  it('says which rule a crown breaks and which squares show it', () => {
+    const regions = [
+      [0, 0, 1, 1],
+      [0, 2, 2, 1],
+      [3, 2, 2, 1],
+      [3, 3, 3, 3],
+    ]
+    expect(ruleBroken(regions, [[0, 0]], 0, 3)).toEqual({ rule: 'row', other: [0, 0] })
+    expect(ruleBroken(regions, [[0, 0]], 2, 0)).toEqual({ rule: 'col', other: [0, 0] })
+    expect(ruleBroken(regions, [[1, 1]], 2, 2)).toEqual({ rule: 'bed', other: [1, 1] })
+    expect(ruleBroken(regions, [[0, 1]], 1, 2)).toEqual({ rule: 'touch', other: [0, 1] })
+    expect(ruleBroken(regions, [[0, 1]], 2, 3)).toBeNull()
+    expect(ruleCells(regions, 'row', [0, 3], [0, 0])).toHaveLength(4)
+    expect(ruleCells(regions, 'bed', [2, 2], [1, 1])).toHaveLength(4)
+    expect(ruleCells(regions, 'touch', [1, 2], [0, 1])).toEqual([[1, 2], [0, 1]])
+  })
+
+  it('warns when a row, column or bed has no room left', () => {
+    const regions = [
+      [0, 0, 1, 1],
+      [0, 2, 2, 1],
+      [3, 2, 2, 1],
+      [3, 3, 3, 3],
+    ]
+    expect(starved(regions, [])).toBeNull()
+    // One crown never closes off this garden: bed 2 still has (2, 1) free.
+    expect(starved(regions, [[1, 3]])).toBeNull()
+    // Crowns at (0, 0) and (2, 3) leave row 1 with no free square.
+    expect(starved(regions, [[0, 0], [2, 3]])?.kind).toBe('row')
+    // The real answer never starves anything on the way.
+    const p = makePuzzle(makeRng(11), 6)
+    for (let k = 0; k <= 6; k++) expect(starved(p.regions, cellsOf(p.solution).slice(0, k))).toBeNull()
+    expect(giftsFor(1)).toBe(1)
+    expect(giftsFor(5)).toBe(0)
   })
 
   it('gives hints that fix a wrong crown first, then add a right one', () => {

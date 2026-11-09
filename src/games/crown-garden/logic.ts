@@ -179,10 +179,54 @@ export function conflicts(regions: Regions, crowns: Cell[]): Set<string> {
   return bad
 }
 
-/** Would a crown here break a rule with a crown already in the garden? */
-export function clashes(regions: Regions, crowns: Cell[], r: number, c: number) {
-  return crowns.some(([cr, cc]) => (cr !== r || cc !== c) && (cr === r || cc === c || regions[cr][cc] === regions[r][c] || touches(r, c, cr, cc)))
+export type Rule = 'row' | 'col' | 'bed' | 'touch'
+
+/** The first rule a new crown at (r, c) would break, and the crown it breaks it with. */
+export function ruleBroken(regions: Regions, crowns: Cell[], r: number, c: number): { rule: Rule; other: Cell } | null {
+  for (const other of crowns) {
+    const [cr, cc] = other
+    if (cr === r && cc === c) continue
+    if (cr === r) return { rule: 'row', other }
+    if (cc === c) return { rule: 'col', other }
+    if (regions[cr][cc] === regions[r][c]) return { rule: 'bed', other }
+    if (touches(r, c, cr, cc)) return { rule: 'touch', other }
+  }
+  return null
 }
+
+/** Would a crown here break a rule with a crown already in the garden? */
+export const clashes = (regions: Regions, crowns: Cell[], r: number, c: number) => ruleBroken(regions, crowns, r, c) !== null
+
+/** The squares that show why a rule broke: the whole row, column or bed, or just the two touching squares. */
+export function ruleCells(regions: Regions, rule: Rule, [r, c]: Cell, other: Cell): Cell[] {
+  if (rule === 'touch') return [[r, c], other]
+  const out: Cell[] = []
+  regions.forEach((row, rr) =>
+    row.forEach((bed, cc) => {
+      if (rule === 'row' ? rr === r : rule === 'col' ? cc === c : bed === regions[r][c]) out.push([rr, cc])
+    }),
+  )
+  return out
+}
+
+/**
+ * A row, column or bed that still needs its crown but has no free square left: a dead end the player can see.
+ * Only looks at what the crowns on the board rule out, so it never gives the answer away.
+ */
+export function starved(regions: Regions, crowns: Cell[]): { kind: Exclude<Rule, 'touch'>; cells: Cell[] } | null {
+  const n = regions.length
+  const units: { kind: Exclude<Rule, 'touch'>; cells: Cell[] }[] = []
+  for (let i = 0; i < n; i++) {
+    units.push({ kind: 'row', cells: regions[i].map((_, c) => [i, c]) })
+    units.push({ kind: 'col', cells: regions.map((_, r) => [r, i]) })
+    units.push({ kind: 'bed', cells: regions.flatMap((row, r) => row.flatMap((bed, c) => (bed === i ? [[r, c] as Cell] : []))) })
+  }
+  const has = (r: number, c: number) => crowns.some(([cr, cc]) => cr === r && cc === c)
+  return units.find((u) => !u.cells.some(([r, c]) => has(r, c)) && u.cells.every(([r, c]) => clashes(regions, crowns, r, c))) ?? null
+}
+
+/** Beginners get one crown planted for them, so the first move shows how the rules work. */
+export const giftsFor = (level: number) => (level <= 2 ? 1 : 0)
 
 export const isSolved = (regions: Regions, crowns: Cell[]) => crowns.length === regions.length && conflicts(regions, crowns).size === 0
 
@@ -203,12 +247,13 @@ export interface Solved {
   hints: number
 }
 
-/** Bigger gardens are worth more; a clean garden in a row of clean gardens earns a growing bonus. */
-export function pointsFor({ n, mistakes, hints }: Solved, streak: number) {
-  const base = n * 25
-  const bonus = mistakes === 0 && hints === 0 ? 20 * n * Math.min(streak, 4) : 0
-  return Math.max(n * 5, base + bonus - mistakes * 10 - hints * 20)
-}
+/** What each crown is worth when the garden is done: rule breaks and hints shave it down, never below 5. */
+export const crownPoints = ({ n, mistakes, hints }: Solved) => Math.max(5, 25 - Math.ceil((mistakes * 10 + hints * 20) / n))
+
+/** A clean garden earns a bonus that grows with every clean garden in a row. */
+export const cleanBonus = ({ n, mistakes, hints }: Solved, streak: number) => (mistakes === 0 && hints === 0 ? 20 * n * Math.min(streak, 4) : 0)
+
+export const pointsFor = (solved: Solved, streak: number) => solved.n * crownPoints(solved) + cleanBonus(solved, streak)
 
 /** A clean garden counts fully; each rule broken or hint used takes a slice off. */
 export function accuracyFor(done: Solved[]) {
