@@ -281,7 +281,7 @@ export default function PuppySpots({ level, seed, t, onFinish }: GameProps) {
                 clash?.why.has(k) ? 'ps-why' : '',
                 hopping || other ? 'ps-bad' : '',
                 !clash && stuckAt.has(k) ? 'ps-stuck' : '',
-                blocked.has(k) ? 'ps-blocked' : '',
+                blocked.has(k) && !marks.has(k) ? 'ps-blocked' : '',
               ]
               return (
                 <button key={k} className={cls.filter(Boolean).join(' ')} onPointerDown={() => tap(r, c)} aria-label={t('cell', { row: r + 1, col: c + 1 })}>

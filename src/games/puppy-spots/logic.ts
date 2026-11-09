@@ -26,7 +26,7 @@ export function sizeFor(level: number) {
 /** Small rooms come three to a round, big ones two. */
 export const puzzlesFor = (level: number) => (sizeFor(level) <= 5 ? 3 : 2)
 
-/** Low levels shade the cells a pup already blocks, so a young player sees the rules at work. */
+/** Low levels put a small cross on the cells a pup already rules out, so a young player sees the rules at work. */
 export const showsBlocked = (level: number) => level <= 4
 
 export const touches = (r1: number, c1: number, r2: number, c2: number) => Math.abs(r1 - r2) <= 1 && Math.abs(c1 - c2) <= 1

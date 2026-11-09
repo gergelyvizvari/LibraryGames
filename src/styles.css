@@ -829,11 +829,11 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .ps-r5 { background: #ffd0a6; }
 .ps-r6 { background: #ffcfea; }
 .ps-r7 { background: #a9ebe3; }
-/* Squares a pup already rules out, dimmed at low levels. */
-.ps-blocked { --ps-dim: linear-gradient(rgba(45, 49, 66, 0.2), rgba(45, 49, 66, 0.2)); }
-/* Background layers: a little square of line colour in each inside corner of a rug, then the dim for blocked squares. */
-.ps-cell { --ps-dot: linear-gradient(var(--ps-line), var(--ps-line)); background-image: var(--ps-ntl, none), var(--ps-ntr, none), var(--ps-nbl, none), var(--ps-nbr, none), var(--ps-dim, none);
-  background-repeat: no-repeat; background-position: left top, right top, left bottom, right bottom, center; background-size: var(--ps-edge) var(--ps-edge), var(--ps-edge) var(--ps-edge), var(--ps-edge) var(--ps-edge), var(--ps-edge) var(--ps-edge), 100% 100%; }
+/* Squares a pup already rules out get a small faint cross at low levels; the rug keeps its colour. */
+.ps-blocked::after { content: '✕'; font-size: 0.34em; font-weight: 700; color: var(--ink-fixed); opacity: 0.3; animation: psFade 0.35s; pointer-events: none; }
+/* Background layers: a little square of line colour in each inside corner of a rug. */
+.ps-cell { --ps-dot: linear-gradient(var(--ps-line), var(--ps-line)); background-image: var(--ps-ntl, none), var(--ps-ntr, none), var(--ps-nbl, none), var(--ps-nbr, none);
+  background-repeat: no-repeat; background-position: left top, right top, left bottom, right bottom; background-size: var(--ps-edge) var(--ps-edge); }
 .ps-ntl { --ps-ntl: var(--ps-dot); }
 .ps-ntr { --ps-ntr: var(--ps-dot); }
 .ps-nbl { --ps-nbl: var(--ps-dot); }
@@ -854,6 +854,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 [data-theme='contrast'] .ps-board { --ps-line: #000; }
 [data-theme='contrast'] .ps-cell { --ps-thin: #000; }
 @keyframes psHop { 40% { transform: translateY(-14%); } }
+@keyframes psFade { from { opacity: 0; } }
 @keyframes psGlow { 0%, 100% { opacity: 0; } 20%, 70% { opacity: 1; } }
 @keyframes psPulse { from { opacity: 0.35; } }
 @keyframes psNo { 25% { transform: rotate(-12deg); } 75% { transform: rotate(12deg); } }
