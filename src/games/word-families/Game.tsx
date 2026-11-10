@@ -1,12 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocale } from '../../i18n'
-import { useCountdown, useGameLoop, useLatest, usePops, useTimeouts } from '../../kit/hooks'
+import { useGameLoop, useLatest, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
-import { sound, vibrate } from '../../kit/sound'
+import { SceneShell, useStage } from '../../kit/SceneShell'
+import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops, TimerBar } from '../../kit/ui'
 import { words, type Group, type GroupId } from './content'
-import { accuracyFor, beltSeconds, DURATION, makeDealer, pointsFor, showPictures, type Item } from './logic'
+import { beltSeconds, makeDealer, showPictures, type Item } from './logic'
+
+/** Words to sort in one stage. */
+const STAGE = 10
 
 interface Ride extends Item {
   id: number
@@ -26,14 +29,10 @@ export default function WordFamilies({ level, seed, t, onFinish }: GameProps) {
   if (!cur.current) cur.current = newRide()
   const [ride, setRide] = useState<Ride>(cur.current)
   const [baskets, setBaskets] = useState<Group[]>(() => dealer.baskets())
-  const [score, setScore] = useState(0)
-  const [combo, setCombo] = useState(0)
   const [message, setMessage] = useState<{ text: string; kind: '' | 'yes' | 'no' }>(() => ({ text: t('hint'), kind: '' }))
   const [flash, setFlash] = useState<{ id: GroupId; kind: 'right' | 'wrong' | 'show' }[]>([])
-  const [over, setOver] = useState(false)
-  const stats = useRef({ right: 0, wrong: 0 })
-  const scoreRef = useLatest(score)
-  const [pops, addPop] = usePops()
+  const stage = useStage(STAGE, onFinish)
+  const over = stage.over
   const later = useTimeouts()
   const pictures = showPictures(level)
   const seconds = beltSeconds(level)
@@ -43,22 +42,12 @@ export default function WordFamilies({ level, seed, t, onFinish }: GameProps) {
     setRide(r)
   }
 
-  const left = useCountdown(
-    DURATION,
-    () => {
-      setOver(true)
-      onFinish({ score: scoreRef.current, accuracy: accuracyFor(stats.current.right, stats.current.wrong) })
-    },
-    !over,
-  )
-
   const nextRide = () => {
     later(() => {
       const before = cur.current!.set
       const r = newRide()
       if (r.set !== before) {
         setBaskets(dealer.baskets())
-        addPop(t('newBaskets'), 50, 30, 'info')
         sound.pop()
         setMessage({ text: t('hint'), kind: '' })
       }
@@ -72,12 +61,9 @@ export default function WordFamilies({ level, seed, t, onFinish }: GameProps) {
   }
 
   const wrong = (r: Ride, picked: GroupId | null) => {
-    stats.current.wrong++
-    setCombo(0)
     setMessage({ text: t('belongs', { word: r.word.word, group: t(`group.${r.group}`) }), kind: 'no' })
     flashFor(picked ? [{ id: picked, kind: 'wrong' }, { id: r.group, kind: 'show' }] : [{ id: r.group, kind: 'show' }])
-    sound.bad()
-    vibrate(40)
+    stage.slip()
   }
 
   useGameLoop((dt) => {
@@ -96,18 +82,13 @@ export default function WordFamilies({ level, seed, t, onFinish }: GameProps) {
     if (over || r.done) return
     const right = r.group === g
     show({ ...r, done: { picked: g, right } })
-    nextRide()
-    if (!right) return wrong(r, g)
-    const nc = combo + 1
-    const gained = pointsFor(nc, 1 - r.t)
-    stats.current.right++
-    setCombo(nc)
-    setScore((s) => s + gained)
+    if (!right) {
+      nextRide()
+      return wrong(r, g)
+    }
     setMessage({ text: t('yes'), kind: 'yes' })
     flashFor([{ id: g, kind: 'right' }])
-    sound.good(nc)
-    const i = baskets.findIndex((b) => b.id === g)
-    addPop(`+${gained}`, baskets.length === 2 ? 25 + i * 50 : 25 + (i % 2) * 50, 62)
+    if (!stage.good()) nextRide()
   }
 
   // Number keys 1 to 4 pick a basket, for anyone on a computer.
@@ -124,16 +105,7 @@ export default function WordFamilies({ level, seed, t, onFinish }: GameProps) {
 
   const doneClass = ride.done ? (ride.done.right ? ' wf-in' : ride.done.picked ? ' wf-miss' : ' wf-away') : ''
   return (
-    <div className="game word-families">
-      <TimerBar left={left} total={DURATION} />
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('combo'), value: `×${combo}`, highlight: combo >= 5 },
-          { label: t('time'), value: Math.ceil(left) },
-        ]}
-      />
-      <p className={`prompt wf-msg${message.kind ? ` wf-${message.kind}` : ''}`}>{message.text}</p>
+    <SceneShell place="village" say={message.text} stage={stage} bare className="word-families">
       <div className="wf-belt">
         <div key={ride.id} className={`wf-card${doneClass}`} style={{ left: `${88 - ride.t * 76}%` }}>
           {pictures && <span className="wf-emoji">{ride.word.emoji}</span>}
@@ -158,7 +130,6 @@ export default function WordFamilies({ level, seed, t, onFinish }: GameProps) {
           )
         })}
       </div>
-      <Pops pops={pops} />
-    </div>
+    </SceneShell>
   )
 }

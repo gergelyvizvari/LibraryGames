@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import { useCountdown, useGameLoop, useLatest, usePops, useShake, useTimeouts } from '../../kit/hooks'
+import { useGameLoop, useLatest, useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
-import { sound, vibrate } from '../../kit/sound'
+import { SceneShell, useStage } from '../../kit/SceneShell'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops, TimerBar } from '../../kit/ui'
-import { accuracyFor, binFor, DURATION, explain, fallSeconds, makeDealer, pointsFor, showDots, swipeBin, type Bin } from './logic'
+import { binFor, explain, fallSeconds, makeDealer, showDots, swipeBin, type Bin } from './logic'
+
+/** Numbers to sort in one stage. */
+const STAGE = 10
 
 interface Drop {
   id: number
@@ -43,28 +45,15 @@ export default function EvenOdd({ level, seed, t, onFinish }: GameProps) {
     cur.current = d
     setDrop(d)
   }
-  const [score, setScore] = useState(0)
-  const [combo, setCombo] = useState(0)
   const [message, setMessage] = useState<{ text: string; kind: '' | 'yes' | 'no' }>(() => ({ text: t('hint'), kind: '' }))
   const [glow, setGlow] = useState<{ bin: Bin; right: boolean } | null>(null)
-  const [over, setOver] = useState(false)
-  const stats = useRef({ right: 0, wrong: 0 })
-  const scoreRef = useLatest(score)
-  const [pops, addPop] = usePops()
+  const stage = useStage(STAGE, onFinish)
+  const over = stage.over
   const [fieldRef, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
   const swipeFrom = useRef<{ x: number; y: number } | null>(null)
   const dots = showDots(level)
   const fall = fallSeconds(level)
-
-  const left = useCountdown(
-    DURATION,
-    () => {
-      setOver(true)
-      onFinish({ score: scoreRef.current, accuracy: accuracyFor(stats.current.right, stats.current.wrong) })
-    },
-    !over,
-  )
 
   const nextDrop = () => {
     later(() => show({ id: nextId.current++, n: deal(), y: 0 }), 380)
@@ -72,11 +61,8 @@ export default function EvenOdd({ level, seed, t, onFinish }: GameProps) {
 
   const missed = (n: number) => {
     const why = explain(n)
-    stats.current.wrong++
-    setCombo(0)
     setMessage({ text: t(why.key, why.vars), kind: 'no' })
-    sound.bad()
-    vibrate(40)
+    stage.slip()
     shake()
   }
 
@@ -101,19 +87,13 @@ export default function EvenOdd({ level, seed, t, onFinish }: GameProps) {
     show({ ...drop, gone: { bin, right } })
     setGlow({ bin, right })
     later(() => setGlow(null), 450)
-    nextDrop()
     if (!right) {
+      nextDrop()
       missed(drop.n)
       return
     }
-    const nc = combo + 1
-    const gained = pointsFor(nc, 1 - drop.y / 100)
-    stats.current.right++
-    setCombo(nc)
-    setScore((s) => s + gained)
     setMessage({ text: `${drop.n}: ${t(bin)}!`, kind: 'yes' })
-    sound.good(nc)
-    addPop(`+${gained}`, bin === 'even' ? 25 : 75, 70)
+    if (!stage.good()) nextDrop()
   }
 
   // Arrow keys work too, for anyone on a computer.
@@ -131,16 +111,7 @@ export default function EvenOdd({ level, seed, t, onFinish }: GameProps) {
     `eo-bin eo-bin-${bin}${glow?.bin === bin ? (glow.right ? ' eo-bin-right' : ' eo-bin-wrong') : ''}`
 
   return (
-    <div className="game even-odd">
-      <TimerBar left={left} total={DURATION} />
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('combo'), value: `×${combo}`, highlight: combo >= 5 },
-          { label: t('time'), value: Math.ceil(left) },
-        ]}
-      />
-      <p className={`prompt eo-msg${message.kind ? ` eo-${message.kind}` : ''}`}>{message.text}</p>
+    <SceneShell place="peaks" say={message.text} stage={stage} bare fill className="even-odd">
       <div
         ref={fieldRef}
         className="eo-field"
@@ -162,9 +133,6 @@ export default function EvenOdd({ level, seed, t, onFinish }: GameProps) {
           <span className="eo-num">{drop.n}</span>
           {dots && <Dots n={drop.n} />}
         </div>
-        <span className="eo-arrow eo-arrow-left">⬅</span>
-        <span className="eo-arrow eo-arrow-right">➡</span>
-        <Pops pops={pops} />
       </div>
       <div className="eo-bins">
         <button className={binClass('even')} onPointerDown={() => answer('even')} disabled={over}>
@@ -176,6 +144,6 @@ export default function EvenOdd({ level, seed, t, onFinish }: GameProps) {
           {t('odd')}
         </button>
       </div>
-    </div>
+    </SceneShell>
   )
 }

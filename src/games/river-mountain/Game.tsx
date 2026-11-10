@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from 'react'
 import { useLocale } from '../../i18n'
-import { usePops, useShake, useTimeouts } from '../../kit/hooks'
-import { DOT_HIT_R, DOT_R, ROUNDS, dotChoices, dotCount, dotGapFor, nearestDot, pickRound, placesFor as poolFor, pointsForKm, showDots } from '../../kit/mapHunt'
+import { useShake, useTimeouts } from '../../kit/hooks'
+import { DOT_HIT_R, DOT_R, dotChoices, dotCount, dotGapFor, nearestDot, pickRound, placesFor as poolFor, pointsForKm, showDots } from '../../kit/mapHunt'
 import { makeRng } from '../../kit/random'
+import { SceneShell } from '../../kit/SceneShell'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hud, MapStage, Pops } from '../../kit/ui'
+import { MapStage } from '../../kit/ui'
 import { features, type Feature } from './content'
 import { BANDS, DOT_GAP_KM, kindLabel, kmToFeature, placesFor, type FeaturePlace } from './logic'
 import { HEIGHT, WIDTH, fromMap, linePath, loadLand, toMap } from './map'
@@ -27,6 +28,9 @@ function Mark({ f, className = '' }: { f: Feature; className?: string }) {
   return <path d={`M${x - 13},${y + 10} L${x},${y - 13} L${x + 13},${y + 10} Z`} className={`rm-peak ${className}`} />
 }
 
+/** Rivers and mountains to find in one stage. */
+const ROUNDS = 6
+
 export default function RiverMountain({ level, seed, t, onFinish }: GameProps) {
   const locale = useLocale()
   const places = useRef(placesFor(locale)).current
@@ -42,7 +46,6 @@ export default function RiverMountain({ level, seed, t, onFinish }: GameProps) {
   const [combo, setCombo] = useState(0)
   const total = useRef(0)
   const svgRef = useRef<SVGSVGElement>(null)
-  const [pops, addPop] = usePops()
   const [wrapRef, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
   const target = round[index]
@@ -70,7 +73,6 @@ export default function RiverMountain({ level, seed, t, onFinish }: GameProps) {
       vibrate(40)
       shake()
     }
-    if (gained) addPop(`+${gained}`, (tx / WIDTH) * 100, Math.max(6, (ty / HEIGHT) * 100 - 16))
     later(() => {
       const next = index + 1
       if (next >= ROUNDS) {
@@ -113,14 +115,9 @@ export default function RiverMountain({ level, seed, t, onFinish }: GameProps) {
   const ly = ty < 90 ? ty + 64 : ty - 36
 
   return (
-    <div className="game river-mountain">
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('round'), value: `${index + 1} / ${ROUNDS}`, highlight: combo >= 3 },
-        ]}
-      />
-      <p className="prompt rm-ask" key={index}>
+    <SceneShell
+      place="coast"
+      say={<>
         {result ? (
           result.label
         ) : (
@@ -131,7 +128,12 @@ export default function RiverMountain({ level, seed, t, onFinish }: GameProps) {
             {t('where', { place: target.name })}
           </>
         )}
-      </p>
+      </>}
+      stage={{ done: index + (result ? 1 : 0), total: ROUNDS, over: false, mood: !result ? 'idle' : result.pts >= 20 ? 'happy' : 'oops' }}
+      bare
+      fill
+      className="river-mountain"
+    >
       <MapStage>
       <div className="rm-wrap map-box" ref={wrapRef} style={{ '--map-ratio': WIDTH / HEIGHT } as CSSProperties}>
         {land ? (
@@ -166,9 +168,8 @@ export default function RiverMountain({ level, seed, t, onFinish }: GameProps) {
         ) : (
           <div className="rm-loading">{t('loading')}</div>
         )}
-        <Pops pops={pops} />
       </div>
       </MapStage>
-    </div>
+    </SceneShell>
   )
 }

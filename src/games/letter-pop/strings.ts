@@ -3,6 +3,7 @@ import type { GameStrings } from '../../i18n'
 const strings: GameStrings = {
   en: {
     title: 'Letter Pop',
+    say: 'Type the letters to pop the bubbles!',
     howTo: 'Bubbles with letters float up. Press that letter on the keyboard to pop the bubble before it flies away!',
     score: 'Score',
     combo: 'Combo',
@@ -11,6 +12,7 @@ const strings: GameStrings = {
   },
   hu: {
     title: 'Betűpukkasztó',
+    say: 'Írd be a betűket, és kipukkannak a buborékok!',
     howTo: 'Betűs buborékok szállnak felfelé. Nyomd meg azt a betűt a billentyűzeten, és pukkaszd ki a buborékot, mielőtt elrepül!',
     score: 'Pont',
     combo: 'Kombó',

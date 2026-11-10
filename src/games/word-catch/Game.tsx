@@ -1,13 +1,13 @@
 import { useRef, useState } from 'react'
 import { useLocale } from '../../i18n'
-import { useCountdown, useGameLoop, usePops, useShake } from '../../kit/hooks'
+import { useGameLoop, useShake } from '../../kit/hooks'
 import { clamp, makeRng } from '../../kit/random'
-import { sound, vibrate } from '../../kit/sound'
+import { SceneShell, useStage } from '../../kit/SceneShell'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops, TimerBar } from '../../kit/ui'
 import { words, wordsForLevel, type Word } from './content'
 
-const DURATION = 60
+/** Pictures to name in one stage. */
+const STAGE = 8
 
 interface Drop {
   answer: Word
@@ -38,28 +38,15 @@ export default function WordCatch({ level, seed, t, onFinish }: GameProps) {
     dropRef.current = d
     setDropState(d)
   }
-  const [score, setScore] = useState(0)
-  const [combo, setCombo] = useState(0)
-  const [hits, setHits] = useState(0)
-  const [misses, setMisses] = useState(0)
-  const [over, setOver] = useState(false)
-  const [pops, addPop] = usePops()
+  const stage = useStage(STAGE, onFinish)
+  const over = stage.over
   const [ref, shake] = useShake<HTMLDivElement>()
 
-  const end = () => {
-    setOver(true)
-    onFinish({ score, accuracy: hits + misses === 0 ? 0 : (hits / (hits + misses)) * clamp(hits / 12, 0, 1) })
-  }
-  const left = useCountdown(DURATION, end, !over)
-
-  const fallSeconds = clamp(6.5 - level * 0.4 - combo * 0.08, 2.2, 6.5)
+  const fallSeconds = clamp(7.5 - level * 0.45, 3, 7.5)
 
   const miss = () => {
-    sound.bad()
-    vibrate(50)
+    stage.slip()
     shake()
-    setCombo(0)
-    setMisses((m) => m + 1)
   }
 
   useGameLoop((dt) => {
@@ -70,51 +57,39 @@ export default function WordCatch({ level, seed, t, onFinish }: GameProps) {
       return
     }
     miss()
-    addPop(t('oops'), d.x, 80, 'bad')
     setDrop(makeDrop(d.answer))
   }, !over)
 
   const choose = (option: string) => {
     if (over) return
-    if (option === drop.answer.word) {
-      const nextCombo = combo + 1
-      const gained = 10 + Math.min(nextCombo, 10) * 2
-      setScore((s) => s + gained)
-      setCombo(nextCombo)
-      setHits((h) => h + 1)
-      sound.good(nextCombo)
-      addPop(`+${gained}`, drop.x, drop.y)
-      setDrop(makeDrop(drop.answer))
-    } else {
-      miss()
-      addPop(t('oops'), drop.x, drop.y, 'bad')
-    }
+    if (option !== drop.answer.word) return miss()
+    if (!stage.good()) setDrop(makeDrop(drop.answer))
   }
 
   return (
-    <div className="game word-catch">
-      <TimerBar left={left} total={DURATION} />
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('combo'), value: `×${combo}`, highlight: combo >= 5 },
-          { label: t('time'), value: Math.ceil(left) },
-        ]}
-      />
+    <SceneShell
+      place="village"
+      say={t('say')}
+      stage={stage}
+      bare
+      fill
+      className="word-catch"
+      tray={
+        <div className="choices">
+          {drop.options.map((o) => (
+            <button key={o} className="choice-btn" onPointerDown={() => choose(o)}>
+              {o}
+            </button>
+          ))}
+        </div>
+      }
+    >
       <div className="wc-sky" ref={ref}>
         <div className="wc-drop" style={{ left: `${drop.x}%`, top: `${drop.y}%` }}>
           {drop.answer.emoji}
         </div>
         <div className="wc-ground" />
-        <Pops pops={pops} />
       </div>
-      <div className="choices">
-        {drop.options.map((o) => (
-          <button key={o} className="choice-btn" onPointerDown={() => choose(o)}>
-            {o}
-          </button>
-        ))}
-      </div>
-    </div>
+    </SceneShell>
   )
 }

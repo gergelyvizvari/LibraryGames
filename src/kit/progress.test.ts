@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { currentStreak, dailyDoneToday, gameProgress, loadProgress, nextLevel, recordRound, setLevel, stars } from './progress'
+import { awardSticker, currentStreak, dailyDoneToday, gameProgress, isFavourite, loadProgress, nextLevel, recordRound, setLevel, stars, stickerCount, toggleFavourite } from './progress'
 
 describe('progress', () => {
   beforeEach(() => localStorage.clear())
@@ -63,5 +63,24 @@ describe('progress', () => {
     expect(gameProgress(loadProgress(), 'x').level).toBe(10)
     setLevel('x', 0)
     expect(gameProgress(loadProgress(), 'x').level).toBe(1)
+  })
+
+  it('hands out stickers one at a time until the album is full, and keeps them through later rounds', () => {
+    expect(awardSticker('demo', 2)).toBe(0)
+    recordRound('demo', 'memory', { score: 5, accuracy: 0.5 })
+    expect(awardSticker('demo', 2)).toBe(1)
+    expect(awardSticker('demo', 2)).toBeNull()
+    expect(stickerCount(loadProgress(), 'demo')).toBe(2)
+    expect(stickerCount(loadProgress(), 'other')).toBe(0)
+  })
+
+  it('gives a game a heart and takes it back, and remembers it', () => {
+    expect(isFavourite(loadProgress(), 'a')).toBe(false)
+    toggleFavourite('a')
+    const p = toggleFavourite('b')
+    expect(p.favourites?.map((f) => f.id)).toEqual(['a', 'b'])
+    expect(isFavourite(loadProgress(), 'a')).toBe(true)
+    toggleFavourite('a')
+    expect(loadProgress().favourites?.map((f) => f.id)).toEqual(['b'])
   })
 })

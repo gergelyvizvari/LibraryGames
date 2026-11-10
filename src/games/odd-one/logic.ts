@@ -37,3 +37,6 @@ export function makeBoard(rng: Rng, level: number, found: number): Board {
   const [common, odd] = rng.chance(0.5) ? pair : [pair[1], pair[0]]
   return { size, common, odd, oddIndex: rng.int(0, size * size - 1) }
 }
+
+/** Finds in one stage. */
+export const STAGE = 6

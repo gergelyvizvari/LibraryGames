@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from 'react'
 import { useLocale } from '../../i18n'
-import { usePops, useShake, useTimeouts } from '../../kit/hooks'
+import { useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
+import { SceneShell } from '../../kit/SceneShell'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hud, MapStage, Pops } from '../../kit/ui'
+import { MapStage } from '../../kit/ui'
 import { displayName, flag } from './content'
 import { pickQuestions, pointsFor } from './logic'
 import { WIDTH, loadMap, nearEnough, type RegionMap } from './map'
@@ -12,7 +13,7 @@ import { WIDTH, loadMap, nearEnough, type RegionMap } from './map'
 export default function BlindMap({ level, seed, t, onFinish }: GameProps) {
   const locale = useLocale()
   const rng = useRef(makeRng(seed)).current
-  const questions = useRef(pickQuestions(rng, level)).current
+  const questions = useRef(pickQuestions(rng, level).slice(0, 6)).current
   const [index, setIndex] = useState(0)
   const [map, setMap] = useState<RegionMap | null>(null)
   const shapes = map?.shapes
@@ -26,7 +27,6 @@ export default function BlindMap({ level, seed, t, onFinish }: GameProps) {
   const [done, setDone] = useState(false)
   const askedAt = useRef(0)
   const svg = useRef<SVGSVGElement>(null)
-  const [pops, addPop] = usePops()
   const [shakeRef, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
 
@@ -76,7 +76,6 @@ export default function BlindMap({ level, seed, t, onFinish }: GameProps) {
       setScore(score + gained)
       setFound(q.atlas)
       sound.good(nc)
-      addPop(gained ? `+${gained}` : t('hereItIs'), (pt.x / WIDTH) * 100, (pt.y / (map?.height ?? 1)) * 100)
       next(tries === 0, score + gained)
       return
     }
@@ -96,20 +95,24 @@ export default function BlindMap({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <div className="game blind-map">
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('country'), value: `${index + 1} / ${questions.length}` },
-          { label: t('combo'), value: `×${combo}`, highlight: combo >= 3 },
-        ]}
-      />
-      <p className="prompt bm-prompt" key={index}>
-        <span className="bm-flag">{flag(q.iso)}</span> {t('find', { name: displayName(q.atlas, locale) })}
-      </p>
-      <p className="bm-hint">
-        {found ? (reveal ? t('hereItIs') : '') : wrongName ? t('thatIs', { name: displayName(wrongName, locale) }) : ' '}
-      </p>
+    <SceneShell
+      place="coast"
+      say={
+        found && reveal ? (
+          t('hereItIs')
+        ) : wrongName && !found ? (
+          t('thatIs', { name: displayName(wrongName, locale) })
+        ) : (
+          <>
+            <span className="bm-flag">{flag(q.iso)}</span> {t('find', { name: displayName(q.atlas, locale) })}
+          </>
+        )
+      }
+      stage={{ done: index + (found ? 1 : 0), total: questions.length, over: done, mood: found && !reveal ? 'happy' : wrongName && !found ? 'oops' : 'idle' }}
+      bare
+      fill
+      className="blind-map"
+    >
       <MapStage>
       <div className="bm-sea map-box" ref={shakeRef} style={{ '--map-ratio': map ? WIDTH / map.height : 1 } as CSSProperties}>
         {map && shapes ? (
@@ -126,9 +129,8 @@ export default function BlindMap({ level, seed, t, onFinish }: GameProps) {
         ) : (
           <div className="bm-loading">{t('loading')}</div>
         )}
-        <Pops pops={pops} />
       </div>
       </MapStage>
-    </div>
+    </SceneShell>
   )
 }

@@ -1,9 +1,12 @@
 import { useMemo, useRef, useState } from 'react'
-import { usePops, useTimeouts } from '../../kit/hooks'
+import { useT } from '../../i18n'
+import { useTimeouts } from '../../kit/hooks'
+import { Bunting, Guide } from '../../kit/places'
 import { makeRng } from '../../kit/random'
+import { SceneTool, SceneTray, StagePips } from '../../kit/scene'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops } from '../../kit/ui'
+import { Basket, COATS, DenWindow, Rug } from './Den'
 import {
   accuracyFor,
   clashes,
@@ -61,7 +64,8 @@ export default function PuppySpots({ level, seed, t, onFinish }: GameProps) {
   const [message, setMessage] = useState(t('place'))
   const [busy, setBusy] = useState(false)
   const [over, setOver] = useState(false)
-  const [pops, addPop] = usePops()
+  const [tip, setTip] = useState<string | null>(null)
+  const app = useT()
   const later = useTimeouts()
   const clashRun = useRef(0)
   const { puzzle, gifts } = room
@@ -79,8 +83,12 @@ export default function PuppySpots({ level, seed, t, onFinish }: GameProps) {
   const stuck = useMemo(() => (busy ? null : starved(regions, pups)), [busy, regions, pups])
   const stuckAt = useMemo(() => keys(stuck?.cells ?? []), [stuck])
 
-  const popAt = (r: number, c: number, text: string, kind: 'good' | 'bad' | 'info' = 'good') =>
-    addPop(text, ((c + 0.5) / n) * 100, ((r + 0.5) / n) * 100, kind)
+  /** The square a hint points at glows for a moment. */
+  const popAt = (r: number, c: number) => {
+    const k = key(r, c)
+    setTip(k)
+    later(() => setTip((now) => (now === k ? null : now)), 1200)
+  }
 
   /** After a change that broke no rule: warn about a dead end, or go back to the plain prompt. */
   const settle = (next: Cell[], fallback: string) => {
@@ -105,7 +113,6 @@ export default function PuppySpots({ level, seed, t, onFinish }: GameProps) {
     setMessage(t(clean ? 'perfect' : 'solved'))
     // A quiet ending: the pups give one happy hop.
     sound.win()
-    addPop(`+${gained}`, 50, 45)
     if (all.length >= total) {
       setOver(true)
       later(() => onFinish({ score: sum, accuracy: accuracyFor(all) }), 1400)
@@ -189,7 +196,7 @@ export default function PuppySpots({ level, seed, t, onFinish }: GameProps) {
     if ('remove' in h) {
       const [r, c] = h.remove
       sound.pop()
-      popAt(r, c, '💡', 'info')
+      popAt(r, c)
       setPups(without(pups, r, c))
       setMessage(t('hintTook'))
       return
@@ -199,7 +206,7 @@ export default function PuppySpots({ level, seed, t, onFinish }: GameProps) {
     const m = new Set(marks)
     m.delete(key(r, c))
     setMarks(m)
-    popAt(r, c, '💡', 'info')
+    popAt(r, c)
     if (isSolved(regions, next)) {
       finishRoom(next, mistakes, hints + 1)
       return
@@ -226,95 +233,59 @@ export default function PuppySpots({ level, seed, t, onFinish }: GameProps) {
     setMessage(t(next === 'pup' ? 'place' : 'mark'))
   }
 
-  // Each rug is one shape: a square gets a wide line on every side that faces another rug or the wall,
-  // and a round corner where two such sides meet. It reads without telling colours apart.
-  const edges = (r: number, c: number) => {
-    const rug = regions[r][c]
-    const top = r === 0 || regions[r - 1][c] !== rug
-    const left = c === 0 || regions[r][c - 1] !== rug
-    const bottom = r === n - 1 || regions[r + 1][c] !== rug
-    const right = c === n - 1 || regions[r][c + 1] !== rug
-    return [
-      top && 'ps-et',
-      left && 'ps-el',
-      bottom && 'ps-eb',
-      right && 'ps-er',
-      top && left && 'ps-ctl',
-      top && right && 'ps-ctr',
-      bottom && left && 'ps-cbl',
-      bottom && right && 'ps-cbr',
-      // An inside corner of an L-shaped rug: only the diagonal neighbour belongs to another rug.
-      !top && !left && regions[r - 1][c - 1] !== rug && 'ps-ntl',
-      !top && !right && regions[r - 1][c + 1] !== rug && 'ps-ntr',
-      !bottom && !left && regions[r + 1][c - 1] !== rug && 'ps-nbl',
-      !bottom && !right && regions[r + 1][c + 1] !== rug && 'ps-nbr',
-    ]
-      .filter(Boolean)
-      .join(' ')
-  }
-
+  const mood = clash ? 'oops' : busy ? 'happy' : 'idle'
+  const marking = tool === 'mark'
+  // The pups still in the basket: one of each coat that has no spot on the rug yet.
+  const seated = new Set(pups.map(([r, c]) => regions[r][c]))
+  const waiting = [...Array(n).keys()].filter((rug) => !seated.has(rug))
   const grid = `repeat(${n}, minmax(0, 1fr))`
   return (
-    <div className="game puppy-spots">
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('room'), value: `${Math.min(done.length + (over ? 0 : 1), total)} / ${total}` },
-          { label: t('pups'), value: `${pups.length} / ${n}`, highlight: streak > 0 },
-        ]}
-      />
-      <p className={`ps-message${clash || stuck ? ' ps-warn' : ''}`}>{message}</p>
-      <div className="ps-wrap">
-        <div
-          key={done.length}
-          className={`ps-board${busy ? ' ps-solved' : ''}`}
-          style={{ gridTemplateColumns: grid, gridTemplateRows: grid, ['--ps-n' as string]: n }}
-        >
-          {regions.map((row, r) =>
-            row.map((rug, c) => {
-              const k = key(r, c)
-              const hopping = clash !== null && clash.cell[0] === r && clash.cell[1] === c
-              const other = clash !== null && clash.other[0] === r && clash.other[1] === c
-              const cls = [
-                `ps-cell ps-r${rug}`,
-                edges(r, c),
-                clash?.why.has(k) ? 'ps-why' : '',
-                hopping || other ? 'ps-bad' : '',
-                !clash && stuckAt.has(k) ? 'ps-stuck' : '',
-                blocked.has(k) && !marks.has(k) ? 'ps-blocked' : '',
-              ]
-              return (
-                <button key={k} className={cls.filter(Boolean).join(' ')} onPointerDown={() => tap(r, c)} aria-label={t('cell', { row: r + 1, col: c + 1 })}>
-                  {hopping || pupAt.has(k) ? (
-                    <span className="ps-pup">🐶</span>
-                  ) : marks.has(k) ? (
-                    <span className="ps-mark">✖</span>
-                  ) : null}
-                </button>
-              )
-            }),
-          )}
+    <div className="scene pk">
+      <div className="pk-wall">
+        <Bunting />
+        <DenWindow />
+        <p className="scene-bubble sg-bubble" role="status" aria-live="polite">
+          {message}
+        </p>
+        <span className={`sg-guide sg-${mood}`}>
+          <Guide place="woods" />
+        </span>
+      </div>
+      <StagePips done={done.length} total={total} label={app('scene.progress', { n: done.length, total })} />
+      <div className="pk-floor">
+        <div key={done.length} className="pk-rug">
+          <Rug
+            regions={regions}
+            pups={pups}
+            gifts={giftAt}
+            marks={marks}
+            blocked={blocked}
+            why={clash?.why}
+            bad={clash ? [clash.cell, clash.other] : []}
+            stuck={stuckAt}
+            tip={tip}
+            happy={busy}
+          />
+          <div className="pk-cells" style={{ gridTemplateColumns: grid, gridTemplateRows: grid }}>
+            {regions.map((row, r) =>
+              row.map((_, c) => (
+                <button key={key(r, c)} className="pk-cell" onPointerDown={() => tap(r, c)} aria-label={t('cell', { row: r + 1, col: c + 1 })} aria-pressed={pupAt.has(key(r, c))} />
+              )),
+            )}
+          </div>
         </div>
-        <Pops pops={pops} />
       </div>
-      <div className="ps-tools">
-        <button className={`ps-tool${tool === 'pup' ? ' ps-on' : ''}`} onPointerDown={() => pickTool('pup')} aria-pressed={tool === 'pup'}>
-          <span>🐶</span>
-          {t('toolPup')}
-        </button>
-        <button className={`ps-tool${tool === 'mark' ? ' ps-on' : ''}`} onPointerDown={() => pickTool('mark')} aria-pressed={tool === 'mark'}>
-          <span>✖</span>
-          {t('toolMark')}
-        </button>
-        <button className="ps-tool" onPointerDown={hint}>
-          <span>💡</span>
-          {t('hint')}
-        </button>
-        <button className="ps-tool" onPointerDown={clear} disabled={!canClear}>
-          <span>🔄</span>
-          {t('clear')}
-        </button>
-      </div>
+      <SceneTray hidden={over}>
+        <div className="pk-basket">
+          <Basket waiting={waiting.length} coats={waiting.map((rug) => rug % COATS)} />
+          <span className="pk-basket-label">{t(waiting.length ? 'waiting' : 'allOut')}</span>
+        </div>
+        <div className="pk-tools">
+          <SceneTool kind="mark" label={t('toolMark')} on={marking} onPress={() => pickTool(marking ? 'pup' : 'mark')} />
+          <SceneTool kind="hint" label={t('hint')} onPress={hint} />
+          <SceneTool kind="restart" label={t('clear')} onPress={clear} disabled={!canClear} />
+        </div>
+      </SceneTray>
     </div>
   )
 }

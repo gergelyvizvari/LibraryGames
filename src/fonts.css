@@ -10,3 +10,21 @@
   src: url('@fontsource-variable/baloo-2/files/baloo-2-latin-ext-wght-normal.woff2') format('woff2-variations');
   unicode-range: U+0150-0151, U+0170-0171;
 }
+
+/* The storybook capitals on the map and in scene games. Only the two Latin ranges are bundled. */
+@font-face {
+  font-family: 'Alegreya SC';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 800;
+  src: url('@fontsource/alegreya-sc/files/alegreya-sc-latin-800-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+2000-206F;
+}
+@font-face {
+  font-family: 'Alegreya SC';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 800;
+  src: url('@fontsource/alegreya-sc/files/alegreya-sc-latin-ext-800-normal.woff2') format('woff2');
+  unicode-range: U+0100-02BA;
+}

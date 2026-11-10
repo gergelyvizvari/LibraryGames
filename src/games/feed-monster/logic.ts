@@ -1,6 +1,7 @@
 import { clamp, type Rng } from '../../kit/random'
 
-export const DURATION = 60
+/** A stage is this many monsters to feed. There is no clock. */
+export const STAGE = 5
 
 export interface Monster {
   target: number

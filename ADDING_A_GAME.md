@@ -91,13 +91,16 @@ export const icon: GameIcon = [
   (a yellow cheese on a mustard card needs its outline, a blue shape on a blue card does not work).
 - **Themes**: icons always sit on the game colour (cards, daily challenge) or on the intro card, and the outline
   stays dark, so the same icon works in light, dark and high contrast without changes. High contrast thickens the outline.
-- Check it on the home screen in all three themes. The registry test checks every game has an icon with valid roles and colours.
+- Check it on the "All games" screen in all three themes. The registry test checks every game has an icon with valid roles and colours.
 
 ## Kit pieces (`src/kit`)
 
 - `hooks.ts`: `useCountdown(seconds, onEnd, running)`, `useGameLoop(dt => …, running)`, `useTimeouts()`,
   `usePops()`, `useShake()`, `useInterval()`.
-- `ui.tsx`: `<Hud items>`, `<TimerBar>`, `<Pops>`, `<Hearts>`, `<Confetti>`.
+- `SceneShell.tsx`: `<SceneShell>`, `useStage()`, `medals()`; see "Scene games" below. `places.tsx` holds the rooms and characters.
+- `scene.tsx`: `<SceneTool>` is the round drawn button for tools and arrows (undo, restart, hint, mark, listen, up/down/left/right).
+- `things.tsx`: `<Thing id>` draws small storybook things (apple, acorn, fish, star...) to count, sort or line up. Use these instead of emoji.
+- `ui.tsx`: `<Pops>`, `<MapStage>`; `<Hud>`, `<TimerBar>`, `<Hearts>` and `<Confetti>` are from the old timed rounds and no game uses them now.
 - `sound.ts`: `sound.good(combo)`, `bad`, `pop`, `tap`, `tick`, `win`, `tone(freq, dur)`, `vibrate(ms)`. Real recordings: `preloadClip(url)` + `playClip(url)` (import the file from the game folder; keep clips tiny and list their source and licence in a `sounds/CREDITS.md`).
 - `random.ts`: `makeRng(seed)` with `int`, `pick`, `shuffle`, `chance`; `clamp`.
 - `MapHuntGame.tsx` + `mapHunt.ts`: a whole "find the place on a blind map" round. A map game only supplies its map,
@@ -112,11 +115,48 @@ export const icon: GameIcon = [
   the top of `styles.css` (`--bg`, `--ink`, `--muted`, `--card`, `--line`, `--good`, `--bad`, `--good-soft`,
   `--bad-soft`, `--highlight`, `--on-color` for text on coloured buttons, `--press` for button edges).
   Fixed colours are fine inside a game's own scene (a sky, a pond, game pieces); text on a surface that stays
-  light in every theme uses `--ink-fixed`. Check your game in all three themes with the ☀️ button on the home screen.
+  light in every theme uses `--ink-fixed`. Check your game in all three themes with the ☀️ button on the "All games" screen.
+
+## Scene games
+
+Every game is a scene: a place in the storybook world instead of a quiz round with a clock. It has a drawn room,
+a character who says what to do, a short stage with a clear goal, and a quiet ending with a sticker.
+
+- Set `scene: true` in `meta`. The frame (`kit/SceneFrame.tsx`) shows no intro card, countdown, level picker
+  or score: only a back button over your scene. The level still adapts from the `accuracy` you report.
+- A round is one **stage**: a handful of tasks (six clocks to read, one board of pairs), no timer and no way to
+  lose. Nothing is taken away for a mistake; the task comes again or the stage moves on.
+- Wrap the game in `<SceneShell place say stage>` (`kit/SceneShell.tsx`). `place` is the game's region on the map
+  (`peaks` maths, `woods` logic and spatial, `lake` memory and focus, `sea` typing and reading, `village`
+  language, `meadow` reflexes, `coast` geography): it gives the room, the window and the character. `say` is the
+  one short sentence in the character's speech bubble (screen readers hear it, so every message goes there).
+  Children are the board, laid on a paper sheet; pass `bare` when the game draws its own field, `fill` when the
+  board should take all the room, and `tray` for buttons that belong at the bottom edge.
+- `useStage(total, onFinish)` keeps the stage: call `stage.good()` when a task is done (it plays the sound, lets
+  the character hop and ends the stage after the last one, returning true), `stage.slip()` for a wrong try, and
+  `stage.miss()` when a task that cannot be retried went wrong. It calls `onFinish` once, by itself. A game with
+  its own bookkeeping can pass `stage={{ done, total, over, mood }}` instead.
+- Give the game `stickers` in `index.ts`. `medals(icon)` makes a bronze, a silver and a gold medal from the
+  game's icon; a game with its own drawn stickers lists `{ name, icon }` entries (`name` a key in `strings.ts`).
+  One is won per finished stage, in order; they show up in the sticker album.
+- Make the board an object in the room, not tiles on paper: pass `bare` and draw it (a rug, a pond, a crate, a framed
+  picture). Draw the pieces too (`kit/things.tsx` or the game's own SVG). `puppy-spots/Den.tsx` and
+  `maze-dash/Garden.tsx` are the models: an SVG picture with a grid of transparent buttons on top.
+- `feed-monster` draws its whole scene itself (`StagePips`, `SpeechBubble`, `SceneTray` from `kit/scene.tsx`,
+  sized from `useSize()` and a small tested `layout.ts`). Do that only for a game that deserves its own room.
+- Look: no outlines, flat painted shapes with one lit and one shaded side, big glossy eyes on characters, the
+  `--story` font for numbers and names, `var(--grain)` laid over painted areas. Colours are fixed (a printed
+  page), so themes do not apply inside a scene. Endings stay calm: one hop, one sound, no confetti.
+- Check the scene on an upright phone (390 × 800) and a wide window: the whole stage fits one screen without
+  scrolling. Size square boards with `min(100%, <px>, 100dvh - <px>)`.
+
+The home screen is a map (`src/shell/map`): every skill belongs to a region in `regions.ts`, and every game gets
+a star there automatically. A region needs a free spot in its `slots` for each of its games; `regions.test.ts`
+fails when a new game does not fit, so add a spot (map units, clear of the drawing) when that happens.
 
 ## Translations
 
-The app speaks English (`en`) and Hungarian (`hu`); kids switch with the EN/HU button on the home screen.
+The app speaks English (`en`) and Hungarian (`hu`); kids switch with the EN/HU button on the "All games" screen.
 Every new game must ship both:
 
 - `strings.ts` has an `en` and a `hu` block with the same keys and the same `{placeholders}`. Write natural,

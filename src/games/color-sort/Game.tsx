@@ -1,10 +1,11 @@
 import { useRef, useState } from 'react'
-import { usePops, useTimeouts } from '../../kit/hooks'
+import { useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
-import { sound, vibrate } from '../../kit/sound'
+import { SceneTool } from '../../kit/scene'
+import { SceneShell, useStage } from '../../kit/SceneShell'
+import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops } from '../../kit/ui'
-import { PUZZLES, accuracyFor, canPour, isDone, isSolved, makePuzzle, pointsFor, pour, sizeFor, type Tube } from './logic'
+import { PUZZLES, canPour, isDone, isSolved, makePuzzle, pointsFor, pour, sizeFor, type Tube } from './logic'
 
 /** Shapes shown on the liquid in the high contrast theme, so colours never have to be told apart by hue alone. */
 const SYMBOLS = ['●', '▲', '■', '★', '♥', '◆', '✚']
@@ -20,23 +21,17 @@ export default function ColorSort({ level, seed, t, onFinish }: GameProps) {
   const [history, setHistory] = useState<Tube[][]>([])
   const [picked, setPicked] = useState<number | null>(null)
   const [moves, setMoves] = useState(0)
-  const [solved, setSolved] = useState<{ moves: number; par: number }[]>([])
-  const [score, setScore] = useState(0)
-  const [combo, setCombo] = useState(0)
+  const [solved, setSolved] = useState(0)
+  const stage = useStage(PUZZLES, onFinish)
+  const over = stage.over
   const [message, setMessage] = useState(t('pickTube'))
   const [wobble, setWobble] = useState<number | null>(null)
   const [busy, setBusy] = useState(false)
-  const [over, setOver] = useState(false)
-  const [pops, addPop] = usePops()
   const later = useTimeouts()
   const { cap } = puzzle
 
-  const popAt = (i: number) => ((i % perRow(tubes.length)) + 0.5) * (100 / perRow(tubes.length))
-
   const miss = (i: number, key: string) => {
-    sound.bad()
-    vibrate(40)
-    setCombo(0)
+    stage.slip()
     setWobble(i)
     later(() => setWobble(null), 400)
     setMessage(t(key))
@@ -71,35 +66,15 @@ export default function ColorSort({ level, seed, t, onFinish }: GameProps) {
     setTubes(next)
     setMoves(pours)
     setPicked(null)
-    let gained = 0
-    let streak = combo
-    if (isDone(next[i], cap)) {
-      streak = combo + 1
-      gained = 10 * Math.min(streak, 5)
-      sound.good(streak)
-      addPop(`${t('tubeDone')} +${gained}`, popAt(i), 30)
-    } else {
-      sound.tone(520 + next[i].length * 80, 0.08, 'triangle', 0.12)
-    }
-    setCombo(streak)
+    sound.tone(520 + next[i].length * 80, 0.08, 'triangle', 0.12)
 
     if (isSolved(next, cap)) {
-      const done = [...solved, { moves: pours, par: puzzle.par }]
-      gained += pointsFor(puzzle.colors, pours, puzzle.par)
-      const total = score + gained
-      setScore(total)
-      setSolved(done)
       setMessage(t('solved'))
-      sound.win()
-      addPop(`+${gained}`, 50, 50)
       setBusy(true)
-      if (done.length >= PUZZLES) {
-        setOver(true)
-        onFinish({ score: total, accuracy: accuracyFor(done) })
-        return
-      }
+      setSolved(solved + 1)
+      if (stage.good(pointsFor(puzzle.colors, pours, puzzle.par))) return
       later(() => {
-        const p = newPuzzle(done.length)
+        const p = newPuzzle(solved + 1)
         setPuzzle(p)
         setTubes(p.tubes)
         setHistory([])
@@ -109,7 +84,6 @@ export default function ColorSort({ level, seed, t, onFinish }: GameProps) {
       }, 1200)
       return
     }
-    setScore((s) => s + gained)
     const anyPour = next.some((_, a) => next.some((_, b) => canPour(next, a, b, cap) && !isDone(next[a], cap)))
     setMessage(anyPour ? t('pickTube') : t('stuck'))
   }
@@ -120,7 +94,6 @@ export default function ColorSort({ level, seed, t, onFinish }: GameProps) {
     setTubes(history[history.length - 1])
     setHistory((h) => h.slice(0, -1))
     setPicked(null)
-    setCombo(0)
     setMessage(t('pickTube'))
   }
 
@@ -130,22 +103,25 @@ export default function ColorSort({ level, seed, t, onFinish }: GameProps) {
     setTubes(puzzle.tubes)
     setHistory([])
     setPicked(null)
-    setCombo(0)
     setMessage(t('pickTube'))
   }
 
   const columns = perRow(tubes.length)
   return (
-    <div className="game color-sort">
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('puzzle'), value: `${Math.min(solved.length + (over ? 0 : 1), PUZZLES)} / ${PUZZLES}` },
-          { label: t('moves'), value: moves },
-        ]}
-      />
-      <p className="cs-message">{message}</p>
-      <div className="cs-rack" key={solved.length} style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 70px))` }}>
+    <SceneShell
+      place="woods"
+      say={message}
+      stage={stage}
+      bare
+      className="color-sort"
+      tray={
+        <div className="cs-tools">
+          <SceneTool kind="undo" label={t('undo')} onPress={undo} disabled={history.length === 0} />
+          <SceneTool kind="restart" label={t('restart')} onPress={restart} disabled={history.length === 0} />
+        </div>
+      }
+    >
+      <div className="cs-rack" key={solved} style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 70px))` }}>
         {tubes.map((tube, i) => (
           <button
             key={i}
@@ -159,17 +135,8 @@ export default function ColorSort({ level, seed, t, onFinish }: GameProps) {
             ))}
           </button>
         ))}
-        <Pops pops={pops} />
       </div>
-      <div className="cs-tools">
-        <button className="cs-tool" onPointerDown={undo} disabled={history.length === 0}>
-          ↩️ {t('undo')}
-        </button>
-        <button className="cs-tool" onPointerDown={restart} disabled={history.length === 0}>
-          🔄 {t('restart')}
-        </button>
-      </div>
-    </div>
+    </SceneShell>
   )
 }
 

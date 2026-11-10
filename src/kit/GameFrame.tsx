@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useMemo, useState, type ComponentType } from 'react'
+import { Suspense, useEffect, useMemo, useState } from 'react'
 import { makeGameT, useLocale, useT } from '../i18n'
 import { useTimeouts } from './hooks'
 import { Icon } from './icon'
@@ -8,35 +8,15 @@ import { shareUrl } from './share'
 import { ShareButton } from './ShareButton'
 import { sound } from './sound'
 import { gameColorVars } from './theme'
-import type { GameDef, GameProps, RoundResult } from './types'
+import type { GameDef, RoundResult } from './types'
 import { Confetti } from './ui'
 import { ErrorBoundary } from './ErrorBoundary'
-
-// One lazy component per game, kept for the whole visit, so "play again" never shows the loading state twice.
-const lazyGames = new WeakMap<GameDef, ComponentType<GameProps>>()
-function gameComponent(game: GameDef) {
-  let c = lazyGames.get(game)
-  if (!c) {
-    // A failed download (offline) is forgotten, so "try again" downloads again.
-    const load = () => game.load().catch((e: unknown) => (lazyGames.delete(game), Promise.reject(e)))
-    lazyGames.set(game, (c = lazy(load)))
-  }
-  return c
-}
+import { OopsCard, gameComponent } from './lazyGame'
+import { SceneFrame } from './SceneFrame'
 
 type Phase = 'intro' | 'countdown' | 'playing' | 'results'
 
-/**
- * Everything around a game: intro card, 3-2-1 countdown, the round itself, results.
- * Games only render the round and call `onFinish` once.
- */
-export function GameFrame({
-  game,
-  seed,
-  daily = false,
-  onHome,
-  onNext,
-}: {
+interface FrameProps {
   game: GameDef
   seed?: number
   /** Playing today's daily challenge: a finished round marks it done on the home screen. */
@@ -44,7 +24,23 @@ export function GameFrame({
   onHome: () => void
   /** Offers another game on the results card. */
   onNext?: () => void
-}) {
+}
+
+/**
+ * Everything around a game: intro card, 3-2-1 countdown, the round itself, results.
+ * Games only render the round and call `onFinish` once. Scene games get their own, quieter frame.
+ */
+export function GameFrame(props: FrameProps) {
+  return props.game.meta.scene ? <SceneFrame {...props} /> : <ClassicFrame {...props} />
+}
+
+function ClassicFrame({
+  game,
+  seed,
+  daily = false,
+  onHome,
+  onNext,
+}: FrameProps) {
   const locale = useLocale()
   const t = useT()
   const gt = useMemo(() => makeGameT(game.strings, locale), [game, locale])
@@ -151,23 +147,7 @@ export function GameFrame({
         <div className="stage">
           <ErrorBoundary
             key={round}
-            fallback={
-              <div className="card oops" role="alert">
-                <div className="oops-face" aria-hidden>
-                  🙈
-                </div>
-                <h1>{t('oops')}</h1>
-                <p className="muted">{t('oopsHint')}</p>
-                <div className="row">
-                  <button className="big-btn" onClick={again}>
-                    {t('playAgain')}
-                  </button>
-                  <button className="ghost-btn" onClick={onHome}>
-                    {t('home')}
-                  </button>
-                </div>
-              </div>
-            }
+            fallback={<OopsCard onAgain={again} onHome={onHome} />}
           >
             <Suspense fallback={<div className="game-loading">{t('loading')}</div>}>
               <Component level={progress.level} seed={roundSeed} t={gt} onFinish={finish} />

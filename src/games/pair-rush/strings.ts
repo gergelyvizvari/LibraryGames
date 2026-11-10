@@ -3,6 +3,7 @@ import type { GameStrings } from '../../i18n'
 const strings: GameStrings = {
   en: {
     title: 'Pair Rush',
+    say: 'Find the pairs!',
     howTo: 'Flip two cards to find matching animals. Clear the board and a bigger one appears. How many can you clear?',
     score: 'Score',
     combo: 'Combo',
@@ -12,6 +13,7 @@ const strings: GameStrings = {
   },
   hu: {
     title: 'Párkereső',
+    say: 'Keresd meg a párokat!',
     howTo: 'Fordíts fel két kártyát, és keresd meg az egyforma állatokat. Ha kiürül a tábla, jön egy nagyobb. Hányat tudsz kiüríteni?',
     score: 'Pont',
     combo: 'Kombó',

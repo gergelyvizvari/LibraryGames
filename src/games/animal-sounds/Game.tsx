@@ -1,13 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
-import { usePops, useShake, useTimeouts } from '../../kit/hooks'
+import { useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
-import { sound, vibrate } from '../../kit/sound'
+import { SceneTool } from '../../kit/scene'
+import { SceneShell, useStage } from '../../kit/SceneShell'
+import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hearts, Hud, Pops } from '../../kit/ui'
-import { ANIMALS, LIVES, ROUNDS, animalCount, makeSequence, roundPoints, seqLength, showLights, stepMs } from './logic'
+import { ANIMALS, animalCount, makeSequence, roundPoints, seqLength, showLights, stepMs } from './logic'
 import { preloadVoices, voices } from './voices'
 
 const faces = { cat: '🐱', dog: '🐶', cow: '🐮', duck: '🦆', bird: '🐦', frog: '🐸', sheep: '🐑', pig: '🐷', rooster: '🐓', horse: '🐴' }
+
+/** Calls to repeat in one stage. */
+const STAGE = 5
 
 type Phase = 'listen' | 'input' | 'between' | 'done'
 
@@ -25,13 +29,9 @@ export default function AnimalSounds({ level, seed, t, onFinish }: GameProps) {
   const [pos, setPos] = useState(0)
   const [lit, setLit] = useState<number | null>(null)
   const [calling, setCalling] = useState(false)
-  const [lives, setLives] = useState(LIVES)
-  const [score, setScore] = useState(0)
-  const [combo, setCombo] = useState(0)
+  const stage = useStage(STAGE, onFinish)
   const [replayed, setReplayed] = useState(false)
   const [message, setMessage] = useState('')
-  const perfect = useRef(0)
-  const [pops, addPop] = usePops()
   const [boardRef, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
 
@@ -59,17 +59,8 @@ export default function AnimalSounds({ level, seed, t, onFinish }: GameProps) {
     }, 700 + seq.length * ms)
   }, [phase, playKey])
 
-  const finish = (s: number) => {
-    setPhase('done')
-    onFinish({ score: s, accuracy: perfect.current / ROUNDS })
-  }
-
-  const nextRound = (s: number, livesLeft: number) => {
+  const nextRound = () => {
     const r = round + 1
-    if (r >= ROUNDS || livesLeft <= 0) {
-      later(() => finish(s), 900)
-      return
-    }
     later(() => {
       setRound(r)
       setSeq(makeSequence(rng, seqLength(level, r), count))
@@ -82,17 +73,13 @@ export default function AnimalSounds({ level, seed, t, onFinish }: GameProps) {
   const tap = (i: number) => {
     if (phase !== 'input') return
     if (i !== seq[pos]) {
-      sound.bad()
-      vibrate(50)
       shake()
+      sound.bad()
       setLit(seq[pos])
       later(() => setLit(null), 700)
-      const left = lives - 1
-      setLives(left)
-      setCombo(0)
       setMessage(t('oops', { animal: faces[farm[seq[pos]]] }))
       setPhase('between')
-      nextRound(score, left)
+      if (!stage.miss()) nextRound()
       return
     }
     // A soft tick, not the call again: hearing every sequence twice gets tiring fast.
@@ -103,19 +90,9 @@ export default function AnimalSounds({ level, seed, t, onFinish }: GameProps) {
       setPos(pos + 1)
       return
     }
-    const c = combo + 1
-    const pts = roundPoints(seq.length, replayed, c)
-    const s = score + pts
-    if (!replayed) perfect.current++
-    setCombo(c)
-    setScore(s)
     setMessage(t('great'))
     setPhase('between')
-    later(() => {
-      sound.good(c * 2)
-      addPop(`+${pts}`, 50, 40)
-    }, 450)
-    nextRound(s, lives)
+    if (!stage.good(roundPoints(seq.length, replayed, 1))) nextRound()
   }
 
   const replay = () => {
@@ -126,17 +103,18 @@ export default function AnimalSounds({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <div className="game animal-sounds">
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('round'), value: `${Math.min(round + 1, ROUNDS)} / ${ROUNDS}` },
-          { label: t('lives'), value: <Hearts left={lives} total={LIVES} /> },
-        ]}
-      />
-      <p className="prompt">{message}</p>
+    <SceneShell
+      place="lake"
+      say={message}
+      stage={stage}
+      bare
+      className="animal-sounds"
+      tray={
+        <SceneTool kind="listen" label={t('again')} onPress={replay} disabled={phase !== 'input' || pos > 0 || replayed} />
+      }
+    >
       <div className={`as-ear${calling ? ' as-calling' : ''}`} aria-hidden>
-        {phase === 'listen' ? '👂' : phase === 'input' ? `${pos} / ${seq.length}` : ''}
+        {phase === 'listen' ? '♪' : phase === 'input' ? `${pos} / ${seq.length}` : ''}
       </div>
       <div ref={boardRef} className={`as-farm as-farm-${count}`}>
         {farm.map((a, i) => (
@@ -150,11 +128,7 @@ export default function AnimalSounds({ level, seed, t, onFinish }: GameProps) {
             <span className="as-face">{faces[a]}</span>
           </button>
         ))}
-        <Pops pops={pops} />
       </div>
-      <button className="as-again" onClick={replay} disabled={phase !== 'input' || pos > 0 || replayed}>
-        🔁 {t('again')}
-      </button>
-    </div>
+    </SceneShell>
   )
 }

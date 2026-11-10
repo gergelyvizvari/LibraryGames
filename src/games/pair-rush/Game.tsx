@@ -1,86 +1,48 @@
 import { useRef, useState } from 'react'
-import { useCountdown, usePops, useTimeouts } from '../../kit/hooks'
-import { clamp, makeRng } from '../../kit/random'
+import { useTimeouts } from '../../kit/hooks'
+import { makeRng } from '../../kit/random'
+import { SceneShell, useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops, TimerBar } from '../../kit/ui'
 import { boardSizes, columnsFor, deal, startBoard } from './logic'
-
-const DURATION = 75
 
 export default function PairRush({ level, seed, t, onFinish }: GameProps) {
   const rng = useRef(makeRng(seed)).current
-  const first = startBoard(level)
-  const [board, setBoard] = useState(first)
-  const [cards, setCards] = useState(() => deal(rng, boardSizes[first]))
+  // One stage is one board: every pair found is a star.
+  const [cards, setCards] = useState(() => deal(rng, boardSizes[startBoard(level)]))
   const [open, setOpen] = useState<number[]>([])
-  const [score, setScore] = useState(0)
-  const [combo, setCombo] = useState(0)
-  const [cleared, setCleared] = useState(0)
-  const [over, setOver] = useState(false)
-  const [pops, addPop] = usePops()
+  const seen = useRef(new Set<number>())
+  const stage = useStage(cards.length / 2, onFinish)
   const later = useTimeouts()
 
-  const left = useCountdown(
-    DURATION,
-    () => {
-      setOver(true)
-      onFinish({ score, accuracy: clamp(cleared / 3, 0, 1) })
-    },
-    !over,
-  )
-
   const flip = (i: number) => {
-    if (over || open.length === 2 || open.includes(i) || cards[i].matched) return
+    if (stage.over || open.length === 2 || open.includes(i) || cards[i].matched) return
     sound.pop()
     const now = [...open, i]
     setOpen(now)
     if (now.length < 2) return
     const [a, b] = now
     if (cards[a].face === cards[b].face) {
-      const nc = combo + 1
-      const gained = 10 * nc
-      const next = cards.map((c, k) => (k === a || k === b ? { ...c, matched: true } : c))
-      setCards(next)
+      setCards(cards.map((c, k) => (k === a || k === b ? { ...c, matched: true } : c)))
       setOpen([])
-      setCombo(nc)
-      setScore((s) => s + gained)
-      sound.good(nc)
-      addPop(`+${gained}`, 50, 45)
-      if (next.every((c) => c.matched)) {
-        const bonus = next.length * 5
-        setScore((s) => s + bonus)
-        setCleared((n) => n + 1)
-        sound.win()
-        addPop(`${t('cleared')} +${bonus}`, 50, 35, 'info')
-        later(() => {
-          const nb = Math.min(board + 1, boardSizes.length - 1)
-          setBoard(nb)
-          setCards(deal(rng, boardSizes[nb]))
-        }, 800)
-      }
-    } else {
-      setCombo(0)
-      later(() => setOpen([]), 750)
+      stage.good()
+      return
     }
+    // Turning over a card whose pair was already seen is a slip of memory; a first look never is.
+    const known = (k: number, other: number) => cards.some((c, j) => j !== k && j !== other && c.face === cards[k].face && seen.current.has(j))
+    if (known(a, b) || (seen.current.has(b) && seen.current.has(a))) stage.slip()
+    seen.current.add(a).add(b)
+    later(() => setOpen([]), 900)
   }
 
   const cols = columnsFor(cards.length)
   return (
-    <div className="game pair-rush">
-      <TimerBar left={left} total={DURATION} />
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('combo'), value: `×${combo}`, highlight: combo >= 3 },
-          { label: t('time'), value: Math.ceil(left) },
-        ]}
-      />
+    <SceneShell place="lake" say={t('say')} stage={stage} bare className="pair-rush">
       <div className="pr-grid" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)`, maxWidth: cols * 110 }}>
         {cards.map((c, i) => {
           const up = c.matched || open.includes(i)
           return (
-            <button key={`${board}-${c.id}`} className={`pr-card${up ? ' pr-up' : ''}${c.matched ? ' pr-matched' : ''}`} onClick={() => flip(i)}>
+            <button key={c.id} className={`pr-card${up ? ' pr-up' : ''}${c.matched ? ' pr-matched' : ''}`} onClick={() => flip(i)}>
               <span className="pr-inner">
                 <span className="pr-front">{c.face}</span>
                 <span className="pr-back">?</span>
@@ -89,7 +51,6 @@ export default function PairRush({ level, seed, t, onFinish }: GameProps) {
           )
         })}
       </div>
-      <Pops pops={pops} />
-    </div>
+    </SceneShell>
   )
 }

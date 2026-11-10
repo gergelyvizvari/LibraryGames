@@ -3,6 +3,7 @@ import type { GameStrings } from '../../i18n'
 const strings: GameStrings = {
   en: {
     title: 'Mole Pop',
+    say: 'Tap the moles, but not the bunnies!',
     howTo: 'Moles pop out of their holes. Tap them quick! Golden moles are worth extra. Never tap the bunny!',
     score: 'Score',
     combo: 'Combo',
@@ -11,6 +12,7 @@ const strings: GameStrings = {
   },
   hu: {
     title: 'Vakondcsapda',
+    say: 'Koppints a vakondokra, de a nyuszikra ne!',
     howTo: 'Vakondok bújnak elő a lyukakból. Koppints rájuk gyorsan! Az aranyvakond többet ér. A nyuszit soha ne bántsd!',
     score: 'Pont',
     combo: 'Kombó',
