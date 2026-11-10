@@ -42,7 +42,7 @@ describe('every game mounts and runs', () => {
         <Game level={level} seed={42} t={makeGameT(g.strings, locale)} onFinish={onFinish} />
       </LocaleContext.Provider>,
     )
-    expect(container.querySelector('.game')).not.toBeNull()
+    expect(container.querySelector('.game, .scene')).not.toBeNull()
     act(() => {
       vi.advanceTimersByTime(5000)
     })

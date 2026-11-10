@@ -32,6 +32,19 @@ export interface GameMeta {
   color: string
   /** ISO date the game was added. Newest games are marked "New". */
   added: string
+  /**
+   * A scene game fills the whole screen with its own drawn scene and is played in short stages without a clock.
+   * The frame shows no intro card, countdown or score: see "Scene games" in ADDING_A_GAME.md.
+   */
+  scene?: boolean
+}
+
+/** A sticker a player collects by finishing a stage of a scene game. */
+export interface Sticker {
+  /** Key of the sticker's name in the game's `strings.ts`. */
+  name: string
+  /** Drawn like a game icon, on the 48 × 48 grid. */
+  icon: GameIcon
 }
 
 export interface GameDef {
@@ -40,4 +53,6 @@ export interface GameDef {
   strings: GameStrings
   /** Loads the game's component on demand: `() => import('./Game')`, so the home screen stays small. */
   load: () => Promise<{ default: ComponentType<GameProps> }>
+  /** Scene games only: handed out one per finished stage, in this order, until all are collected. */
+  stickers?: Sticker[]
 }

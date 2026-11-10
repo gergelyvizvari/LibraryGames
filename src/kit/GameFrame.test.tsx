@@ -73,4 +73,35 @@ describe('GameFrame', () => {
     expect(writeText.mock.calls[0][0]).toMatch(/^I scored 42 points in Quick! .*\?lang=en#\/play\/quick$/)
     expect(screen.getByText('Link copied!').getAttribute('role')).toBe('status')
   })
+
+  it('plays a scene game without intro or score, and ends a stage with a sticker', async () => {
+    vi.useFakeTimers()
+    localStorage.clear()
+    const scene: GameDef = {
+      ...broken,
+      meta: { ...broken.meta, id: 'scene', scene: true },
+      strings: { en: { title: 'Scene', howTo: 'It ends.', 'sticker.one': 'First sticker' } },
+      stickers: [{ name: 'sticker.one', icon: [] }],
+      load: async () => ({
+        default: ({ onFinish }) => {
+          useEffect(() => onFinish({ score: 10, accuracy: 1 }), [])
+          return <p>the scene</p>
+        },
+      }),
+    }
+    const onHome = vi.fn()
+    render(<GameFrame game={scene} onHome={onHome} />)
+    for (let i = 0; i < 4; i++) await act(async () => vi.advanceTimersByTime(500))
+    expect(screen.queryByText('Play!')).toBeNull()
+    expect(screen.getByText('the scene')).toBeTruthy()
+    expect(screen.getByText('First sticker')).toBeTruthy()
+    expect(JSON.parse(localStorage.getItem('lg.progress.v1')!).stickers).toEqual({ scene: 1 })
+    // The next stage starts straight away; the album is full, so it ends without a new sticker.
+    fireEvent.click(screen.getByText('On to stage 2'))
+    for (let i = 0; i < 4; i++) await act(async () => vi.advanceTimersByTime(500))
+    expect(screen.queryByText('First sticker')).toBeNull()
+    expect(screen.getByText('On to stage 3')).toBeTruthy()
+    fireEvent.click(screen.getAllByText('Back to the map').at(-1)!)
+    expect(onHome).toHaveBeenCalled()
+  })
 })

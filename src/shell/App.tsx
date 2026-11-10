@@ -4,10 +4,13 @@ import { detectLocale, LocaleContext, saveLocale, type Locale } from '../i18n'
 import { GameFrame } from '../kit/GameFrame'
 import { daySeed } from '../kit/random'
 import { Home } from './Home'
+import { WorldMap } from './map/WorldMap'
 import { nextGame } from './next'
 import { Privacy } from './Privacy'
+import { Stickers } from './Stickers'
 
-// Tiny hash router: #/ is home, #/play/<id> plays a game, #/daily/<id> plays the daily challenge, #/privacy is for parents.
+// Tiny hash router: #/ is the map, #/games the list of all games, #/play/<id> plays a game, #/daily/<id> plays the daily
+// challenge, #/stickers is the sticker album, #/privacy is for parents.
 function parse(hash: string) {
   const [, mode, id] = hash.replace(/^#/, '').split('/')
   return { mode, id }
@@ -36,10 +39,13 @@ export function App() {
     location.hash = hash
   }
   const game = route.id ? gameById(route.id) : undefined
+  const play = (id: string, daily?: boolean) => go(`/${daily ? 'daily' : 'play'}/${id}`)
+  // The map and scene games use the whole window; every other screen is a centred column.
+  const full = game ? !!game.meta.scene : !route.mode
 
   return (
     <LocaleContext.Provider value={locale}>
-      <main className="app">
+      <main className={full ? 'app app-full' : 'app'}>
         {game ? (
           <GameFrame
             key={`${route.mode}-${game.meta.id}`}
@@ -51,8 +57,12 @@ export function App() {
           />
         ) : route.mode === 'privacy' ? (
           <Privacy onHome={() => go('/')} />
+        ) : route.mode === 'stickers' ? (
+          <Stickers onHome={() => go('/')} />
+        ) : route.mode === 'games' ? (
+          <Home onPlay={play} onLocale={changeLocale} onMap={() => go('/')} />
         ) : (
-          <Home onPlay={(id, daily) => go(`/${daily ? 'daily' : 'play'}/${id}`)} onLocale={changeLocale} />
+          <WorldMap onPlay={play} onAllGames={() => go('/games')} onStickers={() => go('/stickers')} />
         )}
       </main>
     </LocaleContext.Provider>

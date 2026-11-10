@@ -16,6 +16,8 @@ export interface Progress {
   streak: { days: number; lastDay?: string }
   /** The last day the daily challenge was played to the end (isoDay). */
   dailyDone?: string
+  /** How many stickers of each scene game are in the album (game id → count). */
+  stickers?: Record<string, number>
 }
 
 const empty = (): Progress => ({ games: {}, xp: {}, streak: { days: 0 } })
@@ -123,6 +125,7 @@ export function recordRound(id: string, skill: Skill, result: RoundResult, today
   }
 
   const progress: Progress = {
+    ...p,
     games: { ...p.games, [id]: { best: Math.max(g.best, result.score), plays: g.plays + 1, level, lastPlayed: day } },
     xp: { ...p.xp, [skill]: (p.xp[skill] ?? 0) + xpGained },
     streak,
@@ -130,4 +133,17 @@ export function recordRound(id: string, skill: Skill, result: RoundResult, today
   }
   save(progress)
   return { progress, newRecord, previousLevel: g.level, level, xpGained }
+}
+
+export function stickerCount(p: Progress, id: string) {
+  return p.stickers?.[id] ?? 0
+}
+
+/** Puts the game's next sticker in the album. Returns its index, or null when all `total` are already collected. */
+export function awardSticker(id: string, total: number): number | null {
+  const p = loadProgress()
+  const have = stickerCount(p, id)
+  if (have >= total) return null
+  save({ ...p, stickers: { ...p.stickers, [id]: have + 1 } })
+  return have
 }

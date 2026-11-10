@@ -91,7 +91,7 @@ export const icon: GameIcon = [
   (a yellow cheese on a mustard card needs its outline, a blue shape on a blue card does not work).
 - **Themes**: icons always sit on the game colour (cards, daily challenge) or on the intro card, and the outline
   stays dark, so the same icon works in light, dark and high contrast without changes. High contrast thickens the outline.
-- Check it on the home screen in all three themes. The registry test checks every game has an icon with valid roles and colours.
+- Check it on the "All games" screen in all three themes. The registry test checks every game has an icon with valid roles and colours.
 
 ## Kit pieces (`src/kit`)
 
@@ -112,11 +112,37 @@ export const icon: GameIcon = [
   the top of `styles.css` (`--bg`, `--ink`, `--muted`, `--card`, `--line`, `--good`, `--bad`, `--good-soft`,
   `--bad-soft`, `--highlight`, `--on-color` for text on coloured buttons, `--press` for button edges).
   Fixed colours are fine inside a game's own scene (a sky, a pond, game pieces); text on a surface that stays
-  light in every theme uses `--ink-fixed`. Check your game in all three themes with the ☀️ button on the home screen.
+  light in every theme uses `--ink-fixed`. Check your game in all three themes with the ☀️ button on the "All games" screen.
+
+## Scene games (pilot)
+
+A scene game is a place in the storybook world instead of a quiz round with a clock: a full-screen drawn scene,
+a character who talks, a short stage with a clear goal, and a quiet ending with a sticker. `feed-monster` is the
+first one; copy its shape.
+
+- Set `scene: true` in `meta`. The frame (`kit/SceneFrame.tsx`) then shows no intro card, countdown, level picker
+  or score: only a back button over your scene. The level still adapts from the `accuracy` you report.
+- A round is one **stage**: a handful of tasks (five monsters to feed), no timer. Show progress with
+  `<StagePips done total label>`, let the character speak through `<SpeechBubble>` (it is read out by screen
+  readers, so every message goes there), and put the things to tap in a `<SceneTray>` (all in `kit/scene.tsx`).
+- The root element has the class `scene` (not `game`) and fills the frame. Draw the scene as SVG sized from
+  `useSize()` and a small pure `layout.ts` (tested for phone, tablet and wide windows), so an upright phone and
+  a wide desktop window both look composed. Tappable things stay real `<button>`s.
+- Call `onFinish` once when the stage is done and leave the finished scene on screen: the frame lays the ending
+  over it (sticker card, "on to stage N", "back to the map").
+- Give the game `stickers` in `index.ts`: a few `{ name, icon }` entries, `name` a key in `strings.ts`, `icon`
+  drawn like a game icon. One is won per finished stage, in order; they show up in the sticker album.
+- Look: no outlines, flat painted shapes with one lit and one shaded side, big glossy eyes on characters, the
+  `--story` font for numbers and names, `var(--grain)` laid over painted areas. Colours are fixed (a printed
+  page), so themes do not apply inside the scene. Endings stay calm: one hop, one sound, no confetti.
+
+The home screen is a map (`src/shell/map`): every skill belongs to a region in `regions.ts`, and every game gets
+a star there automatically. A region needs a free spot in its `slots` for each of its games; `regions.test.ts`
+fails when a new game does not fit, so add a spot (map units, clear of the drawing) when that happens.
 
 ## Translations
 
-The app speaks English (`en`) and Hungarian (`hu`); kids switch with the EN/HU button on the home screen.
+The app speaks English (`en`) and Hungarian (`hu`); kids switch with the EN/HU button on the "All games" screen.
 Every new game must ship both:
 
 - `strings.ts` has an `en` and a `hu` block with the same keys and the same `{placeholders}`. Write natural,

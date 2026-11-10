@@ -33,7 +33,16 @@ export function newGameIds(list: GameDef[] = games, today = new Date()) {
   )
 }
 
-export function Home({ onPlay, onLocale }: { onPlay: (id: string, daily?: boolean) => void; onLocale: (locale: Locale) => void }) {
+export function Home({
+  onPlay,
+  onLocale,
+  onMap,
+}: {
+  onPlay: (id: string, daily?: boolean) => void
+  onLocale: (locale: Locale) => void
+  /** Back to the map, when the list is opened from there. */
+  onMap?: () => void
+}) {
   const t = useT()
   const locale = useLocale()
   const [filter, setFilter] = useState<Skill | 'all'>('all')
@@ -64,6 +73,11 @@ export function Home({ onPlay, onLocale }: { onPlay: (id: string, daily?: boolea
           {t('appName')}
         </h1>
         <div className="home-tools">
+          {onMap && (
+            <button className="icon-btn" aria-label={t('map.open')} title={t('map.open')} onClick={onMap}>
+              🗺️
+            </button>
+          )}
           <button
             className="icon-btn lang-btn"
             aria-label={t('language', { name: t(`lang.${locale}`) })}

@@ -93,3 +93,20 @@ export function useShake<T extends HTMLElement>() {
   }, [])
   return [ref, shake] as const
 }
+
+/** The size of the element holding the ref, in CSS pixels, kept up to date as the window changes. */
+export function useSize<T extends Element>(initial = { w: 390, h: 560 }) {
+  const ref = useRef<T>(null)
+  const [size, setSize] = useState(initial)
+  useEffect(() => {
+    const el = ref.current
+    if (!el || typeof ResizeObserver === 'undefined') return
+    const ro = new ResizeObserver(() => {
+      const r = el.getBoundingClientRect()
+      if (r.width && r.height) setSize((s) => (s.w === r.width && s.h === r.height ? s : { w: r.width, h: r.height }))
+    })
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+  return [ref, size] as const
+}
