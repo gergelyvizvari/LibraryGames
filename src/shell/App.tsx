@@ -40,12 +40,13 @@ export function App() {
   }
   const game = route.id ? gameById(route.id) : undefined
   const play = (id: string, daily?: boolean) => go(`/${daily ? 'daily' : 'play'}/${id}`)
-  // The map, the games list, the sticker album and scene games use the whole window; every other screen is a centred column.
-  const full = game ? !!game.meta.scene : !route.mode || route.mode === 'games' || route.mode === 'stickers'
+  // The map and scene games fill the window and never scroll; the games list and the album are as wide but scroll.
+  const full = game ? !!game.meta.scene : !route.mode
+  const wide = !game && (route.mode === 'games' || route.mode === 'stickers')
 
   return (
     <LocaleContext.Provider value={locale}>
-      <main className={full ? 'app app-full' : 'app'}>
+      <main className={full ? 'app app-full' : wide ? 'app app-wide' : 'app'}>
         {game ? (
           <GameFrame
             key={`${route.mode}-${game.meta.id}`}

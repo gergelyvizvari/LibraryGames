@@ -466,7 +466,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .12 0 0 0 0 .12 0 0 0 0 .25 1.9 0 0 0 -.8'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 /* The map and scene games use the whole window. */
-.app-full { max-width: none; padding: 0; }
+.app-full, .app-wide { max-width: none; padding: 0; }
 html:has(.app-full) { scrollbar-gutter: auto; overflow: hidden; }
 .scene-btn { background: #7c5ce0; color: #fff; font-weight: 700; font-size: 1.15rem; padding: 12px 26px; border-radius: 30px; box-shadow: 0 4px 0 #5a3fc0; flex: none; }
 .scene-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #5a3fc0; }
