@@ -75,7 +75,7 @@ const hu: Record<keyof typeof en, string> = {
   'privacy.updated': 'Utolsó frissítés: {date}',
   'privacy.intro': 'A Library Games egy ingyenes hobbiprojekt. Nincs fiók, nincs reklám, nem kell regisztrálni, és a gyerekektől soha nem kérünk személyes adatot.',
   'privacy.device.h': 'Amit az eszközöd tárol',
-  'privacy.device.p': 'A választott nyelvet, a színtémát, a hangbeállítást és a játékokban elért eredményeket (rekordokat) a böngésző helyi tárolója (localStorage) őrzi, hogy legközelebb is megmaradjanak. Ezek nem hagyják el az eszközt, és nem sütik. Ha a böngészőben törlöd az oldal adatait, ezek is törlődnek.',
+  'privacy.device.p': 'A választott nyelvet, a színtémát, a hangbeállítást, a kedvenc játékokat és a játékokban elért eredményeket (lejátszott szakaszokat, megszerzett matricákat) a böngésző helyi tárolója (localStorage) őrzi, hogy legközelebb is megmaradjanak. Ezek nem hagyják el az eszközt, és nem sütik. Ha a böngészőben törlöd az oldal adatait, ezek is törlődnek.',
   'privacy.stats.h': 'Névtelen statisztika',
   'privacy.stats.p': 'A Vercel Web Analytics és Speed Insights szolgáltatással számoljuk a látogatásokat és mérjük az oldal betöltési sebességét, hogy lássuk, mely játékokkal játszanak, és gyors maradjon az oldal. Ezek nem használnak sütit, és nem azonosítanak téged: az adatok összesítve jelennek meg, az IP-címet nem tárolják. Ennek jogalapja az oldal megfelelő működéséhez fűződő jogos érdekünk (GDPR 6. cikk (1) f) pont).',
   'privacy.hosting.h': 'Tárhely',

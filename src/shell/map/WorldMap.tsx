@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { games } from '../../games/registry'
 import { makeGameT, useLocale, useT, type Locale } from '../../i18n'
-import { useSize } from '../../kit/hooks'
+import { useSize, useTimeouts } from '../../kit/hooks'
 import { Icon } from '../../kit/icon'
 import { currentStreak, dailyDoneToday, gameProgress, isFavourite, loadProgress, stickerCount, toggleFavourite } from '../../kit/progress'
 import { sound } from '../../kit/sound'
@@ -71,6 +71,7 @@ export function WorldMap({
   const [openId, setOpenId] = useState<string | null>(null)
   // 'in' while the map closes in on a game that is about to open, 'out' while it pulls back from the one just left.
   const [zoom, setZoom] = useState<'in' | 'out' | null>(from ? 'out' : null)
+  const later = useTimeouts()
   const drag = useRef<{ x: number; y: number; left: number; top: number; moved: boolean } | null>(null)
 
   const daily = dailyGame()
@@ -161,7 +162,7 @@ export function WorldMap({
     if (!window.matchMedia || matchMedia('(prefers-reduced-motion: reduce)').matches) return go()
     setZoom('in')
     aim(id)
-    setTimeout(go, ZOOM_MS)
+    later(go, ZOOM_MS)
   }
 
   // Coming back from a game: start close up on its badge, under the veil, and pull back.
@@ -169,14 +170,19 @@ export function WorldMap({
     const el = scroller.current
     const p = placed.find((q) => q.game.meta.id === from)
     if (!el || !p) return setZoom(null)
-    const frame = requestAnimationFrame(() => {
-      el.scrollLeft = p.x * scaleNow.current - el.clientWidth / 2
-      el.style.transition = 'none'
-      aim(p.game.meta.id)
-      void el.offsetWidth
-      el.style.transition = ''
-      aim(null)
-      setZoom(null)
+    // Two frames: the first one measures the window and puts the map back where the player left it.
+    let frame = requestAnimationFrame(() => {
+      frame = requestAnimationFrame(() => {
+        const x = p.x * scaleNow.current
+        // A game opened from somewhere else (today's adventure) may be out of sight: bring it to the middle.
+        if (x < el.scrollLeft + 40 || x > el.scrollLeft + el.clientWidth - 40) el.scrollLeft = x - el.clientWidth / 2
+        el.style.transition = 'none'
+        aim(p.game.meta.id)
+        void el.offsetWidth
+        el.style.transition = ''
+        aim(null)
+        setZoom(null)
+      })
     })
     return () => cancelAnimationFrame(frame)
     // Only once, when the map appears.

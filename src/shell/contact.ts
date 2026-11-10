@@ -9,7 +9,7 @@ export const FACEBOOK_URLS: Record<string, string> = {
   hu: 'https://www.facebook.com/librarygamesapphu',
 }
 /** Bump when the privacy text changes in a way that matters. */
-export const PRIVACY_UPDATED = '2026-11-03'
+export const PRIVACY_UPDATED = '2026-11-10'
 
 export function portfolioUrl(locale: string) {
   return `${PORTFOLIO_URL}?lang=${locale}`
