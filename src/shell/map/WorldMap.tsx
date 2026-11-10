@@ -15,25 +15,17 @@ const STAR = 'M0 -14 L4.1 -5.6 L13.3 -4.3 L6.6 2.1 L8.2 11.3 L0 7 L-8.2 11.3 L-6
 
 type StarState = 'done' | 'next' | 'todo'
 
+/** A game's mark on the map: a round badge with a star. Gold once played; the next one to try in a region has a ring and bobs. */
 function StarMark({ state }: { state: StarState }) {
+  const done = state === 'done'
   return (
     <svg viewBox="-30 -30 60 60" aria-hidden focusable="false">
-      {state === 'next' ? (
-        <>
-          <circle className="wm-ring" r="27" />
-          <ellipse className="wm-shade" cx="1" cy="4" rx="19" ry="18" />
-          <circle r="19" fill="#7c5ce0" />
-          <path d="M-14 -12 A19 19 0 0 1 12 -15 A24 24 0 0 0 -14 -12Z" fill="#a48cf0" />
-          <path d="M-6 -9.5 L10 0 L-6 9.5Z" fill="#fff" stroke="#fff" strokeWidth="2.5" strokeLinejoin="round" />
-        </>
-      ) : (
-        <>
-          <path className="wm-shade" d={STAR} transform="translate(1 3.5)" strokeWidth="4.5" strokeLinejoin="round" />
-          <path d={STAR} fill={state === 'done' ? '#ffd24a' : '#fffaf0'} stroke={state === 'done' ? '#ffd24a' : '#fffaf0'} strokeWidth="4.5" strokeLinejoin="round" />
-          <path d="M0 -14 L4.1 -5.6 L13.3 -4.3 L6.6 2.1 L8.2 11.3 L0 7 Z" fill={state === 'done' ? '#f2a71b' : '#d9d3e6'} opacity="0.75" />
-          {state === 'done' && <circle cx="-4" cy="-4" r="2.2" fill="#fff7c8" />}
-        </>
-      )}
+      {state === 'next' && <circle className="wm-ring" r="27" />}
+      <ellipse className="wm-shade" cx="1" cy="4" rx="20" ry="19" />
+      <circle r="20" fill={done ? '#ffd24a' : '#fffaf0'} />
+      <path d="M-15 -13 A20 20 0 0 1 13 -15 A26 26 0 0 0 -15 -13Z" fill="#fff" opacity={done ? 0.55 : 0.9} />
+      <path d={STAR} transform="scale(0.86)" fill={done ? '#fffaf0' : '#7c5ce0'} stroke={done ? '#fffaf0' : '#7c5ce0'} strokeWidth="4" strokeLinejoin="round" />
+      <path d="M0 -14 L4.1 -5.6 L13.3 -4.3 L6.6 2.1 L8.2 11.3 L0 7 Z" transform="scale(0.86)" fill={done ? '#f6e3a8' : '#5a3fc0'} opacity="0.7" />
     </svg>
   )
 }
