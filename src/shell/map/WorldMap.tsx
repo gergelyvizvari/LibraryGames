@@ -10,6 +10,7 @@ import { shareUrl } from '../../kit/share'
 import { gameColorVars, loadTheme, nextTheme, setTheme, themeIcons } from '../../kit/theme'
 import { SUPPORT_URL } from '../contact'
 import { dailyGame } from '../Home'
+import { SoundIcon } from '../SoundIcon'
 import { TeaCup } from '../TeaCup'
 import mapArt from './map.webp'
 import { MAP_H, MAP_W, mapScale, placeGames, regions } from './regions'
@@ -219,13 +220,14 @@ export function WorldMap({
           <button
             className="wm-tool"
             aria-label={t('sound')}
+            aria-pressed={!muted}
             title={t('sound')}
             onClick={() => {
               sound.setMuted(!muted)
               setMuted(!muted)
             }}
           >
-            {muted ? '🔇' : '🔊'}
+            <SoundIcon muted={muted} />
           </button>
           <ShareButton hint={t('share.page')} data={() => ({ title: t('appName'), text: t('share.pageText'), url: shareUrl('', locale) })} />
           <a className="wm-tool" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer" title={t('supportHint')} aria-label={t('supportHint')}>

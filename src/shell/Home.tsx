@@ -11,6 +11,7 @@ import { gameColorVars, loadTheme, nextTheme, setTheme, themeIcons } from '../ki
 import { skills, type GameDef, type Skill } from '../kit/types'
 import { AUTHOR, facebookUrl, portfolioUrl, SUPPORT_URL } from './contact'
 import { logoIcon } from './logo'
+import { SoundIcon } from './SoundIcon'
 import { TeaCup } from './TeaCup'
 
 
@@ -110,12 +111,13 @@ export function Home({
           <button
             className="icon-btn"
             aria-label={t('sound')}
+            aria-pressed={!muted}
             onClick={() => {
               sound.setMuted(!muted)
               setMuted(!muted)
             }}
           >
-            {muted ? '🔇' : '🔊'}
+            <SoundIcon muted={muted} />
           </button>
         </div>
       </header>
