@@ -467,6 +467,10 @@ h1, h2 { margin: 0; line-height: 1.1; }
 }
 /* The map and scene games use the whole window. */
 .app-full, .app-wide { max-width: none; padding: 0; }
+/* Paper behind the full-window screens, so the fade between the map and a game never shows the page colour. */
+.app-full { background: var(--story-paper); }
+.scene-frame { animation: sceneIn 0.35s ease-out; }
+@keyframes sceneIn { from { opacity: 0; } }
 html:has(.app-full) { scrollbar-gutter: auto; overflow: hidden; }
 .scene-btn { background: #7c5ce0; color: #fff; font-weight: 700; font-size: 1.15rem; padding: 12px 26px; border-radius: 30px; box-shadow: 0 4px 0 #5a3fc0; flex: none; }
 .scene-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #5a3fc0; }
@@ -503,8 +507,8 @@ html:has(.app-full) { scrollbar-gutter: auto; overflow: hidden; }
 .book-meadow { --band: #6aa84a; }
 .book-coast { --band: #f0d27a; --band-ink: var(--story-ink); }
 .book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; padding: 12px 14px 16px; }
-.book-card { position: relative; display: grid; justify-items: center; align-content: start; gap: 6px; padding: 14px 8px 10px; border-radius: 22px; background: color-mix(in srgb, var(--game-surface) 13%, var(--story-paper)); color: var(--story-ink); box-shadow: 0 3px 0 color-mix(in srgb, var(--game-surface) 32%, #e0cfa4); }
-.book-card:active { transform: translateY(2px); box-shadow: 0 1px 0 color-mix(in srgb, var(--game-surface) 32%, #e0cfa4); }
+.book-card { position: relative; border-radius: 22px; background: color-mix(in srgb, var(--game-surface) 13%, var(--story-paper)); color: var(--story-ink); box-shadow: 0 3px 0 color-mix(in srgb, var(--game-surface) 32%, #e0cfa4); }
+.book-card:has(.book-card-play:active) { transform: translateY(2px); box-shadow: 0 1px 0 color-mix(in srgb, var(--game-surface) 32%, #e0cfa4); }
 @media (hover: hover) { .book-card:hover { background: color-mix(in srgb, var(--game-surface) 22%, var(--story-paper)); } }
 .book-card-icon { display: grid; place-items: center; width: 68px; height: 68px; border-radius: 50%; background: var(--story-paper); box-shadow: 0 2px 4px rgba(40, 30, 70, 0.18); }
 .book-played .book-card-icon { box-shadow: 0 0 0 3px #ffd24a, 0 2px 4px rgba(40, 30, 70, 0.18); }
@@ -527,9 +531,30 @@ html:has(.app-full) { scrollbar-gutter: auto; overflow: hidden; }
   .book-band { padding-left: 12px; }
 }
 
+/* Favourites: the heart button and the small heart on a map badge */
+.fav-btn { flex: none; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border-radius: 50%; background: transparent; }
+.fav-heart { width: 24px; height: 24px; fill: rgba(255, 250, 240, 0.7); stroke: #c9bfae; stroke-width: 2.2; stroke-linejoin: round; transition: scale 0.15s; }
+.fav-on .fav-heart { fill: #e2607e; stroke: #b63c5c; animation: popIn 0.25s; }
+.fav-btn:active .fav-heart { scale: 0.85; }
+.book-card .fav-btn { position: absolute; top: 2px; left: 2px; }
+.wm-card .fav-btn { width: 34px; height: 34px; margin: 0 -4px; }
+.book-card-play { display: grid; justify-items: center; align-content: start; gap: 6px; width: 100%; padding: 14px 8px 10px; border-radius: inherit; background: none; color: inherit; }
+.book-favs { --band: #e2607e; }
+.book-favs h2 { grid-row: 1 / 3; align-self: center; }
+.book-favs .book-band { align-items: center; }
+.book-guide-heart { display: grid; place-items: center; height: 46px; margin: 0; }
+.book-guide-heart .fav-heart { width: 42px; height: 42px; fill: var(--story-paper); stroke: none; }
+.wm-fav { position: absolute; right: -2px; bottom: 0; display: grid; }
+.wm-fav .fav-heart { width: 20px; height: 20px; fill: #e2607e; stroke: var(--story-paper); stroke-width: 2.4; paint-order: stroke; }
+
 /* World map */
 .wm { position: relative; height: 100dvh; overflow: hidden; background: #c5d86b; color: var(--story-ink); user-select: none; -webkit-user-select: none; }
-.wm-scroll { height: 100%; display: flex; overflow: auto; scrollbar-width: none; cursor: grab; overscroll-behavior: contain; }
+/* Opening a game closes in on its badge and fades to paper; coming back does the same backwards (WorldMap `launch`, ZOOM_MS). */
+.wm-veil { position: absolute; inset: 0; z-index: 20; background: var(--story-paper); opacity: 0; pointer-events: none; transition: opacity 0.4s ease-out; }
+.wm-zoom-in .wm-veil { opacity: 1; transition: opacity 0.3s ease-in 0.22s; pointer-events: auto; }
+.wm-zoom-out .wm-veil { opacity: 1; transition: none; }
+.wm-zoom-in .wm-top, .wm-zoom-in .wm-card, .wm-zoom-in .wm-daily, .wm-zoom-in .wm-arrow { opacity: 0; transition: opacity 0.2s; }
+.wm-scroll { transition: transform 0.52s cubic-bezier(0.5, 0, 0.3, 1); will-change: transform; height: 100%; display: flex; overflow: auto; scrollbar-width: none; cursor: grab; overscroll-behavior: contain; }
 .wm-scroll::-webkit-scrollbar { display: none; }
 .wm-scroll:active { cursor: grabbing; }
 /* Auto margins centre a map smaller than the window and still let a bigger one scroll from its edge. */

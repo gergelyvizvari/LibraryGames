@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gameById } from '../games/registry'
 import { detectLocale, LocaleContext, saveLocale, type Locale } from '../i18n'
 import { GameFrame } from '../kit/GameFrame'
@@ -39,6 +39,12 @@ export function App() {
     location.hash = hash
   }
   const game = route.id ? gameById(route.id) : undefined
+  // The screen shown before this one, so the map knows which game the player has just left.
+  const before = useRef(route)
+  useEffect(() => {
+    before.current = route
+  }, [route])
+  const left = before.current.id ? gameById(before.current.id)?.meta.id : undefined
   const play = (id: string, daily?: boolean) => go(`/${daily ? 'daily' : 'play'}/${id}`)
   // The map and scene games fill the window and never scroll; the games list and the album are as wide but scroll.
   const full = game ? !!game.meta.scene : !route.mode
@@ -63,7 +69,7 @@ export function App() {
         ) : route.mode === 'games' ? (
           <Home onPlay={play} onLocale={changeLocale} onMap={() => go('/')} />
         ) : (
-          <WorldMap onPlay={play} onAllGames={() => go('/games')} onStickers={() => go('/stickers')} onLocale={changeLocale} />
+          <WorldMap onPlay={play} onAllGames={() => go('/games')} onStickers={() => go('/stickers')} onLocale={changeLocale} from={left} />
         )}
       </main>
     </LocaleContext.Provider>

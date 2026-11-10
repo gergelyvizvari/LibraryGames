@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { awardSticker, currentStreak, dailyDoneToday, gameProgress, loadProgress, nextLevel, recordRound, setLevel, stars, stickerCount } from './progress'
+import { awardSticker, currentStreak, dailyDoneToday, gameProgress, isFavourite, loadProgress, nextLevel, recordRound, setLevel, stars, stickerCount, toggleFavourite } from './progress'
 
 describe('progress', () => {
   beforeEach(() => localStorage.clear())
@@ -72,5 +72,15 @@ describe('progress', () => {
     expect(awardSticker('demo', 2)).toBeNull()
     expect(stickerCount(loadProgress(), 'demo')).toBe(2)
     expect(stickerCount(loadProgress(), 'other')).toBe(0)
+  })
+
+  it('gives a game a heart and takes it back, and remembers it', () => {
+    expect(isFavourite(loadProgress(), 'a')).toBe(false)
+    toggleFavourite('a')
+    const p = toggleFavourite('b')
+    expect(p.favourites?.map((f) => f.id)).toEqual(['a', 'b'])
+    expect(isFavourite(loadProgress(), 'a')).toBe(true)
+    toggleFavourite('a')
+    expect(loadProgress().favourites?.map((f) => f.id)).toEqual(['b'])
   })
 })

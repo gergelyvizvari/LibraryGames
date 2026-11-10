@@ -18,6 +18,8 @@ export interface Progress {
   dailyDone?: string
   /** How many stickers of each scene game are in the album (game id → count). */
   stickers?: Record<string, number>
+  /** The games the player gave a heart, oldest first. Kept on this device only. */
+  favourites?: { id: string; at: string }[]
 }
 
 const empty = (): Progress => ({ games: {}, xp: {}, streak: { days: 0 } })
@@ -133,6 +135,19 @@ export function recordRound(id: string, skill: Skill, result: RoundResult, today
   }
   save(progress)
   return { progress, newRecord, previousLevel: g.level, level, xpGained }
+}
+
+export function isFavourite(p: Progress, id: string) {
+  return !!p.favourites?.some((f) => f.id === id)
+}
+
+/** Gives the game a heart or takes it back. Returns the saved progress. */
+export function toggleFavourite(id: string, now = new Date()): Progress {
+  const p = loadProgress()
+  const rest = (p.favourites ?? []).filter((f) => f.id !== id)
+  const next = { ...p, favourites: isFavourite(p, id) ? rest : [...rest, { id, at: now.toISOString() }] }
+  save(next)
+  return next
 }
 
 export function stickerCount(p: Progress, id: string) {

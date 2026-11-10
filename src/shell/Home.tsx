@@ -1,12 +1,13 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { games } from '../games/registry'
 import { makeGameT, useLocale, useT, type Locale } from '../i18n'
 import { Icon } from '../kit/icon'
 import { Guide, type PlaceId } from '../kit/places'
-import { currentStreak, dailyDoneToday, gameProgress, isIosBrowser, loadProgress, stickerCount } from '../kit/progress'
+import { currentStreak, dailyDoneToday, gameProgress, isFavourite, isIosBrowser, loadProgress, stickerCount, toggleFavourite } from '../kit/progress'
 import { daySeed, makeRng } from '../kit/random'
 import { gameColorVars } from '../kit/theme'
 import type { GameDef } from '../kit/types'
+import { FavButton, Heart } from './FavButton'
 import { AUTHOR, facebookUrl, portfolioUrl, SUPPORT_URL } from './contact'
 import { logoIcon } from './logo'
 import { regions } from './map/regions'
@@ -50,7 +51,7 @@ export function Home({
 }) {
   const t = useT()
   const locale = useLocale()
-  const progress = useMemo(loadProgress, [])
+  const [progress, setProgress] = useState(loadProgress)
   const daily = dailyGame()
   const dailyDone = dailyDoneToday(progress)
   const streak = currentStreak(progress)
@@ -63,6 +64,37 @@ export function Home({
   }
   // The author's name is a link, so split the sentence around it (word order differs between languages).
   const madeBy = t('madeBy', { name: '\u0000' }).split('\u0000')
+
+  const favourites = (progress.favourites ?? []).flatMap((f) => games.find((g) => g.meta.id === f.id) ?? [])
+
+  // A card is a box with two buttons side by side in the markup: the game itself and its heart.
+  const card = (g: GameDef) => {
+    const gt = makeGameT(g.strings, locale)
+    const total = g.stickers?.length ?? 0
+    const have = stickerCount(progress, g.meta.id)
+    const played = gameProgress(progress, g.meta.id).plays > 0
+    return (
+      <div key={g.meta.id} className={`book-card${played ? ' book-played' : ''}`} style={gameColorVars(g.meta.color)}>
+        <button className="book-card-play" onClick={() => onPlay(g.meta.id)}>
+          <span className="book-card-icon">
+            <Icon icon={g.meta.icon} />
+          </span>
+          <span className="book-card-title">{gt('title')}</span>
+          {total > 0 && (
+            <span className="book-card-stars" role="img" aria-label={t('stickers.count', { n: have, total })}>
+              {Array.from({ length: total }, (_, i) => (
+                <i key={i} className={i < have ? 'book-star-on' : undefined}>
+                  ★
+                </i>
+              ))}
+            </span>
+          )}
+        </button>
+        <FavButton on={isFavourite(progress, g.meta.id)} onToggle={() => setProgress(toggleFavourite(g.meta.id))} />
+        {fresh.has(g.meta.id) && <span className="book-new">{t('new')}</span>}
+      </div>
+    )
+  }
 
   return (
     <div className="book">
@@ -105,6 +137,18 @@ export function Home({
           </span>
         </button>
 
+        {favourites.length > 0 && (
+          <section className="book-region book-favs" aria-labelledby="book-favs">
+            <header className="book-band">
+              <span className="book-guide book-guide-heart">
+                <Heart />
+              </span>
+              <h2 id="book-favs">{t('fav.title')}</h2>
+            </header>
+            <div className="book-grid">{favourites.map(card)}</div>
+          </section>
+        )}
+
         {regions.map((r) => {
           const list = games.filter((g) => r.skills.includes(g.meta.skill)).sort((a, b) => rank(a) - rank(b))
           if (!list.length) return null
@@ -118,30 +162,7 @@ export function Home({
                 <small>{r.skills.map((s) => t(`skill.${s}`).toLowerCase()).join(', ')}</small>
               </header>
               <div className="book-grid">
-                {list.map((g) => {
-                  const gt = makeGameT(g.strings, locale)
-                  const total = g.stickers?.length ?? 0
-                  const have = stickerCount(progress, g.meta.id)
-                  const played = gameProgress(progress, g.meta.id).plays > 0
-                  return (
-                    <button key={g.meta.id} className={`book-card${played ? ' book-played' : ''}`} style={gameColorVars(g.meta.color)} onClick={() => onPlay(g.meta.id)}>
-                      {fresh.has(g.meta.id) && <span className="book-new">{t('new')}</span>}
-                      <span className="book-card-icon">
-                        <Icon icon={g.meta.icon} />
-                      </span>
-                      <span className="book-card-title">{gt('title')}</span>
-                      {total > 0 && (
-                        <span className="book-card-stars" role="img" aria-label={t('stickers.count', { n: have, total })}>
-                          {Array.from({ length: total }, (_, i) => (
-                            <i key={i} className={i < have ? 'book-star-on' : undefined}>
-                              ★
-                            </i>
-                          ))}
-                        </span>
-                      )}
-                    </button>
-                  )
-                })}
+                {list.map(card)}
               </div>
             </section>
           )

@@ -3,9 +3,10 @@ import { games } from '../../games/registry'
 import { makeGameT, useLocale, useT, type Locale } from '../../i18n'
 import { useSize } from '../../kit/hooks'
 import { Icon } from '../../kit/icon'
-import { currentStreak, dailyDoneToday, gameProgress, loadProgress, stickerCount } from '../../kit/progress'
+import { currentStreak, dailyDoneToday, gameProgress, isFavourite, loadProgress, stickerCount, toggleFavourite } from '../../kit/progress'
 import { sound } from '../../kit/sound'
 import { gameColorVars } from '../../kit/theme'
+import { FavButton, Heart } from '../FavButton'
 import { dailyGame } from '../Home'
 import { Tools } from '../Tools'
 import mapArt from './map.webp'
@@ -13,6 +14,10 @@ import { MAP_H, MAP_W, mapScale, placeGames, regions } from './regions'
 
 const SCROLL_KEY = 'lg.map.x'
 const STAR = 'M0 -14 L4.1 -5.6 L13.3 -4.3 L6.6 2.1 L8.2 11.3 L0 7 L-8.2 11.3 L-6.6 2.1 L-13.3 -4.3 L-4.1 -5.6 Z'
+
+/** How much the map grows when it closes in on a game, and how long that takes. Keep ZOOM_MS in step with .wm-scroll's transition. */
+const ZOOM = 3.4
+const ZOOM_MS = 520
 
 type StarState = 'done' | 'next' | 'todo'
 
@@ -44,21 +49,28 @@ export function WorldMap({
   onAllGames,
   onStickers,
   onLocale,
+  from,
 }: {
   onPlay: (id: string, daily?: boolean) => void
   onAllGames: () => void
   onStickers: () => void
   onLocale: (l: Locale) => void
+  /** The game the player has just left: the map opens close up on its badge and pulls back. */
+  from?: string
 }) {
   const t = useT()
   const locale = useLocale()
-  const progress = useMemo(loadProgress, [])
+  const [progress, setProgress] = useState(loadProgress)
   const placed = useMemo(() => placeGames(games), [])
   const [wrap, size] = useSize<HTMLDivElement>({ w: 390, h: 800 })
   const scale = mapScale(size.w, size.h)
+  const scaleNow = useRef(scale)
+  scaleNow.current = scale
   const scroller = useRef<HTMLDivElement>(null)
   const [edge, setEdge] = useState({ left: false, right: false })
   const [openId, setOpenId] = useState<string | null>(null)
+  // 'in' while the map closes in on a game that is about to open, 'out' while it pulls back from the one just left.
+  const [zoom, setZoom] = useState<'in' | 'out' | null>(from ? 'out' : null)
   const drag = useRef<{ x: number; y: number; left: number; top: number; moved: boolean } | null>(null)
 
   const daily = dailyGame()
@@ -125,6 +137,51 @@ export function WorldMap({
     }
   }, [])
 
+  /** Moves and enlarges the whole map so that the game's badge fills the middle of the window; null puts it back. */
+  const aim = (id: string | null) => {
+    const el = scroller.current
+    const p = placed.find((q) => q.game.meta.id === id)
+    if (!el) return
+    if (!p) {
+      el.style.transform = ''
+      return
+    }
+    const box = el.getBoundingClientRect()
+    const map = el.firstElementChild!.getBoundingClientRect()
+    const x = map.left - box.left + p.x * scaleNow.current
+    const y = map.top - box.top + p.y * scaleNow.current
+    el.style.transformOrigin = `${x}px ${y}px`
+    el.style.transform = `translate(${box.width / 2 - x}px, ${box.height / 2 - y}px) scale(${ZOOM})`
+  }
+
+  // Close in on the badge, then open the game, so the map does not just vanish.
+  const launch = (id: string, daily?: boolean) => {
+    if (zoom === 'in') return
+    if (!window.matchMedia || matchMedia('(prefers-reduced-motion: reduce)').matches) return onPlay(id, daily)
+    setZoom('in')
+    aim(id)
+    setTimeout(() => onPlay(id, daily), ZOOM_MS)
+  }
+
+  // Coming back from a game: start close up on its badge, under the veil, and pull back.
+  useEffect(() => {
+    const el = scroller.current
+    const p = placed.find((q) => q.game.meta.id === from)
+    if (!el || !p) return setZoom(null)
+    const frame = requestAnimationFrame(() => {
+      el.scrollLeft = p.x * scaleNow.current - el.clientWidth / 2
+      el.style.transition = 'none'
+      aim(p.game.meta.id)
+      void el.offsetWidth
+      el.style.transition = ''
+      aim(null)
+      setZoom(null)
+    })
+    return () => cancelAnimationFrame(frame)
+    // Only once, when the map appears.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const step = (dir: number) => scroller.current?.scrollBy({ left: dir * scroller.current.clientWidth * 0.7, behavior: 'smooth' })
   const pick = (id: string | null) => {
     sound.tap()
@@ -132,7 +189,7 @@ export function WorldMap({
   }
 
   return (
-    <div className="wm" ref={wrap}>
+    <div className={`wm${zoom ? ` wm-zoom-${zoom}` : ''}`} ref={wrap}>
       <div
         className="wm-scroll"
         ref={scroller}
@@ -175,6 +232,11 @@ export function WorldMap({
                 >
                   <StarMark state={state} />
                   <Icon icon={game.meta.icon} className="wm-star-icon" />
+                  {isFavourite(progress, id) && (
+                    <span className="wm-fav">
+                      <Heart />
+                    </span>
+                  )}
                   <span className="wm-tip" aria-hidden>
                     {title}
                   </span>
@@ -237,7 +299,8 @@ export function WorldMap({
               {t(open.region.name)} · {t(`skill.${open.game.meta.skill}`)}
             </small>
           </span>
-          <button className="scene-btn" onClick={() => onPlay(open.game.meta.id)} autoFocus>
+          <FavButton on={isFavourite(progress, open.game.meta.id)} onToggle={() => setProgress(toggleFavourite(open.game.meta.id))} />
+          <button className="scene-btn" onClick={() => launch(open.game.meta.id)} autoFocus>
             {t('play')}
           </button>
           <button className="wm-card-close" onClick={() => pick(null)} aria-label={t('map.close')}>
@@ -245,7 +308,7 @@ export function WorldMap({
           </button>
         </div>
       ) : (
-        <button className="wm-daily" onClick={() => onPlay(daily.meta.id, true)}>
+        <button className="wm-daily" onClick={() => launch(daily.meta.id, true)}>
           <span className="wm-daily-icon">
             <Icon icon={daily.meta.icon} />
           </span>
@@ -258,6 +321,7 @@ export function WorldMap({
           </span>
         </button>
       )}
+      <div className="wm-veil" />
     </div>
   )
 }
