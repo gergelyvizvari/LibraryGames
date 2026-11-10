@@ -1,4 +1,4 @@
-import { games } from '../games/registry'
+import { shownGames } from '../games/registry'
 import { gameProgress, loadProgress, type Progress } from '../kit/progress'
 import { makeRng, randomSeed } from '../kit/random'
 import type { GameDef } from '../kit/types'
@@ -7,7 +7,7 @@ import type { GameDef } from '../kit/types'
  * The game offered after a round: another skill, so kids try something different, and games they have not played
  * yet first, so they discover the whole collection.
  */
-export function nextGame(currentId: string, list: GameDef[] = games, progress: Progress = loadProgress(), seed = randomSeed()) {
+export function nextGame(currentId: string, list: GameDef[] = shownGames(), progress: Progress = loadProgress(), seed = randomSeed()) {
   const current = list.find((g) => g.meta.id === currentId)
   const others = list.filter((g) => g.meta.id !== currentId && g.meta.skill !== current?.meta.skill)
   const pool = others.length > 0 ? others : list.filter((g) => g.meta.id !== currentId)

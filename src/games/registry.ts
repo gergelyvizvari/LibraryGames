@@ -1,3 +1,4 @@
+import { touchOnly } from '../kit/device'
 import type { GameDef } from '../kit/types'
 import flashRead from './flash-read'
 import lightsOut from './lights-out'
@@ -48,3 +49,8 @@ export const games: GameDef[] = [sequenceEcho, lightsOut, wordCatch, stroopClash
   rhythmCopy, feedMonster, colorSort, animalSounds, rhymeTime, clockCatch, countryMap, ukMap, busyBees, continentSort, flagFriends, riverMountain, opposites, evenOdd, wordFamilies, numberLine, puppySpots, storyOrder]
 
 export const gameById = (id: string) => games.find((g) => g.meta.id === id)
+
+/** The games this device can play: games played with a keyboard are left out on phones and tablets. */
+export function shownGames(list: GameDef[] = games, touch = touchOnly()) {
+  return touch ? list.filter((g) => !g.meta.keyboard) : list
+}

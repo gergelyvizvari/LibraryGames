@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { games } from '../games/registry'
+import { shownGames } from '../games/registry'
 import { makeGameT, useLocale, useT, type Locale } from '../i18n'
 import { Icon } from '../kit/icon'
 import { Guide, type PlaceId } from '../kit/places'
@@ -7,7 +7,7 @@ import { currentStreak, dailyDoneToday, gameProgress, isFavourite, isIosBrowser,
 import { daySeed, makeRng } from '../kit/random'
 import { gameColorVars } from '../kit/theme'
 import type { GameDef } from '../kit/types'
-import { FavButton, Heart } from './FavButton'
+import { FavButton, Heart } from '../kit/FavButton'
 import { AUTHOR, facebookUrl, portfolioUrl, SUPPORT_URL } from './contact'
 import { logoIcon } from './logo'
 import { regions } from './map/regions'
@@ -20,11 +20,11 @@ const NEW_DAYS = 7
 const MAX_NEW = 3
 
 export function dailyGame(date = new Date()) {
-  return makeRng(daySeed(date)).pick(games)
+  return makeRng(daySeed(date)).pick(shownGames())
 }
 
 /** Ids of the games that get a NEW label: added in the last week, newest first (later in the registry wins ties). */
-export function newGameIds(list: GameDef[] = games, today = new Date()) {
+export function newGameIds(list: GameDef[] = shownGames(), today = new Date()) {
   return new Set(
     list
       .map((g, i) => ({ g, i }))
@@ -65,7 +65,8 @@ export function Home({
   // The author's name is a link, so split the sentence around it (word order differs between languages).
   const madeBy = t('madeBy', { name: '\u0000' }).split('\u0000')
 
-  const favourites = (progress.favourites ?? []).flatMap((f) => games.find((g) => g.meta.id === f.id) ?? [])
+  const shown = useMemo(() => shownGames(), [])
+  const favourites = (progress.favourites ?? []).flatMap((f) => shown.find((g) => g.meta.id === f.id) ?? [])
 
   // A card is a box with two buttons side by side in the markup: the game itself and its heart.
   const card = (g: GameDef) => {
@@ -150,7 +151,7 @@ export function Home({
         )}
 
         {regions.map((r) => {
-          const list = games.filter((g) => r.skills.includes(g.meta.skill)).sort((a, b) => rank(a) - rank(b))
+          const list = shown.filter((g) => r.skills.includes(g.meta.skill)).sort((a, b) => rank(a) - rank(b))
           if (!list.length) return null
           return (
             <section key={r.id} className={`book-region book-${r.id}`} aria-labelledby={`book-${r.id}`}>
