@@ -13,19 +13,26 @@ import { MAP_H, MAP_W, mapScale, placeGames, regions } from './regions'
 const SCROLL_KEY = 'lg.map.x'
 const STAR = 'M0 -14 L4.1 -5.6 L13.3 -4.3 L6.6 2.1 L8.2 11.3 L0 7 L-8.2 11.3 L-6.6 2.1 L-13.3 -4.3 L-4.1 -5.6 Z'
 
+/** Height of the strip under the map that holds today's adventure or the picked game, so they never cover a star. */
+const DOCK = 72
+
 type StarState = 'done' | 'next' | 'todo'
 
-/** A game's mark on the map: a round badge with a star. Gold once played; the next one to try in a region has a ring and bobs. */
+/** The badge behind a game's picture on the map. Played games get a gold rim and a little star; the next one to try in a region has a ring. */
 function StarMark({ state }: { state: StarState }) {
   const done = state === 'done'
   return (
     <svg viewBox="-30 -30 60 60" aria-hidden focusable="false">
-      {state === 'next' && <circle className="wm-ring" r="27" />}
-      <ellipse className="wm-shade" cx="1" cy="4" rx="20" ry="19" />
-      <circle r="20" fill={done ? '#ffd24a' : '#fffaf0'} />
-      <path d="M-15 -13 A20 20 0 0 1 13 -15 A26 26 0 0 0 -15 -13Z" fill="#fff" opacity={done ? 0.55 : 0.9} />
-      <path d={STAR} transform="scale(0.86)" fill={done ? '#fffaf0' : '#7c5ce0'} stroke={done ? '#fffaf0' : '#7c5ce0'} strokeWidth="4" strokeLinejoin="round" />
-      <path d="M0 -14 L4.1 -5.6 L13.3 -4.3 L6.6 2.1 L8.2 11.3 L0 7 Z" transform="scale(0.86)" fill={done ? '#f6e3a8' : '#5a3fc0'} opacity="0.7" />
+      {state === 'next' && <circle className="wm-ring" r="28" />}
+      <ellipse className="wm-shade" cx="1" cy="4" rx="22" ry="21" />
+      <circle r="22" fill="#fffaf0" stroke={done ? '#ffd24a' : '#fffaf0'} strokeWidth="4" />
+      {done && (
+        <g transform="translate(18 -18) scale(0.72)">
+          <path className="wm-shade" d={STAR} transform="translate(1 3)" strokeWidth="5" strokeLinejoin="round" />
+          <path d={STAR} fill="#ffd24a" stroke="#ffd24a" strokeWidth="5" strokeLinejoin="round" />
+          <path d="M0 -14 L4.1 -5.6 L13.3 -4.3 L6.6 2.1 L8.2 11.3 L0 7 Z" fill="#f2a71b" opacity="0.75" />
+        </g>
+      )}
     </svg>
   )
 }
@@ -48,7 +55,7 @@ export function WorldMap({
   const progress = useMemo(loadProgress, [])
   const placed = useMemo(() => placeGames(games), [])
   const [wrap, size] = useSize<HTMLDivElement>({ w: 390, h: 800 })
-  const scale = mapScale(size.w, size.h)
+  const scale = mapScale(size.w, size.h - DOCK)
   const scroller = useRef<HTMLDivElement>(null)
   const [edge, setEdge] = useState({ left: false, right: false })
   const [openId, setOpenId] = useState<string | null>(null)
@@ -161,13 +168,16 @@ export function WorldMap({
                   className={`wm-star wm-${state}${openId === id ? ' wm-open' : ''}`}
                   style={{ left: x, top: y }}
                   aria-label={title}
-                  title={title}
                   onClick={(e) => {
                     e.stopPropagation()
                     pick(openId === id ? null : id)
                   }}
                 >
                   <StarMark state={state} />
+                  <Icon icon={game.meta.icon} className="wm-star-icon" />
+                  <span className="wm-tip" aria-hidden>
+                    {title}
+                  </span>
                 </button>
               )
             })}

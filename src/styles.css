@@ -538,7 +538,7 @@ html:has(.app-full) { scrollbar-gutter: auto; overflow: hidden; }
 
 /* World map */
 .wm { position: relative; height: 100dvh; overflow: hidden; background: #c5d86b; color: var(--story-ink); user-select: none; -webkit-user-select: none; }
-.wm-scroll { height: 100%; display: flex; overflow: auto; scrollbar-width: none; cursor: grab; overscroll-behavior: contain; }
+.wm-scroll { height: calc(100% - 72px); display: flex; overflow: auto; scrollbar-width: none; cursor: grab; overscroll-behavior: contain; }
 .wm-scroll::-webkit-scrollbar { display: none; }
 .wm-scroll:active { cursor: grabbing; }
 /* Auto margins centre a map smaller than the window and still let a bigger one scroll from its edge. */
@@ -554,11 +554,17 @@ html:has(.app-full) { scrollbar-gutter: auto; overflow: hidden; }
 .wm-ribbon::after { left: calc(100% - 8px); clip-path: polygon(0 0, 100% 0, 60% 50%, 100% 100%, 0 100%); }
 .wm-star { position: absolute; width: 60px; height: 60px; margin: -30px 0 0 -30px; padding: 0; border-radius: 50%; background: none; transition: transform 0.15s; }
 .wm-star svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.wm-star .wm-star-icon { position: absolute; left: 50%; top: 50%; width: 32px; height: 32px; margin: -16px 0 0 -16px; filter: none; }
+.wm-star:hover, .wm-star:focus-visible, .wm-open { z-index: 2; }
+.wm-tip { position: absolute; left: 50%; bottom: calc(100% + 2px); translate: -50% 4px; padding: 4px 12px; border-radius: 14px; background: var(--story-paper); color: var(--story-ink); font-weight: 700; font-size: 15px; line-height: 1.2; white-space: nowrap; box-shadow: 0 2px 5px rgba(40, 30, 70, 0.3); opacity: 0; pointer-events: none; transition: opacity 0.12s, translate 0.12s; }
+.wm-tip::after { content: ''; position: absolute; left: 50%; top: 100%; margin-left: -6px; border: 6px solid transparent; border-top-color: var(--story-paper); border-bottom: 0; }
+.wm-star:hover .wm-tip, .wm-star:focus-visible .wm-tip, .wm-open .wm-tip { opacity: 1; translate: -50% 0; }
 .wm-star:hover, .wm-star:focus-visible, .wm-open { transform: scale(1.2); }
 .wm-star:focus-visible { outline: 3px solid var(--story-paper); outline-offset: -6px; }
 .wm-shade { fill: var(--story-ink); stroke: var(--story-ink); opacity: 0.3; }
 .wm-ring { fill: rgba(255, 248, 224, 0.45); stroke: var(--story-paper); stroke-width: 2; stroke-dasharray: 5 6; }
-.wm-next svg { animation: wmBob 2.4s ease-in-out infinite; }
+.wm-next { animation: wmBob 2.4s ease-in-out infinite; }
+.wm-next:hover, .wm-next.wm-open { animation: none; }
 @keyframes wmBob { 50% { transform: translateY(-4px); } }
 .wm-top { position: absolute; top: calc(12px + env(safe-area-inset-top)); left: calc(12px + env(safe-area-inset-left)); right: calc(12px + env(safe-area-inset-right)); display: flex; align-items: center; gap: 8px; pointer-events: none; }
 .wm-top-gap { flex: 1; }
@@ -572,10 +578,10 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 @media (max-width: 520px) { .wm-pill-text { display: none; } }
 .wm-arrow, .scene-back { position: absolute; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%; background: var(--story-paper); box-shadow: 0 2px 5px rgba(40, 30, 70, 0.3); }
 .wm-arrow svg, .scene-back svg { width: 24px; height: 24px; fill: none; stroke: var(--story-ink); stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
-.wm-arrow { top: 50%; margin-top: -22px; }
+.wm-arrow { top: calc(50% - 36px); margin-top: -22px; }
 .wm-arrow-left { left: calc(10px + env(safe-area-inset-left)); }
 .wm-arrow-right { right: calc(10px + env(safe-area-inset-right)); }
-.wm-daily, .wm-card { position: absolute; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; align-items: center; gap: 10px; max-width: calc(100% - 24px); background: var(--story-paper); color: var(--story-ink); box-shadow: 0 3px 8px rgba(40, 30, 70, 0.35); text-align: left; }
+.wm-daily, .wm-card { position: absolute; left: 50%; bottom: calc(10px + env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; align-items: center; gap: 10px; max-width: calc(100% - 24px); background: var(--story-paper); color: var(--story-ink); box-shadow: 0 3px 8px rgba(40, 30, 70, 0.35); text-align: left; }
 .wm-daily { padding: 6px 8px; border-radius: 30px; }
 .wm-daily:active { transform: translateX(-50%) translateY(2px); }
 .wm-daily-icon, .wm-card-icon { flex: none; width: 44px; height: 44px; }
