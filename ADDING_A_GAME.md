@@ -89,9 +89,8 @@ export const icon: GameIcon = [
   `#54a0ff` blue, `#a29bfe` purple, `#ff9f43` orange, `#8d6e63` brown, `#fff` white, `#c7ecee` glass,
   and `ink` for eyes, dots and text lines. The main shape must stand out from the game's own card colour
   (a yellow cheese on a mustard card needs its outline, a blue shape on a blue card does not work).
-- **Themes**: icons always sit on the game colour (cards, daily challenge) or on the intro card, and the outline
-  stays dark, so the same icon works in light, dark and high contrast without changes. High contrast thickens the outline.
-- Check it on the "All games" screen in all three themes. The registry test checks every game has an icon with valid roles and colours.
+- Icons always sit on the game colour (cards, daily challenge) and keep a dark outline.
+- Check it on the "All games" screen. The registry test checks every game has an icon with valid roles and colours.
 
 ## Kit pieces (`src/kit`)
 
@@ -111,11 +110,11 @@ export const icon: GameIcon = [
   To make something appear, prefer the `popIn` animation (grows from smaller, animates `scale` so a centring
   `translate` stays put). `zoom` starts bigger than the element, so use it only inside a box that clips it.
   An absolutely placed label that moves (`left: …%`) needs `width: max-content`, or it re-wraps as it moves.
-- `theme.ts`: light, dark and high contrast themes. Never hard-code page colours: use the theme variables at
+- `theme.ts`: colour helpers for game-coloured surfaces. The page has one look. Never hard-code page colours: use the variables at
   the top of `styles.css` (`--bg`, `--ink`, `--muted`, `--card`, `--line`, `--good`, `--bad`, `--good-soft`,
   `--bad-soft`, `--highlight`, `--on-color` for text on coloured buttons, `--press` for button edges).
   Fixed colours are fine inside a game's own scene (a sky, a pond, game pieces); text on a surface that stays
-  light in every theme uses `--ink-fixed`. Check your game in all three themes with the ☀️ button on the "All games" screen.
+  light uses `--ink-fixed`.
 
 ## Scene games
 
