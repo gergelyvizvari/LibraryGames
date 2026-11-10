@@ -557,15 +557,16 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 /* On a phone everything stays in one row over the sky, so no button ever sits on a game's badge. */
 @media (max-width: 640px) {
   .wm-top, .wm-top .wm-tools { gap: 5px; }
-  .wm-top .wm-tool, .wm-top .wm-tools .icon-btn { width: 36px; height: 36px; }
+  .wm-top { --tool: clamp(32px, 10.2vw, 42px); }
+  .wm-top .wm-tool, .wm-top .wm-tools .icon-btn { width: var(--tool); height: var(--tool); }
+  .wm-top .wm-tools .share-glyph, .wm-top .wm-tool .tea-cup, .wm-top .wm-tool .sound-icon { width: calc(var(--tool) * 0.62); height: calc(var(--tool) * 0.62); }
   .wm-top .wm-pill { height: 38px; padding: 0 10px; gap: 4px; }
 }
-@media (max-width: 420px) {
+@media (max-width: 480px) {
   .wm-top .wm-red { display: none; }
 }
 @media (max-width: 379px) {
   .wm-top, .wm-top .wm-tools { gap: 4px; }
-  .wm-top .wm-tool, .wm-top .wm-tools .icon-btn { width: 32px; height: 32px; }
   .wm-top .wm-pill { padding: 0 8px; }
 }
 @media (max-width: 339px) {
