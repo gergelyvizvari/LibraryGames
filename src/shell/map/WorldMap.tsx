@@ -234,7 +234,9 @@ export function WorldMap({
                   aria-label={title}
                   onClick={(e) => {
                     e.stopPropagation()
-                    pick(openId === id ? null : id)
+                    // A second tap on the same badge opens the game, so a double tap goes straight in.
+                    if (openId === id) launch(id)
+                    else pick(id)
                   }}
                 >
                   <StarMark state={state} />
