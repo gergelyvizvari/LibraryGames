@@ -157,10 +157,11 @@ export function WorldMap({
   // Close in on the badge, then open the game, so the map does not just vanish.
   const launch = (id: string, daily?: boolean) => {
     if (zoom === 'in') return
-    if (!window.matchMedia || matchMedia('(prefers-reduced-motion: reduce)').matches) return onPlay(id, daily)
+    const go = () => (daily ? onPlay(id, true) : onPlay(id))
+    if (!window.matchMedia || matchMedia('(prefers-reduced-motion: reduce)').matches) return go()
     setZoom('in')
     aim(id)
-    setTimeout(() => onPlay(id, daily), ZOOM_MS)
+    setTimeout(go, ZOOM_MS)
   }
 
   // Coming back from a game: start close up on its badge, under the veil, and pull back.
