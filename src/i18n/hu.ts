@@ -95,7 +95,6 @@ const hu: Record<keyof typeof en, string> = {
   'scene.progress': '{n} kész ennyiből: {total}',
   'scene.next': 'Tovább a {n}. szakaszra',
   'map.title': 'Játékország',
-  'map.settings': 'Beállítások',
   'map.allGames': 'Minden játék',
   'map.open': 'Térkép',
   'map.adventure': 'Mai kaland',
