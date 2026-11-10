@@ -980,73 +980,97 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 @keyframes nlHop { 50% { transform: translateY(-34px); } }
 
 /* Puppy Spots */
-.ps-message { display: flex; align-items: center; justify-content: center; text-align: center; text-wrap: balance; font-size: 1.15rem; line-height: 1.25; font-weight: 700; min-height: 2.5em; margin: 2px 0; color: var(--muted); }
-.ps-warn { color: var(--game-text); }
-.ps-wrap { position: relative; width: min(100% - 14px, 440px, 56vh); margin: 8px auto 0; }
-/* Lines are the page colour: wide around each rug, hair-thin between the squares inside one. */
-.ps-board { --ps-line: var(--bg); display: grid; aspect-ratio: 1; border-radius: 24px; overflow: hidden; background: var(--ps-line); padding: 3px; box-shadow: 0 0 0 2px var(--line), 0 6px 0 0 var(--line); animation: popIn 0.3s; }
-.ps-cell { --ps-edge: 3px; --ps-thin: color-mix(in srgb, var(--ps-line) 60%, transparent); position: relative; display: grid; place-items: center; min-width: 0; min-height: 0; overflow: hidden; padding: 0; border: 0; border-radius: 0;
-  box-shadow: inset 0 calc(var(--ps-t, 0) * var(--ps-edge)) 0 var(--ps-line), inset calc(var(--ps-l, 0) * var(--ps-edge)) 0 0 var(--ps-line),
-    inset 0 calc(var(--ps-b, 0) * -1 * var(--ps-edge)) 0 var(--ps-line), inset calc(var(--ps-r, 0) * -1 * var(--ps-edge)) 0 0 var(--ps-line),
-    inset 0 1px 0 var(--ps-thin), inset 1px 0 0 var(--ps-thin);
-  color: var(--ink-fixed); font-size: calc(min(92vw, 440px, 56vh) / var(--ps-n) * 0.56); line-height: 1; touch-action: manipulation; }
-.ps-ctl { border-top-left-radius: 16px; }
-.ps-ctr { border-top-right-radius: 16px; }
-.ps-cbl { border-bottom-left-radius: 16px; }
-.ps-cbr { border-bottom-right-radius: 16px; }
-.ps-cell:active { filter: brightness(0.94); }
-.ps-et { --ps-t: 1; }
-.ps-el { --ps-l: 1; }
-.ps-eb { --ps-b: 1; }
-.ps-er { --ps-r: 1; }
-.ps-r0 { background: #ffc2c2; }
-.ps-r1 { background: #ffe29a; }
-.ps-r2 { background: #b5e0ff; }
-.ps-r3 { background: #bdeebd; }
-.ps-r4 { background: #dccbff; }
-.ps-r5 { background: #ffd0a6; }
-.ps-r6 { background: #ffcfea; }
-.ps-r7 { background: #a9ebe3; }
-/* Squares a pup already rules out get a small faint cross at low levels; the rug keeps its colour. */
-.ps-blocked::after { content: '✕'; font-size: 0.34em; font-weight: 700; color: var(--ink-fixed); opacity: 0.3; animation: psFade 0.35s; pointer-events: none; }
-/* Background layers: a little square of line colour in each inside corner of a rug. */
-.ps-cell { --ps-dot: linear-gradient(var(--ps-line), var(--ps-line)); background-image: var(--ps-ntl, none), var(--ps-ntr, none), var(--ps-nbl, none), var(--ps-nbr, none);
-  background-repeat: no-repeat; background-position: left top, right top, left bottom, right bottom; background-size: var(--ps-edge) var(--ps-edge); }
-.ps-ntl { --ps-ntl: var(--ps-dot); }
-.ps-ntr { --ps-ntr: var(--ps-dot); }
-.ps-nbl { --ps-nbl: var(--ps-dot); }
-.ps-nbr { --ps-nbr: var(--ps-dot); }
-.ps-pup { position: relative; display: inline-block; animation: popIn 0.2s; }
-.ps-solved .ps-pup { animation: psHop 0.5s; }
-.ps-mark { font-size: 0.5em; opacity: 0.45; }
-/* A rule broke: the squares that show why glow softly once, and the pup shakes its head. */
-.ps-why::before { content: ''; position: absolute; inset: 0; background: rgba(255, 107, 107, 0.4); animation: psGlow 1.1s both; pointer-events: none; }
-.ps-bad .ps-pup { animation: psNo 0.4s; }
-/* No room left for a pup here: the row, column or rug dims gently until a pup is taken back. */
-.ps-stuck::before { content: ''; position: absolute; inset: 0; background: rgba(45, 49, 66, 0.32); animation: psPulse 1.2s infinite alternate ease-in-out; pointer-events: none; }
-.ps-tools { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 20px; }
-.ps-tool { display: flex; flex-direction: column; align-items: center; gap: 2px; background: var(--card); color: var(--ink); font-size: 1rem; font-weight: 700; padding: 10px 4px; border-radius: 16px; box-shadow: var(--shadow); line-height: 1.2; }
-.ps-tool:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 0 0 2px var(--line), 0 2px 0 var(--line); }
-.ps-tool:disabled { opacity: 0.45; cursor: default; }
-.ps-on { background: var(--game-surface); color: var(--on-color); box-shadow: 0 0 0 2px var(--press), 0 5px 0 var(--press); }
-[data-theme='contrast'] .ps-board { --ps-line: #000; }
-[data-theme='contrast'] .ps-cell { --ps-thin: #000; }
-@keyframes psHop { 40% { transform: translateY(-14%); } }
+.pk { flex: 1; min-height: 0; position: relative; display: flex; flex-direction: column; color: var(--story-ink); background: repeating-linear-gradient(90deg, #cc9a64 0 56px, #c08a58 56px 112px); }
+.pk::after { content: ''; position: absolute; inset: 0; z-index: 1; background: var(--grain); opacity: 0.3; pointer-events: none; }
+.pk-wall { position: relative; flex: none; height: calc(216px + env(safe-area-inset-top)); display: flex; align-items: flex-end; justify-content: flex-end; gap: 4px; padding: 0 14px 0 86px; border-bottom: 12px solid #fff6dc; box-shadow: 0 10px 0 rgba(138, 90, 60, 0.45);
+  background: radial-gradient(circle at 10px 10px, rgba(61, 163, 154, 0.45) 3px, transparent 3.5px) 0 0 / 40px 40px, radial-gradient(circle at 30px 30px, rgba(61, 163, 154, 0.45) 3px, transparent 3.5px) 0 0 / 40px 40px, linear-gradient(#17595f, #23807c); }
+.pk-bunting { position: absolute; left: 0; top: calc(6px + env(safe-area-inset-top)); }
+.pk-window { position: absolute; left: 22px; bottom: 22px; width: 92px; }
+.pk-bubble { position: relative; flex: 0 1 auto; min-width: 0; margin: 0 -6px 62px 0; padding: 10px 16px; border-radius: 22px; font-size: 1.08rem; }
+.pk-bubble::after { left: auto; right: 8px; top: calc(100% - 3px); border: 9px solid transparent; border-top: 18px solid var(--story-paper); border-bottom: 0; transform: skewX(-32deg); }
+.pk-owl { position: relative; z-index: 2; width: 78px; margin-bottom: 8px; }
+.pk-owl::after { content: ''; position: absolute; left: -8px; right: -8px; bottom: -8px; height: 11px; border-radius: 4px; background: #8a5a3c; box-shadow: inset 0 -4px 0 #6d4130; }
+.pk-floor { flex: 1; min-height: 0; position: relative; z-index: 2; container-type: size; display: grid; place-items: center; }
+.pk-rug { position: relative; width: min(100cqw - 72px, 100cqh - 52px, 560px); aspect-ratio: 1; animation: popIn 0.3s; }
+.pk-rug-art { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.pk-cells { position: absolute; inset: 0; display: grid; }
+.pk-cell { min-width: 0; min-height: 0; padding: 0; background: none; border-radius: 12%; }
+.pk-cell:active { background: rgba(255, 255, 255, 0.22); }
+.pk-cell:focus-visible { outline: 3px solid var(--story-paper); outline-offset: -4px; }
+.pk-pup, .pk-wait, .pk-mark, .pk-blocked { transform-box: fill-box; transform-origin: 50% 100%; }
+.pk-pup { animation: pkSit 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.3); }
+.pk-pup.pk-hop { animation: pkHop 0.55s backwards; }
+.pk-no .pk-head { transform-box: fill-box; transform-origin: 50% 80%; animation: psNo 0.4s 2; }
+.pk-wait { animation: pkSit 0.3s; }
+.pk-mark { opacity: 0.95; animation: psFade 0.2s; }
+.pk-blocked { opacity: 0.5; animation: psFade 0.35s; }
+.pk-why { animation: pkGlow 1.1s both; }
+.pk-stuck { opacity: 0.34; animation: psPulse 1.2s infinite alternate ease-in-out; }
+.pk-tip { transform-box: fill-box; transform-origin: center; animation: pkTip 1.2s both; }
+.pk .scene-tray { z-index: 2; gap: 6px 18px; padding-top: 14px; }
+.pk-basket { display: grid; justify-items: center; width: clamp(108px, 34vw, 150px); }
+.pk-basket-art { display: block; width: 100%; overflow: visible; }
+.pk-basket-label { display: none; font-weight: 700; font-size: 0.95rem; opacity: 0.8; }
+.pk-tools { display: flex; gap: clamp(6px, 3vw, 16px); }
+.pk-tool { display: grid; justify-items: center; gap: 5px; padding: 0; background: none; color: var(--story-ink); font-weight: 700; font-size: 0.9rem; line-height: 1.1; }
+.pk-tool-btn { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%; background: var(--story-paper); box-shadow: 0 3px 0 #e0cfa4, 0 4px 6px rgba(20, 15, 50, 0.25); transition: transform 0.1s; }
+.pk-tool-btn svg { width: 56px; height: 56px; }
+.pk-tool:active:not(:disabled) .pk-tool-btn { transform: translateY(3px); box-shadow: 0 0 0 #e0cfa4, 0 1px 3px rgba(20, 15, 50, 0.25); }
+.pk-tool:disabled { opacity: 0.45; cursor: default; }
+.pk-on .pk-tool-btn { background: #7c5ce0; color: #fff; box-shadow: 0 3px 0 #5a3fc0, 0 4px 6px rgba(20, 15, 50, 0.25); }
+.pk-tool:focus-visible .pk-tool-btn { outline: 3px solid #7c5ce0; outline-offset: 2px; }
+.scene-frame:has(.scene-end) .pk-owl { visibility: hidden; }
+/* Wide screens: the rug in the middle, the basket on a round mat to its left, the tools to its right. */
+@media (min-aspect-ratio: 11/10) {
+  .pk { display: grid; grid-template: 'wall wall wall' auto 'basket floor tools' minmax(0, 1fr) / minmax(120px, 1fr) minmax(0, 2.4fr) minmax(120px, 1fr); }
+  .pk-wall { grid-area: wall; height: 170px; padding: 0 max(60px, 50% - 380px) 0 0; }
+  .pk-window { left: max(60px, 50% - 380px); bottom: 20px; }
+  .pk-bubble { margin-bottom: 52px; }
+  .pk-floor { grid-area: floor; }
+  .pk-rug { width: min(100cqw - 80px, 100cqh - 76px, 620px); }
+  .pk .scene-tray { display: contents; }
+  .pk .scene-tray::before { display: none; }
+  .pk-basket { grid-area: basket; z-index: 2; align-self: end; justify-self: center; width: min(64%, 210px); margin-bottom: 11vh; gap: 22px; }
+  .pk-basket { position: relative; }
+  .pk-basket::before { content: ''; position: absolute; left: -16%; right: -16%; top: 26%; aspect-ratio: 2.3; border-radius: 50%; background: radial-gradient(closest-side, #f7b3c6 0 80%, #e2607e 81%); }
+  .pk-basket-art, .pk-basket-label { position: relative; }
+  .pk-basket-label { margin-top: 14px; }
+  .pk-basket-label { display: block; }
+  .pk-tools { grid-area: tools; z-index: 2; flex-direction: column; align-self: center; justify-self: center; gap: 22px; }
+  .pk-tool-btn { width: 64px; height: 64px; }
+  .scene-tray-off .pk-tools, .scene-tray-off .pk-basket-label { visibility: hidden; }
+}
+/* A phone on its side: the wall becomes a strip on the left, so the rug gets the whole height. */
+@media (orientation: landscape) and (max-height: 560px) {
+  .pk { grid-template: 'wall floor tools' minmax(0, 1fr) / minmax(190px, 1fr) minmax(0, 1.5fr) minmax(104px, 0.6fr); }
+  .pk-wall { height: auto; flex-direction: column; align-items: center; justify-content: flex-end; padding: calc(66px + env(safe-area-inset-top)) 10px 0 calc(10px + env(safe-area-inset-left)); border-bottom: 0; border-right: 12px solid #fff6dc; box-shadow: 10px 0 0 rgba(138, 90, 60, 0.45); }
+  .pk-bunting, .pk-window { display: none; }
+  .pk-bubble { margin: 0 0 20px; font-size: 1rem; padding: 8px 12px; }
+  .pk-bubble::after { right: 42%; transform: none; }
+  .pk-owl { width: 66px; margin-bottom: 16px; }
+  .pk .scene-pips { left: calc(64px + env(safe-area-inset-left)); transform: none; }
+  .pk-rug { width: min(100cqw - 76px, 100cqh - 44px); }
+  .pk-basket { grid-area: tools; align-self: end; width: 100px; margin-bottom: 10px; }
+  .pk-basket::before { display: none; }
+  .pk-basket-label, .pk-tool-label { display: none; }
+  .pk-tools { align-self: start; margin-top: 14px; gap: 10px; }
+  .pk-tool-btn { width: 52px; height: 52px; }
+}
+@keyframes pkSit { from { transform: translateY(-30%) scale(0.7); opacity: 0; } }
+@keyframes pkHop { 40% { transform: translateY(-16%); } }
+@keyframes pkGlow { 0%, 100% { opacity: 0; } 20%, 70% { opacity: 0.6; } }
+@keyframes pkTip { 0% { transform: scale(0.4); opacity: 0; } 30% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.15); opacity: 0; } }
 @keyframes psFade { from { opacity: 0; } }
-@keyframes psGlow { 0%, 100% { opacity: 0; } 20%, 70% { opacity: 1; } }
 @keyframes psPulse { from { opacity: 0.35; } }
 @keyframes psNo { 25% { transform: rotate(-12deg); } 75% { transform: rotate(12deg); } }
 
 /* Games inside the shared scene: boards sized so the whole scene fits one screen. */
-.sg .scene-tray .cs-tool, .sg .scene-tray .ps-tool, .sg .scene-tray .md-btn { background: #fff; box-shadow: 0 4px 0 #e0cfa4; }
-.sg .ps-tools { margin: 0; width: min(100%, 440px); }
-.sg .ps-wrap { width: min(100%, 440px, 100dvh - 400px); min-width: 230px; margin: 0 auto; }
+.sg .scene-tray .cs-tool, .sg .scene-tray .md-btn { background: #fff; box-shadow: 0 4px 0 #e0cfa4; }
 .sg .md-maze { width: min(100%, 420px, (100dvh - 420px) * var(--md-ratio, 1)); min-width: 200px; }
 .sg .md-pad { grid-template-columns: repeat(3, 60px); gap: 6px; }
 .sg .md-btn { height: 46px; }
 .sg .cs-rack { padding: 10px 0 4px; }
 .sg .hm-board { width: min(100%, 420px, 100dvh - 380px); min-width: 220px; background: #fff; box-shadow: inset 0 0 0 2px var(--line); }
-.sg .scene-tray .ps-tool.ps-on { background: var(--game-surface); box-shadow: 0 4px 0 var(--game-edge); }
 .sg .cm-country { display: block; margin-top: 4px; font-family: var(--story); font-weight: 800; font-size: 1.5rem; letter-spacing: 1px; }
 .sg .cm-card { text-align: center; }
 .scene-frame:has(.scene-end) .sg-head { visibility: hidden; }
