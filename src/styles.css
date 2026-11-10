@@ -863,13 +863,12 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .so-msg { min-height: 2.4em; line-height: 1.2; display: grid; place-items: center; font-size: 1.3rem; }
 .so-yes { color: var(--good); }
 .so-no { color: var(--bad); }
-.so-cards { display: grid; gap: 10px; }
-.so-card { display: flex; align-items: center; gap: 12px; min-height: clamp(84px, 13vh, 120px); padding: 10px 14px; border-radius: 22px; background: var(--card); border: 3px solid var(--line); box-shadow: 0 5px 0 var(--press); color: var(--ink); text-align: left; animation: popIn 0.25s backwards; transition: transform 0.12s, background 0.15s, border-color 0.15s; }
-.so-cards-3 .so-card { min-height: clamp(100px, 21vh, 190px); }
+.so-cards { flex: 1; display: grid; grid-auto-rows: minmax(0, 1fr); gap: clamp(6px, 1.4vh, 10px); max-height: 600px; }
+.so-card { display: flex; align-items: center; gap: 12px; min-height: 0; padding: 6px 14px; border-radius: 22px; background: var(--card); border: 3px solid var(--line); box-shadow: 0 5px 0 var(--press); color: var(--ink); text-align: left; animation: popIn 0.25s backwards; transition: transform 0.12s, background 0.15s, border-color 0.15s; }
 .so-card:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--press); }
-.so-badge { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; border: 3px dashed var(--line); font-size: 1.4rem; font-weight: 800; color: #fff; }
-.so-emoji { flex: none; font-size: clamp(2.2rem, 10vw, 2.8rem); line-height: 1; }
-.so-text { font-size: clamp(1.1rem, 5vw, 1.35rem); font-weight: 800; line-height: 1.2; overflow-wrap: break-word; hyphens: auto; }
+.so-badge { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; border: 3px dashed var(--line); font-size: 1.4rem; font-weight: 800; color: #fff; }
+.so-emoji { flex: none; font-size: clamp(1.8rem, min(10vw, 5.5vh), 2.8rem); line-height: 1; }
+.so-text { font-size: clamp(1rem, min(5vw, 3vh), 1.35rem); font-weight: 800; line-height: 1.2; overflow-wrap: break-word; hyphens: auto; }
 .so-placed { background: var(--good-soft); border-color: var(--good); }
 .so-placed .so-badge { background: var(--good); border: 3px solid var(--good); animation: popIn 0.2s; }
 .so-wrong { background: var(--bad-soft); border-color: var(--bad); animation: shake 0.35s; }
