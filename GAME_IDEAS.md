@@ -5,7 +5,6 @@ Edit freely: reorder, add, or delete ideas.
 
 ## Up next
 
-- **Story Order** (reading): three or four picture cards from a tiny story; put them in the right order.
 - **Copy Cat Typing** (typing): type a short sentence before the cat finishes its nap; mistakes wake it up.
 - **Shadow Match** (spatial): match each object to its shadow.
 - **Odd Sound Out** (focus): three sounds play; tap the one that was different.
@@ -57,3 +56,4 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-11-08 | Word Families | language |
 | 2026-11-09 | Number Line Jump | maths |
 | 2026-11-09 | Puppy Spots | logic |
+| 2026-11-10 | Story Order | reading |

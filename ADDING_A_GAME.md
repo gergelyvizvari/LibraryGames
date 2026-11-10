@@ -1,22 +1,27 @@
 # Adding a game
 
 Every game is one folder in `src/games/<id>/` plus one line in `src/games/registry.ts`.
-The shared kit handles the intro card, the 3-2-1 countdown, results, stars, records, levels and streaks.
+Every game is a scene in the storybook world (see "Scene games"): no timer, no score, no intro card. The shared kit
+handles the room, the character, the stage's stars, the sticker at the end, levels and the place on the map.
 
 ## Who it's for
 
 Kids (roughly 5 to 11). Big buttons, drawn sticker icons and emoji, bright colours, short words, friendly feedback.
-Never punish harshly: a mistake costs a combo or a heart, with a soft sound, never a scary one.
+Never punish: a mistake costs nothing, the character shakes its head with a soft sound and the task can be tried again.
 
 ## The fun checklist (every game must pass)
 
-1. **Short rounds**: 45 to 90 seconds, or a few turns.
-2. **Instant feedback**: every tap gets a sound (`sound.good(combo)`, `sound.bad()`, `sound.pop()`) and a visual (`addPop('+10', x, y)`, `shake()`).
-3. **Combos or streaks**: doing well in a row is worth more and sounds better.
+1. **A scene, not a quiz**: `scene: true`, `<SceneShell>` and `useStage()`; the board is an object in the room.
+   Read "Scene games" before writing any code.
+2. **Short stages with a goal**: a handful of tasks (three stories, six clocks, one board), about a minute. No
+   clock, no score, no lives, no combo counter, and no way to lose.
+3. **Instant, gentle feedback**: every tap gets a sound and a visual. `stage.good()` and `stage.slip()` play the
+   sounds and move the character; add a small `sound.tone()` for steps inside a task.
 4. **Adaptive difficulty**: use the `level` prop (1 to 10). Level 1 must be easy for a 5-year-old.
-5. **A score worth beating**: report a meaningful `score` and an honest `accuracy` (0 to 1).
-6. **Learn in 5 seconds**: `howTo` is one or two short sentences a child can follow.
-7. **Works on a phone**: touch first (`onPointerDown` for fast taps), fits a 390 px wide screen, no hover-only UI.
+5. **A quiet ending**: the stage ends with a sticker card. One hop, one sound, no confetti or count-up.
+6. **Learn in 5 seconds**: the character's speech bubble (`say`) tells what to do in one short sentence; `howTo`
+   is the same idea for the games list.
+7. **Works on a phone**: touch first (`onPointerDown` for fast taps), fits a 390 px wide screen without scrolling, no hover-only UI.
 8. **Plenty of content**: a kid should not see the same question twice in a few rounds. Word, story, country or
    picture lists need at least 20 items available at every level (50+ in total is a good start), and higher levels
    should swap in harder items, not only add them. Add a `content.test.ts` that checks the pool size per level and
@@ -29,15 +34,15 @@ Never punish harshly: a mistake costs a combo or a heart, with a soft sound, nev
 src/games/<id>/
   index.ts      GameDef: meta + strings + load (the Game, loaded on demand)
   icon.tsx      the game's drawn icon (see Icons below)
-  Game.tsx      the round (default export)
+  Game.tsx      the stage (default export)
   strings.ts    every piece of text, keyed, under `en` and `hu`
   content.ts    word lists, stories, levels (optional, keyed by locale)
   logic.ts      pure rules and scoring (optional but preferred)
   logic.test.ts tests for logic.ts
 ```
 
-Copy an existing game that is closest to your idea (e.g. `stroop-clash` for a tap-the-answer game,
-`number-ninja` or `type-defender` for things that move, `sequence-echo` for turn-based).
+Copy an existing game that is closest to your idea (e.g. `story-order` or `sentence-builder` for a tap-in-order
+game, `rhyme-time` for tap-the-answer, `puppy-spots` or `maze-dash` for a drawn board, `sequence-echo` for turn-based).
 
 ## The contract
 
@@ -46,8 +51,9 @@ Copy an existing game that is closest to your idea (e.g. `stroop-clash` for a ta
 import { icon } from './icon'
 
 const game: GameDef = {
-  meta: { id: 'my-game', skill: 'logic', icon, color: '#ff9f43', added: '2026-10-27' },
+  meta: { id: 'my-game', skill: 'logic', icon, color: '#ff9f43', added: '2026-10-27', scene: true },
   strings,
+  stickers: medals(icon), // from kit/SceneShell
   load: () => import('./Game'), // never import Game directly: each game is its own download
 }
 ```
@@ -58,7 +64,7 @@ const game: GameDef = {
 - `seed`: use `makeRng(seed)` for every random choice (the daily challenge relies on it).
 - `t(key, vars?)`: translates keys from `strings.ts` into the player's language. Never hard-code visible text.
   For language-specific content (`content.ts`), read the language with `useLocale()` and pick `list[locale] ?? list.en`.
-- `onFinish({ score, accuracy })`: call exactly once, then stop timers and ignore input.
+- `onFinish({ score, accuracy })`: `useStage(total, onFinish)` calls it for you, exactly once, after the last task.
   `accuracy >= 0.8` raises the level, `< 0.45` lowers it.
 
 ## Icons
@@ -94,8 +100,8 @@ export const icon: GameIcon = [
 
 ## Kit pieces (`src/kit`)
 
-- `hooks.ts`: `useCountdown(seconds, onEnd, running)`, `useGameLoop(dt => …, running)`, `useTimeouts()`,
-  `usePops()`, `useShake()`, `useInterval()`.
+- `hooks.ts`: `useGameLoop(dt => …, running)`, `useTimeouts()`, `useShake()`, `useInterval()`, `useLatest()`.
+  (`useCountdown` and `usePops` are from the old timed rounds; do not use them in a new game.)
 - `SceneShell.tsx`: `<SceneShell>`, `useStage()`, `medals()`; see "Scene games" below. `places.tsx` holds the rooms and characters.
 - `scene.tsx`: `<SceneTool>` is the round drawn button for tools and arrows (undo, restart, hint, mark, listen, up/down/left/right).
 - `things.tsx`: `<Thing id>` draws small storybook things (apple, acorn, fish, star...) to count, sort or line up. Use these instead of emoji.
@@ -155,7 +161,7 @@ fails when a new game does not fit, so add a spot (map units, clear of the drawi
 
 ## Translations
 
-The app speaks English (`en`) and Hungarian (`hu`); kids switch with the EN/HU button on the "All games" screen.
+The app speaks English (`en`) and Hungarian (`hu`); the EN/HU button is on the map and on the "All games" screen (`?lang=hu` in the address also works).
 Every new game must ship both:
 
 - `strings.ts` has an `en` and a `hu` block with the same keys and the same `{placeholders}`. Write natural,
@@ -178,5 +184,6 @@ npm test          # registry test mounts every game in every language and taps e
 npm run build     # type-check + production build
 ```
 
-Then play it in `npm run dev` on a phone-sized window, in English and in Hungarian. If it isn't fun, change it before shipping.
+Then play a whole stage in `npm run dev` on a phone-sized window (390 × 800) and a wide one, in English and in
+Hungarian, to the sticker card. Check that the game's badge shows on the map in its region. If it isn't fun, change it before shipping.
 Finally, move the idea from "Up next" to "Shipped" in `GAME_IDEAS.md`.
