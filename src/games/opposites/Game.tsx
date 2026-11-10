@@ -59,7 +59,7 @@ export default function Opposites({ level, seed, t, onFinish }: GameProps) {
     (missed.includes(keyOf(c)) ? ' op-miss' : '')
 
   return (
-    <SceneShell place="village" say={message.text} stage={stage} className="opposites">
+    <SceneShell place="village" say={message.text} stage={stage} bare className="opposites">
       <div className="op-board">
         {board.left.map((l, row) => {
           const r = board.right[row]

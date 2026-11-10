@@ -1141,3 +1141,39 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .sg .rc-hit .rc-sticks { transform: translateY(8px); }
 .sg .bb-meadow { background: radial-gradient(ellipse at 30% 20%, #d2e27c, #b5d15f 70%); box-shadow: 0 0 0 8px #fff6dc, 0 8px 0 8px rgba(36, 26, 60, 0.22); }
 .sg .bb-flower { width: 34px; opacity: 1; }
+
+/* Letter Sea games: portholes, an open book, shells. */
+.sg .lp-water, .sg .td-sky, .sg .wc-sky, .sg .ts-sky, .sg .lo-area { margin: 0 8px 8px; box-shadow: 0 0 0 8px #fff6dc, 0 8px 0 8px rgba(36, 26, 60, 0.22); }
+.sg .lp-water { background: radial-gradient(ellipse 60px 26px at 18% 100%, #1f8a6c 0 99%, transparent), radial-gradient(ellipse 40px 60px at 84% 100%, #2c9c7a 0 99%, transparent), linear-gradient(to top, #ecd27c 0 6%, transparent 6%), linear-gradient(#8fe0ea, #27a3b4 60%, #157889); }
+.sg .td-sky { background: radial-gradient(circle at 80% 14%, #fff6dc 0 20px, rgba(255, 246, 220, 0.22) 21px 36px, transparent 37px), radial-gradient(circle at 12px 0, transparent 0 13px, #157889 13.5px) 0 100% / 24px 26px repeat-x, linear-gradient(#1c2a66, #4b4690 70%, #c2607a); }
+.sg .fr-stage { align-self: center; width: min(100%, 460px); padding: 26px 22px; border-radius: 10px 10px 22px 22px; background: linear-gradient(90deg, transparent calc(50% - 1px), rgba(51, 40, 74, 0.12) 0 calc(50% + 1px), transparent 0), linear-gradient(90deg, #fffaf0 0 46%, #f3ead6 50%, #fffaf0 54%); box-shadow: 0 0 0 9px #94405e, 0 9px 0 9px rgba(36, 26, 60, 0.25); margin: 9px; }
+.sg .fr-word { font-family: var(--story); }
+.sg .sb-picture { align-self: center; padding: 8px 26px; border-radius: 22px; background: var(--story-paper); box-shadow: 0 0 0 6px #c99a6a, 0 6px 0 6px rgba(36, 26, 60, 0.22); }
+.sg .sb-built { background: var(--story-paper); border: 0; box-shadow: inset 0 -3px 0 #e0cfa4, 0 5px 0 rgba(36, 26, 60, 0.2); }
+.sg .sb-tiles, .sg .ar-tiles, .sg .op-board, .sg .rt-options { padding: 14px; border-radius: 26px; background: #a8744e; box-shadow: inset 0 0 0 7px #8a5a3c, 0 7px 0 rgba(36, 26, 60, 0.28); }
+.sg .sb-tile { background: var(--story-paper); color: var(--story-ink); border: 0; box-shadow: 0 4px 0 #e0cfa4; }
+/* Story Village games: wooden letter blocks, signs and baskets. */
+.sg .ar-picture, .sg .rt-target { position: relative; align-self: center; margin-top: 26px; padding: 10px 34px 14px; border-radius: 20px; background: var(--story-paper); box-shadow: inset 0 0 0 6px #c99a6a, 0 8px 0 rgba(36, 26, 60, 0.25); }
+.sg .ar-picture::before, .sg .rt-target::before { content: ''; position: absolute; left: 24%; right: 24%; bottom: 100%; height: 24px; border: 4px solid #8a5a3c; border-bottom: 0; border-radius: 50% 50% 0 0 / 100% 100% 0 0; }
+.sg .ar-slot { background: rgba(255, 246, 220, 0.35); border-color: #fff6dc; color: var(--story-ink); }
+.sg .ar-filled { background: var(--story-paper); border-style: solid; }
+.sg .ar-tile { background: #f2c14e; color: var(--story-ink); border: 0; border-radius: 12px; box-shadow: inset 0 5px 0 #f7d572, 0 5px 0 #c98f2a; font-family: var(--story); }
+.sg .op-board > *, .sg .rt-option { background: var(--story-paper); border: 0; box-shadow: 0 4px 0 #e0cfa4; }
+.sg .rt-word { font-family: var(--story); }
+.sg .wc-sky { background: radial-gradient(circle at 16% 20%, #fff 0 18px, transparent 19px), radial-gradient(circle at 23% 22%, #fff 0 13px, transparent 14px), radial-gradient(circle at 76% 34%, #fff 0 15px, transparent 16px), linear-gradient(#8fd0ee, #dff3f0); }
+.sg .wc-ground { background: radial-gradient(circle at 14px 0, transparent 0 15px, #a5cf5c 15.5px) 0 0 / 28px 100% repeat-x; }
+.sg .wf-belt { border-radius: 24px; background: linear-gradient(to top, #8a5a3c 0 14px, transparent 14px), #f3d9c0; box-shadow: 0 0 0 8px #fff6dc, 0 8px 0 8px rgba(36, 26, 60, 0.22); margin: 8px; }
+.sg .wf-card { border: 0; background: var(--story-paper); color: var(--story-ink); box-shadow: 0 5px 0 #e0cfa4, 0 7px 8px rgba(20, 15, 50, 0.2); }
+.sg .wf-basket { border: 0; border-top: 12px solid #e2607e; border-radius: 10px 10px 34px 34px; color: var(--story-ink); background: repeating-linear-gradient(90deg, transparent 0 16px, rgba(138, 90, 60, 0.35) 16px 19px), #c99a6a; box-shadow: 0 6px 0 rgba(36, 26, 60, 0.28); }
+.sg .wf-basket:nth-child(2) { border-top-color: #3fb0a8; }
+.sg .wf-basket:nth-child(3) { border-top-color: #f2c14e; }
+/* Nimble Meadow games. */
+.sg .lo-area { background: radial-gradient(circle at 84% 12%, #fff6dc 0 18px, transparent 19px), radial-gradient(circle at 16px 0, transparent 0 17px, #3f7a44 17.5px) 0 100% / 32px 34px repeat-x, linear-gradient(#2a2560, #47428c); }
+.sg .lo-on { background: radial-gradient(circle at 36% 30%, #fff6dc, #ffd24a 55%, #f2a94e); box-shadow: 0 0 24px rgba(255, 210, 74, 0.8); }
+.sg .ts-sky { background: radial-gradient(circle at 18% 16%, #fff 0 16px, transparent 17px), radial-gradient(circle at 25% 18%, #fff 0 12px, transparent 13px), linear-gradient(#8fd0ee, #e8f5d8); }
+.sg .mp-field { background: #8fc24f; border-radius: 36px; box-shadow: inset 0 0 0 7px #a5cf5c, 0 0 0 7px #fff6dc, 0 8px 0 7px rgba(36, 26, 60, 0.22); align-self: center; width: min(100% - 14px, 440px, 100dvh - 400px); min-width: 230px; }
+/* Explorers' Coast games: a postcard and framed wall maps. */
+.sg .cm-card { align-self: center; width: min(100%, 420px); background: var(--story-paper); border-radius: 12px; box-shadow: inset 0 0 0 7px #fffaf0, inset 0 0 0 9px #e2607e, 0 7px 0 rgba(36, 26, 60, 0.25); rotate: -1.5deg; }
+.sg .cm-country { font-family: var(--story); }
+.sg .map-box { border-radius: 14px; box-shadow: 0 0 0 5px #fff6dc, 0 0 0 13px #a8744e, 0 0 0 16px #8a5a3c, 0 9px 0 16px rgba(36, 26, 60, 0.22); }
+.sg .cs2-card { background: var(--story-paper); border: 0; box-shadow: inset 0 0 0 5px #c99a6a, 0 6px 0 rgba(36, 26, 60, 0.25); }

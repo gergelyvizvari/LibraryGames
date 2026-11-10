@@ -47,7 +47,7 @@ export default function AnagramRace({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <SceneShell place="village" say={t('say')} stage={stage} className="anagram-race">
+    <SceneShell place="village" say={t('say')} stage={stage} bare className="anagram-race">
       <div className="ar-picture" key={index}>
         {word.emoji}
       </div>

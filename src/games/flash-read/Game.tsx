@@ -61,7 +61,7 @@ export default function FlashRead({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <SceneShell place="sea" say={phase === 'reading' ? t('read') : phase === 'question' ? t('ask') : feedback} stage={stage} className="flash-read">
+    <SceneShell place="sea" say={phase === 'reading' ? t('read') : phase === 'question' ? t('ask') : feedback} stage={stage} bare className="flash-read">
       {phase === 'reading' && (
         <div className="fr-stage">
           <div className="fr-word" key={word}>

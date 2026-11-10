@@ -61,6 +61,7 @@ export default function CapitalMatch({ level, seed, t, onFinish }: GameProps) {
   return (
     <SceneShell
       place="coast"
+      bare
       say={picked ? (picked === q.country.capital ? t('correct', { capital: q.country.capital }) : t('itIs', { capital: q.country.capital })) : t('question', { country: q.country.name })}
       stage={{ done: index + (picked ? 1 : 0), total: questions.length, over: false, mood: !picked ? 'idle' : picked === q.country.capital ? 'happy' : 'oops' }}
       className="capital-match"

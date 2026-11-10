@@ -49,7 +49,7 @@ export default function RhymeTime({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <SceneShell place="village" say={message} stage={stage} className="rhyme-time">
+    <SceneShell place="village" say={message} stage={stage} bare className="rhyme-time">
       <div className="rt-target" key={qIndex}>
         <span className="rt-emoji">{q.target.emoji}</span>
         <span className="rt-word">{q.target.word}</span>

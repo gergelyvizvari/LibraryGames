@@ -45,7 +45,7 @@ export default function SentenceBuilder({ level, seed, t, onFinish }: GameProps)
   }
 
   return (
-    <SceneShell place="sea" say={t('say')} stage={stage} className="sentence-builder">
+    <SceneShell place="sea" say={t('say')} stage={stage} bare className="sentence-builder">
       <div className="sb-picture" key={index}>
         {sentence.picture}
       </div>

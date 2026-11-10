@@ -51,7 +51,7 @@ export default function MolePop({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <SceneShell place="meadow" say={t('say')} stage={stage} className="mole-pop">
+    <SceneShell place="meadow" say={t('say')} stage={stage} bare className="mole-pop">
       <div className="mp-field" ref={ref}>
         {holes.map((h, i) => (
           <button key={i} className="mp-hole" onPointerDown={() => whack(i)} aria-label={`hole ${i + 1}`}>

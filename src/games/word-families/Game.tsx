@@ -105,7 +105,7 @@ export default function WordFamilies({ level, seed, t, onFinish }: GameProps) {
 
   const doneClass = ride.done ? (ride.done.right ? ' wf-in' : ride.done.picked ? ' wf-miss' : ' wf-away') : ''
   return (
-    <SceneShell place="village" say={message.text} stage={stage} className="word-families">
+    <SceneShell place="village" say={message.text} stage={stage} bare className="word-families">
       <div className="wf-belt">
         <div key={ride.id} className={`wf-card${doneClass}`} style={{ left: `${88 - ride.t * 76}%` }}>
           {pictures && <span className="wf-emoji">{ride.word.emoji}</span>}
