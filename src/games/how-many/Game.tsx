@@ -3,13 +3,14 @@ import { useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
 import { SceneShell, useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
+import { Thing, type ThingId } from '../../kit/things'
 import type { GameProps } from '../../kit/types'
 import { countRange, flashMs, makeDots, options, pointsFor } from './logic'
 
 /** Looks in one stage. */
 const STAGE = 6
 // Something different to count every round.
-const things = ['🍎', '🐟', '⭐', '🐞', '🎈', '🍓', '🐥', '🌸', '⚽', '🍪', '🐸', '🦋', '🍩', '🐝', '💎', '🧁', '🐠', '🍄', '🌟', '🍒']
+const things: ThingId[] = ['apple', 'fish', 'star', 'ladybird', 'balloon', 'mushroom', 'flower', 'cookie', 'acorn', 'berries', 'heart', 'leaf', 'snowball', 'pine']
 
 export default function HowMany({ level, seed, t, onFinish }: GameProps) {
   const rng = useRef(makeRng(seed)).current
@@ -45,12 +46,13 @@ export default function HowMany({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <SceneShell place="peaks" say={phase === 'show' ? t('look') : phase === 'guess' ? t('howMany') : message} stage={stage} className="how-many">
+    <SceneShell place="peaks" say={phase === 'show' ? t('look') : phase === 'guess' ? t('howMany') : message} stage={stage} bare className="how-many">
       <div className="hm-board">
+        <span className="hm-chalk" aria-hidden />
         {(phase === 'show' || phase === 'result') &&
           round.dots.map((d, i) => (
             <span key={`${index}-${i}`} className="hm-dot" style={{ left: `${d.x}%`, top: `${d.y}%` }}>
-              {round.thing}
+              <Thing id={round.thing} />
             </span>
           ))}
         {phase === 'guess' && <span className="hm-question">?</span>}

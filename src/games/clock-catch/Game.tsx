@@ -54,7 +54,7 @@ export default function ClockCatch({ level, seed, t, onFinish }: GameProps) {
   const optionClass = (o: Time) => `${solved && same(o, q.answer) ? ' cc-right' : ''}${wrong.some((w) => same(w, o)) ? ' cc-wrong' : ''}`
 
   return (
-    <SceneShell place="peaks" say={message || (flip ? t('findClock', { time: label(q.answer) }) : t('whatTime'))} stage={stage} className="clock-catch">
+    <SceneShell place="peaks" say={message || (flip ? t('findClock', { time: label(q.answer) }) : t('whatTime'))} stage={stage} bare className="clock-catch">
       <div className={`cc-stage${flip ? ' cc-stage-flip' : ''}`} key={index}>
         {flip ? <div className="cc-digital">{label(q.answer)}</div> : <Clock time={q.answer} size={200} />}
       </div>

@@ -133,8 +133,6 @@ export default function EvenOdd({ level, seed, t, onFinish }: GameProps) {
           <span className="eo-num">{drop.n}</span>
           {dots && <Dots n={drop.n} />}
         </div>
-        <span className="eo-arrow eo-arrow-left">⬅</span>
-        <span className="eo-arrow eo-arrow-right">➡</span>
       </div>
       <div className="eo-bins">
         <button className={binClass('even')} onPointerDown={() => answer('even')} disabled={over}>

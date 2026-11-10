@@ -23,6 +23,27 @@ function hopsOf(q: Question) {
   return out
 }
 
+/** The little frog that hops along the stones. */
+function Frog() {
+  return (
+    <svg className="nl-frog-art" viewBox="-30 -30 60 56" aria-hidden focusable="false">
+      <ellipse cx="0" cy="20" rx="24" ry="5" fill="#241a3c" opacity="0.25" />
+      <path d="M-24 20 C-28 8 -16 2 -10 10Z M24 20 C28 8 16 2 10 10Z" fill="#4a9a4e" />
+      <ellipse cx="0" cy="6" rx="22" ry="16" fill="#6cbf5c" />
+      <ellipse cx="0" cy="11" rx="13" ry="8" fill="#e3f4b8" />
+      <circle cx="-11" cy="-13" r="10" fill="#6cbf5c" />
+      <circle cx="11" cy="-13" r="10" fill="#6cbf5c" />
+      <circle cx="-11" cy="-13" r="6.6" fill="#fff" />
+      <circle cx="11" cy="-13" r="6.6" fill="#fff" />
+      <circle cx="-10.4" cy="-12.5" r="4.8" fill="#33284a" />
+      <circle cx="11.6" cy="-12.5" r="4.8" fill="#33284a" />
+      <circle cx="-12.2" cy="-14.6" r="1.8" fill="#fff" />
+      <circle cx="9.8" cy="-14.6" r="1.8" fill="#fff" />
+      <path d="M-7 3 q7 6 14 0" fill="none" stroke="#33284a" strokeWidth="2.2" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 export default function NumberLine({ level, seed, t, onFinish }: GameProps) {
   const spec = specFor(level)
   const rng = useRef(makeRng(seed)).current
@@ -79,17 +100,21 @@ export default function NumberLine({ level, seed, t, onFinish }: GameProps) {
 
   const ticks = Array.from({ length: WINDOW + 1 }, (_, i) => q.lo + i)
   return (
-    <SceneShell place="peaks" say={message.text} stage={stage} className="number-line">
+    <SceneShell place="peaks" say={message.text} stage={stage} bare className="number-line">
       <div className="nl-jumps" key={`${q.start}-${q.jumps.join()}-${q.lo}`}>
         {q.jumps.map((j, i) => (
           <span key={i} className={`nl-jump ${j > 0 ? 'nl-fwd' : 'nl-back'}`}>
-            {j > 0 ? '➡' : '⬅'} {jumpText(j)}
+            <svg viewBox="-14 -12 28 24" aria-hidden focusable="false" style={{ transform: j > 0 ? undefined : 'scaleX(-1)' }}>
+              <path d="M-11 0 H7 M2 -8 L11 0 L2 8" fill="none" stroke="currentColor" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            {jumpText(j)}
           </span>
         ))}
       </div>
       <div className="nl-stage" ref={lineRef}>
         <span key={hop} className="nl-frog" style={{ left: `${xOf(frog, q.lo)}%` }}>
-          🐸{count !== null && <span className="nl-count">{count}</span>}
+          <Frog />
+          {count !== null && <span className="nl-count">{count}</span>}
         </span>
         <div className="nl-line" />
         {ticks.map((n) => {
