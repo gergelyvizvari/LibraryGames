@@ -56,7 +56,7 @@ export default function GridGlow({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <SceneShell place="lake" say={mode === 'show' ? t('watch') : t('yourTurn')} stage={stage} className="grid-glow">
+    <SceneShell place="lake" say={mode === 'show' ? t('watch') : t('yourTurn')} stage={stage} bare className="grid-glow">
       <div className="gg-grid" ref={ref} style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}>
         {Array.from({ length: size * size }, (_, i) => {
           const lit = mode === 'show' || (mode === 'wait' && wrongCell !== null) ? cells.includes(i) : picked.includes(i)

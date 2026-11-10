@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
+import { SceneTool } from '../../kit/scene'
 import { SceneShell, useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
@@ -106,15 +107,14 @@ export default function AnimalSounds({ level, seed, t, onFinish }: GameProps) {
       place="lake"
       say={message}
       stage={stage}
+      bare
       className="animal-sounds"
       tray={
-        <button className="as-again" onClick={replay} disabled={phase !== 'input' || pos > 0 || replayed}>
-          🔁 {t('again')}
-        </button>
+        <SceneTool kind="listen" label={t('again')} onPress={replay} disabled={phase !== 'input' || pos > 0 || replayed} />
       }
     >
       <div className={`as-ear${calling ? ' as-calling' : ''}`} aria-hidden>
-        {phase === 'listen' ? '👂' : phase === 'input' ? `${pos} / ${seq.length}` : ''}
+        {phase === 'listen' ? '♪' : phase === 'input' ? `${pos} / ${seq.length}` : ''}
       </div>
       <div ref={boardRef} className={`as-farm as-farm-${count}`}>
         {farm.map((a, i) => (

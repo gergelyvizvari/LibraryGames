@@ -75,13 +75,13 @@ export default function SequenceEcho({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <SceneShell place="lake" say={mode === 'input' ? t('yourTurn') : t('watch')} stage={stage} className="sequence-echo">
+    <SceneShell place="lake" say={mode === 'input' ? t('yourTurn') : t('watch')} stage={stage} bare className="sequence-echo">
       <div className="se-board" ref={boardRef}>
         {pads.map((p, i) => (
           <button
             key={i}
             className={`se-pad${lit === i ? ' se-lit' : ''}`}
-            style={{ background: p.color }}
+            style={{ ['--pad' as string]: p.color }}
             onPointerDown={() => press(i)}
             aria-label={`pad ${i + 1}`}
             disabled={mode !== 'input'}

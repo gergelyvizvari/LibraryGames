@@ -37,7 +37,7 @@ export default function PairRush({ level, seed, t, onFinish }: GameProps) {
 
   const cols = columnsFor(cards.length)
   return (
-    <SceneShell place="lake" say={t('say')} stage={stage} className="pair-rush">
+    <SceneShell place="lake" say={t('say')} stage={stage} bare className="pair-rush">
       <div className="pr-grid" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)`, maxWidth: cols * 110 }}>
         {cards.map((c, i) => {
           const up = c.matched || open.includes(i)

@@ -3,6 +3,7 @@ import { useGameLoop, useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
 import { SceneShell, useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
+import { Thing, type ThingId } from '../../kit/things'
 import type { GameProps } from '../../kit/types'
 import { Bee } from './Bee'
 import { makeTurn, pointsFor, positionAt, SHOW_MS } from './logic'
@@ -13,8 +14,8 @@ const STAGE = 5
 type Phase = 'show' | 'fly' | 'pick' | 'done'
 
 // Flowers that decorate the meadow, as [emoji, x %, y %].
-const FLOWERS: [string, number, number][] = [
-  ['🌼', 8, 10], ['🌸', 88, 6], ['🌷', 50, 92], ['🌼', 92, 60], ['🌸', 4, 70], ['🌻', 34, 4], ['🌷', 70, 34], ['🌼', 26, 48],
+const FLOWERS: [ThingId, number, number][] = [
+  ['flower', 8, 10], ['flower', 88, 6], ['mushroom', 50, 92], ['flower', 92, 60], ['leaf', 4, 70], ['flower', 34, 4], ['flower', 70, 34], ['leaf', 26, 48],
 ]
 
 export default function BusyBees({ level, seed, t, onFinish }: GameProps) {
@@ -94,7 +95,7 @@ export default function BusyBees({ level, seed, t, onFinish }: GameProps) {
       <div ref={ref} className={`bb-meadow${phase === 'pick' && !result ? ' bb-picking' : ''}`}>
         {FLOWERS.map(([f, x, y], i) => (
           <span key={i} className="bb-flower" style={{ left: `${x}%`, top: `${y}%` }}>
-            {f}
+            <Thing id={f} />
           </span>
         ))}
         {turn.paths.map((path, b) => {

@@ -22,7 +22,7 @@ export default function OddOne({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <SceneShell place="lake" say={t('find')} stage={stage} className="odd-one">
+    <SceneShell place="lake" say={t('find')} stage={stage} bare className="odd-one">
       <div
         className="oo-grid"
         ref={ref}

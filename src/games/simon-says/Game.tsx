@@ -66,7 +66,7 @@ export default function SimonSays({ level, seed, t, onFinish }: GameProps) {
   const animal = t(`${key}.tap`) === `${key}.tap` ? t(key) : t(`${key}.tap`)
 
   return (
-    <SceneShell place="lake" say={order.simon ? t('simonSays', { animal }) : t('plain', { animal })} stage={stage} className="simon-says">
+    <SceneShell place="lake" say={order.simon ? t('simonSays', { animal }) : t('plain', { animal })} stage={stage} bare className="simon-says">
       <div className="sim-timer">
         <div style={{ width: `${(active ? progress : 0) * 100}%` }} />
       </div>

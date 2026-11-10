@@ -26,7 +26,7 @@ export default function StroopClash({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <SceneShell place="lake" say={card.rule === 'ink' ? t('tapInk') : t('tapWord')} stage={stage} className="stroop">
+    <SceneShell place="lake" say={card.rule === 'ink' ? t('tapInk') : t('tapWord')} stage={stage} bare className="stroop">
       <div className={`sc-word${card.rule === 'word' ? ' sc-flip' : ''}`} ref={ref} key={n} style={{ color: colours[card.ink].css }}>
         {t(colours[card.word].key)}
       </div>

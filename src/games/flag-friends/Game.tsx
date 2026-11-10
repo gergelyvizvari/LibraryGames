@@ -63,7 +63,7 @@ export default function FlagFriends({ level, seed, t, onFinish }: GameProps) {
 
   const cols = cards.length <= 6 ? 3 : 4
   return (
-    <SceneShell place="lake" say={peeking ? t('peek') : message || t('find')} stage={stage} className="flag-friends">
+    <SceneShell place="lake" say={peeking ? t('peek') : message || t('find')} stage={stage} bare className="flag-friends">
       <span className="ff-group">{t(`group.${board.group}`)}</span>
       <div className="ff-grid" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
         {cards.map((c: Card, i) => {
