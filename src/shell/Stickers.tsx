@@ -14,13 +14,20 @@ export function Stickers({ onHome }: { onHome: () => void }) {
   const total = pages.reduce((n, g) => n + stickerCount(progress, g.meta.id), 0)
 
   return (
-    <div className="album">
-      <header className="frame-bar">
-        <button className="icon-btn" onClick={onHome} aria-label={t('scene.back')}>
-          ✕
-        </button>
-        <h1 className="frame-title">{t('stickers.title')}</h1>
-      </header>
+    <div className="book">
+      <div className="book-in album">
+        <div className="book-top">
+          <button className="wm-pill" onClick={onHome}>
+            <svg viewBox="0 0 24 24" className="wm-pill-icon" aria-hidden focusable="false">
+              <path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z" />
+              <path d="M9 4v14M15 6v14" fill="none" stroke="#fffaf0" strokeWidth="1.6" />
+            </svg>
+            {t('map.open')}
+          </button>
+        </div>
+        <header className="book-head">
+          <h1 className="book-ribbon">{t('stickers.title')}</h1>
+        </header>
       {total === 0 && <p className="album-empty">{t('stickers.empty')}</p>}
       {pages.map((g) => {
         const gt = makeGameT(g.strings, locale)
@@ -41,6 +48,7 @@ export function Stickers({ onHome }: { onHome: () => void }) {
           </section>
         )
       })}
+      </div>
     </div>
   )
 }

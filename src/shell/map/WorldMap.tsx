@@ -1,17 +1,13 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { games } from '../../games/registry'
-import { makeGameT, nextLocale, useLocale, useT, type Locale } from '../../i18n'
+import { makeGameT, useLocale, useT, type Locale } from '../../i18n'
 import { useSize } from '../../kit/hooks'
 import { Icon } from '../../kit/icon'
 import { currentStreak, dailyDoneToday, gameProgress, loadProgress, stickerCount } from '../../kit/progress'
 import { sound } from '../../kit/sound'
-import { ShareButton } from '../../kit/ShareButton'
-import { shareUrl } from '../../kit/share'
-import { gameColorVars, loadTheme, nextTheme, setTheme, themeIcons } from '../../kit/theme'
-import { SUPPORT_URL } from '../contact'
+import { gameColorVars } from '../../kit/theme'
 import { dailyGame } from '../Home'
-import { SoundIcon } from '../SoundIcon'
-import { TeaCup } from '../TeaCup'
+import { Tools } from '../Tools'
 import mapArt from './map.webp'
 import { MAP_H, MAP_W, mapScale, placeGames, regions } from './regions'
 
@@ -63,9 +59,6 @@ export function WorldMap({
   const scroller = useRef<HTMLDivElement>(null)
   const [edge, setEdge] = useState({ left: false, right: false })
   const [openId, setOpenId] = useState<string | null>(null)
-  const [tools, setTools] = useState(false)
-  const [muted, setMuted] = useState(sound.isMuted())
-  const [theme, setThemeState] = useState(loadTheme)
   const drag = useRef<{ x: number; y: number; left: number; top: number; moved: boolean } | null>(null)
 
   const daily = dailyGame()
@@ -200,40 +193,7 @@ export function WorldMap({
           <span className="wm-pill-text">{t('map.allGames')}</span>
         </button>
         <span className="wm-top-gap" />
-        {/* The grown-ups' buttons: in a row on a wide screen, behind the cog on a narrow one. */}
-        <div className={`wm-tools${tools ? ' wm-tools-open' : ''}`}>
-          <button className="wm-tool" aria-label={t('language', { name: t(`lang.${locale}`) })} title={t('language', { name: t(`lang.${locale}`) })} onClick={() => onLocale(nextLocale(locale))}>
-            <span className="wm-tool-lang">{locale.toUpperCase()}</span>
-          </button>
-          <button
-            className="wm-tool"
-            aria-label={t('theme', { name: t(`theme.${theme}`) })}
-            title={t('theme', { name: t(`theme.${theme}`) })}
-            onClick={() => {
-              const next = nextTheme(theme)
-              setTheme(next)
-              setThemeState(next)
-            }}
-          >
-            {themeIcons[theme]}
-          </button>
-          <button
-            className="wm-tool"
-            aria-label={t('sound')}
-            aria-pressed={!muted}
-            title={t('sound')}
-            onClick={() => {
-              sound.setMuted(!muted)
-              setMuted(!muted)
-            }}
-          >
-            <SoundIcon muted={muted} />
-          </button>
-          <ShareButton hint={t('share.page')} data={() => ({ title: t('appName'), text: t('share.pageText'), url: shareUrl('', locale) })} />
-          <a className="wm-tool" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer" title={t('supportHint')} aria-label={t('supportHint')}>
-            <TeaCup />
-          </a>
-        </div>
+        <Tools onLocale={onLocale} />
         <span className="wm-pill wm-gold" role="img" aria-label={t('map.stars', { n: starCount })} title={t('map.starsHint')}>
           ★ {starCount}
         </span>
@@ -248,13 +208,6 @@ export function WorldMap({
             <path className="wm-fold" d="M21 14h-5a2 2 0 0 0-2 2v5z" />
           </svg>
           {stickers}
-        </button>
-        <button className="wm-tool wm-more" aria-label={t('map.settings')} title={t('map.settings')} aria-expanded={tools} onClick={() => setTools(!tools)}>
-          <svg viewBox="0 0 24 24" aria-hidden focusable="false">
-            <circle cx="12" cy="5" r="2.2" />
-            <circle cx="12" cy="12" r="2.2" />
-            <circle cx="12" cy="19" r="2.2" />
-          </svg>
         </button>
       </div>
 

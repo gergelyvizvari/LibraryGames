@@ -40,8 +40,8 @@ export function App() {
   }
   const game = route.id ? gameById(route.id) : undefined
   const play = (id: string, daily?: boolean) => go(`/${daily ? 'daily' : 'play'}/${id}`)
-  // The map and scene games use the whole window; every other screen is a centred column.
-  const full = game ? !!game.meta.scene : !route.mode
+  // The map, the games list, the sticker album and scene games use the whole window; every other screen is a centred column.
+  const full = game ? !!game.meta.scene : !route.mode || route.mode === 'games' || route.mode === 'stickers'
 
   return (
     <LocaleContext.Provider value={locale}>

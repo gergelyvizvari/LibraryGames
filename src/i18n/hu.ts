@@ -117,6 +117,7 @@ const hu: Record<keyof typeof en, string> = {
   'stickers.medal0': 'Bronzérem: {title}',
   'stickers.medal1': 'Ezüstérem: {title}',
   'stickers.medal2': 'Aranyérem: {title}',
+  'stickers.count': 'Matricák: {n} / {total}',
   'stickers.locked': 'Még nincs meg',
 }
 

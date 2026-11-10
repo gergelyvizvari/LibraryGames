@@ -115,6 +115,7 @@ const en = {
   'stickers.medal0': 'Bronze medal: {title}',
   'stickers.medal1': 'Silver medal: {title}',
   'stickers.medal2': 'Gold medal: {title}',
+  'stickers.count': 'Stickers: {n} of {total}',
   'stickers.locked': 'Not found yet',
 }
 
