@@ -20,13 +20,14 @@ describe('map regions', () => {
       expect(x).toBeGreaterThan(20)
       expect(x).toBeLessThan(MAP_W - 20)
       expect(y).toBeGreaterThan(80)
-      expect(y).toBeLessThan(MAP_H - 16)
+      // The bottom strip stays free for today's adventure.
+      expect(y).toBeLessThan(MAP_H - 100)
     })
     slots.forEach(([x, y], i) => slots.slice(i + 1).forEach(([a, b]) => expect(Math.hypot(x - a, y - b), `${x},${y} and ${a},${b}`).toBeGreaterThan(48)))
   })
 
   it('fits the height on a phone and the whole map on a wide screen', () => {
-    expect(mapScale(390, 800)).toBe(1)
+    expect(mapScale(390, 900)).toBe(1)
     const wide = mapScale(1920, 1080)
     expect(MAP_W * wide).toBeLessThanOrEqual(1920)
     expect(MAP_H * wide).toBeLessThanOrEqual(1080)

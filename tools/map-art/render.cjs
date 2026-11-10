@@ -7,7 +7,7 @@ const { chromium } = require('playwright')
 const here = __dirname
 ;(async () => {
 const browser = await chromium.launch()
-const page = await browser.newPage({ viewport: { width: 1720, height: 800 }, deviceScaleFactor: 2 })
+const page = await browser.newPage({ viewport: { width: 1720, height: 900 }, deviceScaleFactor: 2 })
 await page.goto(`file://${here}/map-art.html`)
 await page.evaluate(() => document.fonts.ready)
 await page.waitForTimeout(1500)

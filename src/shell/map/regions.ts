@@ -1,9 +1,12 @@
 import type { AppKey } from '../../i18n'
 import type { GameDef, Skill } from '../../kit/types'
 
-/** The picture (map.webp, drawn by tools/map-art) is this big; every position below is in these units. */
+/**
+ * The picture (map.webp, drawn by tools/map-art) is this big; every position below is in these units.
+ * The bottom 100 units are plain ground with no stars: today's adventure and the picked game's card sit over it.
+ */
 export const MAP_W = 1720
-export const MAP_H = 800
+export const MAP_H = 900
 
 export interface Region {
   id: string

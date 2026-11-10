@@ -538,7 +538,7 @@ html:has(.app-full) { scrollbar-gutter: auto; overflow: hidden; }
 
 /* World map */
 .wm { position: relative; height: 100dvh; overflow: hidden; background: #c5d86b; color: var(--story-ink); user-select: none; -webkit-user-select: none; }
-.wm-scroll { height: calc(100% - 72px); display: flex; overflow: auto; scrollbar-width: none; cursor: grab; overscroll-behavior: contain; }
+.wm-scroll { height: 100%; display: flex; overflow: auto; scrollbar-width: none; cursor: grab; overscroll-behavior: contain; }
 .wm-scroll::-webkit-scrollbar { display: none; }
 .wm-scroll:active { cursor: grabbing; }
 /* Auto margins centre a map smaller than the window and still let a bigger one scroll from its edge. */
@@ -576,9 +576,20 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .wm-sticker-icon path { fill: #e2607e; }
 .wm-sticker-icon .wm-fold { fill: #b63c5c; }
 @media (max-width: 520px) { .wm-pill-text { display: none; } }
+.wm-tools { display: flex; align-items: center; gap: 8px; pointer-events: auto; }
+.wm-tool, .wm-tools .icon-btn { flex: none; display: grid; place-items: center; width: 42px; height: 42px; margin: 0; padding: 0; border-radius: 50%; background: var(--story-paper); color: var(--story-ink); font-size: 1.1rem; text-decoration: none; box-shadow: 0 2px 5px rgba(40, 30, 70, 0.3); pointer-events: auto; }
+.wm-tool:active, .wm-tools .icon-btn:active { transform: translateY(2px); box-shadow: 0 2px 5px rgba(40, 30, 70, 0.3); }
+.wm-tool-lang { font-size: 0.9rem; font-weight: 800; }
+.wm-tool svg { width: 22px; height: 22px; fill: var(--story-ink); }
+.wm-more { display: none; }
+@media (max-width: 859px) {
+  .wm-more { display: grid; }
+  .wm-tools { display: none; position: absolute; top: 50px; right: 0; flex-direction: column; }
+  .wm-tools-open { display: flex; animation: popIn 0.2s; }
+}
 .wm-arrow, .scene-back { position: absolute; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%; background: var(--story-paper); box-shadow: 0 2px 5px rgba(40, 30, 70, 0.3); }
 .wm-arrow svg, .scene-back svg { width: 24px; height: 24px; fill: none; stroke: var(--story-ink); stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
-.wm-arrow { top: calc(50% - 36px); margin-top: -22px; }
+.wm-arrow { top: 50%; margin-top: -22px; }
 .wm-arrow-left { left: calc(10px + env(safe-area-inset-left)); }
 .wm-arrow-right { right: calc(10px + env(safe-area-inset-right)); }
 .wm-daily, .wm-card { position: absolute; left: 50%; bottom: calc(10px + env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; align-items: center; gap: 10px; max-width: calc(100% - 24px); background: var(--story-paper); color: var(--story-ink); box-shadow: 0 3px 8px rgba(40, 30, 70, 0.35); text-align: left; }

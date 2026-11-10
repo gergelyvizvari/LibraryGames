@@ -1,20 +1,20 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { games } from '../../games/registry'
-import { makeGameT, useLocale, useT } from '../../i18n'
+import { makeGameT, nextLocale, useLocale, useT, type Locale } from '../../i18n'
 import { useSize } from '../../kit/hooks'
 import { Icon } from '../../kit/icon'
 import { currentStreak, dailyDoneToday, gameProgress, loadProgress, stickerCount } from '../../kit/progress'
 import { sound } from '../../kit/sound'
-import { gameColorVars } from '../../kit/theme'
+import { ShareButton } from '../../kit/ShareButton'
+import { shareUrl } from '../../kit/share'
+import { gameColorVars, loadTheme, nextTheme, setTheme, themeIcons } from '../../kit/theme'
+import { SUPPORT_URL } from '../contact'
 import { dailyGame } from '../Home'
 import mapArt from './map.webp'
 import { MAP_H, MAP_W, mapScale, placeGames, regions } from './regions'
 
 const SCROLL_KEY = 'lg.map.x'
 const STAR = 'M0 -14 L4.1 -5.6 L13.3 -4.3 L6.6 2.1 L8.2 11.3 L0 7 L-8.2 11.3 L-6.6 2.1 L-13.3 -4.3 L-4.1 -5.6 Z'
-
-/** Height of the strip under the map that holds today's adventure or the picked game, so they never cover a star. */
-const DOCK = 72
 
 type StarState = 'done' | 'next' | 'todo'
 
@@ -45,20 +45,25 @@ export function WorldMap({
   onPlay,
   onAllGames,
   onStickers,
+  onLocale,
 }: {
   onPlay: (id: string, daily?: boolean) => void
   onAllGames: () => void
   onStickers: () => void
+  onLocale: (l: Locale) => void
 }) {
   const t = useT()
   const locale = useLocale()
   const progress = useMemo(loadProgress, [])
   const placed = useMemo(() => placeGames(games), [])
   const [wrap, size] = useSize<HTMLDivElement>({ w: 390, h: 800 })
-  const scale = mapScale(size.w, size.h - DOCK)
+  const scale = mapScale(size.w, size.h)
   const scroller = useRef<HTMLDivElement>(null)
   const [edge, setEdge] = useState({ left: false, right: false })
   const [openId, setOpenId] = useState<string | null>(null)
+  const [tools, setTools] = useState(false)
+  const [muted, setMuted] = useState(sound.isMuted())
+  const [theme, setThemeState] = useState(loadTheme)
   const drag = useRef<{ x: number; y: number; left: number; top: number; moved: boolean } | null>(null)
 
   const daily = dailyGame()
@@ -193,6 +198,39 @@ export function WorldMap({
           <span className="wm-pill-text">{t('map.allGames')}</span>
         </button>
         <span className="wm-top-gap" />
+        {/* The grown-ups' buttons: in a row on a wide screen, behind the cog on a narrow one. */}
+        <div className={`wm-tools${tools ? ' wm-tools-open' : ''}`}>
+          <button className="wm-tool" aria-label={t('language', { name: t(`lang.${locale}`) })} title={t('language', { name: t(`lang.${locale}`) })} onClick={() => onLocale(nextLocale(locale))}>
+            <span className="wm-tool-lang">{locale.toUpperCase()}</span>
+          </button>
+          <button
+            className="wm-tool"
+            aria-label={t('theme', { name: t(`theme.${theme}`) })}
+            title={t('theme', { name: t(`theme.${theme}`) })}
+            onClick={() => {
+              const next = nextTheme(theme)
+              setTheme(next)
+              setThemeState(next)
+            }}
+          >
+            {themeIcons[theme]}
+          </button>
+          <button
+            className="wm-tool"
+            aria-label={t('sound')}
+            title={t('sound')}
+            onClick={() => {
+              sound.setMuted(!muted)
+              setMuted(!muted)
+            }}
+          >
+            {muted ? '🔇' : '🔊'}
+          </button>
+          <ShareButton hint={t('share.page')} data={() => ({ title: t('appName'), text: t('share.pageText'), url: shareUrl('', locale) })} />
+          <a className="wm-tool" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer" title={t('supportHint')} aria-label={t('supportHint')}>
+            <span aria-hidden>🍵</span>
+          </a>
+        </div>
         <span className="wm-pill wm-gold" role="img" aria-label={t('map.stars', { n: starCount })} title={t('map.starsHint')}>
           ★ {starCount}
         </span>
@@ -207,6 +245,13 @@ export function WorldMap({
             <path className="wm-fold" d="M21 14h-5a2 2 0 0 0-2 2v5z" />
           </svg>
           {stickers}
+        </button>
+        <button className="wm-tool wm-more" aria-label={t('map.settings')} title={t('map.settings')} aria-expanded={tools} onClick={() => setTools(!tools)}>
+          <svg viewBox="0 0 24 24" aria-hidden focusable="false">
+            <circle cx="12" cy="5" r="2.2" />
+            <circle cx="12" cy="12" r="2.2" />
+            <circle cx="12" cy="19" r="2.2" />
+          </svg>
         </button>
       </div>
 

@@ -62,7 +62,7 @@ export function App() {
         ) : route.mode === 'games' ? (
           <Home onPlay={play} onLocale={changeLocale} onMap={() => go('/')} />
         ) : (
-          <WorldMap onPlay={play} onAllGames={() => go('/games')} onStickers={() => go('/stickers')} />
+          <WorldMap onPlay={play} onAllGames={() => go('/games')} onStickers={() => go('/stickers')} onLocale={changeLocale} />
         )}
       </main>
     </LocaleContext.Provider>

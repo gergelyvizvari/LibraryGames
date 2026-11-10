@@ -93,6 +93,7 @@ const en = {
   'scene.progress': '{n} of {total} done',
   'scene.next': 'On to stage {n}',
   'map.title': 'Gameland',
+  'map.settings': 'Settings',
   'map.allGames': 'All games',
   'map.open': 'Map',
   'map.adventure': "Today's adventure",
