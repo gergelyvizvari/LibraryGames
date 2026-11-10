@@ -128,7 +128,10 @@ Every game is a scene: a place in the storybook world instead of a quiz round wi
 a character who says what to do, a short stage with a clear goal, and a quiet ending with a sticker.
 
 - Set `scene: true` in `meta`. The frame (`kit/SceneFrame.tsx`) shows no intro card, countdown, level picker
-  or score: only a back button over your scene. The level still adapts from the `accuracy` you report.
+  or score: only a back button and a favourites heart (top right, keep that corner free) over your scene.
+  The level still adapts from the `accuracy` you report.
+- A game that can only be played by typing on a keyboard sets `keyboard: true` in `meta`: phones and tablets
+  never show it (`shownGames()` in `games/registry.ts`). Keys as an extra shortcut next to on-screen buttons need no flag.
 - A round is one **stage**: a handful of tasks (six clocks to read, one board of pairs), no timer and no way to
   lose. Nothing is taken away for a mistake; the task comes again or the stage moves on.
 - Wrap the game in `<SceneShell place say stage>` (`kit/SceneShell.tsx`). `place` is the game's region on the map

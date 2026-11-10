@@ -115,6 +115,9 @@ const en = {
   'stickers.medal2': 'Gold medal: {title}',
   'stickers.count': 'Stickers: {n} of {total}',
   'stickers.locked': 'Not found yet',
+  'stickers.play': 'Play {title}',
+  'stickers.ofGame': 'Stickers of {title}',
+  'stickers.short': 'Stickers',
 }
 
 export default en

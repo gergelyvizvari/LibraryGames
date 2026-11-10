@@ -1,12 +1,12 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { games } from '../../games/registry'
+import { games, shownGames } from '../../games/registry'
 import { makeGameT, useLocale, useT, type Locale } from '../../i18n'
 import { useSize, useTimeouts } from '../../kit/hooks'
 import { Icon } from '../../kit/icon'
 import { currentStreak, dailyDoneToday, gameProgress, isFavourite, loadProgress, stickerCount, toggleFavourite } from '../../kit/progress'
 import { sound } from '../../kit/sound'
 import { gameColorVars } from '../../kit/theme'
-import { FavButton, Heart } from '../FavButton'
+import { FavButton, Heart } from '../../kit/FavButton'
 import { dailyGame } from '../Home'
 import { Tools } from '../Tools'
 import mapArt from './map.webp'
@@ -41,6 +41,24 @@ function StarMark({ state }: { state: StarState }) {
 }
 
 /**
+ * A round smiley sticker with its edge peeling up, so it reads as "stickers" even to a child who cannot read,
+ * and does not look like the gold star of played games next to it.
+ */
+function StickerIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="wm-sticker-icon" aria-hidden focusable="false">
+      <circle cx="12.4" cy="12.8" r="10.6" fill="rgba(60, 40, 90, 0.18)" />
+      <path d="M22.1 14.7 A10.4 10.4 0 1 0 14.7 22.1 Z" fill="#fff" />
+      <path d="M20.3 14.3 A8.5 8.5 0 1 0 14.3 20.3 Z" fill="#ff8fab" />
+      <circle cx="8.6" cy="9.6" r="1.35" fill="#5a2340" />
+      <circle cx="14.2" cy="9.6" r="1.35" fill="#5a2340" />
+      <path d="M7.6 13.2 Q11.4 16.6 15.2 13.2" fill="none" stroke="#5a2340" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M22.1 14.7 Q15.6 15.4 14.7 22.1 Z" fill="#efe3c9" stroke="#d8c8a6" strokeWidth="0.8" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+/**
  * The home screen: a storybook map with a landscape for every group of skills and a star for every game.
  * On a phone it is as tall as the screen and is dragged sideways; a wide window shows all of it.
  */
@@ -61,7 +79,11 @@ export function WorldMap({
   const t = useT()
   const locale = useLocale()
   const [progress, setProgress] = useState(loadProgress)
-  const placed = useMemo(() => placeGames(games), [])
+  // Every game keeps its own spot, also where a game this device cannot play is left out.
+  const placed = useMemo(() => {
+    const shown = new Set(shownGames())
+    return placeGames(games).filter((p) => shown.has(p.game))
+  }, [])
   const [wrap, size] = useSize<HTMLDivElement>({ w: 390, h: 800 })
   const scale = mapScale(size.w, size.h)
   const scaleNow = useRef(scale)
@@ -78,8 +100,8 @@ export function WorldMap({
   const dailyDone = dailyDoneToday(progress)
   const streak = currentStreak(progress)
   const played = (id: string) => gameProgress(progress, id).plays > 0
-  const starCount = games.filter((g) => played(g.meta.id)).length
-  const stickers = games.reduce((n, g) => n + stickerCount(progress, g.meta.id), 0)
+  const starCount = placed.filter(({ game }) => played(game.meta.id)).length
+  const stickers = placed.reduce((n, { game }) => n + stickerCount(progress, game.meta.id), 0)
   // In every region the first game not tried yet is the one to play next.
   const nextIds = new Set(regions.map((r) => placed.find((p) => p.region === r && !played(p.game.meta.id))?.game.meta.id))
   const open = placed.find((p) => p.game.meta.id === openId)
@@ -273,12 +295,10 @@ export function WorldMap({
             🔥 {streak}
           </span>
         )}
-        <button className="wm-pill" onClick={onStickers} aria-label={t('stickers.open', { n: stickers })} title={t('stickers.title')}>
-          <svg viewBox="0 0 24 24" className="wm-pill-icon wm-sticker-icon" aria-hidden focusable="false">
-            <path d="M5 3h14a2 2 0 0 1 2 2v9l-7 7H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
-            <path className="wm-fold" d="M21 14h-5a2 2 0 0 0-2 2v5z" />
-          </svg>
-          {stickers}
+        <button className="wm-pill wm-stickers" onClick={onStickers} aria-label={t('stickers.open', { n: stickers })} title={t('stickers.title')}>
+          <StickerIcon />
+          <span className="wm-pill-text">{t('stickers.short')}</span>
+          <b className="wm-stickers-n">{stickers}</b>
         </button>
       </div>
 

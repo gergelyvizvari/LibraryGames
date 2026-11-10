@@ -1,5 +1,5 @@
 import { useT } from '../i18n'
-import { sound } from '../kit/sound'
+import { sound } from './sound'
 
 /** The heart that keeps a game among the favourites: an outline when off, rose when on. */
 export function FavButton({ on, onToggle, className = '' }: { on: boolean; onToggle: () => void; className?: string }) {

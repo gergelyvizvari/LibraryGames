@@ -65,7 +65,7 @@ export function App() {
         ) : route.mode === 'privacy' ? (
           <Privacy onHome={() => go('/')} />
         ) : route.mode === 'stickers' ? (
-          <Stickers onHome={() => go('/')} />
+          <Stickers onHome={() => go('/')} onPlay={play} />
         ) : route.mode === 'games' ? (
           <Home onPlay={play} onLocale={changeLocale} onMap={() => go('/')} />
         ) : (
