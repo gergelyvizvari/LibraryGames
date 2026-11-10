@@ -1,0 +1,12 @@
+/** The support button's picture: a red mug with a heart and two wisps of steam. Drawn so it still reads at 24 pixels. */
+export function TeaCup() {
+  return (
+    <svg className="tea-cup" viewBox="0 0 32 32" aria-hidden focusable="false">
+      <path d="M11 2.5c-2.2 2.2 2.2 3.6 0 6M18 2.5c-2.2 2.2 2.2 3.6 0 6" fill="none" stroke="#9a94b8" strokeWidth="2.4" strokeLinecap="round" />
+      <path d="M22.5 15h2.2a4.3 4.3 0 0 1 0 8.6h-3" fill="none" stroke="#c2374f" strokeWidth="3.2" strokeLinecap="round" />
+      <path d="M4.5 11.5h20v9.5a8 8 0 0 1-8 8h-4a8 8 0 0 1-8-8z" fill="#e2607e" />
+      <path d="M4.5 11.5h5v9.500a8 8 0 0 0 5 7.400 8 8 0 0 1-10-7.400z" fill="#c2374f" opacity="0.55" />
+      <path d="M14.500 24.200c-5.200-3.300-4.600-7.700-1.900-7.700 1 0 1.600.6 1.900 1.300.300-.7.900-1.300 1.900-1.300 2.700 0 3.300 4.400-1.900 7.700z" fill="#fff6dc" />
+    </svg>
+  )
+}

@@ -10,6 +10,7 @@ import { shareUrl } from '../../kit/share'
 import { gameColorVars, loadTheme, nextTheme, setTheme, themeIcons } from '../../kit/theme'
 import { SUPPORT_URL } from '../contact'
 import { dailyGame } from '../Home'
+import { TeaCup } from '../TeaCup'
 import mapArt from './map.webp'
 import { MAP_H, MAP_W, mapScale, placeGames, regions } from './regions'
 
@@ -228,7 +229,7 @@ export function WorldMap({
           </button>
           <ShareButton hint={t('share.page')} data={() => ({ title: t('appName'), text: t('share.pageText'), url: shareUrl('', locale) })} />
           <a className="wm-tool" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer" title={t('supportHint')} aria-label={t('supportHint')}>
-            <span aria-hidden>🍵</span>
+            <TeaCup />
           </a>
         </div>
         <span className="wm-pill wm-gold" role="img" aria-label={t('map.stars', { n: starCount })} title={t('map.starsHint')}>

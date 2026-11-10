@@ -11,6 +11,7 @@ import { gameColorVars, loadTheme, nextTheme, setTheme, themeIcons } from '../ki
 import { skills, type GameDef, type Skill } from '../kit/types'
 import { AUTHOR, facebookUrl, portfolioUrl, SUPPORT_URL } from './contact'
 import { logoIcon } from './logo'
+import { TeaCup } from './TeaCup'
 
 
 const NEW_DAYS = 7
@@ -88,7 +89,7 @@ export function Home({
           </button>
           {/* The same support link as in the footer, as a small tea button up here where grown-ups notice it. */}
           <a className="icon-btn tea-btn" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer" title={t('supportHint')} aria-label={t('supportHint')}>
-            <span aria-hidden>🍵</span>
+            <TeaCup />
           </a>
           <ShareButton
             hint={t('share.page')}
@@ -168,7 +169,7 @@ export function Home({
         <span className="home-foot-label">{t('forGrownUps')}</span>
         {iosTip && <p className="home-foot-tip">{t('iosTip')}</p>}
         <a className="support-link" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer" title={t('supportHint')} aria-label={t('supportHint')}>
-          <span aria-hidden>🍵</span> {t('support')}
+          <TeaCup /> {t('support')}
         </a>
         <span className="home-foot-credit">
           {madeBy[0]}
