@@ -4,6 +4,7 @@ import { makeRng } from '../../kit/random'
 import { SceneShell, useStage } from '../../kit/SceneShell'
 import type { GameProps } from '../../kit/types'
 import { makePuzzle } from './logic'
+import { Piece } from './pieces'
 
 /** Rows to finish in one stage. */
 const STAGE = 6
@@ -34,19 +35,21 @@ export default function WhatNext({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <SceneShell place="woods" say={t('say')} stage={stage} className="what-next">
-      <div className="wn-row" ref={ref} key={round}>
-        {puzzle.shown.map((s, i) => (
-          <span key={i} className="wn-item" style={{ animationDelay: `${i * 0.04}s` }}>
-            {s}
-          </span>
-        ))}
-        <span className={`wn-item wn-slot${solved ? ' wn-solved' : ''}`}>{solved ? puzzle.answer : '?'}</span>
+    <SceneShell place="woods" say={t('say')} stage={stage} bare className="what-next">
+      <div className="wn-shelf" ref={ref} key={round}>
+        <div className="wn-row">
+          {puzzle.shown.map((s, i) => (
+            <span key={i} className="wn-item" style={{ animationDelay: `${i * 0.04}s` }}>
+              <Piece symbol={s} />
+            </span>
+          ))}
+          <span className={`wn-item wn-slot${solved ? ' wn-solved' : ''}`}>{solved ? <Piece symbol={puzzle.answer} /> : '?'}</span>
+        </div>
       </div>
-      <div className="choices">
-        {puzzle.options.map((o) => (
-          <button key={`${round}-${o}`} className="choice-btn wn-choice" onPointerDown={() => choose(o)}>
-            {o}
+      <div className="wn-choices">
+        {puzzle.options.map((o, i) => (
+          <button key={`${round}-${o}`} className="wn-choice" onPointerDown={() => choose(o)} aria-label={t('option', { n: i + 1 })}>
+            <Piece symbol={o} />
           </button>
         ))}
       </div>

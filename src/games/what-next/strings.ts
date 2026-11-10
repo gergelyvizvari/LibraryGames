@@ -2,6 +2,7 @@ import type { GameStrings } from '../../i18n'
 
 const strings: GameStrings = {
   en: {
+    option: 'Choice {n}',
     title: 'What Comes Next?',
     say: 'What comes next?',
     howTo: 'Look at the pattern. What comes next? Tap the right picture to finish the row!',
@@ -10,6 +11,7 @@ const strings: GameStrings = {
     time: 'Time',
   },
   hu: {
+    option: '{n}. lehetőség',
     title: 'Mi jön ezután?',
     say: 'Mi jön ezután?',
     howTo: 'Nézd meg a mintát. Mi jön ezután? Koppints a jó képre, és fejezd be a sort!',

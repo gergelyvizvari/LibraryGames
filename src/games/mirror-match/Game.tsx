@@ -55,15 +55,12 @@ export default function MirrorMatch({ level, seed, t, onFinish }: GameProps) {
   )
 
   return (
-    <SceneShell place="woods" say={t('say')} stage={stage} className="mirror-match">
+    <SceneShell place="woods" say={t('say')} stage={stage} bare className="mirror-match">
       <div className="mm-board" ref={ref} key={solved}>
         {side(true)}
         <div className="mm-mirror" />
         {side(false)}
       </div>
-      <p className="muted" style={{ textAlign: 'center' }}>
-        {filled.length} / {goal.length}
-      </p>
     </SceneShell>
   )
 }

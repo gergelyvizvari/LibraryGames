@@ -3,10 +3,10 @@ import { useT } from '../../i18n'
 import { useTimeouts } from '../../kit/hooks'
 import { Bunting, Guide } from '../../kit/places'
 import { makeRng } from '../../kit/random'
-import { SceneTray, StagePips } from '../../kit/scene'
+import { SceneTool, SceneTray, StagePips } from '../../kit/scene'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Basket, COATS, DenWindow, Rug, ToolIcon } from './Den'
+import { Basket, COATS, DenWindow, Rug } from './Den'
 import {
   accuracyFor,
   clashes,
@@ -281,24 +281,9 @@ export default function PuppySpots({ level, seed, t, onFinish }: GameProps) {
           <span className="pk-basket-label">{t(waiting.length ? 'waiting' : 'allOut')}</span>
         </div>
         <div className="pk-tools">
-          <button className={`pk-tool${marking ? ' pk-on' : ''}`} onPointerDown={() => pickTool(marking ? 'pup' : 'mark')} aria-pressed={marking}>
-            <span className="pk-tool-btn">
-              <ToolIcon kind="mark" />
-            </span>
-            <span className="pk-tool-label">{t('toolMark')}</span>
-          </button>
-          <button className="pk-tool" onPointerDown={hint}>
-            <span className="pk-tool-btn">
-              <ToolIcon kind="hint" />
-            </span>
-            <span className="pk-tool-label">{t('hint')}</span>
-          </button>
-          <button className="pk-tool" onPointerDown={clear} disabled={!canClear}>
-            <span className="pk-tool-btn">
-              <ToolIcon kind="clear" />
-            </span>
-            <span className="pk-tool-label">{t('clear')}</span>
-          </button>
+          <SceneTool kind="mark" label={t('toolMark')} on={marking} onPress={() => pickTool(marking ? 'pup' : 'mark')} />
+          <SceneTool kind="hint" label={t('hint')} onPress={hint} />
+          <SceneTool kind="restart" label={t('clear')} onPress={clear} disabled={!canClear} />
         </div>
       </SceneTray>
     </div>

@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
+import { SceneTool } from '../../kit/scene'
 import { SceneShell, useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
@@ -111,16 +112,13 @@ export default function ColorSort({ level, seed, t, onFinish }: GameProps) {
       place="woods"
       say={message}
       stage={stage}
+      bare
       className="color-sort"
       tray={
-        <>
-          <button className="cs-tool" onPointerDown={undo} disabled={history.length === 0}>
-            ↩️ {t('undo')}
-          </button>
-          <button className="cs-tool" onPointerDown={restart} disabled={history.length === 0}>
-            🔄 {t('restart')}
-          </button>
-        </>
+        <div className="cs-tools">
+          <SceneTool kind="undo" label={t('undo')} onPress={undo} disabled={history.length === 0} />
+          <SceneTool kind="restart" label={t('restart')} onPress={restart} disabled={history.length === 0} />
+        </div>
       }
     >
       <div className="cs-rack" key={solved} style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 70px))` }}>

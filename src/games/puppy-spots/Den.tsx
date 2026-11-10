@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react'
 import type { Cell, Regions } from './logic'
 
 // The drawn pieces of the puppies' den: the pups, the patchwork rug they sit on, their basket and the tools.
@@ -184,31 +183,6 @@ export function Basket({ waiting, coats: list }: { waiting: number; coats: numbe
       <path d="M-60 4 q4 16 0 32 M-40 4 q4 16 0 32 M-20 4 q4 16 0 32 M0 4 q4 16 0 32 M20 4 q4 16 0 32 M40 4 q4 16 0 32 M60 4 q4 16 0 32" fill="none" stroke="#8a5a3c" strokeWidth="2.5" strokeLinecap="round" opacity="0.6" />
       <rect x="-78" y="-8" width="156" height="16" rx="8" fill="#c99a6a" />
       <rect x="-78" y="2" width="156" height="6" rx="3" fill="#94694a" opacity="0.6" />
-    </svg>
-  )
-}
-
-const toolArt: Record<'mark' | 'hint' | 'clear', ReactNode> = {
-  mark: <path d="M-9 -9 l18 18 M9 -9 l-18 18" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />,
-  hint: (
-    <>
-      <circle cy="-4" r="10" fill="#ffd24a" />
-      <rect x="-5" y="6" width="10" height="7" rx="2" fill="currentColor" />
-      <path d="M-16 -12 l-5 -3 M16 -12 l5 -3 M0 -20 v-5" fill="none" stroke="#f2b01e" strokeWidth="2.5" strokeLinecap="round" />
-    </>
-  ),
-  clear: (
-    <>
-      <path d="M10 -4 A11 11 0 1 0 8 8" fill="none" stroke="currentColor" strokeWidth="4.5" strokeLinecap="round" />
-      <path d="M4 -10 L15 -8 L11 3Z" fill="currentColor" />
-    </>
-  ),
-}
-
-export function ToolIcon({ kind }: { kind: keyof typeof toolArt }) {
-  return (
-    <svg viewBox="-28 -28 56 56" aria-hidden focusable="false">
-      {toolArt[kind]}
     </svg>
   )
 }

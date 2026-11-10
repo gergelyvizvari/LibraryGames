@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
+import { SceneTool } from '../../kit/scene'
 import { SceneShell, useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
+import { Garden } from './Garden'
 import { E, N, S, W, makeMaze, sizeFor, step } from './logic'
 
 /** Mazes in one stage. */
@@ -64,38 +66,28 @@ export default function MazeDash({ level, seed, t, onFinish }: GameProps) {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  const cell = (i: number) => {
-    const o = maze.open[i]
-    const wall = '3px solid var(--ink)'
-    return {
-      borderTop: o & N ? undefined : wall,
-      borderRight: o & E ? undefined : wall,
-      borderBottom: o & S ? undefined : wall,
-      borderLeft: o & W ? undefined : wall,
-    }
-  }
-
   return (
     <SceneShell
       place="woods"
       say={t('say')}
       stage={stage}
+      bare
       className="maze-dash"
       tray={
         <div className="md-pad">
           <span />
-          <button className="md-btn" onPointerDown={() => move(N)} aria-label="up">⬆️</button>
+          <SceneTool kind="up" label={t('up')} hideLabel onPress={() => move(N)} />
           <span />
-          <button className="md-btn" onPointerDown={() => move(W)} aria-label="left">⬅️</button>
-          <button className="md-btn" onPointerDown={() => move(S)} aria-label="down">⬇️</button>
-          <button className="md-btn" onPointerDown={() => move(E)} aria-label="right">➡️</button>
+          <SceneTool kind="left" label={t('left')} hideLabel onPress={() => move(W)} />
+          <SceneTool kind="down" label={t('down')} hideLabel onPress={() => move(S)} />
+          <SceneTool kind="right" label={t('right')} hideLabel onPress={() => move(E)} />
         </div>
       }
     >
       <div
         className="md-maze"
         key={solved}
-        style={{ gridTemplateColumns: `repeat(${maze.w}, 1fr)`, aspectRatio: `${maze.w} / ${maze.h}` }}
+        style={{ aspectRatio: `${maze.w} / ${maze.h}`, ['--md-ratio' as string]: maze.w / maze.h }}
         onPointerDown={(e) => (touch.current = { x: e.clientX, y: e.clientY })}
         onPointerUp={(e) => {
           const start = touch.current
@@ -107,11 +99,7 @@ export default function MazeDash({ level, seed, t, onFinish }: GameProps) {
           move(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? E : W) : dy > 0 ? S : N)
         }}
       >
-        {maze.open.map((_, i) => (
-          <div key={i} className={`md-cell${trail.includes(i) ? ' md-trail' : ''}`} style={cell(i)}>
-            {i === pos ? '🐭' : i === goal ? '🧀' : ''}
-          </div>
-        ))}
+        <Garden maze={maze} pos={pos} trail={trail} won={busy} />
       </div>
     </SceneShell>
   )
