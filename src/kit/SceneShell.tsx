@@ -2,7 +2,7 @@ import { useCallback, useRef, useState, type ReactNode } from 'react'
 import { useT, type AppKey, type T } from '../i18n'
 import { useLatest, useTimeouts } from './hooks'
 import type { GameIcon } from './icon'
-import { Guide, PlaceWindow, RoomBooks, RoomPlant, type PlaceId } from './places'
+import { Bunting, Guide, PlaceWindow, RoomBooks, RoomPlant, type PlaceId } from './places'
 import { SceneTray, StagePips } from './scene'
 import { sound, vibrate } from './sound'
 import type { RoundResult, Sticker } from './types'
@@ -120,20 +120,20 @@ export function SceneShell({
   return (
     <div className={`scene sg sg-${place} ${className}`}>
       <div className="sg-room" aria-hidden>
-        <PlaceWindow place={place} />
-        <div className="sg-floor" />
         <RoomPlant />
         <RoomBooks />
       </div>
-      <StagePips done={stage.done} total={stage.total} label={t('scene.progress', { n: stage.done, total: stage.total })} />
-      <div className="sg-head">
-        <span className={`sg-guide sg-${stage.mood}`}>
-          <Guide place={place} />
-        </span>
+      <div className="sg-wall">
+        <Bunting />
+        <PlaceWindow place={place} />
         <p className="scene-bubble sg-bubble" role="status" aria-live="polite">
           {say}
         </p>
+        <span className={`sg-guide sg-${stage.mood}`}>
+          <Guide place={place} />
+        </span>
       </div>
+      <StagePips done={stage.done} total={stage.total} label={t('scene.progress', { n: stage.done, total: stage.total })} />
       <div className={`sg-board${bare ? '' : ' sg-sheet'}${fill ? ' sg-fill' : ''}`}>{children}</div>
       {tray && <SceneTray hidden={stage.over}>{tray}</SceneTray>}
     </div>

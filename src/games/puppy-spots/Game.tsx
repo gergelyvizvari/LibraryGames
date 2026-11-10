@@ -1,12 +1,12 @@
 import { useMemo, useRef, useState } from 'react'
 import { useT } from '../../i18n'
 import { useTimeouts } from '../../kit/hooks'
-import { Guide } from '../../kit/places'
+import { Bunting, Guide } from '../../kit/places'
 import { makeRng } from '../../kit/random'
 import { SceneTray, StagePips } from '../../kit/scene'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Basket, Bunting, COATS, DenWindow, Rug, ToolIcon } from './Den'
+import { Basket, COATS, DenWindow, Rug, ToolIcon } from './Den'
 import {
   accuracyFor,
   clashes,
@@ -244,10 +244,10 @@ export default function PuppySpots({ level, seed, t, onFinish }: GameProps) {
       <div className="pk-wall">
         <Bunting />
         <DenWindow />
-        <p className="scene-bubble pk-bubble" role="status" aria-live="polite">
+        <p className="scene-bubble sg-bubble" role="status" aria-live="polite">
           {message}
         </p>
-        <span className={`pk-owl sg-guide sg-${mood}`}>
+        <span className={`sg-guide sg-${mood}`}>
           <Guide place="woods" />
         </span>
       </div>

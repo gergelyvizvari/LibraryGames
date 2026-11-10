@@ -213,25 +213,7 @@ export function ToolIcon({ kind }: { kind: keyof typeof toolArt }) {
   )
 }
 
-const flags = ['#e2607e', '#f2c14e', '#3fb0a8', '#a48cf0', '#7cc552']
-
-/** The den's wall: a string of flags and a round window onto the pines of the Maze Woods. */
-export function Bunting() {
-  return (
-    <svg className="pk-bunting" width="100%" height="44" aria-hidden focusable="false">
-      <defs>
-        <pattern id="pk-flags" width="260" height="44" patternUnits="userSpaceOnUse">
-          <path d="M0 6 H260" stroke={CREAM} strokeWidth="2.5" opacity="0.9" />
-          {flags.map((f, i) => (
-            <path key={f} d={`M${15 + i * 52} 6 h22 l-11 22Z`} fill={f} />
-          ))}
-        </pattern>
-      </defs>
-      <rect width="100%" height="44" fill="url(#pk-flags)" />
-    </svg>
-  )
-}
-
+/** The den's round window onto the pines of the Maze Woods. */
 export function DenWindow() {
   const pine = (x: number, y: number, q: number) => (
     <>

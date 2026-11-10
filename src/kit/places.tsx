@@ -281,3 +281,22 @@ export function RoomBooks() {
     </svg>
   )
 }
+
+const flags = ['#e2607e', '#f2c14e', '#3fb0a8', '#a48cf0', '#7cc552']
+
+/** A string of flags along the top of a room's wall. */
+export function Bunting() {
+  return (
+    <svg className="sg-bunting" width="100%" height="44" aria-hidden focusable="false">
+      <defs>
+        <pattern id="sg-flags" width="260" height="44" patternUnits="userSpaceOnUse">
+          <path d="M0 6 H260" stroke="#fff6dc" strokeWidth="2.5" opacity="0.9" />
+          {flags.map((f, i) => (
+            <path key={f} d={`M${15 + i * 52} 6 h22 l-11 22Z`} fill={f} />
+          ))}
+        </pattern>
+      </defs>
+      <rect width="100%" height="44" fill="url(#sg-flags)" />
+    </svg>
+  )
+}
