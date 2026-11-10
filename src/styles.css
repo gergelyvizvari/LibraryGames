@@ -1,4 +1,4 @@
-:root, [data-theme='light'] {
+:root {
   color-scheme: light;
   --bg: #ffffff;
   --ink: #3c3f4e;
@@ -23,48 +23,6 @@
   /* Text in the game's colour is mixed with this, so dark accents stay readable on dark themes. */
   --game-tint: #000;
   --game-tint-amount: 0%;
-}
-
-[data-theme='dark'] {
-  color-scheme: dark;
-  --bg: #1b1e2b;
-  --ink: #f1f2f6;
-  --muted: #a4a9c0;
-  --card: #2a2e40;
-  --line: #3d4257;
-  --accent: #a29bfe;
-  --good: #1dd1a1;
-  --bad: #ff7b7b;
-  --press: rgba(0, 0, 0, 0.35);
-  --good-soft: #1d4a3c;
-  --bad-soft: #5a2a2e;
-  --highlight: #4a4026;
-  --highlight-strong: #6b5a24;
-  --star-off: #3d4257;
-  --game-tint: #fff;
-  --game-tint-amount: 40%;
-}
-
-[data-theme='contrast'] {
-  color-scheme: light;
-  --bg: #ffffff;
-  --ink: #000000;
-  --muted: #333333;
-  --card: #ffffff;
-  --line: #000000;
-  --accent: #4b2bd6;
-  --good: #00875a;
-  --bad: #d0021b;
-  --press: #000;
-  --ink-fixed: #000000;
-  --good-soft: #c9f7df;
-  --bad-soft: #ffd0d0;
-  --highlight: #fff1a8;
-  --highlight-strong: #ffd84d;
-  --star-off: #bbbbbb;
-  --star-on: #f0a500;
-  --game-tint: #000;
-  --game-tint-amount: 35%;
 }
 
 :root {
@@ -146,7 +104,6 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .game-icon g { stroke: var(--ink-fixed); stroke-width: 2.2; stroke-linejoin: round; stroke-linecap: round; paint-order: stroke; }
 .game-icon text { font-family: inherit; stroke-width: 0.6; }
 .game-icon .gi-shine { stroke: none; opacity: 0.75; }
-[data-theme='contrast'] .game-icon g:not(.gi-shine) { stroke-width: 2.6; }
 
 /* Drawn pictures of the support and sound buttons */
 .tea-cup { width: 28px; height: 28px; vertical-align: -8px; }
@@ -254,7 +211,6 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .sc-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .sc-btn { height: 96px; border-radius: 24px; box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2); }
 /* The colour words need a light page to stay readable, whatever the theme. */
-[data-theme='dark'] .sc-word { background: #fff8ec; border-radius: 28px; }
 .sc-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2); }
 
 /* Number Ninja */
@@ -799,9 +755,6 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .cs-c4 { background: #a48cf0; }
 .cs-c5 { background: #f39a5a; }
 .cs-c6 { background: #7cc552; }
-[data-theme='contrast'] .cs-layer { outline: 2px solid var(--ink); outline-offset: -2px; }
-[data-theme='contrast'] .cs-layer::after { content: attr(data-sym); }
-[data-theme='contrast'] .cs-tube { border-color: var(--ink); }
 .cs-tools { display: flex; justify-content: center; gap: 22px; }
 
 /* Animal Sounds */
