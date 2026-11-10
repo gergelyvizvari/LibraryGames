@@ -98,6 +98,8 @@ export const icon: GameIcon = [
 - `hooks.ts`: `useCountdown(seconds, onEnd, running)`, `useGameLoop(dt => …, running)`, `useTimeouts()`,
   `usePops()`, `useShake()`, `useInterval()`.
 - `SceneShell.tsx`: `<SceneShell>`, `useStage()`, `medals()`; see "Scene games" below. `places.tsx` holds the rooms and characters.
+- `scene.tsx`: `<SceneTool>` is the round drawn button for tools and arrows (undo, restart, hint, mark, listen, up/down/left/right).
+- `things.tsx`: `<Thing id>` draws small storybook things (apple, acorn, fish, star...) to count, sort or line up. Use these instead of emoji.
 - `ui.tsx`: `<Pops>`, `<MapStage>`; `<Hud>`, `<TimerBar>`, `<Hearts>` and `<Confetti>` are from the old timed rounds and no game uses them now.
 - `sound.ts`: `sound.good(combo)`, `bad`, `pop`, `tap`, `tick`, `win`, `tone(freq, dur)`, `vibrate(ms)`. Real recordings: `preloadClip(url)` + `playClip(url)` (import the file from the game folder; keep clips tiny and list their source and licence in a `sounds/CREDITS.md`).
 - `random.ts`: `makeRng(seed)` with `int`, `pick`, `shuffle`, `chance`; `clamp`.
@@ -137,6 +139,9 @@ a character who says what to do, a short stage with a clear goal, and a quiet en
 - Give the game `stickers` in `index.ts`. `medals(icon)` makes a bronze, a silver and a gold medal from the
   game's icon; a game with its own drawn stickers lists `{ name, icon }` entries (`name` a key in `strings.ts`).
   One is won per finished stage, in order; they show up in the sticker album.
+- Make the board an object in the room, not tiles on paper: pass `bare` and draw it (a rug, a pond, a crate, a framed
+  picture). Draw the pieces too (`kit/things.tsx` or the game's own SVG). `puppy-spots/Den.tsx` and
+  `maze-dash/Garden.tsx` are the models: an SVG picture with a grid of transparent buttons on top.
 - `feed-monster` draws its whole scene itself (`StagePips`, `SpeechBubble`, `SceneTray` from `kit/scene.tsx`,
   sized from `useSize()` and a small tested `layout.ts`). Do that only for a game that deserves its own room.
 - Look: no outlines, flat painted shapes with one lit and one shaded side, big glossy eyes on characters, the
