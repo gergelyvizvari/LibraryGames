@@ -554,9 +554,24 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .wm-tool-lang { font-size: 0.9rem; font-weight: 800; }
 .wm-tool svg { width: 22px; height: 22px; fill: var(--story-ink); }
 /* Phones: the map's top row is full, so the tools go in a second row on the right. The games list has room for them in one row. */
+/* On a phone everything stays in one row over the sky, so no button ever sits on a game's badge. */
 @media (max-width: 640px) {
-  .wm-top { flex-wrap: wrap; }
-  .wm-top .wm-tools { order: 9; flex-basis: 100%; justify-content: flex-end; }
+  .wm-top, .wm-top .wm-tools { gap: 5px; }
+  .wm-top { --tool: clamp(32px, 10.2vw, 42px); }
+  .wm-top .wm-tool, .wm-top .wm-tools .icon-btn { width: var(--tool); height: var(--tool); }
+  .wm-top .wm-tools .share-glyph, .wm-top .wm-tool .tea-cup, .wm-top .wm-tool .sound-icon { width: calc(var(--tool) * 0.62); height: calc(var(--tool) * 0.62); }
+  .wm-top .wm-pill { height: 38px; padding: 0 10px; gap: 4px; }
+}
+@media (max-width: 480px) {
+  .wm-top .wm-red { display: none; }
+}
+@media (max-width: 379px) {
+  .wm-top, .wm-top .wm-tools { gap: 4px; }
+  .wm-top .wm-pill { padding: 0 8px; }
+}
+@media (max-width: 339px) {
+  .wm-top, .wm-top .wm-tools { gap: 3px; }
+  .wm-top .wm-pill { padding: 0 6px; font-size: 0.9rem; }
 }
 @media (max-width: 380px) {
   .book-top .wm-tools { gap: 5px; }

@@ -9,7 +9,7 @@ import { TeaCup } from './TeaCup'
 
 /**
  * The grown-ups' buttons of the map and the games list: language, sound, share and support.
- * Always in sight: on a phone the map puts them in a second row under its other buttons.
+ * Always in sight: on a phone they get smaller so the map keeps everything in one row.
  */
 export function Tools({ onLocale }: { onLocale: (locale: Locale) => void }) {
   const t = useT()
