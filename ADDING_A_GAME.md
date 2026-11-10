@@ -97,7 +97,8 @@ export const icon: GameIcon = [
 
 - `hooks.ts`: `useCountdown(seconds, onEnd, running)`, `useGameLoop(dt => …, running)`, `useTimeouts()`,
   `usePops()`, `useShake()`, `useInterval()`.
-- `ui.tsx`: `<Hud items>`, `<TimerBar>`, `<Pops>`, `<Hearts>`, `<Confetti>`.
+- `SceneShell.tsx`: `<SceneShell>`, `useStage()`, `medals()`; see "Scene games" below. `places.tsx` holds the rooms and characters.
+- `ui.tsx`: `<Pops>`, `<MapStage>`; `<Hud>`, `<TimerBar>`, `<Hearts>` and `<Confetti>` are from the old timed rounds and no game uses them now.
 - `sound.ts`: `sound.good(combo)`, `bad`, `pop`, `tap`, `tick`, `win`, `tone(freq, dur)`, `vibrate(ms)`. Real recordings: `preloadClip(url)` + `playClip(url)` (import the file from the game folder; keep clips tiny and list their source and licence in a `sounds/CREDITS.md`).
 - `random.ts`: `makeRng(seed)` with `int`, `pick`, `shuffle`, `chance`; `clamp`.
 - `MapHuntGame.tsx` + `mapHunt.ts`: a whole "find the place on a blind map" round. A map game only supplies its map,
@@ -114,27 +115,35 @@ export const icon: GameIcon = [
   Fixed colours are fine inside a game's own scene (a sky, a pond, game pieces); text on a surface that stays
   light in every theme uses `--ink-fixed`. Check your game in all three themes with the ☀️ button on the "All games" screen.
 
-## Scene games (pilot)
+## Scene games
 
-A scene game is a place in the storybook world instead of a quiz round with a clock: a full-screen drawn scene,
-a character who talks, a short stage with a clear goal, and a quiet ending with a sticker. `feed-monster` is the
-first one; copy its shape.
+Every game is a scene: a place in the storybook world instead of a quiz round with a clock. It has a drawn room,
+a character who says what to do, a short stage with a clear goal, and a quiet ending with a sticker.
 
-- Set `scene: true` in `meta`. The frame (`kit/SceneFrame.tsx`) then shows no intro card, countdown, level picker
+- Set `scene: true` in `meta`. The frame (`kit/SceneFrame.tsx`) shows no intro card, countdown, level picker
   or score: only a back button over your scene. The level still adapts from the `accuracy` you report.
-- A round is one **stage**: a handful of tasks (five monsters to feed), no timer. Show progress with
-  `<StagePips done total label>`, let the character speak through `<SpeechBubble>` (it is read out by screen
-  readers, so every message goes there), and put the things to tap in a `<SceneTray>` (all in `kit/scene.tsx`).
-- The root element has the class `scene` (not `game`) and fills the frame. Draw the scene as SVG sized from
-  `useSize()` and a small pure `layout.ts` (tested for phone, tablet and wide windows), so an upright phone and
-  a wide desktop window both look composed. Tappable things stay real `<button>`s.
-- Call `onFinish` once when the stage is done and leave the finished scene on screen: the frame lays the ending
-  over it (sticker card, "on to stage N", "back to the map").
-- Give the game `stickers` in `index.ts`: a few `{ name, icon }` entries, `name` a key in `strings.ts`, `icon`
-  drawn like a game icon. One is won per finished stage, in order; they show up in the sticker album.
+- A round is one **stage**: a handful of tasks (six clocks to read, one board of pairs), no timer and no way to
+  lose. Nothing is taken away for a mistake; the task comes again or the stage moves on.
+- Wrap the game in `<SceneShell place say stage>` (`kit/SceneShell.tsx`). `place` is the game's region on the map
+  (`peaks` maths, `woods` logic and spatial, `lake` memory and focus, `sea` typing and reading, `village`
+  language, `meadow` reflexes, `coast` geography): it gives the room, the window and the character. `say` is the
+  one short sentence in the character's speech bubble (screen readers hear it, so every message goes there).
+  Children are the board, laid on a paper sheet; pass `bare` when the game draws its own field, `fill` when the
+  board should take all the room, and `tray` for buttons that belong at the bottom edge.
+- `useStage(total, onFinish)` keeps the stage: call `stage.good()` when a task is done (it plays the sound, lets
+  the character hop and ends the stage after the last one, returning true), `stage.slip()` for a wrong try, and
+  `stage.miss()` when a task that cannot be retried went wrong. It calls `onFinish` once, by itself. A game with
+  its own bookkeeping can pass `stage={{ done, total, over, mood }}` instead.
+- Give the game `stickers` in `index.ts`. `medals(icon)` makes a bronze, a silver and a gold medal from the
+  game's icon; a game with its own drawn stickers lists `{ name, icon }` entries (`name` a key in `strings.ts`).
+  One is won per finished stage, in order; they show up in the sticker album.
+- `feed-monster` draws its whole scene itself (`StagePips`, `SpeechBubble`, `SceneTray` from `kit/scene.tsx`,
+  sized from `useSize()` and a small tested `layout.ts`). Do that only for a game that deserves its own room.
 - Look: no outlines, flat painted shapes with one lit and one shaded side, big glossy eyes on characters, the
   `--story` font for numbers and names, `var(--grain)` laid over painted areas. Colours are fixed (a printed
-  page), so themes do not apply inside the scene. Endings stay calm: one hop, one sound, no confetti.
+  page), so themes do not apply inside a scene. Endings stay calm: one hop, one sound, no confetti.
+- Check the scene on an upright phone (390 × 800) and a wide window: the whole stage fits one screen without
+  scrolling. Size square boards with `min(100%, <px>, 100dvh - <px>)`.
 
 The home screen is a map (`src/shell/map`): every skill belongs to a region in `regions.ts`, and every game gets
 a star there automatically. A region needs a free spot in its `slots` for each of its games; `regions.test.ts`

@@ -6,7 +6,9 @@ import { Icon } from './icon'
 import { OopsCard, gameComponent } from './lazyGame'
 import { awardSticker, gameProgress, loadProgress, recordRound } from './progress'
 import { randomSeed } from './random'
+import { stickerName } from './SceneShell'
 import { sound } from './sound'
+import { gameColorVars } from './theme'
 import type { GameDef, RoundResult } from './types'
 
 /**
@@ -46,7 +48,7 @@ export function SceneFrame({ game, seed, daily = false, onHome }: { game: GameDe
   const Component = gameComponent(game)
   const won = end && end.sticker !== null ? game.stickers?.[end.sticker] : undefined
   return (
-    <div className="scene-frame">
+    <div className="scene-frame" style={gameColorVars(game.meta.color)}>
       <ErrorBoundary key={stage.seed} fallback={<OopsCard onAgain={next} onHome={onHome} />}>
         <Suspense fallback={<div className="game-loading">{t('loading')}</div>}>
           <Component level={stage.level} seed={stage.seed} t={gt} onFinish={finish} />
@@ -65,7 +67,7 @@ export function SceneFrame({ game, seed, daily = false, onHome }: { game: GameDe
             </span>
             <span className="scene-end-text">
               <span className="scene-end-kicker">{won ? t('scene.newSticker') : gt('title')}</span>
-              <span className="scene-end-name">{won ? gt(won.name) : t('scene.done')}</span>
+              <span className="scene-end-name">{won ? stickerName(won, gt, t) : t('scene.done')}</span>
               {won && <span className="scene-end-kicker">{t('scene.done')}</span>}
             </span>
           </div>

@@ -41,8 +41,10 @@ export interface GameMeta {
 
 /** A sticker a player collects by finishing a stage of a scene game. */
 export interface Sticker {
-  /** Key of the sticker's name in the game's `strings.ts`. */
-  name: string
+  /** Key of the sticker's name in the game's `strings.ts`. Not needed for a medal. */
+  name?: string
+  /** A medal made from the game's icon by `medals()`: 0 bronze, 1 silver, 2 gold. Named by the app. */
+  medal?: 0 | 1 | 2
   /** Drawn like a game icon, on the 48 × 48 grid. */
   icon: GameIcon
 }

@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import { useLatest, usePops, useShake, useTimeouts } from '../../kit/hooks'
+import { useLatest, useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
+import { SceneShell, useStage } from '../../kit/SceneShell'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops } from '../../kit/ui'
-import { BAR, ROUNDS, beatMs, cellBeats, grade, judge, makePattern, showWhilePlaying } from './logic'
+import { BAR, beatMs, cellBeats, grade, judge, makePattern, showWhilePlaying } from './logic'
+
+/** Rhythms to play back in one stage. */
+const STAGE = 5
 
 /** Pause before the drum starts, in ms. */
 const LEAD = 700
@@ -26,11 +29,8 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
   const [lit, setLit] = useState(-1)
   const [hit, setHit] = useState(false)
   const [credits, setCredits] = useState<number[] | null>(null)
-  const [score, setScore] = useState(0)
-  const [combo, setCombo] = useState(0)
-  const [total, setTotal] = useState(0)
+  const stage = useStage(STAGE, onFinish)
   const [message, setMessage] = useState('')
-  const [pops, addPop] = usePops()
   const [ref, shake] = useShake<HTMLButtonElement>()
   const later = useTimeouts()
   const tapTimes = useRef<number[]>([])
@@ -46,28 +46,17 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
     clearTimeout(idle.current)
     const j = judge(pattern.hits, tapTimes.current, beat, level)
     const g = grade(j.score)
-    const nc = g === 'oops' ? 0 : combo + 1
-    const gained = Math.round(j.score * pattern.hits.length * 10) + (g === 'perfect' ? 10 + Math.min(nc, 5) * 2 : 0)
-    const newScore = score + gained
-    const newTotal = total + j.score
-    setScore(newScore)
-    setTotal(newTotal)
-    setCombo(nc)
     setCredits(j.credits)
     setPhase('result')
     setMessage(t(g))
+    let last: boolean
     if (g === 'oops') {
       sound.bad()
       shake()
-    } else {
-      sound.good(nc * 2)
-      addPop(`+${gained}`, 50, 30)
-    }
+      last = stage.miss()
+    } else last = stage.good(Math.round(j.score * pattern.hits.length * 10))
+    if (last) return
     later(() => {
-      if (round + 1 >= ROUNDS) {
-        onFinish({ score: newScore, accuracy: newTotal / ROUNDS })
-        return
-      }
       setRound(round + 1)
       setPattern(makePattern(rng, level, round + 1))
     }, 2200)
@@ -127,15 +116,7 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
   let cellStart = 0
 
   return (
-    <div className="game rhythm-copy">
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('beat'), value: `${round + 1} / ${ROUNDS}` },
-          { label: t('combo'), value: `×${combo}`, highlight: combo >= 3 },
-        ]}
-      />
-      <p className="prompt">{phase === 'result' ? message : phase === 'listen' ? t('listen') : t('yourTurn')}</p>
+    <SceneShell place="lake" say={phase === 'result' ? message : phase === 'listen' ? t('listen') : t('yourTurn')} stage={stage} className="rhythm-copy">
       {/* The rhythm shows while the drum plays it, then hides on the player's turn so it has to be remembered. */}
       <div className="rc-bar">
         {shown
@@ -168,7 +149,6 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
       <button ref={ref} className={`rc-drum${hit ? ' rc-hit' : ''}${phase === 'play' ? ' rc-ready' : ''}`} onPointerDown={tap} aria-label={t('drum')}>
         🥁
       </button>
-      <Pops pops={pops} />
-    </div>
+    </SceneShell>
   )
 }

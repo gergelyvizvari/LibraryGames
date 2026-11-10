@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
-import { useGameLoop, usePops, useShake, useTimeouts } from '../../kit/hooks'
+import { useGameLoop, useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
-import { sound, vibrate } from '../../kit/sound'
+import { SceneShell, useStage } from '../../kit/SceneShell'
+import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops } from '../../kit/ui'
 import { Bee } from './Bee'
-import { makeTurn, pointsFor, positionAt, SHOW_MS, TURNS } from './logic'
+import { makeTurn, pointsFor, positionAt, SHOW_MS } from './logic'
+
+/** Flights to follow in one stage. */
+const STAGE = 5
 
 type Phase = 'show' | 'fly' | 'pick' | 'done'
 
@@ -23,10 +26,7 @@ export default function BusyBees({ level, seed, t, onFinish }: GameProps) {
   const [found, setFound] = useState<number[]>([])
   const [wrong, setWrong] = useState<number | null>(null)
   const [result, setResult] = useState<'yes' | 'no' | null>(null)
-  const [score, setScore] = useState(0)
-  const [combo, setCombo] = useState(0)
-  const stats = useRef({ right: 0 })
-  const [pops, addPop] = usePops()
+  const stage = useStage(STAGE, onFinish)
   const [ref, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
   const flight = (turn.paths[0].length - 1) * turn.legMs
@@ -48,12 +48,6 @@ export default function BusyBees({ level, seed, t, onFinish }: GameProps) {
 
   const nextTurn = (delay: number) => {
     later(() => {
-      if (index + 1 >= TURNS) {
-        setPhase('done')
-        sound.win()
-        onFinish({ score: scoreRef.current, accuracy: stats.current.right / TURNS })
-        return
-      }
       setTurn(makeTurn(rng, level))
       setIndex((i) => i + 1)
       setMs(0)
@@ -63,39 +57,25 @@ export default function BusyBees({ level, seed, t, onFinish }: GameProps) {
       setPhase('show')
     }, delay)
   }
-  const scoreRef = useRef(0)
-  scoreRef.current = score
-
-  const tap = (bee: number, x: number, y: number) => {
+  const tap = (bee: number) => {
     if (phase !== 'pick' || result || found.includes(bee)) return
     if (turn.targets.includes(bee)) {
       const now = [...found, bee]
       setFound(now)
       if (now.length < turn.targets.length) {
         sound.pop()
-        addPop('🐝', x, y, 'info')
         return
       }
-      const c = combo + 1
-      const pts = pointsFor(level, c)
-      stats.current.right++
-      setCombo(c)
-      setScore((s) => s + pts)
       setResult('yes')
-      sound.good(c)
       // A happy little buzz.
       sound.tone(220, 0.12, 'sawtooth', 0.04, 0.12)
-      addPop(`+${pts}`, x, y)
-      nextTurn(1000)
+      if (!stage.good(pointsFor(level, 1))) nextTurn(1100)
       return
     }
     setWrong(bee)
-    setCombo(0)
     setResult('no')
-    sound.bad()
-    vibrate(40)
     shake()
-    nextTurn(1600)
+    if (!stage.miss()) nextTurn(1800)
   }
 
   const prompt = () => {
@@ -110,15 +90,7 @@ export default function BusyBees({ level, seed, t, onFinish }: GameProps) {
   const reveal = phase === 'show' || result === 'no'
 
   return (
-    <div className="game busy-bees">
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('turn'), value: `${Math.min(index + 1, TURNS)}/${TURNS}` },
-          { label: t('streak'), value: combo, highlight: combo >= 3 },
-        ]}
-      />
-      <p className={`prompt${result === 'yes' ? ' bb-yes' : ''}`}>{prompt()}</p>
+    <SceneShell place="lake" say={prompt()} stage={stage} bare fill className="busy-bees">
       <div ref={ref} className={`bb-meadow${phase === 'pick' && !result ? ' bb-picking' : ''}`}>
         {FLOWERS.map(([f, x, y], i) => (
           <span key={i} className="bb-flower" style={{ left: `${x}%`, top: `${y}%` }}>
@@ -143,7 +115,7 @@ export default function BusyBees({ level, seed, t, onFinish }: GameProps) {
               key={`${index}-${b}`}
               className={cls}
               style={{ left: `${x}%`, top: `${y}%` }}
-              onPointerDown={() => tap(b, x, y)}
+              onPointerDown={() => tap(b)}
               aria-label={`bee ${b + 1}`}
               disabled={phase === 'done'}
             >
@@ -153,8 +125,7 @@ export default function BusyBees({ level, seed, t, onFinish }: GameProps) {
             </button>
           )
         })}
-        <Pops pops={pops} />
       </div>
-    </div>
+    </SceneShell>
   )
 }

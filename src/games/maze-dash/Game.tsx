@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import { useCountdown, usePops, useTimeouts } from '../../kit/hooks'
-import { clamp, makeRng } from '../../kit/random'
+import { useTimeouts } from '../../kit/hooks'
+import { makeRng } from '../../kit/random'
+import { SceneShell, useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops, TimerBar } from '../../kit/ui'
 import { E, N, S, W, makeMaze, sizeFor, step } from './logic'
 
-const DURATION = 90
+/** Mazes in one stage. */
+const STAGE = 3
 const keys: Record<string, number> = { ArrowUp: N, ArrowRight: E, ArrowDown: S, ArrowLeft: W, w: N, d: E, s: S, a: W }
 
 export default function MazeDash({ level, seed, t, onFinish }: GameProps) {
@@ -19,23 +20,13 @@ export default function MazeDash({ level, seed, t, onFinish }: GameProps) {
   const [pos, setPos] = useState(0)
   const [trail, setTrail] = useState<number[]>([0])
   const [solved, setSolved] = useState(0)
-  const [score, setScore] = useState(0)
-  const [over, setOver] = useState(false)
   const [busy, setBusy] = useState(false)
-  const startedAt = useRef(performance.now())
   const touch = useRef<{ x: number; y: number } | null>(null)
-  const [pops, addPop] = usePops()
   const later = useTimeouts()
   const goal = maze.w * maze.h - 1
 
-  const left = useCountdown(
-    DURATION,
-    () => {
-      setOver(true)
-      onFinish({ score, accuracy: clamp(solved / 4, 0, 1) })
-    },
-    !over,
-  )
+  const stage = useStage(STAGE, onFinish)
+  const over = stage.over
 
   const move = (dir: number) => {
     if (over || busy) return
@@ -48,19 +39,14 @@ export default function MazeDash({ level, seed, t, onFinish }: GameProps) {
     setPos(next)
     setTrail((tr) => (tr.includes(next) ? tr : [...tr, next]))
     if (next !== goal) return
-    const seconds = (performance.now() - startedAt.current) / 1000
-    const gained = maze.w * maze.h + Math.max(0, Math.round(30 - seconds))
-    setScore((s) => s + gained)
     setSolved((n) => n + 1)
-    sound.win()
-    addPop(`${t('yum')} +${gained}`, 50, 50)
     setBusy(true)
+    if (stage.good(maze.w * maze.h)) return
     later(() => {
       setMaze(newMaze(solved + 1))
       setPos(0)
       setTrail([0])
       setBusy(false)
-      startedAt.current = performance.now()
     }, 900)
   }
   const moveRef = useRef(move)
@@ -90,15 +76,22 @@ export default function MazeDash({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <div className="game maze-dash">
-      <TimerBar left={left} total={DURATION} />
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('mazes'), value: solved, highlight: solved > 0 },
-          { label: t('time'), value: Math.ceil(left) },
-        ]}
-      />
+    <SceneShell
+      place="woods"
+      say={t('say')}
+      stage={stage}
+      className="maze-dash"
+      tray={
+        <div className="md-pad">
+          <span />
+          <button className="md-btn" onPointerDown={() => move(N)} aria-label="up">⬆️</button>
+          <span />
+          <button className="md-btn" onPointerDown={() => move(W)} aria-label="left">⬅️</button>
+          <button className="md-btn" onPointerDown={() => move(S)} aria-label="down">⬇️</button>
+          <button className="md-btn" onPointerDown={() => move(E)} aria-label="right">➡️</button>
+        </div>
+      }
+    >
       <div
         className="md-maze"
         key={solved}
@@ -119,16 +112,7 @@ export default function MazeDash({ level, seed, t, onFinish }: GameProps) {
             {i === pos ? '🐭' : i === goal ? '🧀' : ''}
           </div>
         ))}
-        <Pops pops={pops} />
       </div>
-      <div className="md-pad">
-        <span />
-        <button className="md-btn" onPointerDown={() => move(N)} aria-label="up">⬆️</button>
-        <span />
-        <button className="md-btn" onPointerDown={() => move(W)} aria-label="left">⬅️</button>
-        <button className="md-btn" onPointerDown={() => move(S)} aria-label="down">⬇️</button>
-        <button className="md-btn" onPointerDown={() => move(E)} aria-label="right">➡️</button>
-      </div>
-    </div>
+    </SceneShell>
   )
 }

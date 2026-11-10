@@ -79,7 +79,7 @@
 
 /* Anything that sets --game-color (from TS, with --game-surface: the colour deepened so white text reads on it)
    also gets a readable text version of it and a darker pressable edge. */
-.frame, .game-card, .daily {
+.frame, .game-card, .daily, .scene-frame {
   --game-text: color-mix(in srgb, var(--game-surface), var(--game-tint) var(--game-tint-amount));
   --game-edge: color-mix(in srgb, var(--game-surface), #000 22%);
 }
@@ -323,9 +323,8 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .sc-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2); }
 
 /* Number Ninja */
-.nn-target { text-align: center; font-size: 1.4rem; font-weight: 700; }
-.nn-target strong { display: inline-block; background: var(--game-color); color: var(--ink-fixed); border-radius: 18px; padding: 0 18px; font-size: 2.6rem; animation: zoom 0.4s; }
-.nn-field { position: relative; flex: 1; min-height: 380px; border-radius: 28px; background: linear-gradient(#2d3142, #4b4f6b); overflow: hidden; }
+.nn-target { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--story); font-weight: 800; font-size: 9rem; color: rgba(255, 255, 255, 0.16); animation: zoom 0.4s; pointer-events: none; }
+.nn-field { position: relative; flex: 1; min-height: 0; border-radius: 28px; background: linear-gradient(#2f2a66, #4b4690); overflow: hidden; }
 .nn-bubble { position: absolute; width: 92px; height: 92px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #ffffff, #c8ecff 45%, #7cc9ff); color: var(--ink-fixed); font-weight: 700; font-size: 1.25rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); }
 
 /* Flash Read */
@@ -390,7 +389,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 
 /* Spot the Odd One */
 .oo-wrap { position: relative; }
-.oo-grid { display: grid; gap: 6px; width: min(100%, 460px); margin: 0 auto; animation: zoom 0.25s; }
+.oo-grid { display: grid; gap: 6px; width: min(100%, 460px, 100dvh - 250px); min-width: 200px; margin: 0 auto; animation: zoom 0.25s; }
 .oo-cell { aspect-ratio: 1; display: grid; place-items: center; background: var(--card); border-radius: 14px; box-shadow: 0 0 0 2px var(--line), 0 3px 0 var(--line); font-size: inherit; line-height: 1; padding: 0; }
 .oo-cell:active { transform: scale(0.92); }
 
@@ -606,6 +605,68 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .scene-end-name { font-family: var(--story); font-weight: 800; font-size: 1.5rem; line-height: 1.05; letter-spacing: 1.5px; text-transform: uppercase; }
 .scene-end-actions { align-self: stretch; display: grid; justify-items: center; gap: 10px; pointer-events: auto; }
 .scene-link { padding: 8px 16px; background: none; color: var(--story-ink); font-weight: 700; opacity: 0.8; }
+
+/* The shared scene of a game (kit/SceneShell.tsx): the room of its place, its character, the board on a sheet. */
+.sg {
+  flex: 1; min-height: 0; position: relative; display: flex; flex-direction: column; background: var(--wall); color: var(--story-ink);
+  /* A printed page: the same light colours in every theme. */
+  --ink: var(--story-ink); --ink-fixed: var(--story-ink); --muted: #6f6787; --card: #fff; --bg: var(--story-paper); --line: #e6dcc8; --accent: #7c5ce0;
+  --good: #1aa37f; --bad: #e2506a; --good-soft: #dff5e6; --bad-soft: #fde0e2; --highlight: #fff0b8; --highlight-strong: #ffe08a; --star-off: #e6dcc8;
+  --game-tint: #000; --game-tint-amount: 0%; --shadow: 0 3px 0 rgba(51, 40, 74, 0.16); --on-color: #fff; --press: rgba(51, 40, 74, 0.28);
+}
+.sg-peaks { --wall: #6a66b8; --floor: #4b4690; }
+.sg-woods { --wall: #2f8a84; --floor: #1f6661; }
+.sg-lake { --wall: #4a86c8; --floor: #33649c; }
+.sg-sea { --wall: #27a3b4; --floor: #e6c868; }
+.sg-village { --wall: #c2607a; --floor: #8e3b5a; }
+.sg-meadow { --wall: #8fb84a; --floor: #6a9638; }
+.sg-coast { --wall: #e3a352; --floor: #bb7436; }
+.sg-room { position: absolute; inset: 0; overflow: hidden; pointer-events: none; background: radial-gradient(ellipse 75% 42% at 28% 10%, rgba(255, 255, 255, 0.2), transparent 70%), radial-gradient(circle, rgba(255, 255, 255, 0.11) 5px, transparent 6px) 0 0 / 56px 56px, radial-gradient(circle, rgba(255, 255, 255, 0.11) 5px, transparent 6px) 28px 28px / 56px 56px; }
+.sg-room::after { content: ''; position: absolute; inset: 0; background: var(--grain); opacity: 0.32; }
+.sg-floor { position: absolute; left: -6%; right: -6%; bottom: 0; height: 15%; background: var(--floor); border-radius: 50% 50% 0 0 / 30px 30px 0 0; }
+.sg-window { position: absolute; top: calc(8px + env(safe-area-inset-top)); right: calc(8px + env(safe-area-inset-right)); width: 62px; }
+.sg-prop { position: absolute; bottom: 5%; display: none; }
+.sg-plant { left: max(2%, 50% - 520px); width: 130px; }
+.sg-books { right: max(2%, 50% - 520px); width: 150px; }
+.sg-head { position: relative; z-index: 2; flex: none; align-self: center; width: min(100%, 640px); display: flex; align-items: flex-end; gap: 16px; padding: calc(64px + env(safe-area-inset-top)) 16px 0 10px; }
+.sg-guide { flex: none; width: 84px; }
+.sg-guide-art { display: block; width: 100%; overflow: visible; transform-origin: 50% 100%; animation: fmBreathe 3.2s ease-in-out infinite; }
+.sg-happy .sg-guide-art { animation: fmHop 0.6s; }
+.sg-oops .sg-guide-art { animation: sgNo 0.5s; }
+@keyframes sgNo { 20%, 60% { transform: translateX(-5px) rotate(-4deg); } 40%, 80% { transform: translateX(5px) rotate(4deg); } }
+.sg-bubble { position: relative; flex: 0 1 auto; min-width: 0; margin-bottom: 20px; padding: 10px 16px; border-radius: 22px; font-size: 1.1rem; text-align: left; }
+.sg-bubble::after { left: -13px; top: auto; bottom: 14px; border: 8px solid transparent; border-right: 16px solid var(--story-paper); border-left: 0; transform: none; }
+.sg-board { position: relative; z-index: 2; flex: 0 1 auto; min-height: 0; align-self: center; width: min(100% - 24px, 600px); margin: auto 12px; display: flex; flex-direction: column; gap: 12px; }
+.sg-board.sg-fill { flex: 1; margin-top: 6px; margin-bottom: 0; }
+.sg:not(:has(.scene-tray)) { padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
+.sg:has(.scene-tray) .sg-board { margin-bottom: 26px; }
+.sg:has(.scene-tray) .sg-board:not(.sg-fill) { margin-bottom: auto; }
+/* The sheet is a rug with a stitched hem. */
+.sg-sheet { padding: 18px 16px; border-radius: 30px; background: var(--story-paper); box-shadow: 0 6px 0 rgba(36, 26, 60, 0.28); outline: 2px dashed rgba(51, 40, 74, 0.16); outline-offset: -8px; }
+.sg .scene-tray { z-index: 2; flex-wrap: wrap; }
+.sg .prompt { font-size: 1.3rem; }
+/* Many stars need smaller stars. */
+.scene-pips:has(svg:nth-child(7)) { gap: 3px; padding: 7px 10px; }
+.scene-pips:has(svg:nth-child(7)) svg { width: 19px; height: 19px; }
+@media (min-width: 900px) and (min-height: 560px) {
+  .sg-window { width: 150px; top: 28px; right: max(4%, 50% - 560px); }
+  .sg-guide { width: 104px; }
+  .sg-prop { display: block; }
+}
+/* A phone on its side: the character stands on the left, the board gets the rest. */
+@media (max-height: 480px) and (orientation: landscape) {
+  .sg { display: grid; grid-template: 'head board' 1fr 'head tray' auto / minmax(150px, 26%) 1fr; }
+  .sg-head { grid-area: head; align-self: end; flex-direction: column-reverse; align-items: center; gap: 12px; padding: 60px 8px 14px calc(8px + env(safe-area-inset-left)); }
+  .sg-bubble { margin: 0; font-size: 1rem; text-align: center; }
+  .sg-bubble::after { left: 44%; bottom: -14px; border: 8px solid transparent; border-top: 15px solid var(--story-paper); border-bottom: 0; }
+  .sg-guide { width: 76px; }
+  .sg-board, .sg:has(.scene-tray) .sg-board { grid-area: board; width: auto; align-self: center; justify-self: stretch; margin: 60px calc(12px + env(safe-area-inset-right)) 8px 4px; max-height: calc(100% - 68px); overflow-y: auto; }
+  .sg:not(:has(.scene-tray)) { padding-bottom: 0; }
+  .sg-board.sg-fill { align-self: stretch; }
+  .sg .scene-tray { grid-area: tray; }
+  .sg .scene-tray::before { display: none; }
+  .sg-window { display: none; }
+}
 
 /* Sticker album */
 .album { display: grid; gap: 16px; }
@@ -849,7 +910,7 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .eo-msg { min-height: 2.6em; display: grid; place-items: center; font-size: 1.25rem; }
 .eo-yes { color: var(--good); }
 .eo-no { color: var(--bad); }
-.eo-field { position: relative; flex: 1; min-height: 300px; border-radius: 28px; background: var(--card); border: 3px dashed var(--line); overflow: hidden; touch-action: none; }
+.eo-field { position: relative; flex: 1; min-height: 0; border-radius: 28px; background: var(--story-paper); border: 0; box-shadow: 0 6px 0 rgba(36, 26, 60, 0.28); overflow: hidden; touch-action: none; }
 .eo-drop { position: absolute; left: 50%; display: grid; justify-items: center; gap: 6px; min-width: 104px; padding: 12px 18px; border-radius: 26px; background: var(--game-surface); color: var(--on-color); box-shadow: 0 6px 0 rgba(0, 0, 0, 0.18); transform: translateX(-50%); transition: transform 0.35s ease-in, opacity 0.35s ease-in; pointer-events: none; animation: zoom 0.2s; }
 .eo-num { font-size: 3rem; font-weight: 800; line-height: 1; }
 .eo-drop-dots .eo-num { font-size: 2.4rem; }
@@ -975,3 +1036,17 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 @keyframes psGlow { 0%, 100% { opacity: 0; } 20%, 70% { opacity: 1; } }
 @keyframes psPulse { from { opacity: 0.35; } }
 @keyframes psNo { 25% { transform: rotate(-12deg); } 75% { transform: rotate(12deg); } }
+
+/* Games inside the shared scene: boards sized so the whole scene fits one screen. */
+.sg .scene-tray .cs-tool, .sg .scene-tray .ps-tool, .sg .scene-tray .md-btn { background: #fff; box-shadow: 0 4px 0 #e0cfa4; }
+.sg .ps-tools { margin: 0; width: min(100%, 440px); }
+.sg .ps-wrap { width: min(100%, 440px, 100dvh - 400px); min-width: 230px; margin: 0 auto; }
+.sg .md-maze { width: min(100%, 420px, (100dvh - 420px) * var(--md-ratio, 1)); min-width: 200px; }
+.sg .md-pad { grid-template-columns: repeat(3, 60px); gap: 6px; }
+.sg .md-btn { height: 46px; }
+.sg .cs-rack { padding: 10px 0 4px; }
+.sg .hm-board { width: min(100%, 420px, 100dvh - 380px); min-width: 220px; background: #fff; box-shadow: inset 0 0 0 2px var(--line); }
+.sg .scene-tray .ps-tool.ps-on { background: var(--game-surface); box-shadow: 0 4px 0 var(--game-edge); }
+.sg .cm-country { display: block; margin-top: 4px; font-family: var(--story); font-weight: 800; font-size: 1.5rem; letter-spacing: 1px; }
+.sg .cm-card { text-align: center; }
+.scene-frame:has(.scene-end) .sg-head { visibility: hidden; }

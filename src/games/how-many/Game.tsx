@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import { usePops, useTimeouts } from '../../kit/hooks'
+import { useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
+import { SceneShell, useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops } from '../../kit/ui'
-import { ROUNDS, countRange, flashMs, makeDots, options, pointsFor } from './logic'
+import { countRange, flashMs, makeDots, options, pointsFor } from './logic'
 
+/** Looks in one stage. */
+const STAGE = 6
 // Something different to count every round.
 const things = ['🍎', '🐟', '⭐', '🐞', '🎈', '🍓', '🐥', '🌸', '⚽', '🍪', '🐸', '🦋', '🍩', '🐝', '💎', '🧁', '🐠', '🍄', '🌟', '🍒']
 
@@ -19,9 +21,7 @@ export default function HowMany({ level, seed, t, onFinish }: GameProps) {
   const [index, setIndex] = useState(0)
   const [phase, setPhase] = useState<'show' | 'guess' | 'result'>('show')
   const [message, setMessage] = useState('')
-  const [score, setScore] = useState(0)
-  const [exact, setExact] = useState(0)
-  const [pops, addPop] = usePops()
+  const stage = useStage(STAGE, onFinish)
   const later = useTimeouts()
 
   useEffect(() => {
@@ -33,28 +33,11 @@ export default function HowMany({ level, seed, t, onFinish }: GameProps) {
   const guess = (g: number) => {
     if (phase !== 'guess') return
     const pts = pointsFor(g, round.n)
-    const s = score + pts
-    const e = exact + (pts === 20 ? 1 : 0)
-    setScore(s)
-    setExact(e)
-    if (pts === 20) {
-      sound.good(e)
-      setMessage(t('exact'))
-      addPop(`+${pts}`, 50, 40)
-    } else if (pts > 0) {
-      sound.tone(500, 0.12, 'triangle')
-      setMessage(t('close', { n: round.n }))
-      addPop(`+${pts}`, 50, 40, 'info')
-    } else {
-      sound.bad()
-      setMessage(t('itWas', { n: round.n }))
-    }
+    setMessage(pts === 20 ? t('exact') : pts > 0 ? t('close', { n: round.n }) : t('itWas', { n: round.n }))
     setPhase('result')
+    if (pts < 20) sound.tone(pts > 0 ? 500 : 220, 0.12, 'triangle')
+    if (pts === 20 ? stage.good(pts) : stage.miss()) return
     later(() => {
-      if (index + 1 >= ROUNDS) {
-        onFinish({ score: s, accuracy: e / ROUNDS })
-        return
-      }
       setRound(makeRound())
       setIndex(index + 1)
       setPhase('show')
@@ -62,14 +45,7 @@ export default function HowMany({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <div className="game how-many">
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('round'), value: `${index + 1} / ${ROUNDS}` },
-        ]}
-      />
-      <p className="prompt">{phase === 'show' ? t('look') : phase === 'guess' ? t('howMany') : message}</p>
+    <SceneShell place="peaks" say={phase === 'show' ? t('look') : phase === 'guess' ? t('howMany') : message} stage={stage} className="how-many">
       <div className="hm-board">
         {(phase === 'show' || phase === 'result') &&
           round.dots.map((d, i) => (
@@ -78,7 +54,6 @@ export default function HowMany({ level, seed, t, onFinish }: GameProps) {
             </span>
           ))}
         {phase === 'guess' && <span className="hm-question">?</span>}
-        <Pops pops={pops} />
       </div>
       <div className="hm-options">
         {round.options.map((o) => (
@@ -87,6 +62,6 @@ export default function HowMany({ level, seed, t, onFinish }: GameProps) {
           </button>
         ))}
       </div>
-    </div>
+    </SceneShell>
   )
 }

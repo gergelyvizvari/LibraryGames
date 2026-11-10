@@ -3,6 +3,7 @@ import type { GameStrings } from '../../i18n'
 const strings: GameStrings = {
   en: {
     title: 'Sentence Builder',
+    say: 'Put the words in order!',
     howTo: 'Look at the picture. Tap the words in the right order to build the sentence!',
     score: 'Score',
     sentences: 'Sentences',
@@ -10,6 +11,7 @@ const strings: GameStrings = {
   },
   hu: {
     title: 'Mondatépítő',
+    say: 'Rakd sorba a szavakat!',
     howTo: 'Nézd meg a képet! Koppints a szavakra jó sorrendben, és rakd össze a mondatot!',
     score: 'Pont',
     sentences: 'Mondatok',

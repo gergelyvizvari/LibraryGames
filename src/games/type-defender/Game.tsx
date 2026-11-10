@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocale } from '../../i18n'
-import { useCountdown, useGameLoop, usePops, useShake } from '../../kit/hooks'
+import { useGameLoop, useShake } from '../../kit/hooks'
 import { clamp, makeRng } from '../../kit/random'
-import { sound, vibrate } from '../../kit/sound'
+import { SceneShell, useStage } from '../../kit/SceneShell'
+import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hearts, Hud, Pops, TimerBar } from '../../kit/ui'
 import { typedPrefix, typedWhole, wordLists, wordsForLevel } from './content'
 
-const DURATION = 60
-const SHIELDS = 3
+/** Words to type in one stage. */
+const STAGE = 8
 
 interface Enemy {
   id: number
@@ -24,24 +24,14 @@ export default function TypeDefender({ level, seed, t, onFinish }: GameProps) {
   const state = useRef({ enemies: [] as Enemy[], spawnIn: 0.3, nextId: 0 })
   const [enemies, setEnemies] = useState<Enemy[]>([])
   const [typed, setTyped] = useState('')
-  const [score, setScore] = useState(0)
-  const [zapped, setZapped] = useState(0)
-  const [shields, setShields] = useState(SHIELDS)
-  const [over, setOver] = useState(false)
-  const [pops, addPop] = usePops()
+  const stage = useStage(STAGE, onFinish)
+  const over = stage.over
   const [ref, shake] = useShake<HTMLDivElement>()
   const input = useRef<HTMLInputElement>(null)
 
   useEffect(() => input.current?.focus(), [])
 
-  const finish = (finalShields: number) => {
-    if (over) return
-    setOver(true)
-    onFinish({ score, accuracy: clamp(zapped / 15, 0, 1) * (finalShields > 0 ? 1 : 0.7) })
-  }
-  const left = useCountdown(DURATION, () => finish(shields), !over)
-
-  const fallSpeed = clamp(5 + level * 1.2, 5, 18) // % per second
+  const fallSpeed = clamp(4 + level * 1.1, 4, 16) // % per second
 
   useGameLoop((dt) => {
     const s = state.current
@@ -63,14 +53,10 @@ export default function TypeDefender({ level, seed, t, onFinish }: GameProps) {
       return [{ ...e, y }]
     })
     if (hit) {
-      const left = Math.max(0, shields - hit)
-      setShields(left)
-      sound.bad()
-      vibrate(80)
+      // A word that reaches the castle bounces off its wall: nothing is lost, another one comes.
+      stage.slip()
       shake()
-      addPop(t('ouch'), 50, 85, 'bad')
       setTyped('')
-      if (left === 0) finish(0)
     }
     setEnemies(s.enemies)
   }, !over)
@@ -89,11 +75,7 @@ export default function TypeDefender({ level, seed, t, onFinish }: GameProps) {
     if (typedWhole(target.word, v, level)) {
       s.enemies = s.enemies.filter((e) => e.id !== target.id)
       setEnemies(s.enemies)
-      const gained = target.word.length * 5
-      setScore((n) => n + gained)
-      setZapped((z) => z + 1)
-      sound.good(zapped + 1)
-      addPop(`${t('zap')} +${gained}`, target.x + 8, target.y)
+      stage.good(target.word.length * 5)
       setTyped('')
       return
     }
@@ -101,16 +83,8 @@ export default function TypeDefender({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <div className="game type-defender" onPointerDown={() => input.current?.focus()}>
-      <TimerBar left={left} total={DURATION} />
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('shields'), value: <Hearts left={shields} total={SHIELDS} /> },
-          { label: t('time'), value: Math.ceil(left) },
-        ]}
-      />
-      <div className="td-sky" ref={ref}>
+    <SceneShell place="sea" say={t('say')} stage={stage} bare fill className="type-defender">
+      <div className="td-sky" ref={ref} onPointerDown={() => input.current?.focus()}>
         {enemies.map((e) => {
           const active = typed && typedPrefix(e.word, typed, level)
           return (
@@ -127,7 +101,6 @@ export default function TypeDefender({ level, seed, t, onFinish }: GameProps) {
           )
         })}
         <div className="td-castle">🏰</div>
-        <Pops pops={pops} />
       </div>
       <input
         ref={input}
@@ -141,6 +114,6 @@ export default function TypeDefender({ level, seed, t, onFinish }: GameProps) {
         spellCheck={false}
         enterKeyHint="done"
       />
-    </div>
+    </SceneShell>
   )
 }

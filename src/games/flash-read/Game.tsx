@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocale } from '../../i18n'
-import { usePops, useTimeouts } from '../../kit/hooks'
+import { useTimeouts } from '../../kit/hooks'
 import { clamp, makeRng } from '../../kit/random'
-import { sound } from '../../kit/sound'
+import { SceneShell, useStage } from '../../kit/SceneShell'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops } from '../../kit/ui'
 import { stories, storiesForLevel } from './content'
 
 const STORIES_PER_ROUND = 4
@@ -17,10 +16,8 @@ export default function FlashRead({ level, seed, t, onFinish }: GameProps) {
   const [wpm, setWpm] = useState(() => clamp(50 + level * 20, 70, 300))
   const [phase, setPhase] = useState<'reading' | 'question' | 'feedback'>('reading')
   const [word, setWord] = useState(0)
-  const [score, setScore] = useState(0)
-  const [correct, setCorrect] = useState(0)
+  const stage = useStage(picked.length, onFinish)
   const [feedback, setFeedback] = useState('')
-  const [pops, addPop] = usePops()
   const later = useTimeouts()
 
   const story = picked[index]
@@ -41,29 +38,20 @@ export default function FlashRead({ level, seed, t, onFinish }: GameProps) {
   const answer = (o: string) => {
     if (phase !== 'question') return
     const right = o === story.options[0]
-    let nextCorrect = correct
-    let nextScore = score
+    let last: boolean
     if (right) {
-      nextCorrect++
-      nextScore += wpm
-      sound.good(nextCorrect * 2)
-      addPop(`+${wpm}`, 50, 30)
       setFeedback(t('correct'))
       setWpm((w) => w + 20)
+      last = stage.good(wpm)
     } else {
-      sound.bad()
       setFeedback(t('notQuite', { answer: story.options[0] }))
       setWpm((w) => Math.max(60, w - 15))
+      last = stage.miss()
     }
-    setCorrect(nextCorrect)
-    setScore(nextScore)
     setPhase('feedback')
+    if (last) return
     later(
       () => {
-        if (index + 1 >= picked.length) {
-          onFinish({ score: nextScore, accuracy: nextCorrect / picked.length })
-          return
-        }
         setIndex(index + 1)
         setWord(0)
         setPhase('reading')
@@ -73,14 +61,7 @@ export default function FlashRead({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <div className="game flash-read">
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('story'), value: `${index + 1} / ${picked.length}` },
-          { label: t('speed'), value: t('wpm', { wpm }), highlight: true },
-        ]}
-      />
+    <SceneShell place="sea" say={phase === 'reading' ? t('read') : phase === 'question' ? t('ask') : feedback} stage={stage} className="flash-read">
       {phase === 'reading' && (
         <div className="fr-stage">
           <div className="fr-word" key={word}>
@@ -94,9 +75,7 @@ export default function FlashRead({ level, seed, t, onFinish }: GameProps) {
       {phase !== 'reading' && (
         <div className="fr-question">
           <h2>{story.question}</h2>
-          {phase === 'feedback' ? (
-            <p className="fr-feedback">{feedback}</p>
-          ) : (
+          {phase === 'question' && (
             <div className="choices choices-stacked">
               {options.map((o) => (
                 <button key={o} className="choice-btn" onClick={() => answer(o)}>
@@ -107,7 +86,6 @@ export default function FlashRead({ level, seed, t, onFinish }: GameProps) {
           )}
         </div>
       )}
-      <Pops pops={pops} />
-    </div>
+    </SceneShell>
   )
 }

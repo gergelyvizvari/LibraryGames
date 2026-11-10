@@ -1,10 +1,10 @@
 import { useRef, useState } from 'react'
-import { usePops, useShake, useTimeouts } from '../../kit/hooks'
+import { useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
-import { sound, vibrate } from '../../kit/sound'
+import { SceneShell, useStage } from '../../kit/SceneShell'
+import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops } from '../../kit/ui'
-import { ROUNDS, accuracyFor, animalKey, holdRange, pointsFor } from './logic'
+import { ROUNDS, animalKey, holdRange, pointsFor } from './logic'
 
 type State = 'ready' | 'lighting' | 'holding' | 'go' | 'result' | 'done'
 
@@ -12,10 +12,8 @@ export default function LightsOut({ level, seed, t, onFinish }: GameProps) {
   const rng = useRef(makeRng(seed)).current
   const [state, setState] = useState<State>('ready')
   const [lit, setLit] = useState(0)
-  const [times, setTimes] = useState<number[]>([])
   const [message, setMessage] = useState('')
-  const [score, setScore] = useState(0)
-  const [pops, addPop] = usePops()
+  const stage = useStage(ROUNDS, onFinish)
   const [ref, shake] = useShake<HTMLButtonElement>()
   const later = useTimeouts()
   const outAt = useRef(0)
@@ -52,8 +50,7 @@ export default function LightsOut({ level, seed, t, onFinish }: GameProps) {
     }
     if (state === 'lighting' || state === 'holding') {
       run.current++
-      sound.bad()
-      vibrate(80)
+      stage.slip()
       shake()
       setLit(0)
       setMessage(t('tooSoon'))
@@ -62,42 +59,23 @@ export default function LightsOut({ level, seed, t, onFinish }: GameProps) {
     }
     if (state !== 'go') return
     const ms = Math.round(performance.now() - outAt.current)
-    const next = [...times, ms]
-    const pts = pointsFor(ms)
-    setTimes(next)
-    setScore((s) => s + pts)
-    sound.good(next.length * 2)
-    addPop(`+${pts}`, 50, 30)
     setMessage(`${t('ms', { ms })} · ${t(animalKey(ms))}`)
-    if (next.length >= ROUNDS) {
-      setState('done')
-      onFinish({ score: score + pts, accuracy: accuracyFor(next, level) })
-    } else {
-      setState('result')
-    }
+    setState(stage.good(pointsFor(ms)) ? 'done' : 'result')
   }
 
   const label =
     state === 'go' ? t('tapNow') : state === 'lighting' || state === 'holding' ? t('waitForIt') : state === 'done' ? '' : t('tapToStart')
 
   return (
-    <div className="game lights-out">
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('round'), value: `${Math.min(times.length + 1, ROUNDS)} / ${ROUNDS}` },
-        ]}
-      />
+    <SceneShell place="meadow" say={message || label || t('tapToStart')} stage={stage} bare fill className="lights-out">
       <button ref={ref} className={`lo-area lo-${state}`} onPointerDown={tap}>
         <div className="lo-lights">
           {[1, 2, 3, 4, 5].map((i) => (
             <span key={i} className={`lo-light${i <= lit ? ' lo-on' : ''}`} />
           ))}
         </div>
-        <div className="lo-message">{message}</div>
         <div className="lo-label">{label}</div>
       </button>
-      <Pops pops={pops} />
-    </div>
+    </SceneShell>
   )
 }

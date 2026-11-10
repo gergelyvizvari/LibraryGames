@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from 'react'
 import { useLocale } from '../../i18n'
-import { usePops, useShake, useTimeouts } from '../../kit/hooks'
+import { useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
+import { SceneShell } from '../../kit/SceneShell'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hud, MapStage, Pops } from '../../kit/ui'
+import { MapStage } from '../../kit/ui'
 import { continentNames, names, type Item } from './content'
 import { CONTINENTS, type Continent } from './continents'
 import { coloured, pickItems, pointsFor, showLabels } from './logic'
@@ -26,7 +27,7 @@ const SPOTS: [number, number][] = [[0, 0], [-34, -22], [34, -22], [-34, 22], [34
 export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
   const locale = useLocale()
   const rng = useRef(makeRng(seed)).current
-  const questions = useRef(pickItems(rng, level)).current
+  const questions = useRef(pickItems(rng, level).slice(0, 6)).current
   const itemNames = names[locale] ?? names.en
   const cNames = continentNames[locale] ?? continentNames.en
   const [world, setWorld] = useState<WorldMap | null>(null)
@@ -40,7 +41,6 @@ export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
   const [drag, setDrag] = useState<{ x: number; y: number } | null>(null)
   const stats = useRef({ firstTry: 0 })
   const askedAt = useRef(0)
-  const [pops, addPop] = usePops()
   const [shakeRef, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
   const q = questions[index]
@@ -73,16 +73,8 @@ export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
     }, 1100)
   }
 
-  /** Where a screen point falls on the map, in % of the map box, for pops. */
-  const percentAt = (clientX: number, clientY: number) => {
-    const r = shakeRef.current?.getBoundingClientRect()
-    if (!r) return [50, 50] as const
-    return [((clientX - r.left) / r.width) * 100, ((clientY - r.top) / r.height) * 100] as const
-  }
-
-  const answer = (c: Continent, clientX: number, clientY: number) => {
+  const answer = (c: Continent) => {
     if (!world || done || solved) return
-    const [px, py] = percentAt(clientX, clientY)
     if (c === q.continent) {
       const seconds = (performance.now() - askedAt.current) / 1000
       const nc = tries === 0 ? combo + 1 : 0
@@ -93,7 +85,6 @@ export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
       setSolved('yes')
       setPlaced((p) => [...p, q])
       sound.good(nc)
-      addPop(`+${gained}`, px, py)
       next(score + gained)
       return
     }
@@ -119,7 +110,7 @@ export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
 
   const onMapTap = (e: PointerEvent<SVGSVGElement>) => {
     const c = (e.target as Element).closest('[data-cont]')?.getAttribute('data-cont') as Continent | null
-    if (c) answer(c, e.clientX, e.clientY)
+    if (c) answer(c)
   }
 
   const onCardDown = (e: PointerEvent<HTMLDivElement>) => {
@@ -134,7 +125,7 @@ export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
     const up = (e: globalThis.PointerEvent) => {
       setDrag(null)
       const c = continentAt(e.clientX, e.clientY)
-      if (c) answer(c, e.clientX, e.clientY)
+      if (c) answer(c)
     }
     window.addEventListener('pointermove', move)
     window.addEventListener('pointerup', up)
@@ -158,21 +149,20 @@ export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
   const stickers = CONTINENTS.flatMap((c) => placed.filter((p) => p.continent === c).map((p, i) => ({ p, c, i })))
 
   return (
-    <div className="game continent-sort">
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('item'), value: `${Math.min(index + 1, questions.length)} / ${questions.length}` },
-          { label: t('combo'), value: `×${combo}`, highlight: combo >= 3 },
-        ]}
-      />
+    <SceneShell
+      place="coast"
+      say={q ? hint() : ' '}
+      stage={{ done: Math.min(index + (solved ? 1 : 0), questions.length), total: questions.length, over: !q, mood: solved === 'yes' ? 'happy' : wrong ? 'oops' : 'idle' }}
+      bare
+      fill
+      className="continent-sort"
+    >
       {q && (
         <div className={`cs2-card${solved ? ' cs2-card-done' : ''}${drag ? ' cs2-card-lifted' : ''}`} key={index} onPointerDown={onCardDown}>
           <span className="cs2-emoji">{q.emoji}</span>
           <span className="cs2-name">{itemNames[q.id]}</span>
         </div>
       )}
-      <p className={`cs2-hint${solved === 'yes' ? ' cs2-yes' : ''}`}>{q ? hint() : ' '}</p>
       <MapStage>
       <div className="cs2-sea map-box" ref={shakeRef} style={{ '--map-ratio': world ? WIDTH / world.height : 2 } as CSSProperties}>
         {world ? (
@@ -206,7 +196,6 @@ export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
         ) : (
           <div className="cs2-loading">{t('loading')}</div>
         )}
-        <Pops pops={pops} />
       </div>
       </MapStage>
       {drag && q && (
@@ -214,6 +203,6 @@ export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
           {q.emoji}
         </div>
       )}
-    </div>
+    </SceneShell>
   )
 }

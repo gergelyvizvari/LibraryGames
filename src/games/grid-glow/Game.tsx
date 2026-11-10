@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import { usePops, useShake, useTimeouts } from '../../kit/hooks'
+import { useShake, useTimeouts } from '../../kit/hooks'
 import { clamp, makeRng } from '../../kit/random'
-import { sound, vibrate } from '../../kit/sound'
+import { SceneShell, useStage } from '../../kit/SceneShell'
+import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hearts, Hud, Pops } from '../../kit/ui'
 import { gridFor, pattern, startCount } from './logic'
 
-const LIVES = 3
-const ROUNDS = 12
+/** Patterns to remember in one stage. Each one glows one square more; a slip brings an easier one. */
+const STAGE = 5
 
 export default function GridGlow({ level, seed, t, onFinish }: GameProps) {
   const rng = useRef(makeRng(seed)).current
@@ -17,18 +17,15 @@ export default function GridGlow({ level, seed, t, onFinish }: GameProps) {
   const [mode, setMode] = useState<'show' | 'input' | 'wait'>('show')
   const [picked, setPicked] = useState<number[]>([])
   const [wrongCell, setWrongCell] = useState<number | null>(null)
-  const [lives, setLives] = useState(LIVES)
-  const [score, setScore] = useState(0)
-  const [best, setBest] = useState(0)
   const [rounds, setRounds] = useState(0)
-  const [pops, addPop] = usePops()
+  const stage = useStage(STAGE, onFinish)
   const [ref, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
 
   useEffect(() => {
     if (mode !== 'show') return
     sound.tone(700, 0.15, 'triangle', 0.15)
-    later(() => setMode('input'), clamp(1600 - level * 80 + count * 120, 900, 2200))
+    later(() => setMode('input'), clamp(1700 - level * 80 + count * 140, 1000, 2600))
   }, [mode, cells, level, count, later])
 
   const newRound = (n: number) => {
@@ -36,61 +33,30 @@ export default function GridGlow({ level, seed, t, onFinish }: GameProps) {
     setCells(pattern(rng, gridFor(n), n))
     setPicked([])
     setWrongCell(null)
+    setRounds((r) => r + 1)
     setMode('show')
   }
-
-  const end = (finalScore: number, finalBest: number) => onFinish({ score: finalScore, accuracy: clamp(finalBest / (3 + level), 0, 1) })
 
   const tap = (i: number) => {
     if (mode !== 'input' || picked.includes(i)) return
     if (!cells.includes(i)) {
-      sound.bad()
-      vibrate(50)
+      stage.slip()
       shake()
       setWrongCell(i)
       setMode('wait')
-      const left = lives - 1
-      setLives(left)
-      const r = rounds + 1
-      setRounds(r)
-      if (left <= 0 || r >= ROUNDS) {
-        later(() => end(score, best), 900)
-        return
-      }
-      later(() => newRound(Math.max(2, count - 1)), 1100)
+      later(() => newRound(Math.max(2, count - 1)), 1300)
       return
     }
     const next = [...picked, i]
     setPicked(next)
     sound.tone(500 + next.length * 60, 0.08, 'triangle', 0.15)
     if (next.length < cells.length) return
-    const gained = count * 10
-    const s = score + gained
-    const b = Math.max(best, count)
-    setScore(s)
-    setBest(b)
-    sound.good(count)
-    addPop(`+${gained}`, 50, 50)
     setMode('wait')
-    const r = rounds + 1
-    setRounds(r)
-    if (r >= ROUNDS) {
-      later(() => end(s, b), 700)
-      return
-    }
-    later(() => newRound(count + 1), 700)
+    if (!stage.good(count * 10)) later(() => newRound(count + 1), 800)
   }
 
   return (
-    <div className="game grid-glow">
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('squares'), value: count, highlight: true },
-          { label: t('lives'), value: <Hearts left={lives} total={LIVES} /> },
-        ]}
-      />
-      <p className="prompt">{mode === 'show' ? t('watch') : t('yourTurn')}</p>
+    <SceneShell place="lake" say={mode === 'show' ? t('watch') : t('yourTurn')} stage={stage} className="grid-glow">
       <div className="gg-grid" ref={ref} style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}>
         {Array.from({ length: size * size }, (_, i) => {
           const lit = mode === 'show' || (mode === 'wait' && wrongCell !== null) ? cells.includes(i) : picked.includes(i)
@@ -104,7 +70,6 @@ export default function GridGlow({ level, seed, t, onFinish }: GameProps) {
           )
         })}
       </div>
-      <Pops pops={pops} />
-    </div>
+    </SceneShell>
   )
 }

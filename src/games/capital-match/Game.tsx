@@ -1,24 +1,23 @@
 import { useRef, useState } from 'react'
 import { useLocale } from '../../i18n'
-import { usePops, useShake, useTimeouts } from '../../kit/hooks'
+import { useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
+import { SceneShell } from '../../kit/SceneShell'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops } from '../../kit/ui'
 import { countries, flag } from './content'
 import { makeQuestions } from './logic'
 
 export default function CapitalMatch({ level, seed, t, onFinish }: GameProps) {
   const locale = useLocale()
   const rng = useRef(makeRng(seed)).current
-  const questions = useRef(makeQuestions(rng, countries[locale] ?? countries.en, level)).current
+  const questions = useRef(makeQuestions(rng, countries[locale] ?? countries.en, level).slice(0, 6)).current
   const [index, setIndex] = useState(0)
   const [picked, setPicked] = useState<string | null>(null)
   const [score, setScore] = useState(0)
   const [combo, setCombo] = useState(0)
   const [right, setRight] = useState(0)
   const askedAt = useRef(performance.now())
-  const [pops, addPop] = usePops()
   const [ref, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
   const q = questions[index]
@@ -37,7 +36,6 @@ export default function CapitalMatch({ level, seed, t, onFinish }: GameProps) {
       r++
       setCombo(nc)
       sound.good(nc)
-      addPop(`+${gained}`, 50, 30)
     } else {
       setCombo(0)
       sound.bad()
@@ -61,20 +59,15 @@ export default function CapitalMatch({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <div className="game capital-match">
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('question_n'), value: `${index + 1} / ${questions.length}` },
-          { label: t('combo'), value: `×${combo}`, highlight: combo >= 3 },
-        ]}
-      />
+    <SceneShell
+      place="coast"
+      say={picked ? (picked === q.country.capital ? t('correct', { capital: q.country.capital }) : t('itIs', { capital: q.country.capital })) : t('question', { country: q.country.name })}
+      stage={{ done: index + (picked ? 1 : 0), total: questions.length, over: false, mood: !picked ? 'idle' : picked === q.country.capital ? 'happy' : 'oops' }}
+      className="capital-match"
+    >
       <div className="cm-card" key={index} ref={ref}>
         <span className="cm-flag">{flag(q.country.iso)}</span>
-        <h2>{t('question', { country: q.country.name })}</h2>
-        <p className="cm-feedback">
-          {picked ? (picked === q.country.capital ? t('correct', { capital: q.country.capital }) : t('itIs', { capital: q.country.capital })) : ' '}
-        </p>
+        <span className="cm-country">{q.country.name}</span>
       </div>
       <div className="choices choices-stacked">
         {q.options.map((o) => (
@@ -87,7 +80,6 @@ export default function CapitalMatch({ level, seed, t, onFinish }: GameProps) {
           </button>
         ))}
       </div>
-      <Pops pops={pops} />
-    </div>
+    </SceneShell>
   )
 }

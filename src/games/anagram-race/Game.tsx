@@ -1,14 +1,15 @@
 import { useRef, useState } from 'react'
 import { useLocale } from '../../i18n'
-import { useCountdown, usePops, useShake, useTimeouts } from '../../kit/hooks'
-import { clamp, makeRng } from '../../kit/random'
-import { sound, vibrate } from '../../kit/sound'
+import { useShake, useTimeouts } from '../../kit/hooks'
+import { makeRng } from '../../kit/random'
+import { SceneShell, useStage } from '../../kit/SceneShell'
+import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops, TimerBar } from '../../kit/ui'
 import { words, wordsForLevel, type Word } from './content'
 import { scramble } from './logic'
 
-const DURATION = 75
+/** Words to spell in one stage. */
+const STAGE = 5
 
 export default function AnagramRace({ level, seed, t, onFinish }: GameProps) {
   const locale = useLocale()
@@ -19,31 +20,16 @@ export default function AnagramRace({ level, seed, t, onFinish }: GameProps) {
   const word: Word = order[index % order.length]
   const [tiles, setTiles] = useState(() => scramble(rng, word.word))
   const [used, setUsed] = useState<number[]>([])
-  const [score, setScore] = useState(0)
-  const [solved, setSolved] = useState(0)
-  const [slips, setSlips] = useState(0)
-  const [over, setOver] = useState(false)
-  const [pops, addPop] = usePops()
+  const stage = useStage(STAGE, onFinish)
   const [ref, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
-
-  const left = useCountdown(
-    DURATION,
-    () => {
-      setOver(true)
-      onFinish({ score, accuracy: clamp(solved / 8, 0, 1) * (slips > solved * 2 ? 0.7 : 1) })
-    },
-    !over,
-  )
 
   const typed = used.map((id) => tiles.find((x) => x.id === id)!.letter).join('')
 
   const tap = (id: number, letter: string) => {
-    if (over || used.includes(id) || typed === word.word) return
+    if (stage.over || used.includes(id) || typed === word.word) return
     if (letter !== word.word[typed.length]) {
-      setSlips((s) => s + 1)
-      sound.bad()
-      vibrate(40)
+      stage.slip()
       shake()
       return
     }
@@ -51,29 +37,17 @@ export default function AnagramRace({ level, seed, t, onFinish }: GameProps) {
     setUsed(next)
     sound.tone(520 + next.length * 70, 0.08, 'triangle', 0.18)
     if (next.length < word.word.length) return
-    const gained = word.word.length * 10
-    setScore((s) => s + gained)
-    setSolved((n) => n + 1)
-    sound.good(solved + 1)
-    addPop(`+${gained}`, 50, 30)
+    if (stage.good(word.word.length * 10)) return
     later(() => {
       const nextWord = order[(index + 1) % order.length]
       setIndex(index + 1)
       setTiles(scramble(rng, nextWord.word))
       setUsed([])
-    }, 700)
+    }, 900)
   }
 
   return (
-    <div className="game anagram-race">
-      <TimerBar left={left} total={DURATION} />
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('words'), value: solved, highlight: solved > 0 },
-          { label: t('time'), value: Math.ceil(left) },
-        ]}
-      />
+    <SceneShell place="village" say={t('say')} stage={stage} className="anagram-race">
       <div className="ar-picture" key={index}>
         {word.emoji}
       </div>
@@ -91,7 +65,6 @@ export default function AnagramRace({ level, seed, t, onFinish }: GameProps) {
           </button>
         ))}
       </div>
-      <Pops pops={pops} />
-    </div>
+    </SceneShell>
   )
 }

@@ -3,6 +3,7 @@ import { games } from '../games/registry'
 import { makeGameT, useLocale, useT } from '../i18n'
 import { Icon } from '../kit/icon'
 import { loadProgress, stickerCount } from '../kit/progress'
+import { stickerName } from '../kit/SceneShell'
 
 /** The sticker album: every sticker of every scene game, the ones not won yet as empty places. */
 export function Stickers({ onHome }: { onHome: () => void }) {
@@ -31,9 +32,9 @@ export function Stickers({ onHome }: { onHome: () => void }) {
             </h2>
             <ul className="album-grid">
               {g.stickers!.map((s, i) => (
-                <li key={s.name} className={i < have ? 'album-got' : 'album-missing'}>
+                <li key={i} className={i < have ? 'album-got' : 'album-missing'}>
                   {i < have ? <Icon icon={s.icon} /> : <span className="album-hole" aria-hidden>?</span>}
-                  <span>{i < have ? gt(s.name) : t('stickers.locked')}</span>
+                  <span>{i < have ? stickerName(s, gt, t) : t('stickers.locked')}</span>
                 </li>
               ))}
             </ul>

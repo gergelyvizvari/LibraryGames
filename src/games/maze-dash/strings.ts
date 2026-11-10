@@ -3,6 +3,7 @@ import type { GameStrings } from '../../i18n'
 const strings: GameStrings = {
   en: {
     title: 'Maze Dash',
+    say: 'Help the mouse find the cheese!',
     howTo: 'Help the mouse find the cheese! Use the arrows (or swipe) to move through the maze. Each maze is a bit bigger.',
     score: 'Score',
     mazes: 'Mazes',
@@ -11,6 +12,7 @@ const strings: GameStrings = {
   },
   hu: {
     title: 'Labirintus',
+    say: 'Segíts az egérnek megtalálni a sajtot!',
     howTo: 'Segíts az egérnek megtalálni a sajtot! A nyilakkal (vagy húzással) mozogj a labirintusban. Minden labirintus egy kicsit nagyobb.',
     score: 'Pont',
     mazes: 'Labirintusok',

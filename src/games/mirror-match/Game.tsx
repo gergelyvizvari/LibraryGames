@@ -1,12 +1,13 @@
 import { useRef, useState } from 'react'
-import { useCountdown, usePops, useShake, useTimeouts } from '../../kit/hooks'
-import { clamp, makeRng } from '../../kit/random'
-import { sound, vibrate } from '../../kit/sound'
+import { useShake, useTimeouts } from '../../kit/hooks'
+import { makeRng } from '../../kit/random'
+import { SceneShell, useStage } from '../../kit/SceneShell'
+import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops, TimerBar } from '../../kit/ui'
 import { makePuzzle, targets } from './logic'
 
-const DURATION = 75
+/** Patterns to mirror in one stage. */
+const STAGE = 4
 
 export default function MirrorMatch({ level, seed, t, onFinish }: GameProps) {
   const rng = useRef(makeRng(seed)).current
@@ -14,31 +15,17 @@ export default function MirrorMatch({ level, seed, t, onFinish }: GameProps) {
   const [filled, setFilled] = useState<number[]>([])
   const [wrongCell, setWrongCell] = useState<number | null>(null)
   const [solved, setSolved] = useState(0)
-  const [slips, setSlips] = useState(0)
-  const [score, setScore] = useState(0)
-  const [over, setOver] = useState(false)
-  const [pops, addPop] = usePops()
+  const stage = useStage(STAGE, onFinish)
   const [ref, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
   const goal = targets(puzzle)
 
-  const left = useCountdown(
-    DURATION,
-    () => {
-      setOver(true)
-      onFinish({ score, accuracy: clamp(solved / 6, 0, 1) * (slips > solved * 2 ? 0.7 : 1) })
-    },
-    !over,
-  )
-
   const tap = (cell: number) => {
-    if (over || filled.includes(cell) || filled.length === goal.length) return
+    if (stage.over || filled.includes(cell) || filled.length === goal.length) return
     if (!goal.includes(cell)) {
-      setSlips((s) => s + 1)
       setWrongCell(cell)
       later(() => setWrongCell(null), 300)
-      sound.bad()
-      vibrate(40)
+      stage.slip()
       shake()
       return
     }
@@ -46,11 +33,8 @@ export default function MirrorMatch({ level, seed, t, onFinish }: GameProps) {
     setFilled(next)
     sound.tone(500 + next.length * 60, 0.08, 'triangle', 0.16)
     if (next.length < goal.length) return
-    const gained = goal.length * 10
-    setScore((s) => s + gained)
     setSolved((n) => n + 1)
-    sound.good(solved + 1)
-    addPop(`${t('perfect')} +${gained}`, 50, 45)
+    if (stage.good(goal.length * 10)) return
     later(() => {
       setPuzzle(makePuzzle(rng, level, solved + 1))
       setFilled([])
@@ -71,15 +55,7 @@ export default function MirrorMatch({ level, seed, t, onFinish }: GameProps) {
   )
 
   return (
-    <div className="game mirror-match">
-      <TimerBar left={left} total={DURATION} />
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('patterns'), value: solved, highlight: solved > 0 },
-          { label: t('time'), value: Math.ceil(left) },
-        ]}
-      />
+    <SceneShell place="woods" say={t('say')} stage={stage} className="mirror-match">
       <div className="mm-board" ref={ref} key={solved}>
         {side(true)}
         <div className="mm-mirror" />
@@ -88,7 +64,6 @@ export default function MirrorMatch({ level, seed, t, onFinish }: GameProps) {
       <p className="muted" style={{ textAlign: 'center' }}>
         {filled.length} / {goal.length}
       </p>
-      <Pops pops={pops} />
-    </div>
+    </SceneShell>
   )
 }

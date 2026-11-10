@@ -92,6 +92,7 @@ const hu: Record<keyof typeof en, string> = {
   'scene.back': 'Vissza a térképre',
   'scene.done': 'Kész a szakasz!',
   'scene.newSticker': 'Új matrica az albumba',
+  'scene.progress': '{n} kész ennyiből: {total}',
   'scene.next': 'Tovább a {n}. szakaszra',
   'map.title': 'Játékország',
   'map.allGames': 'Minden játék',
@@ -112,6 +113,9 @@ const hu: Record<keyof typeof en, string> = {
   'stickers.title': 'Matricaalbum',
   'stickers.open': 'Matricaalbum ({n})',
   'stickers.empty': 'Fejezz be egy szakaszt valamelyik játékban, és megkapod az első matricádat!',
+  'stickers.medal0': 'Bronzérem: {title}',
+  'stickers.medal1': 'Ezüstérem: {title}',
+  'stickers.medal2': 'Aranyérem: {title}',
   'stickers.locked': 'Még nincs meg',
 }
 

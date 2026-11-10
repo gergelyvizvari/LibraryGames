@@ -90,6 +90,7 @@ const en = {
   'scene.back': 'Back to the map',
   'scene.done': 'Stage complete!',
   'scene.newSticker': 'New sticker for your album',
+  'scene.progress': '{n} of {total} done',
   'scene.next': 'On to stage {n}',
   'map.title': 'Gameland',
   'map.allGames': 'All games',
@@ -110,6 +111,9 @@ const en = {
   'stickers.title': 'Sticker album',
   'stickers.open': 'Sticker album ({n})',
   'stickers.empty': 'Finish a stage in a game to win your first sticker!',
+  'stickers.medal0': 'Bronze medal: {title}',
+  'stickers.medal1': 'Silver medal: {title}',
+  'stickers.medal2': 'Gold medal: {title}',
   'stickers.locked': 'Not found yet',
 }
 

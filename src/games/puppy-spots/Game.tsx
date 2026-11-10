@@ -1,9 +1,10 @@
 import { useMemo, useRef, useState } from 'react'
 import { usePops, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
+import { SceneShell } from '../../kit/SceneShell'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops } from '../../kit/ui'
+import { Pops } from '../../kit/ui'
 import {
   accuracyFor,
   clashes,
@@ -105,7 +106,6 @@ export default function PuppySpots({ level, seed, t, onFinish }: GameProps) {
     setMessage(t(clean ? 'perfect' : 'solved'))
     // A quiet ending: the pups give one happy hop.
     sound.win()
-    addPop(`+${gained}`, 50, 45)
     if (all.length >= total) {
       setOver(true)
       later(() => onFinish({ score: sum, accuracy: accuracyFor(all) }), 1400)
@@ -255,15 +255,32 @@ export default function PuppySpots({ level, seed, t, onFinish }: GameProps) {
 
   const grid = `repeat(${n}, minmax(0, 1fr))`
   return (
-    <div className="game puppy-spots">
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('room'), value: `${Math.min(done.length + (over ? 0 : 1), total)} / ${total}` },
-          { label: t('pups'), value: `${pups.length} / ${n}`, highlight: streak > 0 },
-        ]}
-      />
-      <p className={`ps-message${clash || stuck ? ' ps-warn' : ''}`}>{message}</p>
+    <SceneShell
+      place="woods"
+      say={message}
+      stage={{ done: done.length, total, over, mood: clash ? 'oops' : busy ? 'happy' : 'idle' }}
+      className="puppy-spots"
+      tray={
+        <div className="ps-tools">
+          <button className={`ps-tool${tool === 'pup' ? ' ps-on' : ''}`} onPointerDown={() => pickTool('pup')} aria-pressed={tool === 'pup'}>
+            <span>🐶</span>
+            {t('toolPup')}
+          </button>
+          <button className={`ps-tool${tool === 'mark' ? ' ps-on' : ''}`} onPointerDown={() => pickTool('mark')} aria-pressed={tool === 'mark'}>
+            <span>✖</span>
+            {t('toolMark')}
+          </button>
+          <button className="ps-tool" onPointerDown={hint}>
+            <span>💡</span>
+            {t('hint')}
+          </button>
+          <button className="ps-tool" onPointerDown={clear} disabled={!canClear}>
+            <span>🔄</span>
+            {t('clear')}
+          </button>
+        </div>
+      }
+    >
       <div className="ps-wrap">
         <div
           key={done.length}
@@ -297,24 +314,6 @@ export default function PuppySpots({ level, seed, t, onFinish }: GameProps) {
         </div>
         <Pops pops={pops} />
       </div>
-      <div className="ps-tools">
-        <button className={`ps-tool${tool === 'pup' ? ' ps-on' : ''}`} onPointerDown={() => pickTool('pup')} aria-pressed={tool === 'pup'}>
-          <span>🐶</span>
-          {t('toolPup')}
-        </button>
-        <button className={`ps-tool${tool === 'mark' ? ' ps-on' : ''}`} onPointerDown={() => pickTool('mark')} aria-pressed={tool === 'mark'}>
-          <span>✖</span>
-          {t('toolMark')}
-        </button>
-        <button className="ps-tool" onPointerDown={hint}>
-          <span>💡</span>
-          {t('hint')}
-        </button>
-        <button className="ps-tool" onPointerDown={clear} disabled={!canClear}>
-          <span>🔄</span>
-          {t('clear')}
-        </button>
-      </div>
-    </div>
+    </SceneShell>
   )
 }

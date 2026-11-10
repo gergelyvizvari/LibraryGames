@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { useShake, useTimeouts, usePops } from '../../kit/hooks'
+import { useShake, useTimeouts } from '../../kit/hooks'
 import { clamp, makeRng } from '../../kit/random'
-import { sound, vibrate } from '../../kit/sound'
+import { SceneShell, useStage } from '../../kit/SceneShell'
+import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Hearts, Hud, Pops } from '../../kit/ui'
 
 const pads = [
   { color: '#ff6b6b', note: 523 },
@@ -11,7 +11,8 @@ const pads = [
   { color: '#1dd1a1', note: 784 },
   { color: '#feca57', note: 1047 },
 ]
-const LIVES = 2
+/** Tunes to echo in one stage; each is one note longer. */
+const STAGE = 4
 /** Gap after the last tapped note before the success chime. */
 const CHEER_GAP_MS = 120
 
@@ -25,10 +26,7 @@ export default function SequenceEcho({ level, seed, t, onFinish }: GameProps) {
   const [mode, setMode] = useState<'show' | 'input' | 'done'>('show')
   const [lit, setLit] = useState<number | null>(null)
   const [pos, setPos] = useState(0)
-  const [lives, setLives] = useState(LIVES)
-  const [score, setScore] = useState(0)
-  const [longest, setLongest] = useState(0)
-  const [pops, addPop] = usePops()
+  const stage = useStage(STAGE, onFinish)
   const [boardRef, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
   const ms = stepMs(level)
@@ -55,18 +53,10 @@ export default function SequenceEcho({ level, seed, t, onFinish }: GameProps) {
     if (mode !== 'input') return
     flash(i, noteMs)
     if (i !== sequence[pos]) {
-      sound.bad()
-      vibrate(60)
+      stage.slip()
       shake()
-      const left = lives - 1
-      setLives(left)
-      if (left <= 0) {
-        setMode('done')
-        onFinish({ score, accuracy: clamp(longest / (4 + level), 0, 1) })
-      } else {
-        addPop(t('oops'), 50, 45, 'bad')
-        setMode('show')
-      }
+      setMode('done')
+      later(() => setMode('show'), 900)
       return
     }
     if (pos + 1 < sequence.length) {
@@ -74,30 +64,18 @@ export default function SequenceEcho({ level, seed, t, onFinish }: GameProps) {
       return
     }
     // Completed the whole sequence.
-    const gained = sequence.length * 10
-    setScore((s) => s + gained)
-    setLongest(Math.max(longest, sequence.length))
     setMode('done')
     later(() => {
-      sound.good(sequence.length)
-      addPop(`+${gained}`, 50, 45)
+      if (stage.good(sequence.length * 10)) return
+      later(() => {
+        setSequence((s) => [...s, rng.int(0, 3)])
+        setMode('show')
+      }, 600)
     }, noteMs + CHEER_GAP_MS)
-    later(() => {
-      setSequence((s) => [...s, rng.int(0, 3)])
-      setMode('show')
-    }, noteMs + CHEER_GAP_MS + 500)
   }
 
   return (
-    <div className="game sequence-echo">
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('length'), value: sequence.length, highlight: true },
-          { label: t('lives'), value: <Hearts left={lives} total={LIVES} /> },
-        ]}
-      />
-      <p className="prompt">{mode === 'input' ? t('yourTurn') : t('watch')}</p>
+    <SceneShell place="lake" say={mode === 'input' ? t('yourTurn') : t('watch')} stage={stage} className="sequence-echo">
       <div className="se-board" ref={boardRef}>
         {pads.map((p, i) => (
           <button
@@ -110,7 +88,6 @@ export default function SequenceEcho({ level, seed, t, onFinish }: GameProps) {
           />
         ))}
       </div>
-      <Pops pops={pops} />
-    </div>
+    </SceneShell>
   )
 }

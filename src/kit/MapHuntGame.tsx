@@ -1,14 +1,18 @@
 import { useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from 'react'
-import { usePops, useShake, useTimeouts } from './hooks'
-import { DOT_HIT_R, DOT_R, ROUNDS, dotChoices, dotCount, dotGapFor, kmBetween, nearestDot, pickRound, placesFor, pointsForKm, showDots, type KmBands, type MapPlace } from './mapHunt'
+import { useShake, useTimeouts } from './hooks'
+import { DOT_HIT_R, DOT_R, dotChoices, dotCount, dotGapFor, kmBetween, nearestDot, pickRound, placesFor, pointsForKm, showDots, type KmBands, type MapPlace } from './mapHunt'
 import { makeRng } from './random'
-import { sound, vibrate } from './sound'
+import { SceneShell, useStage } from './SceneShell'
+import { sound } from './sound'
 import type { GameProps } from './types'
-import { Hud, MapStage, Pops } from './ui'
+import { MapStage } from './ui'
+
+/** Places to find in one stage. */
+const STAGE = 6
 
 /**
- * A blind map round: ten place names, tap where each one is (or pick a dot on low levels).
- * The game supplies the map; it needs the strings score, round, where, spotOn, close, near, miss and off.
+ * A blind map stage: six place names, tap where each one is (or pick a dot on low levels).
+ * The game supplies the map; it needs the strings where, spotOn, close, near, miss and off.
  */
 export interface MapHuntProps extends GameProps {
   places: MapPlace[]
@@ -41,37 +45,28 @@ export function MapHunt({ level, seed, t, onFinish, places, width, height, toMap
   const [index, setIndex] = useState(0)
   const [choices, setChoices] = useState(() => makeDots(round[0]))
   const [result, setResult] = useState<Result | null>(null)
-  const [score, setScore] = useState(0)
-  const [combo, setCombo] = useState(0)
-  const total = useRef(0)
+  const stage = useStage(STAGE, onFinish)
   const svgRef = useRef<SVGSVGElement>(null)
-  const [pops, addPop] = usePops()
   const [wrapRef, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
   const target = round[index]
   const [tx, ty] = toMap(target.at)
 
   const finishTurn = (tap: [number, number] | null, pts: number, label: string) => {
-    const c = pts >= 20 ? combo + 1 : 0
-    const gained = pts + (pts > 0 ? Math.min(c, 5) * 2 : 0)
-    total.current += pts / 30
-    setCombo(c)
-    setScore((s) => s + gained)
-    setResult({ tap, pts: gained, label })
-    if (pts >= 20) sound.good(c)
-    else if (pts > 0) sound.tone(500, 0.12, 'triangle')
+    setResult({ tap, pts, label })
+    let last: boolean
+    if (pts >= 20) last = stage.good(pts)
     else {
-      sound.bad()
-      vibrate(40)
-      shake()
+      if (pts > 0) sound.tone(500, 0.12, 'triangle')
+      else {
+        sound.bad()
+        shake()
+      }
+      last = stage.miss()
     }
-    if (gained) addPop(`+${gained}`, (tx / width) * 100, Math.max(6, (ty / height) * 100 - 24))
+    if (last) return
     later(() => {
       const next = index + 1
-      if (next >= ROUNDS) {
-        onFinish({ score: score + gained, accuracy: total.current / ROUNDS })
-        return
-      }
       setIndex(next)
       setChoices(makeDots(round[next]))
       setResult(null)
@@ -103,16 +98,7 @@ export function MapHunt({ level, seed, t, onFinish, places, width, height, toMap
   }
 
   return (
-    <div className={`game ${className}`}>
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('round'), value: `${index + 1} / ${ROUNDS}`, highlight: combo >= 3 },
-        ]}
-      />
-      <p className="prompt mh-ask" key={index}>
-        {result ? result.label : t('where', { place: target.name })}
-      </p>
+    <SceneShell place="coast" say={result ? result.label : t('where', { place: target.name })} stage={stage} bare fill className={className}>
       <MapStage>
       <div className="mh-wrap map-box" ref={wrapRef} style={{ '--map-ratio': width / height } as CSSProperties}>
         <svg ref={svgRef} viewBox={`0 0 ${width} ${height}`} className="mh-map" onPointerDown={tapMap}>
@@ -134,9 +120,8 @@ export function MapHunt({ level, seed, t, onFinish, places, width, height, toMap
             </g>
           )}
         </svg>
-        <Pops pops={pops} />
       </div>
       </MapStage>
-    </div>
+    </SceneShell>
   )
 }

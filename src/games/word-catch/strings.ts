@@ -3,6 +3,7 @@ import type { GameStrings } from '../../i18n'
 const strings: GameStrings = {
   en: {
     title: 'Word Catch',
+    say: 'Which word is the picture?',
     howTo: 'Pictures fall from the sky. Tap the word that matches the picture before it lands!',
     score: 'Score',
     combo: 'Combo',
@@ -12,6 +13,7 @@ const strings: GameStrings = {
   },
   hu: {
     title: 'Szófogó',
+    say: 'Melyik szó illik a képhez?',
     howTo: 'Képek hullanak az égből. Koppints a képhez illő szóra, mielőtt leér!',
     score: 'Pont',
     combo: 'Kombó',

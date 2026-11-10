@@ -1,13 +1,14 @@
 import { useRef, useState } from 'react'
-import { useCountdown, useGameLoop, usePops, useShake } from '../../kit/hooks'
+import { useGameLoop, usePops, useShake } from '../../kit/hooks'
 import { clamp, makeRng } from '../../kit/random'
-import { sound, vibrate } from '../../kit/sound'
+import { SceneShell, useStage } from '../../kit/SceneShell'
 import type { GameProps } from '../../kit/types'
-import { Hud, Pops, TimerBar } from '../../kit/ui'
+import { Pops } from '../../kit/ui'
 import { decoyFor, expressionFor, targetRange, type Expr } from './logic'
 
-const DURATION = 60
-const PER_TARGET = 5
+/** Right bubbles to pop in one stage, and how many of them before the number changes. */
+const STAGE = 8
+const PER_TARGET = 4
 
 interface Bubble extends Expr {
   id: number
@@ -22,86 +23,51 @@ export default function NumberNinja({ level, seed, t, onFinish }: GameProps) {
   const [target, setTarget] = useState(newTarget)
   const [bubbles, setBubbles] = useState<Bubble[]>([])
   const state = useRef({ bubbles: [] as Bubble[], spawnIn: 0, nextId: 0 })
-  const [score, setScore] = useState(0)
-  const [combo, setCombo] = useState(0)
-  const [hits, setHits] = useState(0)
-  const [mistakes, setMistakes] = useState(0)
-  const [over, setOver] = useState(false)
+  const stage = useStage(STAGE, onFinish)
   const [pops, addPop] = usePops()
   const [ref, shake] = useShake<HTMLDivElement>()
 
-  const left = useCountdown(
-    DURATION,
-    () => {
-      setOver(true)
-      onFinish({ score, accuracy: (hits / Math.max(1, hits + mistakes)) * clamp(hits / 15, 0, 1) })
-    },
-    !over,
-  )
-
-  const speed = clamp(14 + level * 2.5, 14, 40) // % of the height per second
+  const speed = clamp(12 + level * 2.2, 12, 34) // % of the height per second
 
   useGameLoop((dt) => {
     const s = state.current
     s.spawnIn -= dt
     if (s.spawnIn <= 0) {
-      s.spawnIn = clamp(1.1 - level * 0.06, 0.55, 1.1)
+      s.spawnIn = clamp(1.2 - level * 0.06, 0.6, 1.2)
       const good = rng.chance(0.45)
       const e = good ? expressionFor(rng, level, target) : decoyFor(rng, level, target)
       s.bubbles.push({ ...e, id: s.nextId++, x: rng.int(10, 82), y: 105, speed: speed * (0.85 + rng.next() * 0.3) })
     }
-    s.bubbles = s.bubbles
-      .map((b) => ({ ...b, y: b.y - b.speed * dt }))
-      .filter((b) => b.y > -15)
+    s.bubbles = s.bubbles.map((b) => ({ ...b, y: b.y - b.speed * dt })).filter((b) => b.y > -15)
     setBubbles(s.bubbles)
-  }, !over)
+  }, !stage.over)
 
   const tap = (b: Bubble) => {
-    if (over) return
+    if (stage.over) return
     const s = state.current
     s.bubbles = s.bubbles.filter((q) => q.id !== b.id)
     setBubbles(s.bubbles)
-    if (b.value === target) {
-      const nc = combo + 1
-      const gained = 10 + Math.min(nc, 10) * 2
-      setScore((v) => v + gained)
-      setCombo(nc)
-      sound.good(nc)
-      addPop(`+${gained}`, b.x + 6, b.y)
-      const h = hits + 1
-      setHits(h)
-      if (h % PER_TARGET === 0) {
-        let n = newTarget()
-        while (n === target) n = newTarget()
-        setTarget(n)
-        s.bubbles = []
-        setBubbles([])
-        addPop(t('newTarget'), 50, 40, 'info')
-      }
-    } else {
-      setCombo(0)
-      setMistakes((m) => m + 1)
-      sound.bad()
-      vibrate(50)
+    if (b.value !== target) {
+      stage.slip()
       shake()
       addPop(`${b.text} = ${b.value}`, b.x + 6, b.y, 'bad')
+      return
     }
+    const hits = stage.done + 1
+    if (stage.good() || hits % PER_TARGET !== 0) return
+    let n = newTarget()
+    while (n === target) n = newTarget()
+    setTarget(n)
+    s.bubbles = []
+    setBubbles([])
   }
 
   return (
-    <div className="game number-ninja">
-      <TimerBar left={left} total={DURATION} />
-      <Hud
-        items={[
-          { label: t('score'), value: score },
-          { label: t('combo'), value: `×${combo}`, highlight: combo >= 5 },
-          { label: t('time'), value: Math.ceil(left) },
-        ]}
-      />
-      <div className="nn-target">
-        {t('target')} <strong key={target}>{target}</strong>
-      </div>
+    <SceneShell place="peaks" say={t('say', { n: target })} stage={stage} bare fill className="number-ninja">
       <div className="nn-field" ref={ref}>
+        <span className="nn-target" key={target}>
+          {target}
+        </span>
         {bubbles.map((b) => (
           <button key={b.id} className="nn-bubble" style={{ left: `${b.x}%`, top: `${b.y}%` }} onPointerDown={() => tap(b)}>
             {b.text}
@@ -109,6 +75,6 @@ export default function NumberNinja({ level, seed, t, onFinish }: GameProps) {
         ))}
         <Pops pops={pops} />
       </div>
-    </div>
+    </SceneShell>
   )
 }
