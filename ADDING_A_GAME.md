@@ -104,6 +104,7 @@ export const icon: GameIcon = [
   (`useCountdown` and `usePops` are from the old timed rounds; do not use them in a new game.)
 - `SceneShell.tsx`: `<SceneShell>`, `useStage()`, `medals()`; see "Scene games" below. `places.tsx` holds the rooms and characters.
 - `scene.tsx`: `<SceneTool>` is the round drawn button for tools and arrows (undo, restart, hint, mark, listen, up/down/left/right).
+- `critters.tsx`: `<Critter kind mood body>` draws small forest animals (owl, bunny, bear, hedgehog, squirrel, mouse, fox) with happy, idle or sad faces; `<CritterGuide>` makes one the scene's character through `<SceneShell guide>`.
 - `things.tsx`: `<Thing id>` draws small storybook things (apple, acorn, fish, star...) to count, sort or line up. Use these instead of emoji.
 - `ui.tsx`: `<Pops>`, `<MapStage>`; `<Hud>`, `<TimerBar>`, `<Hearts>` and `<Confetti>` are from the old timed rounds and no game uses them now.
 - `sound.ts`: `sound.good(combo)`, `bad`, `pop`, `tap`, `tick`, `win`, `tone(freq, dur)`, `vibrate(ms)`. Real recordings: `preloadClip(url)` + `playClip(url)` (import the file from the game folder; keep clips tiny and list their source and licence in a `sounds/CREDITS.md`).
@@ -139,7 +140,8 @@ a character who says what to do, a short stage with a clear goal, and a quiet en
   language, `meadow` reflexes, `coast` geography): it gives the room, the window and the character. `say` is the
   one short sentence in the character's speech bubble (screen readers hear it, so every message goes there).
   Children are the board, laid on a paper sheet; pass `bare` when the game draws its own field, `fill` when the
-  board should take all the room, and `tray` for buttons that belong at the bottom edge.
+  board should take all the room, and `tray` for buttons that belong at the bottom edge. A game with its own host (a fox at a party, a hedgehog
+  postman) passes `guide={<CritterGuide kind="fox" />}`; the room stays the place's.
 - `useStage(total, onFinish)` keeps the stage: call `stage.good()` when a task is done (it plays the sound, lets
   the character hop and ends the stage after the last one, returning true), `stage.slip()` for a wrong try, and
   `stage.miss()` when a task that cannot be retried went wrong. It calls `onFinish` once, by itself. A game with
