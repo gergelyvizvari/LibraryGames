@@ -6,7 +6,6 @@ Edit freely: reorder, add, or delete ideas.
 ## Up next
 
 - **Copy Cat Typing** (typing): type a short sentence before the cat finishes its nap; mistakes wake it up.
-- **Shadow Match** (spatial): match each object to its shadow.
 - **Odd Sound Out** (focus): three sounds play; tap the one that was different.
 - **Balloon Pop Pairs** (memory): balloons show numbers briefly; pop them from smallest to largest.
 - **Traffic Light Tap** (reflexes): tap on green, freeze on red, and never tap on yellow.
@@ -59,3 +58,4 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-11-10 | Story Order | reading |
 | 2026-11-11 | Forest Feast | logic |
 | 2026-11-11 | Hedgehog Post | logic |
+| 2026-11-12 | Shadow Match | spatial |
