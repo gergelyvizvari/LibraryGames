@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, type PointerEvent } from 'react'
 import { useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
 import { SceneShell, useStage } from '../../kit/SceneShell'
@@ -53,6 +53,13 @@ export default function NumberLine({ level, seed, t, onFinish }: GameProps) {
   const [busy, setBusy] = useState(false)
   const [picked, setPicked] = useState<number | null>(null)
   const [count, setCount] = useState<number | null>(null)
+  // The stone a finger rests on. A finger can slide to the right stone; the answer counts when it lifts.
+  const [aim, setAimState] = useState<number | null>(null)
+  const aimRef = useRef<number | null>(null)
+  const setAim = (n: number | null) => {
+    aimRef.current = n
+    setAimState(n)
+  }
   const [message, setMessage] = useState<{ text: string; kind: '' | 'yes' | 'no' }>(() => ({ text: t('ask'), kind: '' }))
   const stage = useStage(STAGE, onFinish)
   const over = stage.over
@@ -98,6 +105,13 @@ export default function NumberLine({ level, seed, t, onFinish }: GameProps) {
     }, (right ? 150 : 600) + hops.length * step + (right ? 450 : 900))
   }
 
+  /** The stone under the finger, from the stage's left edge: a tap counts when the finger lifts. */
+  const tickAt = (e: PointerEvent<HTMLDivElement>) => {
+    const box = e.currentTarget.getBoundingClientRect()
+    const pct = ((e.clientX - box.left) / box.width) * 100
+    return Math.min(q.lo + WINDOW, Math.max(q.lo, q.lo + Math.round(((pct - 8) / 84) * WINDOW)))
+  }
+
   const ticks = Array.from({ length: WINDOW + 1 }, (_, i) => q.lo + i)
   return (
     <SceneShell place="peaks" say={message.text} stage={stage} bare className="number-line">
@@ -111,7 +125,22 @@ export default function NumberLine({ level, seed, t, onFinish }: GameProps) {
           </span>
         ))}
       </div>
-      <div className="nl-stage" ref={lineRef}>
+      <div
+        className="nl-stage"
+        ref={lineRef}
+        onPointerDown={(e) => {
+          if (over || busy) return
+          e.currentTarget.setPointerCapture?.(e.pointerId)
+          setAim(tickAt(e))
+        }}
+        onPointerMove={(e) => aimRef.current !== null && setAim(tickAt(e))}
+        onPointerUp={() => {
+          const n = aimRef.current
+          setAim(null)
+          if (n !== null) tap(n)
+        }}
+        onPointerCancel={() => setAim(null)}
+      >
         <span key={hop} className="nl-frog" style={{ left: `${xOf(frog, q.lo)}%` }}>
           <Frog />
           {count !== null && <span className="nl-count">{count}</span>}
@@ -122,9 +151,10 @@ export default function NumberLine({ level, seed, t, onFinish }: GameProps) {
           return (
             <button
               key={n}
-              className={`nl-tick${n === q.start ? ' nl-start' : ''}${state}`}
+              className={`nl-tick${n === q.start ? ' nl-start' : ''}${state}${aim === n ? ' nl-aim' : ''}`}
               style={{ left: `${xOf(n, q.lo)}%` }}
-              onPointerDown={() => tap(n)}
+              // Taps and drags are handled by the stage; this is for the keyboard (Enter or Space).
+              onClick={(e) => e.detail === 0 && tap(n)}
               disabled={over}
               aria-label={String(n)}
             >

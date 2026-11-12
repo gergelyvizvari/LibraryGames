@@ -1,5 +1,6 @@
 import { Suspense, useMemo, useState, type ReactNode } from 'react'
 import { makeGameT, useLocale, useT } from '../i18n'
+import { touchOnly } from './device'
 import { ErrorBoundary } from './ErrorBoundary'
 import { FavButton } from './FavButton'
 import { useTimeouts } from './hooks'
@@ -42,6 +43,8 @@ export function SceneFrame({
   const [fav, setFav] = useState(() => isFavourite(loadProgress(), id))
   /** The popup with all of the game's stickers, opened from the ending card. */
   const [album, setAlbum] = useState(false)
+  // A typing game opened on a phone (from a shared link, say) first explains that it needs a keyboard.
+  const [noKeys, setNoKeys] = useState(() => !!game.meta.keyboard && touchOnly())
 
   const finish = (r: RoundResult) => {
     recordRound(id, game.meta.skill, r, new Date(), daily)
@@ -67,11 +70,15 @@ export function SceneFrame({
   const have = end ? stickerCount(loadProgress(), id) : 0
   return (
     <div className="scene-frame" style={gameColorVars(game.meta.color)}>
-      <ErrorBoundary key={stage.seed} fallback={<OopsCard onAgain={next} onHome={onHome} />}>
-        <Suspense fallback={<div className="game-loading">{t('loading')}</div>}>
-          <Component level={stage.level} seed={stage.seed} t={gt} onFinish={finish} />
-        </Suspense>
-      </ErrorBoundary>
+      {noKeys ? (
+        <KeyboardCard onAnyway={() => setNoKeys(false)} onHome={onHome} />
+      ) : (
+        <ErrorBoundary key={stage.seed} fallback={<OopsCard onAgain={next} onHome={onHome} />}>
+          <Suspense fallback={<div className="game-loading">{t('loading')}</div>}>
+            <Component level={stage.level} seed={stage.seed} t={gt} onFinish={finish} />
+          </Suspense>
+        </ErrorBoundary>
+      )}
       <button className="scene-back" onClick={onHome} aria-label={t('scene.back')} title={t('scene.back')}>
         <svg viewBox="0 0 24 24" aria-hidden focusable="false">
           <path d="M15 5 L8 12 L15 19" />
@@ -133,5 +140,27 @@ function EndCard({ onOpen, children }: { onOpen?: () => void; children: ReactNod
     </button>
   ) : (
     <div className="scene-end-card">{children}</div>
+  )
+}
+
+/** Shown instead of a typing game on a phone or tablet: most have no keyboard, but one can be plugged in. */
+function KeyboardCard({ onAnyway, onHome }: { onAnyway: () => void; onHome: () => void }) {
+  const t = useT()
+  return (
+    <div className="card oops scene-keys" role="alert">
+      <div className="oops-face" aria-hidden>
+        ⌨️
+      </div>
+      <h1>{t('keys.title')}</h1>
+      <p className="muted">{t('keys.hint')}</p>
+      <div className="row">
+        <button className="big-btn" onClick={onHome} autoFocus>
+          {t('scene.back')}
+        </button>
+        <button className="ghost-btn" onClick={onAnyway}>
+          {t('keys.anyway')}
+        </button>
+      </div>
+    </div>
   )
 }

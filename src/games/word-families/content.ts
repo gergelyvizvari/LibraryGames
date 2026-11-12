@@ -64,7 +64,7 @@ export const words: Record<Locale, Record<GroupId, Word[]>> = {
   hu: {
     animals: w(['macska', '🐱'], ['kutya', '🐶'], ['tehén', '🐮'], ['malac', '🐷'], ['ló', '🐴'], ['bárány', '🐑'], ['kacsa', '🦆'], ['oroszlán', '🦁'], ['béka', '🐸'], ['egér', '🐭'], ['nyuszi', '🐰'], ['medve', '🐻']),
     food: w(['alma', '🍎'], ['kenyér', '🍞'], ['sajt', '🧀'], ['banán', '🍌'], ['tojás', '🥚'], ['pizza', '🍕'], ['torta', '🎂'], ['répa', '🥕'], ['tej', '🥛'], ['szőlő', '🍇'], ['leves', '🍲'], ['palacsinta', '🥞']),
-    colours: w(['piros', '❤️'], ['kék', '💙'], ['zöld', '💚'], ['sárga', '💛'], ['lila', '💜'], ['barna', '🤎'], ['fekete', '🖤'], ['fehér', '🤍'], ['narancssárga', '🧡'], ['arany', '🥇'], ['ezüst', '🥈']),
+    colours: w(['piros', '❤️'], ['kék', '💙'], ['zöld', '💚'], ['sárga', '💛'], ['lila', '💜'], ['barna', '🤎'], ['fekete', '🖤'], ['fehér', '🤍'], ['narancssárga', '🧡'], ['rózsaszín', '🩷'], ['szürke', '🩶']),
     vehicles: w(['autó', '🚗'], ['busz', '🚌'], ['vonat', '🚂'], ['repülő', '✈️'], ['hajó', '🚢'], ['bicikli', '🚲'], ['teherautó', '🚚'], ['traktor', '🚜'], ['rakéta', '🚀'], ['taxi', '🚕'], ['villamos', '🚋'], ['helikopter', '🚁']),
     clothes: w(['póló', '👕'], ['ruha', '👗'], ['sapka', '🧢'], ['zokni', '🧦'], ['cipő', '👟'], ['kabát', '🧥'], ['sál', '🧣'], ['kesztyű', '🧤'], ['farmer', '👖'], ['csizma', '👢'], ['rövidnadrág', '🩳'], ['fürdőruha', '🩱']),
     body: w(['kéz', '✋'], ['talp', '🦶'], ['láb', '🦵'], ['szem', '👁️'], ['fül', '👂'], ['orr', '👃'], ['száj', '👄'], ['kar', '💪'], ['fog', '🦷'], ['agy', '🧠'], ['nyelv', '👅']),

@@ -101,7 +101,7 @@ export const pairs: Record<Locale, Pair[]> = {
     p('easy', 'clean', ['tiszta', '🧼'], ['piszkos', '🐷']),
     p('easy', 'go', ['megáll', '🛑'], ['elindul', '🟢']),
     p('easy', 'taste', ['édes', '🍭'], ['savanyú', '🍋']),
-    p('easy', 'sleep', ['ébren', '👀'], ['alszik', '😴']),
+    p('easy', 'sleep', ['felébred', '⏰'], ['elalszik', '😴']),
     p('easy', 'in', ['be', '📥'], ['ki', '📤']),
     p('easy', 'mood', ['nevet', '😂'], ['sír', '😭']),
 
@@ -125,7 +125,7 @@ export const pairs: Record<Locale, Pair[]> = {
     p('hard', 'many', ['kevés'], ['sok']),
     p('hard', 'always', ['mindig'], ['soha']),
     p('hard', 'time', ['előtt'], ['után']),
-    p('hard', 'mind', ['emlékszik'], ['felejt']),
+    p('hard', 'mind', ['emlékszik'], ['elfelejt']),
     p('hard', 'true', ['igaz'], ['hamis']),
     p('hard', 'easy', ['egyszerű'], ['bonyolult']),
     p('hard', 'price', ['olcsó'], ['drága']),
