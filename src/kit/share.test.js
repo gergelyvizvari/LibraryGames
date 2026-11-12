@@ -1,0 +1,42 @@
+import { describe, expect, it, vi } from 'vitest';
+import indexHtml from '../../index.html?raw';
+import { facebookShareUrl, share, shareUrl, SITE_URL } from './share';
+const data = { title: 'Colour Sort', text: 'I scored 120 points!', url: 'https://example.org/?lang=en#/play/color-sort' };
+describe('share', () => {
+    it('builds links to the public site that keep the language and open the right screen', () => {
+        expect(shareUrl('', 'hu')).toBe('https://www.librarygames.app/?lang=hu');
+        expect(shareUrl('#/play/color-sort', 'en')).toBe('https://www.librarygames.app/?lang=en#/play/color-sort');
+    });
+    it('links to Facebook\'s share page with the whole link, hash included', () => {
+        expect(facebookShareUrl('https://example.org/?lang=hu#/play/x')).toBe('https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fexample.org%2F%3Flang%3Dhu%23%2Fplay%2Fx');
+    });
+    it('opens the share sheet when the browser has one', async () => {
+        const nav = { share: vi.fn().mockResolvedValue(undefined), clipboard: { writeText: vi.fn() } };
+        expect(await share(data, nav)).toBe('shared');
+        expect(nav.share).toHaveBeenCalledWith(data);
+        expect(nav.clipboard.writeText).not.toHaveBeenCalled();
+    });
+    it('does nothing more when the player closes the share sheet', async () => {
+        const abort = Object.assign(new Error('closed'), { name: 'AbortError' });
+        const nav = { share: vi.fn().mockRejectedValue(abort), clipboard: { writeText: vi.fn() } };
+        expect(await share(data, nav)).toBe('cancelled');
+        expect(nav.clipboard.writeText).not.toHaveBeenCalled();
+    });
+    it('copies the text and link where there is no share sheet, or it is not allowed', async () => {
+        const writeText = vi.fn().mockResolvedValue(undefined);
+        expect(await share(data, { clipboard: { writeText } })).toBe('copied');
+        expect(writeText).toHaveBeenCalledWith(`${data.text} ${data.url}`);
+        const denied = { share: vi.fn().mockRejectedValue(new Error('NotAllowedError')), clipboard: { writeText } };
+        expect(await share(data, denied)).toBe('copied');
+    });
+    it('reports a failure when nothing works', async () => {
+        expect(await share(data, {})).toBe('failed');
+        const broken = { clipboard: { writeText: vi.fn().mockRejectedValue(new Error('no')) } };
+        expect(await share(data, broken)).toBe('failed');
+    });
+});
+describe('SITE_URL', () => {
+    it('matches the canonical link in index.html', () => {
+        expect(indexHtml).toContain(`<link rel="canonical" href="${SITE_URL}" />`);
+    });
+});

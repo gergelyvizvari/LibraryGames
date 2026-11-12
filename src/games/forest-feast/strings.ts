@@ -21,7 +21,7 @@ const strings: GameStrings = {
   },
   hu: {
     title: 'Erdei lakoma',
-    howTo: 'Minden vendégnek van egy kis kívánsága: az ablaknál, a torta előtt, a barátja mellett vagy nem valaki mellett szeretne ülni. Ültesd le őket úgy, hogy mindenki mosolyogjon!',
+    howTo: 'Minden vendégnek van egy kis kívánsága: az ablaknál, a torta előtt, a barátja mellett, vagy éppen valaki mellé nem szeretne ülni. Ültesd le őket úgy, hogy mindenki mosolyogjon!',
     say: 'Mindenki kér valamit. Ki hová üljön?',
     'wish.window': 'Én az ablak mellett szeretnék ülni.',
     'wish.cake': 'Én a torta előtt szeretnék ülni.',

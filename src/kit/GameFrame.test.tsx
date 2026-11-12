@@ -104,4 +104,21 @@ describe('GameFrame', () => {
     fireEvent.click(screen.getAllByText('Back to the map').at(-1)!)
     expect(onHome).toHaveBeenCalled()
   })
+
+  it('explains that a typing game needs a keyboard on a phone, and lets a player with one carry on', async () => {
+    vi.stubGlobal('matchMedia', (q: string) => ({ matches: q.includes('coarse') }))
+    const typing: GameDef = {
+      ...broken,
+      meta: { ...broken.meta, id: 'typing', scene: true, keyboard: true },
+      strings: { en: { title: 'Typing', howTo: 'Type.' } },
+      load: async () => ({ default: () => <p>the typing scene</p> }),
+    }
+    const onHome = vi.fn()
+    render(<GameFrame game={typing} onHome={onHome} />)
+    expect(screen.getByText('This game needs a keyboard')).toBeTruthy()
+    expect(screen.queryByText('the typing scene')).toBeNull()
+    await act(async () => fireEvent.click(screen.getByText('I have a keyboard')))
+    expect(await screen.findByText('the typing scene')).toBeTruthy()
+    vi.unstubAllGlobals()
+  })
 })

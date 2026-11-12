@@ -1034,6 +1034,10 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .nl-frog-art { display: block; width: 3.3rem; }
 .nl-frog { position: absolute; top: calc(62% - 46px); font-size: 2.6rem; line-height: 1; translate: -50% 0; transition: left 0.14s ease-out; animation: nlHop 0.16s ease-out; pointer-events: none; z-index: 1; }
 .nl-count { position: absolute; left: 50%; top: -30px; translate: -50% 0; font-size: 1.3rem; font-weight: 800; color: var(--bad); }
+/* The stone under a resting finger; the answer counts when the finger lifts, so it can slide to the right stone first. */
+.nl-aim { background: rgba(255, 246, 220, 0.55); }
+.nl-aim .nl-mark { transform: scale(1.25); }
+.nl-stage { touch-action: none; }
 @keyframes nlHop { 50% { transform: translateY(-34px); } }
 
 /* Puppy Spots */
@@ -1230,8 +1234,9 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .ff-wish { animation: popIn 0.25s; transform-box: fill-box; transform-origin: 50% 100%; }
 .ff-sad { animation: psNo 0.4s 2; }
 .ff-free { animation: psPulse 0.9s infinite alternate ease-in-out; }
-.ff-tray { display: flex; justify-content: center; align-items: flex-end; gap: 4px; min-height: 124px; width: 100%; }
-.ff-wait { flex: 0 1 92px; min-width: 0; padding: 0; background: none; border-radius: 18px; transition: transform 0.15s; }
+/* Five or six guests wait in two rows on a phone, so each one (and the wish above it) stays big enough to read. */
+.ff-tray { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end; gap: 4px; min-height: 124px; width: 100%; }
+.ff-wait { flex: 0 0 min(92px, calc((100% - 12px) / 4)); min-width: 0; padding: 0; background: none; border-radius: 18px; transition: transform 0.15s; }
 .ff-wait-art { display: block; width: 100%; overflow: visible; }
 .ff-wait-on { transform: translateY(-8px); background: rgba(124, 92, 224, 0.16); }
 .ff-all { font-family: var(--story); font-weight: 800; font-size: 1.3rem; letter-spacing: 2px; text-transform: uppercase; }

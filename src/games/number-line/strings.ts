@@ -13,7 +13,7 @@ const strings: GameStrings = {
   },
   hu: {
     title: 'Békaugrás',
-    howTo: 'A béka ugrál a számegyenesen. Koppints arra a számra, ahol meg fog állni!',
+    howTo: 'A béka ugrál a számegyenesen. Koppints arra a számra, ahol megáll!',
     score: 'Pont',
     combo: 'Kombó',
     time: 'Idő',

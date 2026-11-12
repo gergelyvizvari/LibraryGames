@@ -12,7 +12,7 @@ const strings: GameStrings = {
   },
   hu: {
     title: 'Mesekirakó',
-    howTo: 'Összekeveredtek egy kis mese lapjai. Koppints rájuk abban a sorrendben, ahogy történnek!',
+    howTo: 'Összekeveredtek egy kis mese lapjai. Koppints rájuk abban a sorrendben, ahogy a mesében történnek!',
     first: 'Mi történik először?',
     next: 'És aztán?',
     last: 'És a végén?',

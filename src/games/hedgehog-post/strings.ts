@@ -30,7 +30,7 @@ const strings: GameStrings = {
     walking: 'Megyek, megyek…',
     blocked: 'Hoppá, arra nincs út! Javítsd ki a piros kártyát.',
     short: 'Még nem értem oda. Kell még néhány lépés!',
-    full: 'Nincs több hely. Koppints egy kártyára, és kiveszed.',
+    full: 'Nincs több hely. Koppints egy kártyára, hogy kivedd.',
     done: 'Megérkezett a levél. Köszönöm!',
     go: 'Indulj!',
     undo: 'Vissza',
