@@ -1290,3 +1290,19 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .sm-no { animation: psNo 0.4s 2; }
 .sm-fade { opacity: 0.35; }
 @keyframes smShow { from { opacity: 0; } }
+
+/* Lily Pad Pairs: two lily pads on the frog's pond, one picture lies on both. */
+.lp-pond { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; margin-bottom: 10px; border-radius: 42px; background: #4fc3c8; box-shadow: 0 0 0 9px #f2d76a, 0 10px 0 9px rgba(36, 26, 60, 0.16); overflow: hidden; }
+.lp-pond.lp-side { flex-direction: row; }
+.lily-pads .sg-board.sg-fill { width: min(100% - 24px, 920px); }
+.lp-pond-art { position: absolute; inset: 0; width: 100%; height: 100%; }
+.lp-lily { position: absolute; right: 14px; bottom: 10px; width: 44px; }
+.lp-pad { position: relative; flex: none; animation: popIn 0.35s backwards; }
+.lp-pad-art { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.lp-spot { position: absolute; aspect-ratio: 1; }
+.lp-pic { display: block; width: 100%; height: 100%; padding: 0; background: none; border-radius: 50%; transition: transform 0.12s, opacity 0.3s; -webkit-tap-highlight-color: transparent; }
+.lp-pic:active { transform: scale(0.92); }
+.lp-art { display: block; width: 100%; height: 100%; overflow: visible; }
+.lp-hop { animation: pkHop 0.55s; filter: drop-shadow(0 0 6px #fff6dc) drop-shadow(0 0 3px #fff6dc); }
+.lp-no { animation: psNo 0.4s 2; }
+.lp-fade { opacity: 0.35; }

@@ -59,3 +59,4 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-11-11 | Forest Feast | logic |
 | 2026-11-11 | Hedgehog Post | logic |
 | 2026-11-12 | Shadow Match | spatial |
+| 2026-11-12 | Lily Pad Pairs | focus |
