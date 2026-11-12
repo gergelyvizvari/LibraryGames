@@ -101,6 +101,7 @@ export function SceneShell({
   bare = false,
   fill = false,
   className = '',
+  guide,
   children,
 }: {
   place: PlaceId
@@ -114,6 +115,8 @@ export function SceneShell({
   /** The board takes all the room there is, instead of only what it needs. */
   fill?: boolean
   className?: string
+  /** Another character for this game instead of the place's own (a `<CritterGuide>`). */
+  guide?: ReactNode
   children: ReactNode
 }) {
   const t = useT()
@@ -130,7 +133,7 @@ export function SceneShell({
           {say}
         </p>
         <span className={`sg-guide sg-${stage.mood}`}>
-          <Guide place={place} />
+          {guide ?? <Guide place={place} />}
         </span>
       </div>
       <StagePips done={stage.done} total={stage.total} label={t('scene.progress', { n: stage.done, total: stage.total })} />

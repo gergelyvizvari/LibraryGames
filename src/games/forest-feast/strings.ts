@@ -1,0 +1,42 @@
+import type { GameStrings } from '../../i18n'
+
+const strings: GameStrings = {
+  en: {
+    title: 'Forest Feast',
+    howTo: 'Every guest has a little wish: by the window, in front of the cake, next to a friend or not next to someone. Seat them so everyone smiles!',
+    say: 'Everyone wishes for something. Who sits where?',
+    'wish.window': 'I would like to sit by the window.',
+    'wish.cake': 'I would like to sit in front of the cake.',
+    'wish.next': 'I would like to sit next to my friend.',
+    'wish.apart': 'I would rather not sit next to this one.',
+    'wish.none': 'I can sit anywhere!',
+    fix: 'Someone is still sad. Swap them around!',
+    done: 'Everyone is happy. Enjoy your meal!',
+    allSeated: 'Everyone is at the table',
+    guest: 'Guest {n}',
+    seat: 'Chair {n}',
+    'sticker.cake': 'Strawberry cake',
+    'sticker.fox': 'Fox the host',
+    'sticker.tea': 'Cup of tea',
+  },
+  hu: {
+    title: 'Erdei lakoma',
+    howTo: 'Minden vendégnek van egy kis kívánsága: az ablaknál, a torta előtt, a barátja mellett vagy nem valaki mellett szeretne ülni. Ültesd le őket úgy, hogy mindenki mosolyogjon!',
+    say: 'Mindenki kér valamit. Ki hová üljön?',
+    'wish.window': 'Én az ablak mellett szeretnék ülni.',
+    'wish.cake': 'Én a torta előtt szeretnék ülni.',
+    'wish.next': 'Én a barátom mellé szeretnék ülni.',
+    'wish.apart': 'Én nem szeretnék mellé ülni.',
+    'wish.none': 'Én bárhová leülök!',
+    fix: 'Valaki még szomorú. Ültesd át!',
+    done: 'Mindenki boldog. Jó étvágyat!',
+    allSeated: 'Mindenki asztalnál ül',
+    guest: '{n}. vendég',
+    seat: '{n}. szék',
+    'sticker.cake': 'Epres torta',
+    'sticker.fox': 'Róka, a házigazda',
+    'sticker.tea': 'Egy csésze tea',
+  },
+}
+
+export default strings

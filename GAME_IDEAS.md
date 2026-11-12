@@ -57,3 +57,5 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-11-09 | Number Line Jump | maths |
 | 2026-11-09 | Puppy Spots | logic |
 | 2026-11-10 | Story Order | reading |
+| 2026-11-11 | Forest Feast | logic |
+| 2026-11-11 | Hedgehog Post | logic |
