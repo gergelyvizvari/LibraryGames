@@ -560,28 +560,25 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 /* Phones: the map's top row is full, so the tools go in a second row on the right. The games list has room for them in one row. */
 /* On a phone everything stays in one row over the sky, so no button ever sits on a game's badge. */
 @media (max-width: 640px) {
-  .wm-top, .wm-top .wm-tools { gap: 5px; }
-  .wm-top { --tool: clamp(32px, 10.2vw, 42px); }
-  .wm-top .wm-tool, .wm-top .wm-tools .icon-btn { width: var(--tool); height: var(--tool); }
-  .wm-top .wm-tools .share-glyph, .wm-top .wm-tool .tea-cup, .wm-top .wm-tool .sound-icon { width: calc(var(--tool) * 0.62); height: calc(var(--tool) * 0.62); }
-  .wm-top .wm-pill { height: 38px; padding: 0 10px; gap: 4px; }
+  .wm-top, .wm-top .wm-tools, .book-top, .book-top .wm-tools { gap: 5px; }
+  .wm-top, .book-top { --tool: clamp(32px, 10.2vw, 42px); }
+  .wm-top .wm-tool, .wm-top .wm-tools .icon-btn, .book-top .wm-tool, .book-top .wm-tools .icon-btn { width: var(--tool); height: var(--tool); }
+  .wm-top .wm-tools .share-glyph, .wm-top .wm-tool .tea-cup, .wm-top .wm-tool .sound-icon,
+  .book-top .wm-tools .share-glyph, .book-top .wm-tool .tea-cup, .book-top .wm-tool .sound-icon { width: calc(var(--tool) * 0.62); height: calc(var(--tool) * 0.62); }
+  .wm-top .wm-pill, .book-top .wm-pill { height: 38px; padding: 0 10px; gap: 4px; }
 }
 @media (max-width: 480px) {
   .wm-top .wm-red { display: none; }
 }
 @media (max-width: 379px) {
-  .wm-top, .wm-top .wm-tools { gap: 4px; }
-  .wm-top .wm-pill { padding: 0 8px; }
+  .wm-top, .wm-top .wm-tools, .book-top, .book-top .wm-tools { gap: 4px; }
+  .wm-top .wm-pill, .book-top .wm-pill { padding: 0 8px; }
 }
 @media (max-width: 339px) {
-  .wm-top, .wm-top .wm-tools { gap: 3px; }
-  .wm-top .wm-pill { padding: 0 6px; font-size: 0.9rem; }
+  .wm-top, .wm-top .wm-tools, .book-top, .book-top .wm-tools { gap: 3px; }
+  .wm-top .wm-pill, .book-top .wm-pill { padding: 0 6px; font-size: 0.9rem; }
 }
-@media (max-width: 380px) {
-  .book-top .wm-tools { gap: 5px; }
-  .book-top .wm-tool, .book-top .wm-tools .icon-btn { width: 38px; height: 38px; }
-  .book-top .wm-pill { padding: 0 10px; }
-}
+
 .wm-arrow, .scene-back { position: absolute; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%; background: var(--story-paper); box-shadow: 0 2px 5px rgba(40, 30, 70, 0.3); }
 .wm-arrow svg, .scene-back svg { width: 24px; height: 24px; fill: none; stroke: var(--story-ink); stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
 .wm-arrow { top: 50%; margin-top: -22px; }
