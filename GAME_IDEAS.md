@@ -7,9 +7,13 @@ Edit freely: reorder, add, or delete ideas.
 
 - **Copy Cat Typing** (typing): type a short sentence before the cat finishes its nap; mistakes wake it up.
 - **Odd Sound Out** (focus): three sounds play; tap the one that was different.
-- **Balloon Pop Pairs** (memory): balloons show numbers briefly; pop them from smallest to largest.
 - **Traffic Light Tap** (reflexes): tap on green, freeze on red, and never tap on yellow.
 - **Sudoku Junior** (logic): 4x4 picture sudoku.
+- **Acorn Shop** (maths): a squirrel sells snacks; pay exactly the price with acorn coins worth 1, 2 and 5.
+- **Bridge Builder** (spatial): a gap in the forest bridge; pick the plank that is exactly long enough to close it.
+- **Animal Homes** (geography): carry each animal to the part of the world it lives in (a penguin to the ice, a kangaroo to Australia).
+- **Word Garden** (language): plant seeds in the bed whose sign starts with the same sound, and watch the words grow.
+- **Firefly Night** (reflexes): tap the fireflies while they glow and leave the sleeping ones alone.
 
 ## Shipped
 
@@ -60,3 +64,4 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-11-11 | Hedgehog Post | logic |
 | 2026-11-12 | Shadow Match | spatial |
 | 2026-11-12 | Lily Pad Pairs | focus |
+| 2026-11-13 | Balloon Pop | memory |
