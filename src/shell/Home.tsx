@@ -37,6 +37,17 @@ export function newGameIds(list: GameDef[] = shownGames(), today = new Date()) {
 }
 
 /**
+ * A card's stars, split into even rows of at most five so a game with many stickers never pushes past the card:
+ * 10 gives 5 + 5, 7 gives 4 + 3. Each row lists the star indexes it holds.
+ */
+export function starRows(total: number, perRow = 5): number[][] {
+  if (total <= 0) return []
+  const rows = Math.ceil(total / perRow)
+  const size = Math.ceil(total / rows)
+  return Array.from({ length: rows }, (_, r) => Array.from({ length: Math.max(0, Math.min(size, total - r * size)) }, (_, i) => r * size + i))
+}
+
+/**
  * Every game on one page, as the index of the storybook: one panel for each region of the map, with its character,
  * and the games as paper cards. The stars on a card are the game's stickers, gold once they are won.
  */
@@ -90,10 +101,14 @@ export function Home({
           <span className="book-card-title">{gt('title')}</span>
           {total > 0 && (
             <span className="book-card-stars" role="img" aria-label={t('stickers.count', { n: have, total })}>
-              {Array.from({ length: total }, (_, i) => (
-                <i key={i} className={i < have ? 'book-star-on' : undefined}>
-                  ★
-                </i>
+              {starRows(total).map((row, r) => (
+                <span key={r} className="book-star-row">
+                  {row.map((i) => (
+                    <i key={i} className={i < have ? 'book-star-on' : undefined}>
+                      ★
+                    </i>
+                  ))}
+                </span>
               ))}
             </span>
           )}

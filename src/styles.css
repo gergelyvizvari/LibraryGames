@@ -30,7 +30,7 @@
   /* Chunky toy look: every surface has a thin outline and a thicker bottom edge, like a pressable button. */
   --shadow: 0 0 0 2px var(--line), 0 5px 0 var(--line);
   /* The flag font only covers flag letters and only loads where flags are missing (Windows), see main.tsx. */
-  font-family: 'Twemoji Country Flags', 'Fredoka Variable', 'Baloo 2 Variable', ui-rounded, system-ui, sans-serif;
+  font-family: 'Twemoji Country Flags', 'Fredoka Variable', ui-rounded, system-ui, sans-serif;
   color: var(--ink);
   -webkit-tap-highlight-color: transparent;
 }
@@ -474,7 +474,8 @@ html:has(.app-full) { scrollbar-gutter: auto; overflow: hidden; }
 .book-played .book-card-icon { box-shadow: 0 0 0 3px #ffd24a, 0 2px 4px rgba(40, 30, 70, 0.18); }
 .book-card-icon .game-icon { width: 48px; height: 48px; }
 .book-card-title { display: grid; place-items: center; min-height: 2.3em; font-weight: 700; font-size: 1.05rem; line-height: 1.15; text-align: center; text-wrap: balance; }
-.book-card-stars { display: flex; gap: 3px; font-size: 0.95rem; line-height: 1; }
+.book-card-stars { display: flex; flex-direction: column; align-items: center; gap: 2px; max-width: 100%; font-size: 0.95rem; line-height: 1; }
+.book-star-row { display: flex; gap: 3px; }
 .book-card-stars i { font-style: normal; color: #d9cfb8; }
 .book-card-stars .book-star-on { color: #f2a71b; }
 .book-new { position: absolute; top: 8px; right: 8px; z-index: 1; padding: 1px 8px; border-radius: 999px; background: #e2607e; color: var(--story-paper); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; transform: rotate(6deg); }
