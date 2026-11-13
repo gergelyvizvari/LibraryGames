@@ -1,13 +1,17 @@
 /* Fonts are bundled with the app (not loaded from Google), so no visitor data goes to a third party. */
 @import '@fontsource-variable/fredoka/wght.css';
 
-/* Fredoka has no ő or ű (Hungarian), so only those letters come from Baloo 2, which looks close. */
+/*
+ * Fredoka has no ő, Ő, ű or Ű (Hungarian). This small file adds them, drawn from Fredoka's own letters and its double
+ * acute, so Hungarian words keep one look. It comes after the import, so it wins for these four letters.
+ * Rebuild with tools/fredoka-hu.py.
+ */
 @font-face {
-  font-family: 'Baloo 2 Variable';
+  font-family: 'Fredoka Variable';
   font-style: normal;
   font-display: swap;
-  font-weight: 400 800;
-  src: url('@fontsource-variable/baloo-2/files/baloo-2-latin-ext-wght-normal.woff2') format('woff2-variations');
+  font-weight: 300 700;
+  src: url('./fonts/fredoka-hu-wght.woff2') format('woff2-variations');
   unicode-range: U+0150-0151, U+0170-0171;
 }
 

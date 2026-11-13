@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { GameDef } from '../kit/types'
-import { newGameIds } from './Home'
+import { newGameIds, starRows } from './Home'
 
 const game = (id: string, added: string) => ({ meta: { id, added } }) as GameDef
 
@@ -14,5 +14,19 @@ describe('newGameIds', () => {
 
   it('skips games older than a week', () => {
     expect(newGameIds([game('old', '2026-10-01')], today).size).toBe(0)
+  })
+})
+
+describe('starRows', () => {
+  it('keeps five or fewer stars on one row', () => {
+    expect(starRows(5)).toEqual([[0, 1, 2, 3, 4]])
+    expect(starRows(3)).toEqual([[0, 1, 2]])
+  })
+
+  it('splits more stars into even rows of at most five', () => {
+    expect(starRows(10).map((r) => r.length)).toEqual([5, 5])
+    expect(starRows(7).map((r) => r.length)).toEqual([4, 3])
+    expect(starRows(12).map((r) => r.length)).toEqual([4, 4, 4])
+    expect(starRows(10).flat()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
   })
 })
