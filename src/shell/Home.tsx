@@ -12,6 +12,7 @@ import { AUTHOR, facebookUrl, portfolioUrl, SUPPORT_URL } from './contact'
 import { logoIcon } from './logo'
 import { regions } from './map/regions'
 import { TeaCup } from './TeaCup'
+import { StickerIcon } from './StickerIcon'
 import { Tools } from './Tools'
 
 
@@ -43,11 +44,14 @@ export function Home({
   onPlay,
   onLocale,
   onMap,
+  onStickers,
 }: {
   onPlay: (id: string, daily?: boolean) => void
   onLocale: (locale: Locale) => void
   /** Back to the map. */
   onMap: () => void
+  /** Open the sticker album. */
+  onStickers: () => void
 }) {
   const t = useT()
   const locale = useLocale()
@@ -66,6 +70,9 @@ export function Home({
   const madeBy = t('madeBy', { name: '\u0000' }).split('\u0000')
 
   const shown = useMemo(() => shownGames(), [])
+  // The same counters as on the map: a star for every game tried, and the stickers won so far.
+  const starCount = shown.filter((g) => gameProgress(progress, g.meta.id).plays > 0).length
+  const stickers = shown.reduce((n, g) => n + stickerCount(progress, g.meta.id), 0)
   const favourites = (progress.favourites ?? []).flatMap((f) => shown.find((g) => g.meta.id === f.id) ?? [])
 
   // A card is a box with two buttons side by side in the markup: the game itself and its heart.
@@ -106,10 +113,18 @@ export function Home({
               <path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z" />
               <path d="M9 4v14M15 6v14" fill="none" stroke="#fffaf0" strokeWidth="1.6" />
             </svg>
-            {t('map.open')}
+            <span className="wm-pill-text">{t('map.open')}</span>
           </button>
           <span className="wm-top-gap" />
           <Tools onLocale={onLocale} />
+          <span className="wm-pill wm-gold" role="img" aria-label={t('map.stars', { n: starCount })} title={t('map.starsHint')}>
+            ★ {starCount}
+          </span>
+          <button className="wm-pill wm-stickers" onClick={onStickers} aria-label={t('stickers.open', { n: stickers })} title={t('stickers.title')}>
+            <StickerIcon />
+            <span className="wm-pill-text">{t('stickers.short')}</span>
+            <b className="wm-stickers-n">{stickers}</b>
+          </button>
         </div>
 
         <header className="book-head">

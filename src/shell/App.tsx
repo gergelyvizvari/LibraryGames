@@ -74,7 +74,7 @@ export function App() {
         ) : onMap ? (
           <WorldMap onPlay={play} onAllGames={() => go('/')} onStickers={() => go('/stickers')} onLocale={changeLocale} from={left} />
         ) : (
-          <Home onPlay={play} onLocale={changeLocale} onMap={() => go('/map')} />
+          <Home onPlay={play} onLocale={changeLocale} onMap={() => go('/map')} onStickers={() => go('/stickers')} />
         )}
       </main>
     </LocaleContext.Provider>
