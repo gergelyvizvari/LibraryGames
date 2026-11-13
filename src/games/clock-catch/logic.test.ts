@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { makeRng } from '../../kit/random'
-import { angles, flipped, label, makeOptions, optionCount, pointsFor, randomTime, same, stepFor } from './logic'
+import { angles, flipped, label, makeOptions, makeTimeDealer, optionCount, pointsFor, randomTime, same, stepFor } from './logic'
 
 describe('clock catch', () => {
   it('starts with whole hours', () => {
@@ -33,6 +33,14 @@ describe('clock catch', () => {
         expect(new Set(opts.map(label)).size).toBe(opts.length)
         opts.forEach((o) => expect(o.m % stepFor(level)).toBe(0))
       }
+    }
+  })
+  it('brings in half hours at level 2 and never repeats a time within a stage', () => {
+    expect(stepFor(2)).toBe(30)
+    for (const level of [1, 2, 5]) {
+      const deal = makeTimeDealer(makeRng(level), level)
+      const times = Array.from({ length: 12 }, () => label(deal()))
+      expect(new Set(times).size).toBe(12)
     }
   })
   it('puts the hands in the right place', () => {

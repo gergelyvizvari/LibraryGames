@@ -633,6 +633,7 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .scene-end-open { font: inherit; color: inherit; text-align: left; cursor: pointer; }
 .scene-end-open:active { transform: translateY(2px); }
 .scene-end-more { justify-self: start; margin-top: 4px; padding: 4px 12px; border-radius: 14px; background: #fff1c2; color: #8a5a00; font-weight: 700; font-size: 0.95rem; }
+.scene-end-next { display: block; margin-bottom: 2px; font-size: 0.85rem; font-weight: 600; }
 .scene-fav { position: absolute; top: calc(12px + env(safe-area-inset-top)); right: calc(12px + env(safe-area-inset-right)); z-index: 7; width: 44px; height: 44px; background: var(--story-paper); box-shadow: 0 2px 5px rgba(40, 30, 70, 0.3); }
 .scene-fav .fav-heart { width: 26px; height: 26px; fill: transparent; stroke: #e2607e; }
 .scene-fav.fav-on .fav-heart { fill: #e2607e; }

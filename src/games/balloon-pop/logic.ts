@@ -13,8 +13,8 @@ export interface Spec {
 }
 
 const SPECS: Spec[] = [
-  { count: 3, max: 3, show: null },
-  { count: 3, max: 6, show: null },
+  { count: 3, max: 5, show: null },
+  { count: 3, max: 9, show: null },
   { count: 4, max: 9, show: 4 },
   { count: 4, max: 12, show: 3.5 },
   { count: 5, max: 15, show: 4.5 },
@@ -44,7 +44,7 @@ export interface Balloon {
 
 export const COLORS = 6
 
-/** A board: distinct numbers on balloons in shuffled spots and colours. Level 1 is always 1, 2 and 3. */
+/** A board: distinct numbers on balloons in shuffled spots and colours. Level 1 picks three of 1 to 5, so boards differ. */
 export function dealBoard(rng: Rng, level: number): Balloon[] {
   const { count, max } = specFor(level)
   const pool = Array.from({ length: max }, (_, i) => i + 1)

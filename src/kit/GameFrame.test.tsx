@@ -101,7 +101,7 @@ describe('GameFrame', () => {
     for (let i = 0; i < 4; i++) await act(async () => vi.advanceTimersByTime(500))
     expect(screen.queryByText('First sticker')).toBeNull()
     expect(screen.getByText('On to stage 3')).toBeTruthy()
-    fireEvent.click(screen.getAllByText('Back to the map').at(-1)!)
+    fireEvent.click(screen.getAllByText('Back').at(-1)!)
     expect(onHome).toHaveBeenCalled()
   })
 

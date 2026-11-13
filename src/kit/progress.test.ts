@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { awardSticker, currentStreak, dailyDoneToday, gameProgress, isFavourite, loadProgress, nextLevel, recordRound, setLevel, stars, stickerCount, toggleFavourite } from './progress'
+import { awardSticker, stickerLevel, currentStreak, dailyDoneToday, gameProgress, isFavourite, loadProgress, nextLevel, recordRound, setLevel, stars, stickerCount, toggleFavourite } from './progress'
 
 describe('progress', () => {
   beforeEach(() => localStorage.clear())
@@ -63,6 +63,17 @@ describe('progress', () => {
     expect(gameProgress(loadProgress(), 'x').level).toBe(10)
     setLevel('x', 0)
     expect(gameProgress(loadProgress(), 'x').level).toBe(1)
+  })
+
+  it('spreads stickers over the levels: the first at once, the last only at level 10', () => {
+    expect([0, 1, 2, 3, 4].map((i) => stickerLevel(i, 5))).toEqual([1, 3, 6, 8, 10])
+    expect(awardSticker('climb', 5, 1)).toBe(0)
+    expect(awardSticker('climb', 5, 2)).toBeNull()
+    expect(awardSticker('climb', 5, 3)).toBe(1)
+    expect(awardSticker('climb', 5, 9)).toBe(2)
+    expect(awardSticker('climb', 5, 9)).toBe(3)
+    expect(awardSticker('climb', 5, 9)).toBeNull()
+    expect(awardSticker('climb', 5, 10)).toBe(4)
   })
 
   it('hands out stickers one at a time until the album is full, and keeps them through later rounds', () => {

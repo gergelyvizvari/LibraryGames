@@ -16,9 +16,9 @@ const strings: GameStrings = {
     howTo: 'Jegyezd meg a lufikon a számokat, aztán pukkaszd ki őket a legkisebbtől a legnagyobbig!',
     look: 'Nézd meg jól a számokat, és jegyezd meg őket!',
     pop: 'Először a legkisebbet pukkaszd ki!',
-    next: 'Most jöhet a következő nagyobb!',
+    next: 'Most a következő számot!',
     no: 'Ez még nem az. Melyik szám kisebb?',
-    yes: 'Puff, puff, hurrá! Mind sorban!',
+    yes: 'Pukk, pukk, hurrá! Mind jó sorrendben!',
     balloon: 'lufi',
   },
 }

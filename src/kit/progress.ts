@@ -155,10 +155,20 @@ export function stickerCount(p: Progress, id: string) {
 }
 
 /** Puts the game's next sticker in the album. Returns its index, or null when all `total` are already collected. */
-export function awardSticker(id: string, total: number): number | null {
+/**
+ * The level a stage must be played at to win sticker number `index` (from 0) of `total`: the first comes with the
+ * first stage, the last only at level 10, the rest spread in between. So a game's album fills as the player
+ * climbs the levels, not after a few stages.
+ */
+export function stickerLevel(index: number, total: number) {
+  return total <= 1 ? 1 : 1 + Math.round((index * 9) / (total - 1))
+}
+
+/** Gives the next sticker of a game for a stage finished at `level`, if that level is high enough. Returns its index. */
+export function awardSticker(id: string, total: number, level = 10): number | null {
   const p = loadProgress()
   const have = stickerCount(p, id)
-  if (have >= total) return null
+  if (have >= total || level < stickerLevel(have, total)) return null
   save({ ...p, stickers: { ...p.stickers, [id]: have + 1 } })
   return have
 }

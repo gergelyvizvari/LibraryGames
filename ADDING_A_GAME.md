@@ -146,9 +146,11 @@ a character who says what to do, a short stage with a clear goal, and a quiet en
   the character hop and ends the stage after the last one, returning true), `stage.slip()` for a wrong try, and
   `stage.miss()` when a task that cannot be retried went wrong. It calls `onFinish` once, by itself. A game with
   its own bookkeeping can pass `stage={{ done, total, over, mood }}` instead.
-- Give the game `stickers` in `index.ts`. `medals(icon)` makes a bronze, a silver and a gold medal from the
-  game's icon; a game with its own drawn stickers lists `{ name, icon }` entries (`name` a key in `strings.ts`).
-  One is won per finished stage, in order; they show up in the sticker album.
+- Give the game `stickers` in `index.ts`. `medals(icon)` makes five medals from the game's icon (bronze, silver,
+  gold, ruby, diamond); a game with its own drawn stickers lists `{ name, icon }` entries (`name` a key in
+  `strings.ts`) followed by `...medals(icon)`. They are won in order, at most one per finished stage, and spread
+  over the levels (`stickerLevel()` in `progress.ts`): the first comes with the first stage, the last only at
+  level 10, so the album fills as the player climbs. The end card says at which level the next one waits.
 - Make the board an object in the room, not tiles on paper: pass `bare` and draw it (a rug, a pond, a crate, a framed
   picture). Draw the pieces too (`kit/things.tsx` or the game's own SVG). `puppy-spots/Den.tsx` and
   `maze-dash/Garden.tsx` are the models: an SVG picture with a grid of transparent buttons on top.

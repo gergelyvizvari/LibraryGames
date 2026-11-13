@@ -9,8 +9,9 @@ import { nextGame } from './next'
 import { Privacy } from './Privacy'
 import { Stickers } from './Stickers'
 
-// Tiny hash router: #/ is the map, #/games the list of all games, #/play/<id> plays a game, #/daily/<id> plays the daily
-// challenge, #/stickers is the sticker album, #/privacy is for parents.
+// Tiny hash router: #/ is the list of all games (also at #/games, for old links), #/map the storybook map, #/play/<id>
+// plays a game, #/daily/<id> plays the daily challenge, #/stickers is the sticker album, #/privacy is for parents.
+// The list is the home screen: it is the easiest place to find a game; the map is one tap away.
 function parse(hash: string) {
   const [, mode, id] = hash.replace(/^#/, '').split('/')
   return { mode, id }
@@ -44,11 +45,15 @@ export function App() {
   useEffect(() => {
     before.current = route
   }, [route])
+  // Where "back" leads from a game or the album: the list or the map, whichever the player came from.
+  const home = useRef('/')
+  if (!route.id && (route.mode === 'map' || route.mode === undefined || route.mode === '' || route.mode === 'games')) home.current = route.mode === 'map' ? '/map' : '/'
   const left = before.current.id ? gameById(before.current.id)?.meta.id : undefined
   const play = (id: string, daily?: boolean) => go(`/${daily ? 'daily' : 'play'}/${id}`)
   // The map and scene games fill the window and never scroll; the games list and the album are as wide but scroll.
-  const full = game ? !!game.meta.scene : !route.mode
-  const wide = !game && (route.mode === 'games' || route.mode === 'stickers')
+  const onMap = route.mode === 'map'
+  const full = game ? !!game.meta.scene : onMap
+  const wide = !game && !onMap && route.mode !== 'privacy'
 
   return (
     <LocaleContext.Provider value={locale}>
@@ -59,17 +64,17 @@ export function App() {
             game={game}
             seed={route.mode === 'daily' ? daySeed() : undefined}
             daily={route.mode === 'daily'}
-            onHome={() => go('/')}
+            onHome={() => go(home.current)}
             onNext={() => go(`/play/${nextGame(game.meta.id).meta.id}`)}
           />
         ) : route.mode === 'privacy' ? (
           <Privacy onHome={() => go('/')} />
         ) : route.mode === 'stickers' ? (
-          <Stickers onHome={() => go('/')} onPlay={play} />
-        ) : route.mode === 'games' ? (
-          <Home onPlay={play} onLocale={changeLocale} onMap={() => go('/')} />
+          <Stickers onHome={() => go(home.current)} onPlay={play} />
+        ) : onMap ? (
+          <WorldMap onPlay={play} onAllGames={() => go('/')} onStickers={() => go('/stickers')} onLocale={changeLocale} from={left} />
         ) : (
-          <WorldMap onPlay={play} onAllGames={() => go('/games')} onStickers={() => go('/stickers')} onLocale={changeLocale} from={left} />
+          <Home onPlay={play} onLocale={changeLocale} onMap={() => go('/map')} />
         )}
       </main>
     </LocaleContext.Provider>

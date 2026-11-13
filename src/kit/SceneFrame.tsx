@@ -6,7 +6,7 @@ import { FavButton } from './FavButton'
 import { useTimeouts } from './hooks'
 import { Icon } from './icon'
 import { OopsCard, gameComponent } from './lazyGame'
-import { awardSticker, gameProgress, isFavourite, loadProgress, recordRound, stickerCount, toggleFavourite } from './progress'
+import { awardSticker, gameProgress, isFavourite, loadProgress, recordRound, stickerCount, stickerLevel, toggleFavourite } from './progress'
 import { randomSeed } from './random'
 import { stickerName } from './SceneShell'
 import { StickerGrid } from './StickerGrid'
@@ -48,7 +48,7 @@ export function SceneFrame({
 
   const finish = (r: RoundResult) => {
     recordRound(id, game.meta.skill, r, new Date(), daily)
-    const sticker = game.stickers?.length ? awardSticker(id, game.stickers.length) : null
+    const sticker = game.stickers?.length ? awardSticker(id, game.stickers.length, stage.level) : null
     // A moment to look at the finished scene before the card arrives.
     later(() => {
       sound.win()
@@ -97,6 +97,7 @@ export function SceneFrame({
               <span className="scene-end-name">{won ? stickerName(won, gt, t) : t('scene.done')}</span>
               {stickers ? (
                 <span className="scene-end-more">
+                  {!won && have < stickers.length && <span className="scene-end-next">{t('stickers.nextAt', { level: stickerLevel(have, stickers.length) })}</span>}
                   ★ {t('stickers.count', { n: have, total: stickers.length })} <span aria-hidden>›</span>
                 </span>
               ) : (
