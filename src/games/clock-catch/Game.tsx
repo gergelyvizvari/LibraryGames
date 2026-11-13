@@ -5,16 +5,16 @@ import { SceneShell, useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
 import { Clock } from './Clock'
-import { flipped, label, makeOptions, randomTime, same, stepFor, type Time } from './logic'
+import { flipped, label, makeOptions, makeTimeDealer, same, type Time } from './logic'
 
 /** Clocks to read in one stage. */
 const STAGE = 6
 
 export default function ClockCatch({ level, seed, t, onFinish }: GameProps) {
   const rng = useRef(makeRng(seed)).current
-  const makeQuestion = (prev?: Time) => {
-    let answer = randomTime(rng, stepFor(level))
-    while (prev && same(prev, answer)) answer = randomTime(rng, stepFor(level))
+  const nextTime = useRef(makeTimeDealer(rng, level)).current
+  const makeQuestion = () => {
+    const answer = nextTime()
     return { answer, options: makeOptions(rng, answer, level) }
   }
   const [q, setQ] = useState(() => makeQuestion())
@@ -43,7 +43,7 @@ export default function ClockCatch({ level, seed, t, onFinish }: GameProps) {
     sound.tone(900, 0.03, 'square', 0.05, 0.3)
     if (stage.good(wrong.length ? 5 : 15)) return
     later(() => {
-      setQ(makeQuestion(q.answer))
+      setQ(makeQuestion())
       setIndex((i) => i + 1)
       setWrong([])
       setSolved(false)

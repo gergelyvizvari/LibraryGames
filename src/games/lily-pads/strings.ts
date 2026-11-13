@@ -33,7 +33,7 @@ const strings: GameStrings = {
   },
   hu: {
     title: 'Tavirózsa-párok',
-    howTo: 'Két tavirózsalevél, és egy kép mindkettőn ott van. Keresd meg, és koppints rá!',
+    howTo: 'Két tavirózsalevélen van egy közös kép. Keresd meg, és koppints rá!',
     say: 'Melyik kép van mindkét levélen?',
     no: 'Ez csak az egyik levélen van. Nézd meg újra!',
     yes: 'Igen, mindkettőn ott van!',

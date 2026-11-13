@@ -143,12 +143,12 @@ export function SceneShell({
   )
 }
 
-const medalColors = ['#d98a4e', '#b9c2d0', '#f2c14e']
+const medalColors = ['#d98a4e', '#b9c2d0', '#f2c14e', '#e2607e', '#7fd8f0']
 
-/** Three stickers for a game without drawn ones of its own: its icon as a bronze, a silver and a gold medal. */
+/** Five stickers for a game: its icon as a bronze, silver, gold, ruby and diamond medal, won level by level. */
 export function medals(icon: GameIcon): Sticker[] {
   return medalColors.map((color, medal) => ({
-    medal: medal as 0 | 1 | 2,
+    medal: medal as Sticker['medal'],
     icon: [
       ['accent', color, <circle cx="24" cy="24" r="21.5" />],
       ['base', '#fffaf0', <circle cx="24" cy="24" r="16.5" />],

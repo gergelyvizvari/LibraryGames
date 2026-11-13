@@ -35,7 +35,7 @@ const strings: GameStrings = {
     title: 'Árnyékszínház',
     howTo: 'Árnyék vetül a vászonra. Koppints arra, ami ezt az árnyékot veti!',
     say: 'Kié ez az árnyék?',
-    turned: 'Kié ez az árnyék? Lehet, hogy meg van fordítva!',
+    turned: 'Kié ez az árnyék? Lehet, hogy el van forgatva vagy tükrözve van!',
     no: 'Nem ez az. Figyeld meg az alakját!',
     yes: 'Ez az!',
     'shape.apple': 'alma',

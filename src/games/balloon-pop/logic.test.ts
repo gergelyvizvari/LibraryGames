@@ -3,9 +3,11 @@ import { makeRng } from '../../kit/random'
 import { dealBoard, nextNumber, specFor } from './logic'
 
 describe('balloon pop logic', () => {
-  it('starts with 1, 2 and 3 that stay until the first pop', () => {
-    const board = dealBoard(makeRng(1), 1)
-    expect(board.map((b) => b.n).sort()).toEqual([1, 2, 3])
+  it('starts with three small numbers that stay until the first pop, and not the same three every time', () => {
+    const rng = makeRng(1)
+    const boards = Array.from({ length: 5 }, () => dealBoard(rng, 1).map((b) => b.n).sort().join())
+    for (const b of boards) b.split(',').forEach((n) => expect(+n).toBeLessThanOrEqual(5))
+    expect(new Set(boards).size).toBeGreaterThan(1)
     expect(specFor(1).show).toBeNull()
   })
   it('deals distinct numbers in range, in different spots and colours', () => {

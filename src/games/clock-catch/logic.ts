@@ -7,9 +7,12 @@ export interface Time {
   m: number // 0..59
 }
 
-/** Minutes between possible times: whole hours first, then halves, quarters, fives and any minute. */
+/**
+ * Minutes between possible times: whole hours at level 1, then halves (so level 2 already has 24 times to read,
+ * not the same 12 again), quarters, fives and any minute.
+ */
 export function stepFor(level: number) {
-  return level <= 2 ? 60 : level <= 4 ? 30 : level <= 6 ? 15 : level <= 8 ? 5 : 1
+  return level <= 1 ? 60 : level <= 4 ? 30 : level <= 6 ? 15 : level <= 8 ? 5 : 1
 }
 
 export const optionCount = (level: number) => (level <= 2 ? 3 : 4)
@@ -24,6 +27,20 @@ const wrapH = (h: number) => ((((h - 1) % 12) + 12) % 12) + 1
 
 export function randomTime(rng: Rng, step: number): Time {
   return { h: rng.int(1, 12), m: rng.int(0, Math.floor(59 / step)) * (step === 60 ? 0 : step) }
+}
+
+/** Deals the times of one stage: none comes twice until every time on the level's grid has been shown. */
+export function makeTimeDealer(rng: Rng, level: number) {
+  const step = stepFor(level)
+  const seen = new Set<string>()
+  const all = 12 * (step === 60 ? 1 : 60 / step)
+  return (): Time => {
+    if (seen.size >= all) seen.clear()
+    let t = randomTime(rng, step)
+    while (seen.has(label(t))) t = randomTime(rng, step)
+    seen.add(label(t))
+    return t
+  }
 }
 
 /** Hand angles in degrees, clockwise from 12. */
