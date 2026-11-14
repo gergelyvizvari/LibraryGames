@@ -6,7 +6,6 @@ Edit freely: reorder, add, or delete ideas.
 ## Up next
 
 - **Copy Cat Typing** (typing): type a short sentence before the cat finishes its nap; mistakes wake it up.
-- **Odd Sound Out** (focus): three sounds play; tap the one that was different.
 - **Traffic Light Tap** (reflexes): tap on green, freeze on red, and never tap on yellow.
 - **Sudoku Junior** (logic): 4x4 picture sudoku.
 - **Acorn Shop** (maths): a squirrel sells snacks; pay exactly the price with acorn coins worth 1, 2 and 5.
@@ -65,3 +64,4 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-11-12 | Shadow Match | spatial |
 | 2026-11-12 | Lily Pad Pairs | focus |
 | 2026-11-13 | Balloon Pop | memory |
+| 2026-11-14 | Odd Sound Out | focus |
