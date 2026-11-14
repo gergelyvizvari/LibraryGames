@@ -27,6 +27,7 @@ export default function OddSound({ level, seed, t, onFinish }: GameProps) {
   const [listening, setListening] = useState(true)
   const [wrong, setWrong] = useState<number | null>(null)
   const [solved, setSolved] = useState(false)
+  const [muted, setMuted] = useState(sound.isMuted())
   const stage = useStage(STAGE, onFinish)
   const later = useTimeouts()
   const { task } = round
@@ -78,7 +79,7 @@ export default function OddSound({ level, seed, t, onFinish }: GameProps) {
     ? t('yes')
     : wrong !== null
       ? t('no')
-      : sound.isMuted()
+      : muted
         ? t('mute')
         : listening
           ? t('listen')
@@ -93,15 +94,29 @@ export default function OddSound({ level, seed, t, onFinish }: GameProps) {
       fill
       className="odd-sound"
       tray={
-        <SceneTool
-          kind="listen"
-          label={t('again')}
-          onPress={() => {
-            setWrong(null)
-            setPlay((p) => p + 1)
-          }}
-          disabled={listening || solved}
-        />
+        muted ? (
+          // The game is only playable with sound, so the switch is right here, not only on the map.
+          <SceneTool
+            kind="listen"
+            label={t('soundOn')}
+            onPress={() => {
+              sound.setMuted(false)
+              setMuted(false)
+              setWrong(null)
+              setPlay((p) => p + 1)
+            }}
+          />
+        ) : (
+          <SceneTool
+            kind="listen"
+            label={t('again')}
+            onPress={() => {
+              setWrong(null)
+              setPlay((p) => p + 1)
+            }}
+            disabled={listening || solved}
+          />
+        )
       }
     >
       <div className={`os-field os-n${task.songs.length}`}>
