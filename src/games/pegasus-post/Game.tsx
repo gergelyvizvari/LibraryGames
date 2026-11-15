@@ -7,7 +7,7 @@ import { SceneShell, useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
 import { finish, finished, makeSky, moves, refusal, SKIES, stuck, type Cell, type Sky } from './logic'
-import { PostBag, SkyMap } from './Sky'
+import { PAD, PostBag, SkyMap, TOP, boardH, boardW } from './Sky'
 
 // A rising scale: every delivered letter sings one note higher.
 const notes = [262, 294, 330, 349, 392, 440, 494, 523]
@@ -138,7 +138,7 @@ export default function PegasusPost({ level, seed, t, onFinish }: GameProps) {
     >
       <div key={stage.done} className="pp-board" role="group" aria-label={t('sky')} style={{ ['--pp-cols' as string]: sky.cols, ['--pp-rows' as string]: sky.rows }}>
         <SkyMap sky={sky} route={route} open={level <= 2 && !locked ? moves(sky, route) : []} hint={hint} mood={mood} flying={flying} />
-        <div className="pp-cells">
+        <div className="pp-cells" style={{ inset: `${((PAD + TOP) / boardH(sky)) * 100}% ${(PAD / boardW(sky)) * 100}% ${(PAD / boardH(sky)) * 100}%` }}>
           {sky.clouds.map((on, c) => (on ? <button key={c} className="pp-cell" onPointerDown={() => fly(c)} disabled={locked} aria-label={label(c)} /> : <span key={c} />))}
         </div>
       </div>

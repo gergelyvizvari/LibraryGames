@@ -214,7 +214,7 @@ export function PonyGuide({ kind, mood = 'idle', mane, children }: { kind: PonyK
   return (
     <svg viewBox="0 0 120 120" className="sg-guide-art" aria-hidden focusable="false">
       <ellipse cx="60" cy="112" rx="40" ry="7" fill="#241a3c" opacity="0.3" />
-      <g transform="translate(62 62) scale(1.1)">
+      <g transform="translate(60 68) scale(0.95)">
         <Pony kind={kind} mood={mood} mane={mane} />
         {children}
       </g>

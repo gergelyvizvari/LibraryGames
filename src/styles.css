@@ -1377,9 +1377,9 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 @keyframes ponyKnee { 0%, 50% { transform: rotate(0); } 68% { transform: rotate(62deg); } 86% { transform: rotate(40deg); } 100% { transform: rotate(0); } }
 
 /* Pegasus Post */
-.sg .pp-board { position: relative; align-self: center; width: min(100% - 4px, 560px, (100dvh - 400px) * var(--pp-cols) / var(--pp-rows)); min-width: 220px; aspect-ratio: calc(var(--pp-cols) * 68 + 16) / calc(var(--pp-rows) * 68 + 16); animation: popIn 0.3s; }
+.sg .pp-board { position: relative; align-self: center; width: min(100% - 4px, 560px, (100dvh - 400px) * var(--pp-cols) / var(--pp-rows)); min-width: 220px; aspect-ratio: calc(var(--pp-cols) * 68 + 16) / calc(var(--pp-rows) * 68 + 42); animation: popIn 0.3s; }
 .pp-art { display: block; width: 100%; height: 100%; border-radius: 26px; }
-.pp-cells { position: absolute; inset: 2.2%; display: grid; grid-template-columns: repeat(var(--pp-cols), 1fr); grid-template-rows: repeat(var(--pp-rows), 1fr); }
+.pp-cells { position: absolute; display: grid; grid-template-columns: repeat(var(--pp-cols), 1fr); grid-template-rows: repeat(var(--pp-rows), 1fr); }
 .pp-cell { padding: 0; background: none; border-radius: 30%; }
 .pp-cell:disabled { cursor: default; }
 .pp-glow { fill: #fff6c8; opacity: 0.95; animation: ppGlow 0.9s ease-in-out infinite alternate; }

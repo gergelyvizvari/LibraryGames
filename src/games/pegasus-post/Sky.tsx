@@ -5,9 +5,11 @@ import type { Cell, Sky } from './logic'
 // office the pegasus starts from, the rainbow gate, and the rainbow ribbon the pegasus leaves behind.
 
 export const CS = 68
-const PAD = 8
+export const PAD = 8
+/** Extra sky above the top row, so the pegasus standing or flying there keeps its head in the picture. */
+export const TOP = 26
 export const boardW = (sky: Sky) => sky.cols * CS + PAD * 2
-export const boardH = (sky: Sky) => sky.rows * CS + PAD * 2
+export const boardH = (sky: Sky) => sky.rows * CS + PAD * 2 + TOP
 const roofs = [
   { main: '#d9506a', dark: '#b63c5c', light: '#ec7f93' },
   { main: '#7d4a6e', dark: '#5f3554', light: '#a06a90' },
@@ -20,7 +22,7 @@ const WALL_SHADE = '#ecd9b4'
 const DOOR = '#8a3e55'
 
 const cx = (sky: Sky, c: Cell) => PAD + (c % sky.cols) * CS + CS / 2
-const cy = (sky: Sky, c: Cell) => PAD + Math.floor(c / sky.cols) * CS + CS / 2
+const cy = (sky: Sky, c: Cell) => PAD + TOP + Math.floor(c / sky.cols) * CS + CS / 2
 
 function Cloud({ glow }: { glow: boolean }) {
   return (
