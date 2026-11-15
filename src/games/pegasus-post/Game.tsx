@@ -32,7 +32,7 @@ export default function PegasusPost({ level, seed, t, onFinish }: GameProps) {
   /** The wings beat for as long as the flight to the next cloud takes. */
   const takeOff = () => {
     setFlying(true)
-    later(() => setFlying(false), 520)
+    later(() => setFlying(false), 700)
   }
 
   const frown = () => {
@@ -73,7 +73,7 @@ export default function PegasusPost({ level, seed, t, onFinish }: GameProps) {
     setRoute(next)
     setHint(null)
     if (finished(sky, next)) {
-      later(() => setMood('happy'), 520)
+      later(() => setMood('happy'), 720)
       setSay(t('done'))
       if (stage.good()) return
       later(() => {

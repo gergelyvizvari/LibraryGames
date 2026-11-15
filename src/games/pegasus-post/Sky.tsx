@@ -277,12 +277,23 @@ export function SkyMap({
           </g>
         )
       })}
-      <g className="pp-flyer" style={{ transform: `translate(${cx(sky, here)}px, ${cy(sky, here) - 14}px)` }}>
+      <g className="pp-flyer" style={{ transform: `translate(${cx(sky, here)}px, ${cy(sky, here) - 11}px)` }}>
         <g key={route.length} className={route.length > 1 && flying ? 'pp-arc' : undefined}>
-          <g className={mood === 'happy' ? 'pp-hop' : mood === 'sad' ? 'pp-no' : 'pp-hover'}>
-            <g transform={`scale(${left ? -0.5 : 0.5} 0.5)`}>
-              <Pony kind="pegasus" mood={mood} motion={flying ? 'fly' : 'stand'} />
-              <PostBag />
+          {/* A puff of cloud where it lands. */}
+          {!flying && route.length > 1 && (
+            <g className="pp-puff" fill="#fff">
+              <circle cx="-15" cy="27" r="4.5" />
+              <circle cx="15" cy="27" r="4.5" />
+              <circle cx="0" cy="29" r="3.5" />
+            </g>
+          )}
+          <g className={mood === 'sad' ? 'pp-no' : undefined}>
+            <g transform={`scale(${left ? -0.62 : 0.62} 0.62)`}>
+              {/* Nose up on the way up, nose down on the way down, and a little squash on landing. */}
+              <g className={flying ? 'pp-pitch' : route.length > 1 ? 'pp-land' : undefined}>
+                <Pony kind="pegasus" mood={mood} motion={flying ? 'fly' : 'stand'} />
+                <PostBag />
+              </g>
             </g>
           </g>
         </g>

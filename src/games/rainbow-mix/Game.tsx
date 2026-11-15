@@ -129,7 +129,7 @@ export default function RainbowMix({ level, seed, t, onFinish }: GameProps) {
       }
     >
       <div className="rm-board" role="img" aria-label={mixed ? `${t('recipe')}: ${mixed.map((p) => t(p)).join(' + ')}` : undefined}>
-        <StudioArt kind={kind} mood={mood} mane={painted ? wishColour : null} wish={wishColour} drops={drops} cap={cap} mixed={colour} stirring={stirring} recipe={mixed} right={painted} />
+        <StudioArt guest={turn} kind={kind} mood={mood} mane={painted ? wishColour : null} wish={wishColour} drops={drops} cap={cap} mixed={colour} stirring={stirring} recipe={mixed} right={painted} />
       </div>
     </SceneShell>
   )

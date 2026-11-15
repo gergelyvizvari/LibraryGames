@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Pony, type PonyKind, type PonyMood } from '../../kit/ponies'
 import { mixColour, tint, type Paint } from './logic'
 
@@ -80,6 +81,7 @@ function Sum({ recipe, made, wish, right }: { recipe: readonly Paint[]; made: st
 }
 
 export function StudioArt({
+  guest,
   kind,
   mood,
   mane,
@@ -91,6 +93,8 @@ export function StudioArt({
   recipe,
   right,
 }: {
+  /** Which guest this is, counted from 0: a new one walks in. */
+  guest: number
   kind: PonyKind
   mood: PonyMood
   /** The colour the mane has been painted, or null while it waits for its paint. */
@@ -110,6 +114,16 @@ export function StudioArt({
   right: boolean
 }) {
   const hair = mane ? [mane, tint(mane, 0.28), tint(mane, -0.14)] : BARE
+  const [walking, setWalking] = useState(true)
+  const [seen, setSeen] = useState(guest)
+  if (seen !== guest) {
+    setSeen(guest)
+    setWalking(true)
+  }
+  useEffect(() => {
+    const id = setTimeout(() => setWalking(false), 900)
+    return () => clearTimeout(id)
+  }, [guest])
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="rm-art" aria-hidden focusable="false">
       <rect width={W} height={H} fill="#dccdf3" />
@@ -140,9 +154,12 @@ export function StudioArt({
       </g>
       <ellipse cx="100" cy="232" rx="62" ry="10" fill="#8fae3e" opacity="0.6" />
       <g transform="translate(96 164)">
-        <g className={mood === 'happy' ? 'rm-hop' : mood === 'sad' ? 'rm-no' : undefined}>
-          <g className="rm-pony" transform="scale(1.5)">
-            <Pony kind={kind} mood={mood} mane={hair} />
+        {/* Every guest trots in from the edge of the meadow. */}
+        <g key={guest} className="rm-arrive">
+          <g className={mood === 'sad' ? 'rm-no' : stirring ? 'rm-watch' : undefined}>
+            <g className="rm-pony" transform="scale(1.5)">
+              <Pony kind={kind} mood={mood} mane={hair} motion={walking ? 'walk' : 'stand'} />
+            </g>
           </g>
         </g>
       </g>
