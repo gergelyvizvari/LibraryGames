@@ -105,6 +105,7 @@ export const icon: GameIcon = [
 - `SceneShell.tsx`: `<SceneShell>`, `useStage()`, `medals()`; see "Scene games" below. `places.tsx` holds the rooms and characters.
 - `scene.tsx`: `<SceneTool>` is the round drawn button for tools and arrows (undo, restart, hint, mark, listen, up/down/left/right).
 - `critters.tsx`: `<Critter kind mood body>` draws small forest animals (owl, bunny, bear, hedgehog, squirrel, mouse, fox) with happy, idle or sad faces; `<CritterGuide>` makes one the scene's character through `<SceneShell guide>`.
+- `ponies.tsx`: `<Pony kind mood mane>` draws a unicorn, a pegasus or an alicorn from the side, with a mane in any colours; `<PonyGuide>` makes one the scene's character. `RAINBOW` holds the rainbow's seven colours in order.
 - `things.tsx`: `<Thing id>` draws small storybook things (apple, acorn, fish, star...) to count, sort or line up. Use these instead of emoji.
 - `ui.tsx`: `<Pops>`, `<MapStage>`; `<Hud>`, `<TimerBar>`, `<Hearts>` and `<Confetti>` are from the old timed rounds and no game uses them now.
 - `sound.ts`: `sound.good(combo)`, `bad`, `pop`, `tap`, `tick`, `win`, `tone(freq, dur)`, `vibrate(ms)`. Real recordings: `preloadClip(url)` + `playClip(url)` (import the file from the game folder; keep clips tiny and list their source and licence in a `sounds/CREDITS.md`).

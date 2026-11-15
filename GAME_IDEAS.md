@@ -65,3 +65,6 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-11-12 | Shadow Match | spatial |
 | 2026-11-12 | Lily Pad Pairs | focus |
 | 2026-11-13 | Balloon Pop | memory |
+| 2026-11-15 | Rainbow Bridge | logic |
+| 2026-11-15 | Pegasus Post | spatial |
+| 2026-11-15 | Rainbow Mix | logic |
