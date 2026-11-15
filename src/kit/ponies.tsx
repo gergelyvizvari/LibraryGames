@@ -3,13 +3,16 @@ import type { ReactNode } from 'react'
 /**
  * Little storybook ponies for scene games: a unicorn (horn), a pegasus (wings) and an alicorn (both). Lineless
  * flat shapes, a big glossy eye and a flowing mane, seen from the side and looking right. Drawn around the middle
- * of the body at (0, 0): about 100 wide and 100 tall, with the hooves on y = 44.
+ * of the body at (0, 0): about 100 wide and 100 tall, with the hooves on y = 44. The parts move by themselves
+ * (CSS under "Ponies" in styles.css): the tail swings, the eye blinks, the legs trot and the wings beat.
  */
 
 export const ponyKinds = ['unicorn', 'pegasus', 'alicorn'] as const
 export type PonyKind = (typeof ponyKinds)[number]
 /** happy: a closed, smiling eye. sad: a little frown. */
 export type PonyMood = 'idle' | 'happy' | 'sad'
+/** How it moves: standing (the tail swings, it blinks), trotting on the spot, or flying with beating wings and tucked legs. */
+export type PonyMotion = 'stand' | 'walk' | 'fly'
 
 const INK = '#33284a'
 
@@ -41,9 +44,22 @@ const tails = [
 
 function Wing() {
   return (
-    <g className="pony-wing" transform="translate(-9 5)">
-      <path d="M-6 6 Q-34 -6 -30 -32 Q-22 -24 -16 -24 Q-18 -32 -12 -38 Q-6 -28 0 -24 Q2 -30 8 -32 Q12 -12 4 4Z" fill="#fff" />
-      <path d="M-6 6 Q-20 0 -24 -12 Q-14 -8 -10 -10 Q-10 -16 -6 -18 Q-2 -10 4 -8 Q8 -2 4 4Z" fill="#e3ecf8" />
+    <g transform="translate(-9 5)">
+      <g className="pony-wing">
+        <path d="M-6 6 Q-34 -6 -30 -32 Q-22 -24 -16 -24 Q-18 -32 -12 -38 Q-6 -28 0 -24 Q2 -30 8 -32 Q12 -12 4 4Z" fill="#fff" />
+        <path d="M-6 6 Q-20 0 -24 -12 Q-14 -8 -10 -10 Q-10 -16 -6 -18 Q-2 -10 4 -8 Q8 -2 4 4Z" fill="#e3ecf8" />
+        <path d="M-24 -22 q4 6 9 6 M-11 -28 q3 7 8 8" fill="none" stroke="#d3e0f2" strokeWidth="1.6" strokeLinecap="round" />
+      </g>
+    </g>
+  )
+}
+
+/** One leg with its hoof; `step` says which pair it trots with. */
+function Leg({ x, fill, hoof, step, far = false }: { x: number; fill: string; hoof: string; step: 'a' | 'b'; far?: boolean }) {
+  return (
+    <g className={`pony-leg pony-leg-${step}`}>
+      <rect x={x} y="18" width="10" height="26" rx="5" fill={fill} />
+      <path d={`M${x} 39 h10 a5 5 0 0 1 -10 0Z`} fill={hoof} opacity={far ? 0.75 : 1} />
     </g>
   )
 }
@@ -52,64 +68,76 @@ function Wing() {
  * A pony. `mane` gives the colours of its mane and tail (one, two or three, from the outer lock to the inner
  * one); without it the kind's own colours are used.
  */
-export function Pony({ kind, mood = 'idle', mane }: { kind: PonyKind; mood?: PonyMood; mane?: readonly string[] }) {
+export function Pony({ kind, mood = 'idle', mane, motion = 'stand' }: { kind: PonyKind; mood?: PonyMood; mane?: readonly string[]; motion?: PonyMotion }) {
   const c = coats[kind]
   const hair = mane?.length ? mane : manes[kind]
   const lock = (i: number) => hair[Math.min(i, hair.length - 1)]
   const horn = kind !== 'pegasus'
   const wings = kind !== 'unicorn'
   return (
-    <>
-      {tails.map((d, i) => (
-        <path key={i} d={d} fill={lock(i)} />
-      ))}
+    <g className={`pony pony-${motion}`}>
+      <g className="pony-tail">
+        {tails.map((d, i) => (
+          <path key={i} d={d} fill={lock(i)} />
+        ))}
+        <path d="M-40 4 Q-46 14 -42 26" fill="none" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" opacity="0.45" />
+      </g>
       {/* The far legs, a shade darker. */}
-      <rect x="-19" y="18" width="10" height="26" rx="5" fill={c.shade} />
-      <rect x="5" y="18" width="10" height="26" rx="5" fill={c.shade} />
-      <ellipse cx="-5" cy="12" rx="23" ry="16" fill={c.coat} />
-      <path d="M-26 16 Q-12 30 14 22 Q4 32 -10 30 Q-22 28 -26 16Z" fill={c.shade} opacity="0.7" />
-      <rect x="-26" y="18" width="10" height="26" rx="5" fill={c.coat} />
-      <rect x="-2" y="18" width="10" height="26" rx="5" fill={c.coat} />
-      <path d="M-26 39 h10 v0 a5 5 0 0 1 -10 0Z M-2 39 h10 a5 5 0 0 1 -10 0Z" fill={c.hoof} />
-      <path d="M-19 39 h10 a5 5 0 0 1 -10 0Z M5 39 h10 a5 5 0 0 1 -10 0Z" fill={c.hoof} opacity="0.75" />
-      {/* Neck and head. */}
-      <path d="M-2 4 Q0 -16 10 -24 L26 -12 Q20 6 14 14Z" fill={c.coat} />
-      {wings && <Wing />}
-      <path d="M9 -31 L11 -47 L21 -35Z" fill={c.coat} />
-      <path d="M12 -34 L12.5 -42 L18 -35Z" fill="#f4b6c8" />
-      {horn && (
-        <g>
-          <path d="M20 -36 L33 -60 L29 -33Z" fill="#f7cf45" />
-          <path d="M22.5 -40 l5 2.6 M25 -45 l4 2.2 M27.6 -50 l3 1.6" stroke="#e0a82e" strokeWidth="1.8" strokeLinecap="round" />
+      <Leg x={-19} fill={c.shade} hoof={c.hoof} step="b" far />
+      <Leg x={5} fill={c.shade} hoof={c.hoof} step="a" far />
+      <g className="pony-trunk">
+        <ellipse cx="-5" cy="12" rx="23" ry="16" fill={c.coat} />
+        <path d="M-26 16 Q-12 30 14 22 Q4 32 -10 30 Q-22 28 -26 16Z" fill={c.shade} opacity="0.7" />
+        {/* A little star on its side. */}
+        <path d="M-14 7 l1.6 3.3 3.6 .5 -2.6 2.5 .6 3.6 -3.2 -1.7 -3.2 1.7 .6 -3.6 -2.6 -2.5 3.6 -.5Z" fill={lock(0)} opacity="0.85" />
+      </g>
+      <Leg x={-26} fill={c.coat} hoof={c.hoof} step="a" />
+      <Leg x={-2} fill={c.coat} hoof={c.hoof} step="b" />
+      <g className="pony-head">
+        {/* Neck and head. */}
+        <path d="M-2 4 Q0 -16 10 -24 L26 -12 Q20 6 14 14Z" fill={c.coat} />
+        {wings && <Wing />}
+        <path d="M9 -31 L11 -47 L21 -35Z" fill={c.coat} />
+        <path d="M12 -34 L12.5 -42 L18 -35Z" fill="#f4b6c8" />
+        {horn && (
+          <g>
+            <path d="M20 -36 L33 -60 L29 -33Z" fill="#f7cf45" />
+            <path d="M22.5 -40 l5 2.6 M25 -45 l4 2.2 M27.6 -50 l3 1.6" stroke="#e0a82e" strokeWidth="1.8" strokeLinecap="round" />
+            <path className="pony-glint" d="M36 -62 l1.2 3 3 1.2 -3 1.2 -1.2 3 -1.2 -3 -3 -1.2 3 -1.2Z" fill="#fff" />
+          </g>
+        )}
+        <circle cx="18" cy="-18" r="18" fill={c.coat} />
+        <ellipse cx="31" cy="-9" rx="11" ry="9.5" fill={c.coat} />
+        <ellipse cx="33" cy="-7" rx="8" ry="6.5" fill={c.shade} opacity="0.55" />
+        <circle cx="37" cy="-10" r="1.3" fill={INK} opacity="0.55" />
+        <g className="pony-mane">
+          {locks.map((d, i) => (
+            <path key={i} d={d} fill={lock(i)} />
+          ))}
+          <path d="M-4 -26 Q-10 -14 -8 -4" fill="none" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" opacity="0.45" />
         </g>
-      )}
-      <circle cx="18" cy="-18" r="18" fill={c.coat} />
-      <ellipse cx="31" cy="-9" rx="11" ry="9.5" fill={c.coat} />
-      <ellipse cx="33" cy="-7" rx="8" ry="6.5" fill={c.shade} opacity="0.55" />
-      <circle cx="37" cy="-10" r="1.3" fill={INK} opacity="0.55" />
-      {locks.map((d, i) => (
-        <path key={i} d={d} fill={lock(i)} />
-      ))}
-      {/* The forelock over the forehead. */}
-      <path d="M12 -36 Q24 -42 31 -31 Q24 -33 21 -27 Q18 -33 12 -30Z" fill={lock(0)} />
-      {mood === 'happy' ? (
-        <path d="M17 -17 q5 -6 10 0" fill="none" stroke={INK} strokeWidth="2.6" strokeLinecap="round" />
-      ) : (
-        <>
-          <circle cx="22" cy="-18" r="6.2" fill="#fff" />
-          <circle cx="22.8" cy="-17.6" r="4.9" fill={INK} />
-          <circle cx="20.8" cy="-19.8" r="1.9" fill="#fff" />
-          <circle cx="24.6" cy="-15.6" r="0.9" fill="#fff" />
-          {mood === 'sad' && <path d="M16 -27 l8 -2.5" stroke={INK} strokeWidth="1.8" strokeLinecap="round" />}
-        </>
-      )}
-      <circle cx="24" cy="-7" r="3.4" fill="#f08aa6" opacity="0.6" />
-      {mood === 'sad' ? (
-        <path d="M31 -2.5 q3.5 -2.6 6 0" fill="none" stroke={INK} strokeWidth="1.6" strokeLinecap="round" />
-      ) : (
-        <path d="M30 -4 q3.5 3.4 7 0.4" fill="none" stroke={INK} strokeWidth="1.6" strokeLinecap="round" />
-      )}
-    </>
+        {/* The forelock over the forehead. */}
+        <path d="M12 -36 Q24 -42 31 -31 Q24 -33 21 -27 Q18 -33 12 -30Z" fill={lock(0)} />
+        {mood === 'happy' ? (
+          <path d="M17 -17 q5 -6 10 0" fill="none" stroke={INK} strokeWidth="2.6" strokeLinecap="round" />
+        ) : (
+          <g className="pony-eye">
+            <circle cx="22" cy="-18" r="6.2" fill="#fff" />
+            <circle cx="22.8" cy="-17.6" r="4.9" fill={INK} />
+            <circle cx="20.8" cy="-19.8" r="1.9" fill="#fff" />
+            <circle cx="24.6" cy="-15.6" r="0.9" fill="#fff" />
+            <path d="M16.4 -21.6 l-3 -2 M17.6 -23.6 l-2 -3" stroke={INK} strokeWidth="1.3" strokeLinecap="round" />
+            {mood === 'sad' && <path d="M17 -28.5 l8 -2.5" stroke={INK} strokeWidth="1.8" strokeLinecap="round" />}
+          </g>
+        )}
+        <circle cx="24" cy="-7" r="3.4" fill="#f08aa6" opacity="0.6" />
+        {mood === 'sad' ? (
+          <path d="M31 -2.5 q3.5 -2.6 6 0" fill="none" stroke={INK} strokeWidth="1.6" strokeLinecap="round" />
+        ) : (
+          <path d="M30 -4 q3.5 3.4 7 0.4" fill="none" stroke={INK} strokeWidth="1.6" strokeLinecap="round" />
+        )}
+      </g>
+    </g>
   )
 }
 

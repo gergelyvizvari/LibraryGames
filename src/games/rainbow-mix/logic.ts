@@ -105,6 +105,13 @@ export const SHADES: Shade[] = [
   { id: 'skyBlue', recipe: [B, B, W], from: 5 },
 ]
 
+/** What a mix is called: the name key of the colour with the same proportions, a paint's own name, or null. */
+export function nameOf(mix: readonly Paint[]): string | null {
+  const kinds = new Set(mix)
+  if (kinds.size === 1) return mix[0]
+  return SHADES.find((s) => sameColour(s.recipe, mix))?.id ?? null
+}
+
 /**
  * How many drops fit in the bowl. Never more than three: with four, three drops of one paint to one of another
  * would look almost like two to one, and telling them apart would be guessing.

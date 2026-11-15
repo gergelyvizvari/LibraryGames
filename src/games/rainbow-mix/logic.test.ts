@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { makeRng } from '../../kit/random'
 import strings from './strings'
-import { capFor, makeWishes, mixColour, mixRgb, PAINTS, ratio, sameColour, SHADES, tip, wishesFor, type Paint } from './logic'
+import { capFor, makeWishes, nameOf, mixColour, mixRgb, PAINTS, ratio, sameColour, SHADES, tip, wishesFor, type Paint } from './logic'
 
 /** How far apart two colours look, roughly: the distance of their red, green and blue. */
 const apart = (a: readonly Paint[], b: readonly Paint[]) => Math.hypot(...mixRgb(a).map((v, k) => v - mixRgb(b)[k]))
@@ -70,6 +70,14 @@ describe('rainbow mix', () => {
       expect(here.size).toBeGreaterThanOrEqual(level === 1 ? 5 : 8)
     }
     expect(seen.size).toBe(SHADES.length)
+  })
+
+  it('names what a mix made, so a wrong mix teaches something', () => {
+    expect(nameOf(['yellow', 'red'])).toBe('orange')
+    expect(nameOf(['blue', 'white', 'blue'])).toBe('skyBlue')
+    expect(nameOf(['red', 'red'])).toBe('red')
+    expect(nameOf(['yellow', 'white'])).toBeNull()
+    for (const s of SHADES) expect(nameOf(s.recipe)).toBe(s.id)
   })
 
   it('gives a tip that leads towards the wish', () => {

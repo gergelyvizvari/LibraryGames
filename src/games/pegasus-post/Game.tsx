@@ -18,6 +18,7 @@ export default function PegasusPost({ level, seed, t, onFinish }: GameProps) {
   const [route, setRoute] = useState<Cell[]>([sky.start])
   const [mood, setMood] = useState<PonyMood>('idle')
   const [hint, setHint] = useState<Cell | null>(null)
+  const [flying, setFlying] = useState(false)
   /** Dead ends in this sky: after the second one the help button appears. */
   const [deadEnds, setDeadEnds] = useState(0)
   const first = (s: Sky) => t(s.home === null ? 'say' : 'sayGate')
@@ -28,6 +29,12 @@ export default function PegasusPost({ level, seed, t, onFinish }: GameProps) {
   const locked = done || stage.over
   const here = route[route.length - 1]
 
+  /** The wings beat for as long as the flight to the next cloud takes. */
+  const takeOff = () => {
+    setFlying(true)
+    later(() => setFlying(false), 520)
+  }
+
   const frown = () => {
     setMood('sad')
     later(() => setMood((m) => (m === 'sad' ? 'idle' : m)), 800)
@@ -36,6 +43,7 @@ export default function PegasusPost({ level, seed, t, onFinish }: GameProps) {
   const back = () => {
     if (locked || route.length < 2) return
     sound.tap()
+    takeOff()
     setRoute(route.slice(0, -1))
     setHint(null)
     setSay(first(sky))
@@ -61,10 +69,11 @@ export default function PegasusPost({ level, seed, t, onFinish }: GameProps) {
       return
     }
     const next = [...route, c]
+    takeOff()
     setRoute(next)
     setHint(null)
     if (finished(sky, next)) {
-      setMood('happy')
+      later(() => setMood('happy'), 520)
       setSay(t('done'))
       if (stage.good()) return
       later(() => {
@@ -128,7 +137,7 @@ export default function PegasusPost({ level, seed, t, onFinish }: GameProps) {
       }
     >
       <div key={stage.done} className="pp-board" role="group" aria-label={t('sky')} style={{ ['--pp-cols' as string]: sky.cols, ['--pp-rows' as string]: sky.rows }}>
-        <SkyMap sky={sky} route={route} open={level <= 2 && !locked ? moves(sky, route) : []} hint={hint} mood={mood} />
+        <SkyMap sky={sky} route={route} open={level <= 2 && !locked ? moves(sky, route) : []} hint={hint} mood={mood} flying={flying} />
         <div className="pp-cells">
           {sky.clouds.map((on, c) => (on ? <button key={c} className="pp-cell" onPointerDown={() => fly(c)} disabled={locked} aria-label={label(c)} /> : <span key={c} />))}
         </div>

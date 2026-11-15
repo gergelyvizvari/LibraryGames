@@ -5,7 +5,7 @@ import { mixColour, tint, type Paint } from './logic'
 // mixing bowl on a tree stump.
 
 export const W = 360
-export const H = 270
+export const H = 306
 
 /** The pure colour of a paint, as it looks in its pot and as a drop. */
 export const paintColour = (p: Paint) => mixColour([p])
@@ -38,6 +38,47 @@ export function Pot({ paint }: { paint: Paint }) {
   )
 }
 
+const Plus = ({ x }: { x: number }) => <path d={`M${x - 4} 0 h8 M${x} -4 v8`} stroke="#33284a" strokeWidth="2.6" strokeLinecap="round" />
+
+function Sum({ recipe, made, wish, right }: { recipe: readonly Paint[]; made: string; wish: string; right: boolean }) {
+  // Laid out from the left: a drop for every drop, plus signs between them, then what they made.
+  const step = 30
+  const width = recipe.length * step + 34 + 34 + (right ? 0 : 34)
+  const x0 = (W - width) / 2 + 11
+  const after = x0 + recipe.length * step
+  return (
+    <g key={recipe.join('-')} className="rm-sum" transform={`translate(0 ${H - 26})`}>
+      <rect x={(W - width) / 2 - 12} y="-19" width={width + 24} height="38" rx="19" fill="#fffaf0" />
+      {recipe.map((p, i) => (
+        <g key={i}>
+          <g transform={`translate(${x0 + i * step} 0)`}>
+            <path d="M0 -11 C6 -3 8 1 8 4 a8 8 0 0 1 -16 0 C-8 1 -6 -3 0 -11Z" fill={paintColour(p)} />
+            <ellipse cx="-3" cy="3" rx="2" ry="3" fill="#fff" opacity="0.5" />
+          </g>
+          {i < recipe.length - 1 && <Plus x={x0 + i * step + step / 2} />}
+        </g>
+      ))}
+      <path d={`M${after - 9} -3 h9 M${after - 9} 3 h9`} stroke="#33284a" strokeWidth="2.6" strokeLinecap="round" />
+      <g transform={`translate(${after + 19} 0)`}>
+        <Splash colour={made} r={13} />
+      </g>
+      {right ? (
+        <g transform={`translate(${after + 46} 0)`}>
+          <circle r="10" fill="#58b368" />
+          <path d="M-5 0 l3.6 4 l6.4 -7.4" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
+        </g>
+      ) : (
+        <>
+          <path d={`M${after + 37} -3 h9 M${after + 37} 3 h9 M${after + 45} -7 l-7 14`} stroke="#e2607e" strokeWidth="2.4" strokeLinecap="round" />
+          <g transform={`translate(${after + 66} 0)`}>
+            <Splash colour={wish} r={13} />
+          </g>
+        </>
+      )}
+    </g>
+  )
+}
+
 export function StudioArt({
   kind,
   mood,
@@ -47,6 +88,8 @@ export function StudioArt({
   cap,
   mixed,
   stirring,
+  recipe,
+  right,
 }: {
   kind: PonyKind
   mood: PonyMood
@@ -61,14 +104,18 @@ export function StudioArt({
   /** The colour of the bowl once it has been mixed. */
   mixed: string | null
   stirring: boolean
+  /** The drops that were mixed last: shown as a sum under the picture, so the result can be read off. */
+  recipe: readonly Paint[] | null
+  /** Whether that mix was the wished colour. */
+  right: boolean
 }) {
   const hair = mane ? [mane, tint(mane, 0.28), tint(mane, -0.14)] : BARE
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="rm-art" aria-hidden focusable="false">
-      <rect width={W} height={H} rx="28" fill="#dccdf3" />
+      <rect width={W} height={H} fill="#dccdf3" />
       <circle cx="304" cy="40" r="60" fill="#e8dcf8" />
-      <path d={`M0 176 Q84 138 190 170 Q280 196 ${W} 160 V${H - 28} a28 28 0 0 1 -28 28 H28 a28 28 0 0 1 -28 -28Z`} fill="#c5d86b" />
-      <path d={`M0 214 Q120 190 220 216 Q300 234 ${W} 208 V${H - 28} a28 28 0 0 1 -28 28 H28 a28 28 0 0 1 -28 -28Z`} fill="#b6cc5c" />
+      <path d={`M0 176 Q84 138 190 170 Q280 196 ${W} 160 V${H} H0Z`} fill="#c5d86b" />
+      <path d={`M0 214 Q120 190 220 216 Q300 234 ${W} 208 V${H} H0Z`} fill="#b6cc5c" />
       {[[30, 232], [176, 240], [330, 236], [214, 196]].map(([x, y], i) => (
         <g key={i} transform={`translate(${x} ${y})`}>
           <circle r="4.5" fill={i % 2 ? '#f4b6c8' : '#fff'} />
@@ -115,9 +162,11 @@ export function StudioArt({
             const x = 266 + (i - (cap - 1) / 2) * 23
             const p = drops[i]
             return p ? (
-              <g key={`${i}-${p}`} className="rm-drop" transform={`translate(${x} 172)`}>
-                <ellipse rx="10.5" ry="7.5" fill={paintColour(p)} />
-                <ellipse cx="-3" cy="-2.5" rx="3.6" ry="1.8" fill="#fff" opacity="0.55" />
+              <g key={`${i}-${p}`} transform={`translate(${x} 172)`}>
+                <g className="rm-drop">
+                  <ellipse rx="10.5" ry="7.5" fill={paintColour(p)} />
+                  <ellipse cx="-3" cy="-2.5" rx="3.6" ry="1.8" fill="#fff" opacity="0.55" />
+                </g>
               </g>
             ) : (
               <ellipse key={i} cx={x} cy="172" rx="9.5" ry="6.5" className="rm-slot" />
@@ -125,6 +174,16 @@ export function StudioArt({
           })}
         </g>
       )}
+      {stirring && (
+        <g transform="translate(266 168)">
+          <g className="rm-spoon">
+            <rect x="-2.5" y="-46" width="5" height="44" rx="2.5" fill="#b98a5c" />
+            <ellipse cy="2" rx="7" ry="9" fill="#a8774f" />
+          </g>
+        </g>
+      )}
+      {/* The sum of the last mix: the drops that went in, what they made, and whether that is the wish. */}
+      {recipe && mixed && <Sum recipe={recipe} made={mixed} wish={wish} right={right} />}
     </svg>
   )
 }

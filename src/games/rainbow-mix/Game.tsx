@@ -6,7 +6,7 @@ import { SceneTool } from '../../kit/scene'
 import { SceneShell, useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { capFor, makeWishes, mixColour, namedAt, PAINTS, sameColour, tint, tip, type Paint } from './logic'
+import { capFor, makeWishes, mixColour, namedAt, nameOf, PAINTS, sameColour, tint, tip, type Paint } from './logic'
 import { BARE, Pot, StudioArt } from './Studio'
 
 // One pony after the other comes for a new mane.
@@ -90,9 +90,11 @@ export default function RainbowMix({ level, seed, t, onFinish }: GameProps) {
       }
       stage.slip()
       setMood('sad')
-      // The first wrong mix only asks to compare; from the second on the pony gives a tip.
+      // The first wrong mix says what came out and shows the sum; from the second on the pony also gives a tip.
       const hint = tip(wish.recipe, drops)
-      setSay(tries < 1 ? t('wrong') : hint.kind === 'amounts' ? t('tipAmounts') : t(hint.kind === 'add' ? 'tipAdd' : 'tipDrop', { paint: t(hint.paint) }))
+      const made = nameOf(drops)
+      const first = !made ? t('wrong') : namedAt(level) ? t('wrongMade', { made: t(made), colour: t(wish.id) }) : t('wrongShow', { made: t(made) })
+      setSay(tries < 1 ? first : hint.kind === 'amounts' ? t('tipAmounts') : t(hint.kind === 'add' ? 'tipAdd' : 'tipDrop', { paint: t(hint.paint) }))
       setTries(tries + 1)
     }, 800)
   }
@@ -126,8 +128,8 @@ export default function RainbowMix({ level, seed, t, onFinish }: GameProps) {
         </div>
       }
     >
-      <div className="rm-board">
-        <StudioArt kind={kind} mood={mood} mane={painted ? wishColour : null} wish={wishColour} drops={drops} cap={cap} mixed={colour} stirring={stirring} />
+      <div className="rm-board" role="img" aria-label={mixed ? `${t('recipe')}: ${mixed.map((p) => t(p)).join(' + ')}` : undefined}>
+        <StudioArt kind={kind} mood={mood} mane={painted ? wishColour : null} wish={wishColour} drops={drops} cap={cap} mixed={colour} stirring={stirring} recipe={mixed} right={painted} />
       </div>
     </SceneShell>
   )

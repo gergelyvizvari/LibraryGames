@@ -28,6 +28,7 @@ export default function RainbowBridge({ level, seed, t, onFinish }: GameProps) {
   const [mood, setMood] = useState<PonyMood>('idle')
   const [crossed, setCrossed] = useState(false)
   const [peek, setPeek] = useState(false)
+  const [returning, setReturning] = useState(false)
   // What the unicorn says first. Where a bridge may run backwards it always asks to look, so the words give nothing away.
   const start = () => t(plan.canReverse ? 'sayTurn' : plan.help === 'shown' ? 'say' : plan.help === 'peek' ? 'sayHidden' : 'sayMemory')
   const [say, setSay] = useState(start)
@@ -85,10 +86,15 @@ export default function RainbowBridge({ level, seed, t, onFinish }: GameProps) {
       setLaid((now) => now.map((s, i) => (bad.includes(i) ? null : s)))
       setWrong([])
       setPicked(null)
+      // It trots back to its cloud, looking the way it goes.
       setAt(-1)
       setMood('idle')
-      setWalking(false)
+      setReturning(true)
     }, end + 1100)
+    later(() => {
+      setReturning(false)
+      setWalking(false)
+    }, end + 1700)
   }
 
   const lay = (stone: number) => {
@@ -148,6 +154,8 @@ export default function RainbowBridge({ level, seed, t, onFinish }: GameProps) {
           mood={mood}
           garland={plan.help === 'none' ? 'none' : plan.help === 'shown' || peek ? 'shown' : 'hidden'}
           crossed={crossed}
+          walking={walking}
+          backwards={returning}
         />
         {colours.map((c, i) => {
           const s = stoneAt(i, len)
