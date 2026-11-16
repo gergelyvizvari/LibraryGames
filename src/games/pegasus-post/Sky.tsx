@@ -2,7 +2,7 @@ import { Pony, RAINBOW, type PonyMood } from '../../kit/ponies'
 import type { Cell, Sky } from './logic'
 
 // A calm sky laid out as a grid: every stop is one square cloud with a letter waiting on it, empty places are
-// faint hollows, and the pegasus leaves a rainbow ribbon behind.
+// faint hollows, and the pegasus leaves one rainbow ribbon behind.
 
 export const CS = 68
 export const PAD = 8
@@ -83,6 +83,8 @@ export function SkyMap({
   // The pegasus looks the way it flies.
   const left = cx(sky, here) < cx(sky, prev)
   const allDone = route.length === sky.clouds.filter(Boolean).length
+  const trail = flying ? route.slice(0, -1) : route
+  const points = trail.map((c) => `${cx(sky, c)},${cy(sky, c)}`).join(' ')
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="pp-art" aria-hidden focusable="false">
       <rect width={W} height={H} rx="26" fill="#8ccbee" />
@@ -98,16 +100,16 @@ export function SkyMap({
           )}
         </g>
       ))}
-      {/* The ribbon: every flight gets the next colour of the rainbow. */}
-      {route.slice(1).map((c, i) => {
-        const at = { x1: cx(sky, route[i]), y1: cy(sky, route[i]), x2: cx(sky, c), y2: cy(sky, c) }
-        return (
-          <g key={`${i}-${c}`} className="pp-ribbon" strokeLinecap="round">
-            <line {...at} stroke={RAINBOW[i % RAINBOW.length]} strokeWidth="9" />
-            <line {...at} stroke="#fff" strokeWidth="2" opacity="0.45" transform="translate(0 -1.8)" />
-          </g>
-        )
-      })}
+      {/* The way flown: one soft rainbow ribbon that bends round the corners. It grows when the pegasus lands. */}
+      {trail.length > 1 && (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points={points} stroke="#f08aa6" strokeWidth="11" />
+          <polyline points={points} stroke="#f9d65c" strokeWidth="6.6" />
+          <polyline points={points} stroke="#7fd0e8" strokeWidth="2.4" />
+        </g>
+      )}
+      <circle cx={cx(sky, route[0])} cy={cy(sky, route[0])} r="7.5" fill="#f08aa6" />
+      <circle cx={cx(sky, route[0])} cy={cy(sky, route[0])} r="3.4" fill="#fff" />
       {sky.clouds.map((on, c) => {
         if (!on || c === here) return null
         return (

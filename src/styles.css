@@ -1385,7 +1385,6 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .pp-tile { transition: fill 0.4s; }
 .pp-glow { fill: #ffe27a; opacity: 0.95; animation: ppGlow 0.9s ease-in-out infinite alternate; }
 .pp-hint { animation: pulse 0.5s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
-.pp-ribbon { animation: ppFade 0.45s ease-out; }
 .pp-flyer { transition: transform 0.7s cubic-bezier(0.45, 0, 0.35, 1); }
 .pp-arc { animation: ppArc 0.7s ease-in-out; }
 .pp-pitch { animation: ppPitch 0.7s ease-in-out; }
