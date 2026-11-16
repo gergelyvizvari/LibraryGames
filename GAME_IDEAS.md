@@ -9,7 +9,6 @@ Edit freely: reorder, add, or delete ideas.
 - **Odd Sound Out** (focus): three sounds play; tap the one that was different.
 - **Traffic Light Tap** (reflexes): tap on green, freeze on red, and never tap on yellow.
 - **Sudoku Junior** (logic): 4x4 picture sudoku.
-- **Acorn Shop** (maths): a squirrel sells snacks; pay exactly the price with acorn coins worth 1, 2 and 5.
 - **Bridge Builder** (spatial): a gap in the forest bridge; pick the plank that is exactly long enough to close it.
 - **Animal Homes** (geography): carry each animal to the part of the world it lives in (a penguin to the ice, a kangaroo to Australia).
 - **Word Garden** (language): plant seeds in the bed whose sign starts with the same sound, and watch the words grow.
@@ -67,3 +66,4 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-11-13 | Balloon Pop | memory |
 | 2026-11-15 | Pegasus Post | spatial |
 | 2026-11-15 | Rainbow Mix | logic |
+| 2026-11-16 | Acorn Shop | maths |
