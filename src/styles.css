@@ -1382,15 +1382,10 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .pp-cells { position: absolute; display: grid; grid-template-columns: repeat(var(--pp-cols), 1fr); grid-template-rows: repeat(var(--pp-rows), 1fr); }
 .pp-cell { padding: 0; background: none; border-radius: 30%; }
 .pp-cell:disabled { cursor: default; }
-.pp-glow { fill: #fff6c8; opacity: 0.95; animation: ppGlow 0.9s ease-in-out infinite alternate; }
+.pp-tile { transition: fill 0.4s; }
+.pp-glow { fill: #ffe27a; opacity: 0.95; animation: ppGlow 0.9s ease-in-out infinite alternate; }
 .pp-hint { animation: pulse 0.5s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
 .pp-ribbon { animation: ppFade 0.45s ease-out; }
-.pp-letter { animation: ppLetter 0.45s ease-out; transform-box: fill-box; transform-origin: 50% 100%; }
-.pp-pane { transition: fill 0.5s 0.2s; }
-.pp-smoke { animation: ppSmoke 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
-.pp-flag { animation: ppFlag 1.2s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: 0 50%; }
-.pp-twinkle { animation: twinkle 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-.pp-star { animation: twinkle 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
 .pp-flyer { transition: transform 0.7s cubic-bezier(0.45, 0, 0.35, 1); }
 .pp-arc { animation: ppArc 0.7s ease-in-out; }
 .pp-pitch { animation: ppPitch 0.7s ease-in-out; }
@@ -1405,9 +1400,6 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 @keyframes ppPitch { 0% { transform: rotate(0); } 25% { transform: rotate(-16deg); } 75% { transform: rotate(10deg); } 100% { transform: rotate(0); } }
 @keyframes ppLand { 0% { transform: scale(1.08, 0.86); } 60% { transform: scale(0.97, 1.04); } 100% { transform: none; } }
 @keyframes ppPuff { from { transform: scale(0.4); opacity: 0.9; } to { transform: scale(2.2) translateY(-2px); opacity: 0; } }
-@keyframes ppLetter { from { transform: translateY(-14px); opacity: 0; } }
-@keyframes ppSmoke { 0% { transform: translateY(2px) scale(0.7); opacity: 0; } 30% { opacity: 0.9; } 100% { transform: translateY(-7px) scale(1.15); opacity: 0; } }
-@keyframes ppFlag { to { transform: scaleX(0.8) skewY(8deg); } }
 
 /* Rainbow Mix */
 .sg .rm-board { position: relative; align-self: center; width: min(100%, 620px, (100dvh - 440px) * 1.176); min-width: 240px; aspect-ratio: 360 / 306; animation: popIn 0.3s; }

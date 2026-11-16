@@ -130,10 +130,6 @@ export function Pony({ kind, mood = 'idle', mane, motion = 'stand' }: { kind: Po
           <stop offset="0.6" stopColor="#fbe08a" />
           <stop offset="1" stopColor="#fff6cf" />
         </linearGradient>
-        <linearGradient id={`${id}e`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0.35" stopColor={INK} />
-          <stop offset="1" stopColor={eyes[kind]} />
-        </linearGradient>
       </defs>
       <g className="pony-bob">
         <g transform="translate(0 4.4) scale(0.9)">
@@ -177,29 +173,29 @@ export function Pony({ kind, mood = 'idle', mane, motion = 'stand' }: { kind: Po
           )}
           {/* The head: a round cheek and a short muzzle. */}
           <path d="M13 -36 C17 -43 28 -43 32 -36 C35 -31 41 -28 43 -23 C45 -18 42 -13 37 -13 C33 -13 31 -15 28 -15.6 C24 -12 16 -13 12 -19 C8 -24 9 -31 13 -36Z" fill={c.coat} />
-          <path d="M43 -23 C45 -18 42 -13 37 -13 C33 -13 31 -15 28 -15.6 C24 -12 16 -13 12 -19 C17 -16 24 -16 28 -19 C32 -17 40 -17 43 -23Z" fill={c.shade} opacity="0.55" />
+          <path d="M43 -23 C45 -18 42 -13 37 -13 C34.6 -13 33 -13.8 31.4 -14.6 C35 -15 40 -17 43 -23Z" fill={c.shade} opacity="0.5" />
           <ellipse cx="40.6" cy="-20.4" rx="0.9" ry="1.3" fill={INK} opacity="0.5" />
           {/* The forelock over the forehead. */}
           <path d="M15 -41 C21 -46 30 -44 33 -33 C29 -36 26 -35 24 -31 C22 -36 18 -37 14 -35Z" fill={lock(0)} />
           {mood === 'happy' ? (
-            <path d="M23.4 -25.4 q3.8 -5.4 7.8 0" fill="none" stroke={INK} strokeWidth="2.2" strokeLinecap="round" />
+            <path d="M22 -25.6 q4.6 -6.4 9.4 0" fill="none" stroke={INK} strokeWidth="2.4" strokeLinecap="round" />
           ) : (
             <g className="pony-eye">
-              <ellipse cx="27.4" cy="-27" rx="4.2" ry="5.2" fill={`url(#${id}e)`} />
-              <ellipse cx="25.8" cy="-29.2" rx="1.6" ry="2" fill="#fff" />
-              <circle cx="29" cy="-24.6" r="0.9" fill="#fff" opacity="0.9" />
-              <path d="M22.8 -28.6 C24 -33 30.6 -33.6 32 -29.4" fill="none" stroke={INK} strokeWidth="1.5" strokeLinecap="round" />
-              <path d="M23 -29.4 l-2.6 -1 M24.2 -31.4 l-2 -2.2" stroke={INK} strokeWidth="1.1" strokeLinecap="round" />
-              {mood === 'sad' && <path d="M22.6 -35.4 C25 -37 29 -37 31.6 -35.6" fill="none" stroke={INK} strokeWidth="1.3" strokeLinecap="round" transform="rotate(-16 27 -36)" />}
+              <ellipse cx="26.6" cy="-27.4" rx="4.8" ry="5.8" fill={INK} />
+              <path d="M22.4 -25 a4.8 5.8 0 0 0 8.4 0 q-4.2 2 -8.4 0Z" fill={eyes[kind]} />
+              <ellipse cx="24.8" cy="-29.8" rx="1.9" ry="2.3" fill="#fff" />
+              <circle cx="28.8" cy="-25" r="1" fill="#fff" opacity="0.9" />
+              <path d="M22.4 -29.8 q-1.4 -1.8 -3.4 -2" fill="none" stroke={INK} strokeWidth="1.4" strokeLinecap="round" />
+              {mood === 'sad' && <path d="M22.6 -35 q4.4 -1.8 8.4 0.4" fill="none" stroke={INK} strokeWidth="1.2" strokeLinecap="round" transform="rotate(-12 26.6 -35)" />}
             </g>
           )}
-          <ellipse cx="24" cy="-19" rx="3" ry="2" fill="#f08aa6" opacity="0.5" />
+          <ellipse cx="22.6" cy="-18.6" rx="3.2" ry="2.1" fill="#f08aa6" opacity="0.5" />
           {mood === 'sad' ? (
-            <path d="M35.6 -14.8 q2.6 -1.8 5 -0.2" fill="none" stroke={INK} strokeWidth="1.3" strokeLinecap="round" />
+            <path d="M36.4 -15.4 q2.4 -1.6 4.4 -0.2" fill="none" stroke={INK} strokeWidth="1.3" strokeLinecap="round" />
           ) : mood === 'happy' ? (
-            <path d="M34.6 -17 q3 4.2 6.6 0.2Z" fill="#c8506e" stroke={INK} strokeWidth="1.1" strokeLinejoin="round" />
+            <path d="M35.4 -17.2 q2.6 3.8 6 0.4Z" fill="#c8506e" stroke={INK} strokeWidth="1.1" strokeLinejoin="round" />
           ) : (
-            <path d="M34.8 -16.4 q3 2.4 6 0" fill="none" stroke={INK} strokeWidth="1.3" strokeLinecap="round" />
+            <path d="M35.6 -17 q2.6 2.2 5.4 0.2" fill="none" stroke={INK} strokeWidth="1.3" strokeLinecap="round" />
           )}
           </g>
         </Joint>
