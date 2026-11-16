@@ -53,8 +53,9 @@ function Sum({ recipe, made, wish, right }: { recipe: readonly Paint[]; made: st
       {recipe.map((p, i) => (
         <g key={i}>
           <g transform={`translate(${x0 + i * step} 0)`}>
-            <path d="M0 -11 C6 -3 8 1 8 4 a8 8 0 0 1 -16 0 C-8 1 -6 -3 0 -11Z" fill={paintColour(p)} />
-            <ellipse cx="-3" cy="3" rx="2" ry="3" fill="#fff" opacity="0.5" />
+            {/* White paint would vanish on the pale strip, so it gets an outline and a grey gleam. */}
+            <path d="M0 -11 C6 -3 8 1 8 4 a8 8 0 0 1 -16 0 C-8 1 -6 -3 0 -11Z" fill={paintColour(p)} stroke={p === 'white' ? '#b9a98c' : 'none'} strokeWidth="1.6" strokeLinejoin="round" />
+            <ellipse cx="-3" cy="3" rx="2" ry="3" fill={p === 'white' ? '#d9cdb8' : '#fff'} opacity={p === 'white' ? 0.8 : 0.5} />
           </g>
           {i < recipe.length - 1 && <Plus x={x0 + i * step + step / 2} />}
         </g>
