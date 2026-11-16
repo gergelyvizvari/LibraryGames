@@ -290,7 +290,7 @@ export function SkyMap({
             </g>
           )}
           <g className={mood === 'sad' ? 'pp-no' : undefined}>
-            <g transform={`scale(${left ? -0.62 : 0.62} 0.62)`}>
+            <g transform={`scale(${left ? -0.68 : 0.68} 0.68)`}>
               {/* Nose up on the way up, nose down on the way down, and a little squash on landing. */}
               <g className={flying ? 'pp-pitch' : route.length > 1 ? 'pp-land' : undefined}>
                 <Pony kind="pegasus" mood={mood} motion={flying ? 'fly' : 'stand'} />

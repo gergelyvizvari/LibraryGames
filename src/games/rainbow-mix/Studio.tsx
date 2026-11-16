@@ -157,7 +157,7 @@ export function StudioArt({
         {/* Every guest trots in from the edge of the meadow. */}
         <g key={guest} className="rm-arrive">
           <g className={mood === 'sad' ? 'rm-no' : stirring ? 'rm-watch' : undefined}>
-            <g className="rm-pony" transform="scale(1.5)">
+            <g className="rm-pony" transform="scale(1.6)">
               <Pony kind={kind} mood={mood} mane={hair} motion={walking ? 'walk' : 'stand'} />
             </g>
           </g>
