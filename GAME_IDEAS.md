@@ -68,7 +68,5 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-11-13 | Balloon Pop | memory |
 | 2026-11-15 | Pegasus Post | spatial |
 | 2026-11-15 | Rainbow Mix | logic |
-| 2026-11-14 | Odd Sound Out | focus |
-| 2026-11-15 | Traffic Light Tap | reflexes |
 | 2026-11-16 | Acorn Shop | maths |
 | 2026-11-17 | Bridge Builder | spatial |
