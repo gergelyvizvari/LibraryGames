@@ -10,10 +10,14 @@ Edit freely: reorder, add, or delete ideas.
 - **Traffic Light Tap** (reflexes): tap on green, freeze on red, and never tap on yellow.
 - **Sudoku Junior** (logic): 4x4 picture sudoku.
 - **Acorn Shop** (maths): a squirrel sells snacks; pay exactly the price with acorn coins worth 1, 2 and 5.
-- **Bridge Builder** (spatial): a gap in the forest bridge; pick the plank that is exactly long enough to close it.
 - **Animal Homes** (geography): carry each animal to the part of the world it lives in (a penguin to the ice, a kangaroo to Australia).
 - **Word Garden** (language): plant seeds in the bed whose sign starts with the same sound, and watch the words grow.
 - **Firefly Night** (reflexes): tap the fireflies while they glow and leave the sleeping ones alone.
+- **Picnic Basket** (memory): the bear packs a few things into the picnic basket one by one; then tap the thing that was not packed.
+- **Message in a Bottle** (reading): a bottle washes ashore with a short note; read it and tap the picture it describes.
+- **Unicorn Snack Share** (maths): share the apples fairly so every unicorn in the stable gets the same number.
+- **Plural Pets** (language): one cat, three cats: pick the word that matches how many pets are on the rug.
+- **Weather Map** (geography): read a little forecast and put the sun, the rain cloud and the snowflake on the right part of the map.
 
 ## Shipped
 
@@ -67,3 +71,4 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-11-13 | Balloon Pop | memory |
 | 2026-11-15 | Pegasus Post | spatial |
 | 2026-11-15 | Rainbow Mix | logic |
+| 2026-11-17 | Bridge Builder | spatial |
