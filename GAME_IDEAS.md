@@ -7,6 +7,7 @@ Edit freely: reorder, add, or delete ideas.
 
 - **Copy Cat Typing** (typing): type a short sentence before the cat finishes its nap; mistakes wake it up.
 - **Traffic Light Tap** (reflexes): tap on green, freeze on red, and never tap on yellow.
+- **Odd Sound Out** (focus): three sounds play; tap the one that was different.
 - **Sudoku Junior** (logic): 4x4 picture sudoku.
 - **Acorn Shop** (maths): a squirrel sells snacks; pay exactly the price with acorn coins worth 1, 2 and 5.
 - **Bridge Builder** (spatial): a gap in the forest bridge; pick the plank that is exactly long enough to close it.
@@ -67,3 +68,4 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-11-15 | Pegasus Post | spatial |
 | 2026-11-15 | Rainbow Mix | logic |
 | 2026-11-14 | Odd Sound Out | focus |
+| 2026-11-15 | Traffic Light Tap | reflexes |

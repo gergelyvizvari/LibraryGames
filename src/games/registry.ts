@@ -49,12 +49,13 @@ import balloonPop from './balloon-pop'
 import pegasusPost from './pegasus-post'
 import rainbowMix from './rainbow-mix'
 import oddSound from './odd-sound'
+import trafficLight from './traffic-light'
 
 // One line per game. New games go at the end.
 export const games: GameDef[] = [sequenceEcho, lightsOut, wordCatch, stroopClash, numberNinja, flashRead, pairRush, typeDefender,
   shapeSpin, whatNext, oddOne, blindMap, towerStack,
   gridGlow, molePop, anagramRace, simonSays, howMany, sentenceBuilder, letterPop, mazeDash, mirrorMatch, capitalMatch,
-  rhythmCopy, feedMonster, colorSort, animalSounds, rhymeTime, clockCatch, countryMap, ukMap, busyBees, continentSort, flagFriends, riverMountain, opposites, evenOdd, wordFamilies, numberLine, puppySpots, storyOrder, forestFeast, hedgehogPost, shadowMatch, lilyPads, balloonPop, pegasusPost, rainbowMix, oddSound]
+  rhythmCopy, feedMonster, colorSort, animalSounds, rhymeTime, clockCatch, countryMap, ukMap, busyBees, continentSort, flagFriends, riverMountain, opposites, evenOdd, wordFamilies, numberLine, puppySpots, storyOrder, forestFeast, hedgehogPost, shadowMatch, lilyPads, balloonPop, pegasusPost, rainbowMix, oddSound, trafficLight]
 
 export const gameById = (id: string) => games.find((g) => g.meta.id === id)
 
