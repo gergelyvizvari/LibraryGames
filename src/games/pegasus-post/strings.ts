@@ -43,7 +43,7 @@ const strings: GameStrings = {
     hint: 'Segítség',
     sky: 'Az égbolt',
     house: 'Felhő levéllel',
-    delivered: 'Felhő, a levél elvíve',
+    delivered: 'Felhő, a levelét már elvitted',
     start: 'Első felhő',
     home: 'Szivárványkapu',
     here: 'itt van a pegazus',

@@ -6,10 +6,10 @@ describe('traffic light', () => {
   it('only hops on green', () => {
     expect(tapOn('green')).toBe('hop')
     expect(tapOn('red')).toBe('wait')
-    expect(tapOn('yellow')).toBe('wait')
+    expect(tapOn('blink')).toBe('wait')
   })
 
-  it('cycles red, green, (yellow), red with times from the level', () => {
+  it('cycles red, green, (blinking green), red with times from the level', () => {
     const rng = makeRng(5)
     for (let level = 1; level <= 10; level++) {
       const spec = specFor(level)
@@ -22,13 +22,13 @@ describe('traffic light', () => {
         seen.push(next.light)
         light = next.light
       }
-      expect(seen.includes('yellow')).toBe(spec.yellow > 0)
+      expect(seen.includes('blink')).toBe(spec.blink > 0)
       expect(seen.includes('green')).toBe(true)
     }
   })
 
   it('starts easy and gets quicker', () => {
-    expect(specFor(1).yellow).toBe(0)
+    expect(specFor(1).blink).toBe(0)
     expect(specFor(1).green).toBeGreaterThan(specFor(10).green)
     expect(specFor(10).steps).toBeGreaterThan(specFor(1).steps)
     expect(specFor(99)).toEqual(specFor(10))

@@ -6,11 +6,7 @@ Edit freely: reorder, add, or delete ideas.
 ## Up next
 
 - **Copy Cat Typing** (typing): type a short sentence before the cat finishes its nap; mistakes wake it up.
-- **Traffic Light Tap** (reflexes): tap on green, freeze on red, and never tap on yellow.
-- **Odd Sound Out** (focus): three sounds play; tap the one that was different.
 - **Sudoku Junior** (logic): 4x4 picture sudoku.
-- **Bridge Builder** (spatial): a gap in the forest bridge; pick the plank that is exactly long enough to close it.
-- **Acorn Shop** (maths): a squirrel sells snacks; pay exactly the price with acorn coins worth 1, 2 and 5.
 - **Animal Homes** (geography): carry each animal to the part of the world it lives in (a penguin to the ice, a kangaroo to Australia).
 - **Word Garden** (language): plant seeds in the bed whose sign starts with the same sound, and watch the words grow.
 - **Firefly Night** (reflexes): tap the fireflies while they glow and leave the sleeping ones alone.

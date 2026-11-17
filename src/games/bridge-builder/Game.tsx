@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { Critter } from '../../kit/critters'
-import { useTimeouts } from '../../kit/hooks'
+import { useSize, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
 import { SceneShell, useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
@@ -10,9 +10,10 @@ import { DECK_LEFT, DECK_RIGHT, fit, makeTask, STAGE, type Task } from './logic'
 /** The deck's top edge and the grass where the planks lie, in scene units. */
 const DECK_Y = 120
 const GRASS_Y = 232
-const ROW = 52
+// Roomy rows and thick planks, so the grass fills the scene on a phone and every plank is easy to see and tap.
+const ROW = 70
 /** How thick a plank is. */
-const THICK = 20
+const THICK = 26
 
 const woods = [
   { board: '#c98d5a', grain: '#b07444' },
@@ -25,9 +26,9 @@ function Board({ x, y, length, wood, className }: { x: number; y: number; length
   return (
     <g className={className}>
       <rect x={x} y={y} width={length} height={THICK} rx={5} fill={w.board} />
-      <path d={`M${x + 8} ${y + 7} h${length * 0.4} M${x + length * 0.5} ${y + 13} h${length * 0.4}`} stroke={w.grain} strokeWidth={2} strokeLinecap="round" />
-      <circle cx={x + 6} cy={y + 10} r={2} fill="#6b4a32" />
-      <circle cx={x + length - 6} cy={y + 10} r={2} fill="#6b4a32" />
+      <path d={`M${x + 10} ${y + THICK * 0.35} h${length * 0.38} M${x + length * 0.5} ${y + THICK * 0.65} h${length * 0.38}`} stroke={w.grain} strokeWidth={2} strokeLinecap="round" />
+      <circle cx={x + 6} cy={y + THICK / 2} r={2.4} fill="#6b4a32" />
+      <circle cx={x + length - 6} cy={y + THICK / 2} r={2.4} fill="#6b4a32" />
     </g>
   )
 }
@@ -62,7 +63,11 @@ export default function BridgeBuilder({ level, seed, t, onFinish }: GameProps) {
   const later = useTimeouts()
   const tries = useRef(0)
   const { task } = round
-  const height = GRASS_Y + task.planks.length * ROW + 16
+  // The scene grows down to fill a tall phone screen, and the planks spread over the extra grass.
+  const [field, size] = useSize<HTMLDivElement>()
+  const least = GRASS_Y + task.planks.length * ROW + 16
+  const height = Math.round(Math.max(least, Math.min((400 * size.h) / size.w, least * 1.5)))
+  const row = task.planks.length > 1 ? (height - GRASS_Y - 22 - THICK - 24) / (task.planks.length - 1) : ROW
 
   const pick = (i: number) => {
     if (solved || stage.over) return
@@ -88,7 +93,7 @@ export default function BridgeBuilder({ level, seed, t, onFinish }: GameProps) {
 
   return (
     <SceneShell place="woods" say={say} stage={stage} bare fill className="bridge-builder">
-      <div className="bb-field">
+      <div className="bb-field" ref={field}>
         <svg className="bb-scene" viewBox={`0 0 400 ${height}`} preserveAspectRatio="xMidYMid meet" key={round.id}>
           <rect width="400" height={GRASS_Y} fill="#cfeaf7" />
           <ellipse cx="90" cy="40" rx="40" ry="11" fill="#fff" opacity="0.85" />
@@ -117,7 +122,7 @@ export default function BridgeBuilder({ level, seed, t, onFinish }: GameProps) {
           </g>
           <rect y={GRASS_Y} width="400" height={height - GRASS_Y} fill="#9fd47a" />
           {task.planks.map((p, i) => {
-            const y = GRASS_Y + 16 + i * ROW
+            const y = GRASS_Y + 22 + i * row
             const cx = p.x + p.length / 2
             const gone = solved && i === task.fits
             return (

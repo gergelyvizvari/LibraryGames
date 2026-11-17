@@ -28,7 +28,9 @@ export default function AcornShop({ level, seed, t, onFinish }: GameProps) {
   }
   const [round, setRound] = useState(newRound)
   const [paid, setPaid] = useState<Paid[]>([])
+  // The "too much" note stays until the next coin; the shake of the counter only lasts its animation.
   const [over, setOver] = useState(false)
+  const [shake, setShake] = useState(false)
   const [solved, setSolved] = useState(false)
   const stage = useStage(STAGE, onFinish)
   const later = useTimeouts()
@@ -45,6 +47,7 @@ export default function AcornShop({ level, seed, t, onFinish }: GameProps) {
     if (result === 'over') {
       stage.slip()
       setOver(true)
+      setShake(true)
       return
     }
     setOver(false)
@@ -112,7 +115,10 @@ export default function AcornShop({ level, seed, t, onFinish }: GameProps) {
               <PriceTag price={task.price} />
             </span>
           </div>
-          <div className={`as-paid${over ? ' as-no' : ''}`} onAnimationEnd={() => setOver(false)}>
+          <div
+            className={`as-paid${shake ? ' as-no' : ''}`}
+            onAnimationEnd={(e) => e.target === e.currentTarget && setShake(false)}
+          >
             {paid.map((p) => (
               <button key={p.key} className={`as-coin as-c${p.coin} as-on`} onPointerDown={() => takeBack(p.key)} disabled={solved} aria-label={t('back', { n: p.coin })}>
                 <AcornCoin value={p.coin} />

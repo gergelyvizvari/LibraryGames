@@ -29,10 +29,11 @@ const SPECS: Spec[] = [
   { choices: 3, diff: 0.32, tilt: 3, scatter: true },
   { choices: 4, diff: 0.28, tilt: 3, scatter: true },
   { choices: 4, diff: 0.23, tilt: 5, scatter: true },
-  { choices: 4, diff: 0.19, tilt: 6, scatter: true },
-  { choices: 4, diff: 0.16, tilt: 7, scatter: true },
-  { choices: 4, diff: 0.13, tilt: 8, scatter: true },
-  { choices: 4, diff: 0.11, tilt: 8, scatter: true },
+  // Never closer than 15% of the gap: on a phone a smaller difference is hard to see, even more so on a tilted plank.
+  { choices: 4, diff: 0.2, tilt: 6, scatter: true },
+  { choices: 4, diff: 0.18, tilt: 7, scatter: true },
+  { choices: 4, diff: 0.16, tilt: 8, scatter: true },
+  { choices: 4, diff: 0.15, tilt: 8, scatter: true },
 ]
 
 export const specFor = (level: number) => SPECS[clamp(Math.round(level), 1, 10) - 1]

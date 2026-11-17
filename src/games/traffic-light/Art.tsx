@@ -19,25 +19,24 @@ export function RoadArt() {
   )
 }
 
-const lamps: { light: Light; on: string; off: string; y: number }[] = [
-  { light: 'red', on: '#ff5a5f', off: '#5b4a52', y: 22 },
-  { light: 'yellow', on: '#ffd24a', off: '#5d5642', y: 52 },
-  { light: 'green', on: '#4fd26b', off: '#3f5546', y: 82 },
-]
+/** A standing figure (red lamp) and a walking one (green lamp), drawn on a 0..24 box, so the lamps speak without colour too. */
+const STAND = 'M12 3.2a2.6 2.6 0 1 1 0 5.2a2.6 2.6 0 1 1 0-5.2Z M9 9.6h6l1 7.2h-2.1v6.6h-1.6v-6.2h-.6v6.2h-1.6v-6.6H8Z'
+const WALK = 'M13.4 3a2.5 2.5 0 1 1 0 5a2.5 2.5 0 1 1 0-5Z M11.2 9.2l3.1.3l1.4 4.2l2.6 1.3l-.7 1.4l-3.1-1.5l-.6-1.6l-.8 3.4l2.4 2.6l-.4 4.3h-1.7l.3-3.6l-2.6-2.7l-1.2 3.4l-3.3 3h-2l3.6-4l1.4-6.6l-1.4.8l-.9 2.7l-1.6-.5l1.1-3.6Z'
 
-/** A traffic light on its pole; the lamp that is on glows. */
+/** A pedestrian light on its pole: the red standing figure on top, the green walking figure below; the green one blinks before red. */
 export function LightArt({ light }: { light: Light }) {
+  const red = light === 'red'
+  const green = light !== 'red'
   return (
     <svg viewBox="0 0 60 170" aria-hidden focusable="false">
       <rect x="26" y="100" width="8" height="70" rx="3" fill="#5a5470" />
-      <rect x="6" y="4" width="48" height="98" rx="14" fill="#3b3550" />
-      {lamps.map((l) => (
-        <g key={l.light}>
-          {l.light === light && <circle cx="30" cy={l.y} r="16" fill={l.on} opacity="0.35" />}
-          <circle cx="30" cy={l.y} r="11" fill={l.light === light ? l.on : l.off} />
-          {l.light === light && <circle cx="26" cy={l.y - 4} r="3" fill="#fff" opacity="0.7" />}
-        </g>
-      ))}
+      <rect x="4" y="4" width="52" height="98" rx="12" fill="#3b3550" />
+      <rect x="10" y="10" width="40" height="40" rx="8" fill={red ? '#ff5a5f' : '#4a3d48'} />
+      <path d={STAND} transform="translate(12 12) scale(1.5)" fill={red ? '#fff3f0' : '#6b5560'} />
+      <g className={light === 'blink' ? 'tl-blink' : undefined}>
+        <rect x="10" y="56" width="40" height="40" rx="8" fill={green ? '#4fd26b' : '#3a4a42'} />
+        <path d={WALK} transform="translate(12 58) scale(1.5)" fill={green ? '#effff2' : '#53685b'} />
+      </g>
     </svg>
   )
 }

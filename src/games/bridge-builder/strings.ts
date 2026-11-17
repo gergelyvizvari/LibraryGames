@@ -12,10 +12,10 @@ const strings: GameStrings = {
   },
   hu: {
     title: 'Hídépítő',
-    howTo: 'Hiányzik egy deszka az erdei hídból. Nézd meg a rést, és koppints arra a deszkára, amelyik pont olyan hosszú, hogy befoltozza.',
-    say: 'Melyik deszka illik pont a híd résébe?',
+    howTo: 'Hiányzik egy deszka az erdei hídból. Nézd meg a lyukat, és koppints arra a deszkára, amelyik pont belefér!',
+    say: 'Melyik deszka illik pont a lyukba?',
     short: 'Ez túl rövid, maradna egy lyuk!',
-    long: 'Ez túl hosszú, nem fér bele a résbe!',
+    long: 'Ez túl hosszú, nem fér bele a lyukba!',
     yes: 'Pont illik! Mehetünk át a hídon.',
     plank: '{n}. deszka',
   },

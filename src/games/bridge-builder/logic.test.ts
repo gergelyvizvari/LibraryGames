@@ -33,6 +33,10 @@ describe('bridge builder', () => {
     expect(specFor(1).tilt).toBe(0)
   })
 
+  it('never asks to tell apart planks closer than 15% of the gap', () => {
+    for (let level = 1; level <= 10; level++) expect(specFor(level).diff).toBeGreaterThanOrEqual(0.15)
+  })
+
   it('tells short, exact and long apart', () => {
     expect(fit(80, 100)).toBe('short')
     expect(fit(100, 100)).toBe('exact')

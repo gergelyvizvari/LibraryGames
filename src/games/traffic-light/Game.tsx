@@ -31,6 +31,8 @@ export default function TrafficLight({ level, seed, t, onFinish }: GameProps) {
     const next = nextLight(rng, spec, now)
     lightMs.current = next.ms
     setLight(next.light)
+    // A note about the light before is out of date once it changes.
+    setWrong(null)
     setCycle((c) => c + 1)
     if (next.light === 'green') sound.tone(990, 0.08, 'sine', 0.08)
   }
@@ -71,7 +73,7 @@ export default function TrafficLight({ level, seed, t, onFinish }: GameProps) {
     }, 1600)
   }
 
-  const say = solved ? t('yes') : wrong === 'yellow' ? t('yellow') : wrong === 'red' ? t('wait') : t('say')
+  const say = solved ? t('yes') : wrong === 'blink' ? t('blink') : wrong === 'red' ? t('wait') : t('say')
   const top = NEAR - (NEAR - FAR) * progress(step, spec.steps)
 
   return (
