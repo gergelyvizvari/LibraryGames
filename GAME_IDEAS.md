@@ -10,9 +10,15 @@ Edit freely: reorder, add, or delete ideas.
 - **Odd Sound Out** (focus): three sounds play; tap the one that was different.
 - **Sudoku Junior** (logic): 4x4 picture sudoku.
 - **Bridge Builder** (spatial): a gap in the forest bridge; pick the plank that is exactly long enough to close it.
+- **Acorn Shop** (maths): a squirrel sells snacks; pay exactly the price with acorn coins worth 1, 2 and 5.
 - **Animal Homes** (geography): carry each animal to the part of the world it lives in (a penguin to the ice, a kangaroo to Australia).
 - **Word Garden** (language): plant seeds in the bed whose sign starts with the same sound, and watch the words grow.
 - **Firefly Night** (reflexes): tap the fireflies while they glow and leave the sleeping ones alone.
+- **Picnic Basket** (memory): the bear packs a few things into the picnic basket one by one; then tap the thing that was not packed.
+- **Message in a Bottle** (reading): a bottle washes ashore with a short note; read it and tap the picture it describes.
+- **Unicorn Snack Share** (maths): share the apples fairly so every unicorn in the stable gets the same number.
+- **Plural Pets** (language): one cat, three cats: pick the word that matches how many pets are on the rug.
+- **Weather Map** (geography): read a little forecast and put the sun, the rain cloud and the snowflake on the right part of the map.
 
 ## Shipped
 
@@ -69,3 +75,4 @@ Edit freely: reorder, add, or delete ideas.
 | 2026-11-14 | Odd Sound Out | focus |
 | 2026-11-15 | Traffic Light Tap | reflexes |
 | 2026-11-16 | Acorn Shop | maths |
+| 2026-11-17 | Bridge Builder | spatial |
