@@ -1469,3 +1469,17 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .bb-ghost { opacity: 0; animation: bbGhost 1.3s ease-out; pointer-events: none; }
 @keyframes bbDrop { from { transform: translateY(-40px); opacity: 0; } }
 @keyframes bbGhost { 0% { opacity: 0; transform: translateY(-24px); } 20%, 70% { opacity: 0.75; transform: none; } 100% { opacity: 0; } }
+
+/* Firefly Night */
+.ff-field { position: relative; flex: 1; min-height: 0; margin-bottom: 10px; border-radius: 36px; overflow: hidden; box-shadow: 0 0 0 9px #f2d76a, 0 10px 0 9px rgba(36, 26, 60, 0.16); touch-action: manipulation; }
+.ff-night { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ff-fly { position: absolute; width: 74px; height: 74px; padding: 0; translate: -50% -50%; background: none; border-radius: 50%; -webkit-tap-highlight-color: transparent; animation: psFade 0.6s; }
+.ff-fly svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.ff-fly svg ellipse, .ff-halo { transition: fill 0.25s, opacity 0.25s; }
+.ff-no svg { animation: psNo 0.35s 2; }
+.ff-trail { position: absolute; width: 16px; height: 16px; translate: -50% -50%; border-radius: 50%; background: #f9f871; box-shadow: 0 0 14px 6px rgba(246, 255, 156, 0.6); animation: ffTrail 0.55s ease-in forwards; pointer-events: none; }
+.ff-jar { position: absolute; left: 50%; bottom: 3%; width: min(24%, 110px); translate: -50% 0; pointer-events: none; }
+.ff-jar svg { display: block; width: 100%; overflow: visible; }
+.ff-in { animation: popIn 0.3s; }
+.ff-full { animation: pkHop 0.5s ease-out; }
+@keyframes ffTrail { to { left: 50%; top: 88%; scale: 0.4; opacity: 0.4; } }
