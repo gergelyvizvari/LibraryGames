@@ -1,5 +1,4 @@
 import { clamp, type Rng } from '../../kit/random'
-import type { ThingId } from '../../kit/things'
 
 /** Snacks to buy in one stage. */
 export const STAGE = 5
@@ -32,12 +31,14 @@ const SPECS: Spec[] = [
 
 export const specFor = (level: number) => SPECS[clamp(Math.round(level), 1, 10) - 1]
 
-export const SNACKS: ThingId[] = ['apple', 'cookie', 'berries', 'mushroom', 'fish', 'flower']
+/** What the squirrel sells; each has its own painting in `art/`. */
+export const SNACKS = ['apple', 'berries', 'mushroom', 'honey', 'jam'] as const
+export type Snack = (typeof SNACKS)[number]
 
 export const sum = (coins: number[]) => coins.reduce((a, b) => a + b, 0)
 
 export interface Task {
-  snack: ThingId
+  snack: Snack
   price: number
   /** The coins to pay with when they can run out, biggest first; null when every kind of coin never runs out. */
   purse: Coin[] | null
