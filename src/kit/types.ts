@@ -39,6 +39,8 @@ export interface GameMeta {
   scene?: boolean
   /** Played by typing on a keyboard: hidden on phones and tablets, where the on-screen keyboard would cover the scene. */
   keyboard?: boolean
+  /** A small painting of the game's scene with its character (art/thumb.webp), shown on the card in the games list. */
+  thumb?: string
 }
 
 /** A sticker a player collects by finishing a stage of a scene game. */

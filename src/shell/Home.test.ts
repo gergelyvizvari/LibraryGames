@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { GameDef } from '../kit/types'
-import { newGameIds, starRows } from './Home'
+import type { Progress } from '../kit/progress'
+import { newGameIds, recentGames, starRows } from './Home'
 
 const game = (id: string, added: string) => ({ meta: { id, added } }) as GameDef
 
@@ -28,5 +29,23 @@ describe('starRows', () => {
     expect(starRows(7).map((r) => r.length)).toEqual([4, 3])
     expect(starRows(12).map((r) => r.length)).toEqual([4, 4, 4])
     expect(starRows(10).flat()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+  })
+})
+
+describe('recentGames', () => {
+  const list = ['a', 'b', 'c', 'd', 'e', 'f'].map((id) => game(id, '2026-10-01'))
+  const played = (lastPlayed: string, plays: number) => ({ best: 0, plays, level: 1, lastPlayed })
+  const progress = {
+    games: { a: played('2026-11-01', 1), b: played('2026-11-03', 1), c: played('2026-11-03', 5), e: played('2026-11-02', 2), f: played('2026-10-01', 1) },
+    xp: {},
+    streak: { days: 0 },
+  } as Progress
+
+  it('lists the games played lately, newest day first, then the most played', () => {
+    expect(recentGames(list, progress).map((g) => g.meta.id)).toEqual(['c', 'b', 'e', 'a'])
+  })
+
+  it('leaves out games never played', () => {
+    expect(recentGames(list, { games: {}, xp: {}, streak: { days: 0 } } as Progress)).toEqual([])
   })
 })
