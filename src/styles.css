@@ -321,11 +321,14 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .gg-wrong { background: var(--bad); }
 
 /* Mole Pop */
-.mp-field { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; padding: 18px; border-radius: 28px; background: #7bd389; }
-.mp-hole { position: relative; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(ellipse at 50% 70%, #3d2b1f 55%, #5a4030 56%); overflow: hidden; padding: 0; }
-.mp-critter { position: absolute; left: 0; right: 0; bottom: -70%; font-size: clamp(2.4rem, 13vw, 3.6rem); transition: bottom 0.12s ease-out; }
-.mp-up { bottom: 12%; }
-.mp-hit { transform: scale(0.8) rotate(-12deg); filter: brightness(1.3); }
+.mp-field { position: absolute; inset: 0; }
+.mp-hole { position: absolute; padding: 0; background: none; border-radius: 30%; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.mp-mound { position: absolute; left: 0; bottom: 0; width: 100%; user-select: none; pointer-events: none; }
+.mp-pit { position: absolute; left: 0; right: 0; top: 0; overflow: hidden; pointer-events: none; }
+.mp-critter { position: absolute; left: 14%; right: 14%; bottom: -100%; height: 74%; display: flex; justify-content: center; align-items: flex-end; transition: bottom 0.12s ease-out; }
+.mp-critter img { height: 100%; user-select: none; }
+.mp-up { bottom: -4%; }
+.mp-hit { transform: scale(0.92) rotate(-6deg); }
 
 /* Anagram Race */
 .ar-picture, .sb-picture { text-align: center; font-size: 5rem; animation: zoom 0.3s; }
@@ -1267,7 +1270,6 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .sg .lo-area { background: radial-gradient(circle at 84% 12%, #fff6dc 0 18px, transparent 19px), radial-gradient(circle at 16px 0, transparent 0 17px, #3f7a44 17.5px) 0 100% / 32px 34px repeat-x, linear-gradient(#2a2560, #47428c); }
 .sg .lo-on { background: radial-gradient(circle at 36% 30%, #fff6dc, #ffd24a 55%, #f2a94e); box-shadow: 0 0 24px rgba(255, 210, 74, 0.8); }
 .sg .ts-sky { background: radial-gradient(circle at 18% 16%, #fff 0 16px, transparent 17px), radial-gradient(circle at 25% 18%, #fff 0 12px, transparent 13px), linear-gradient(#8fd0ee, #e8f5d8); }
-.sg .mp-field { background: #8fc24f; border-radius: 36px; box-shadow: inset 0 0 0 7px #a5cf5c, 0 0 0 7px #fff6dc, 0 8px 0 7px rgba(36, 26, 60, 0.22); align-self: center; width: min(100% - 14px, 440px, 100dvh - 400px); min-width: 230px; }
 /* Explorers' Coast games: a postcard and framed wall maps. */
 .sg .cm-card { align-self: center; width: min(100%, 420px); background: var(--story-paper); border-radius: 12px; box-shadow: inset 0 0 0 7px #fffaf0, inset 0 0 0 9px #e2607e, 0 7px 0 rgba(36, 26, 60, 0.25); rotate: -1.5deg; }
 .sg .cm-country { font-family: var(--story); }
