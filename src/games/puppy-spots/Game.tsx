@@ -1,12 +1,17 @@
-import { useMemo, useRef, useState } from 'react'
-import { useT } from '../../i18n'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTimeouts } from '../../kit/hooks'
-import { Bunting, Guide } from '../../kit/places'
+import { PaintedScene, worldStyle, type PaintedView } from '../../kit/painted'
 import { makeRng } from '../../kit/random'
-import { SceneTool, SceneTray, StagePips } from '../../kit/scene'
+import { SceneTool } from '../../kit/scene'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { Basket, COATS, DenWindow, Rug } from './Den'
+import denTall from './art/den-tall.webp'
+import den from './art/den.webp'
+import mamaBlink from './art/mama-blink.webp'
+import mamaHappy from './art/mama-happy.webp'
+import mamaSad from './art/mama-sad.webp'
+import mama from './art/mama.webp'
+import { Basket, COATS, Rug } from './Den'
 import {
   accuracyFor,
   clashes,
@@ -28,6 +33,51 @@ import {
 } from './logic'
 
 type Tool = 'pup' | 'mark'
+type Face = 'idle' | 'blink' | 'happy' | 'sad'
+const MAMA: [Face, string][] = [
+  ['idle', mama],
+  ['blink', mamaBlink],
+  ['happy', mamaHappy],
+  ['sad', mamaSad],
+]
+
+type ViewId = 'wide' | 'tall'
+
+/** The puppies' den; the rug lies in the middle of the floor and is the focus. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: den, world: { w: 1280, h: 800 }, focus: { x: 250, y: 90, w: 860, h: 650 }, ground: '#d7823e', sayAt: { x: 900, y: 330 } },
+  { id: 'tall', painting: denTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 140, w: 720, h: 920 }, ground: '#a66633', sayAt: { x: 262, y: 402 } },
+]
+
+/** Where the rug lies (a square, without its fringe) and where the mother dog sits, in each painting. */
+const SPOTS: Record<ViewId, { rug: { x: number; y: number; size: number }; mama: { x: number; bottom: number; h: number } }> = {
+  wide: { rug: { x: 320, y: 140, size: 520 }, mama: { x: 1010, bottom: 700, h: 320 } },
+  tall: { rug: { x: 50, y: 410, size: 620 }, mama: { x: 150, bottom: 392, h: 260 } },
+}
+
+/** The mother dog blinks now and then while she waits. */
+function useBlink(on: boolean) {
+  const [shut, setShut] = useState(false)
+  useEffect(() => {
+    if (!on) return
+    let timer = 0
+    const next = (open: boolean) => {
+      timer = window.setTimeout(
+        () => {
+          setShut(open)
+          next(!open)
+        },
+        open ? 2600 + Math.random() * 2600 : 150,
+      )
+    }
+    next(true)
+    return () => {
+      clearTimeout(timer)
+      setShut(false)
+    }
+  }, [on])
+  return shut
+}
 const key = (r: number, c: number) => `${r},${c}`
 const keys = (cells: Cell[]) => new Set(cells.map(([r, c]) => key(r, c)))
 const without = (cells: Cell[], r: number, c: number) => cells.filter(([cr, cc]) => cr !== r || cc !== c)
@@ -65,7 +115,6 @@ export default function PuppySpots({ level, seed, t, onFinish }: GameProps) {
   const [busy, setBusy] = useState(false)
   const [over, setOver] = useState(false)
   const [tip, setTip] = useState<string | null>(null)
-  const app = useT()
   const later = useTimeouts()
   const clashRun = useRef(0)
   const { puzzle, gifts } = room
@@ -234,58 +283,68 @@ export default function PuppySpots({ level, seed, t, onFinish }: GameProps) {
   }
 
   const mood = clash ? 'oops' : busy ? 'happy' : 'idle'
+  const blink = useBlink(mood === 'idle')
+  const face: Face = mood === 'oops' ? 'sad' : mood === 'happy' ? 'happy' : blink ? 'blink' : 'idle'
   const marking = tool === 'mark'
   // The pups still in the basket: one of each coat that has no spot on the rug yet.
   const seated = new Set(pups.map(([r, c]) => regions[r][c]))
   const waiting = [...Array(n).keys()].filter((rug) => !seated.has(rug))
   const grid = `repeat(${n}, minmax(0, 1fr))`
+  // A phone held sideways has little height: a slimmer tray.
+  const short = window.innerHeight < 500
   return (
-    <div className="scene pk">
-      <div className="pk-wall">
-        <Bunting />
-        <DenWindow />
-        <p className="scene-bubble sg-bubble" role="status" aria-live="polite">
-          {message}
-        </p>
-        <span className={`sg-guide sg-${mood}`}>
-          <Guide place="woods" />
-        </span>
-      </div>
-      <StagePips done={done.length} total={total} label={app('scene.progress', { n: done.length, total })} />
-      <div className="pk-floor">
-        <div key={done.length} className="pk-rug">
-          <Rug
-            regions={regions}
-            pups={pups}
-            gifts={giftAt}
-            marks={marks}
-            blocked={blocked}
-            why={clash?.why}
-            bad={clash ? [clash.cell, clash.other] : []}
-            stuck={stuckAt}
-            tip={tip}
-            happy={busy}
-          />
-          <div className="pk-cells" style={{ gridTemplateColumns: grid, gridTemplateRows: grid }}>
-            {regions.map((row, r) =>
-              row.map((_, c) => (
-                <button key={key(r, c)} className="pk-cell" onPointerDown={() => tap(r, c)} aria-label={t('cell', { row: r + 1, col: c + 1 })} aria-pressed={pupAt.has(key(r, c))} />
-              )),
-            )}
+    <PaintedScene
+      views={VIEWS}
+      say={message}
+      stage={{ done: done.length, total, over }}
+      className="pk"
+      trayHeight={short ? 96 : 140}
+      tray={
+        <div className="pk-tray">
+          <div className="pk-basket">
+            <Basket waiting={waiting.length} coats={waiting.map((rug) => rug % COATS)} />
+          </div>
+          <div className="pk-tools">
+            <SceneTool kind="mark" label={t('toolMark')} on={marking} onPress={() => pickTool(marking ? 'pup' : 'mark')} />
+            <SceneTool kind="hint" label={t('hint')} onPress={hint} />
+            <SceneTool kind="restart" label={t('clear')} onPress={clear} disabled={!canClear} />
           </div>
         </div>
-      </div>
-      <SceneTray hidden={over}>
-        <div className="pk-basket">
-          <Basket waiting={waiting.length} coats={waiting.map((rug) => rug % COATS)} />
-          <span className="pk-basket-label">{t(waiting.length ? 'waiting' : 'allOut')}</span>
-        </div>
-        <div className="pk-tools">
-          <SceneTool kind="mark" label={t('toolMark')} on={marking} onPress={() => pickTool(marking ? 'pup' : 'mark')} />
-          <SceneTool kind="hint" label={t('hint')} onPress={hint} />
-          <SceneTool kind="restart" label={t('clear')} onPress={clear} disabled={!canClear} />
-        </div>
-      </SceneTray>
-    </div>
+      }
+    >
+      {(view) => {
+        const { rug, mama: m } = SPOTS[view]
+        return (
+          <>
+            <div className={`pk-mama pk-${mood}`} style={worldStyle(m.x, m.bottom, m.h)}>
+              {MAMA.map(([f, src]) => (
+                <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'pk-off'} />
+              ))}
+            </div>
+            <div key={done.length} className="pk-rug" style={{ left: rug.x, top: rug.y, width: rug.size, height: rug.size }}>
+              <Rug
+                regions={regions}
+                pups={pups}
+                gifts={giftAt}
+                marks={marks}
+                blocked={blocked}
+                why={clash?.why}
+                bad={clash ? [clash.cell, clash.other] : []}
+                stuck={stuckAt}
+                tip={tip}
+                happy={busy}
+              />
+              <div className="pk-cells" style={{ gridTemplateColumns: grid, gridTemplateRows: grid }}>
+                {regions.map((row, r) =>
+                  row.map((_, c) => (
+                    <button key={key(r, c)} className="pk-cell" onPointerDown={() => tap(r, c)} aria-label={t('cell', { row: r + 1, col: c + 1 })} aria-pressed={pupAt.has(key(r, c))} />
+                  )),
+                )}
+              </div>
+            </div>
+          </>
+        )
+      }}
+    </PaintedScene>
   )
 }

@@ -1,12 +1,65 @@
-import { useRef, useState } from 'react'
-import { useSize, useTimeouts } from '../../kit/hooks'
+import { useEffect, useRef, useState } from 'react'
+import { useTimeouts } from '../../kit/hooks'
+import { PaintedScene, worldStyle, type PaintedView } from '../../kit/painted'
 import { makeRng } from '../../kit/random'
-import { SceneTray, SpeechBubble, StagePips } from '../../kit/scene'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { sceneLayout } from './layout'
+import cookieArt from './art/cookie.webp'
+import kitchenTall from './art/kitchen-tall.webp'
+import kitchen from './art/kitchen.webp'
 import { STAGE, canFinish, makeMonster, pointsFor } from './logic'
-import { Cookie, Monster, Room, skins, type Mood } from './Room'
+
+type Mood = 'idle' | 'chomp' | 'yuck' | 'happy'
+type Face = Mood | 'blink'
+
+const FACE_LIST: Face[] = ['idle', 'blink', 'chomp', 'yuck', 'happy']
+
+/** The painted monster in every fur colour, each with all its faces: art/monster[-<fur>][-<face>].webp. */
+const ART = import.meta.glob<string>('./art/monster*.webp', { eager: true, import: 'default' })
+const FURS = ['', 'teal', 'sky', 'leaf']
+  .map((fur) => FACE_LIST.map((f) => ART[`./art/monster${fur && `-${fur}`}${f === 'idle' ? '' : `-${f}`}.webp`]))
+  .filter((faces) => faces.every(Boolean))
+
+/** The painted monster's shape: width / height, and where its belly and mouth are (fractions of its box). */
+const MONSTER = { aspect: 0.859, belly: { x: 0.48, y: 0.61 }, mouth: { x: 0.49, y: 0.29 } }
+
+type ViewId = 'wide' | 'tall'
+
+/** The monster's kitchen; the focus is the rug with the monster on it. The bubble sits beside the head when wide, above it when upright. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: kitchen, world: { w: 1280, h: 800 }, focus: { x: 300, y: 150, w: 680, h: 610 }, ground: '#d88a39', sayAt: { x: 790, y: 300 } },
+  { id: 'tall', painting: kitchenTall, world: { w: 720, h: 1152 }, focus: { x: 40, y: 300, w: 640, h: 650 }, ground: '#d77e2d', sayAt: { x: 360, y: 372 } },
+]
+
+/** Where the monster stands (its feet) and how tall it is in each painting. */
+const STAND: Record<ViewId, { x: number; bottom: number; h: number }> = {
+  wide: { x: 640, bottom: 668, h: 440 },
+  tall: { x: 360, bottom: 900, h: 520 },
+}
+
+/** The monster blinks now and then while it waits. */
+function useBlink(on: boolean) {
+  const [shut, setShut] = useState(false)
+  useEffect(() => {
+    if (!on) return
+    let timer = 0
+    const next = (open: boolean) => {
+      timer = window.setTimeout(
+        () => {
+          setShut(open)
+          next(!open)
+        },
+        open ? 2600 + Math.random() * 2600 : 150,
+      )
+    }
+    next(true)
+    return () => {
+      clearTimeout(timer)
+      setShut(false)
+    }
+  }, [on])
+  return shut
+}
 
 /** A copy of the tapped cookie flies to the monster's mouth. Purely for show: skipped where it cannot run. */
 function flyCookie(from: Element, to: Element | null) {
@@ -26,10 +79,32 @@ function flyCookie(from: Element, to: Element | null) {
   flight.onfinish = flight.oncancel = () => ghost.remove()
 }
 
+/** A painted number cookie: as many chocolate chips round its rim as it is worth. */
+function Cookie({ n }: { n: number }) {
+  return (
+    <span className="fm-cookie-art" aria-hidden>
+      <img src={cookieArt} alt="" draggable={false} />
+      <svg viewBox="-50 -50 100 100" focusable="false">
+        {Array.from({ length: n }, (_, i) => {
+          const a = -1.27 + (i / n) * 6.283
+          const r = n > 6 ? 5.6 : 6.6
+          return (
+            <g key={i} transform={`translate(${Math.cos(a) * 38} ${Math.sin(a) * 38})`}>
+              <ellipse rx={r} ry={r * 0.86} fill="#5b3424" />
+              <ellipse cx={-r * 0.3} cy={-r * 0.32} rx={r * 0.38} ry={r * 0.26} fill="#8a5a40" />
+            </g>
+          )
+        })}
+      </svg>
+      <b>{n}</b>
+    </span>
+  )
+}
+
 export default function FeedMonster({ level, seed, t, onFinish }: GameProps) {
   const rng = useRef(makeRng(seed)).current
   const [monster, setMonster] = useState(() => makeMonster(rng, level))
-  /** Counts every monster that came in, so each one gets fresh colours and slides in anew. */
+  /** Counts every monster that came in, so each one gets the next fur colour and walks in anew. */
   const [arrival, setArrival] = useState(0)
   const [eaten, setEaten] = useState<number[]>([])
   const [mood, setMood] = useState<Mood>('idle')
@@ -38,9 +113,9 @@ export default function FeedMonster({ level, seed, t, onFinish }: GameProps) {
   const [over, setOver] = useState(false)
   const stats = useRef({ score: 0, clean: 0, tries: 0, combo: 0 })
   const busy = useRef(false)
-  const mouth = useRef<SVGCircleElement>(null)
-  const [room, size] = useSize<HTMLDivElement>()
+  const mouth = useRef<HTMLSpanElement>(null)
   const later = useTimeouts()
+  const blink = useBlink(mood === 'idle')
 
   const nextMonster = () => {
     const m = makeMonster(rng, level)
@@ -63,7 +138,7 @@ export default function FeedMonster({ level, seed, t, onFinish }: GameProps) {
       setMessage(t('tooMuch', { n: need }))
       sound.bad()
       vibrate(40)
-      later(() => setMood((m) => (m === 'yuck' ? 'idle' : m)), 700)
+      later(() => setMood((m) => (m === 'yuck' ? 'idle' : m)), 900)
       return
     }
     flyCookie(cookie, mouth.current)
@@ -73,7 +148,7 @@ export default function FeedMonster({ level, seed, t, onFinish }: GameProps) {
     if (rest > 0) {
       sound.tone(300 + now.length * 80, 0.08, 'square', 0.15)
       setMood('chomp')
-      later(() => setMood((m) => (m === 'chomp' ? 'idle' : m)), 380)
+      later(() => setMood((m) => (m === 'chomp' ? 'idle' : m)), 420)
       if (canFinish(rest, monster.blocks)) {
         setMessage(t('more', { n: rest }))
       } else {
@@ -108,19 +183,18 @@ export default function FeedMonster({ level, seed, t, onFinish }: GameProps) {
   }
 
   const need = monster.target - eaten.reduce((a, c) => a + c, 0)
-  const layout = sceneLayout(size.w, size.h)
+  const face: Face = mood === 'idle' && blink ? 'blink' : mood
+  // A phone held sideways has little height: a slimmer plate.
+  const short = window.innerHeight < 500
+  const fur = FURS[arrival % FURS.length]
   return (
-    <div className="scene fm">
-      <div className="fm-roombox" ref={room}>
-        <Room w={size.w} h={size.h} layout={layout}>
-          <g key={arrival} className="fm-arrive">
-            <Monster skin={skins[arrival % skins.length]} mood={mood} need={need} mouthRef={mouth} />
-          </g>
-        </Room>
-        <SpeechBubble style={{ left: layout.bubble.left, bottom: layout.bubble.bottom, maxWidth: layout.bubble.maxWidth }}>{message}</SpeechBubble>
-      </div>
-      <StagePips done={fed} total={STAGE} label={t('fedOf', { n: fed, total: STAGE })} />
-      <SceneTray hidden={over}>
+    <PaintedScene
+      views={VIEWS}
+      say={message}
+      stage={{ done: fed, total: STAGE, over }}
+      className="fm"
+      trayHeight={short ? 112 : 130}
+      tray={
         <div className="fm-plate">
           {monster.blocks.map((b) => (
             <button key={`${arrival}-${b}`} className="fm-cookie" disabled={over} aria-label={t('cookie', { n: b })} onClick={(e) => feed(b, e.currentTarget)}>
@@ -128,7 +202,35 @@ export default function FeedMonster({ level, seed, t, onFinish }: GameProps) {
             </button>
           ))}
         </div>
-      </SceneTray>
-    </div>
+      }
+    >
+      {(view) => {
+        const at = STAND[view]
+        return (
+          <div key={arrival} className="fm-stand" style={{ ...worldStyle(at.x, at.bottom, at.h), aspectRatio: MONSTER.aspect }}>
+            <div className={`fm-monster fm-${mood}`}>
+              <div className="fm-fur">
+                {FACE_LIST.map((f, i) => (
+                  <img key={f} src={fur[i]} alt="" draggable={false} className={f === face ? '' : 'fm-off'} />
+                ))}
+              </div>
+              <span className="fm-belly" style={{ left: `${MONSTER.belly.x * 100}%`, top: `${MONSTER.belly.y * 100}%`, fontSize: at.h * 0.2 }}>
+                {need === 0 ? (
+                  <svg className="fm-heart" viewBox="-40 -40 80 72" aria-hidden focusable="false">
+                    <path d="M0 26 C-44 -4 -28 -38 0 -16 C28 -38 44 -4 0 26Z" fill="#e2607e" />
+                  </svg>
+                ) : (
+                  <b key={need} className="fm-need">
+                    {need}
+                  </b>
+                )}
+              </span>
+              {/* Where a cookie flies to. */}
+              <span ref={mouth} className="fm-mouth" style={{ left: `${MONSTER.mouth.x * 100}%`, top: `${MONSTER.mouth.y * 100}%` }} />
+            </div>
+          </div>
+        )
+      }}
+    </PaintedScene>
   )
 }

@@ -163,8 +163,9 @@ a character who says what to do, a short stage with a clear goal, and a quiet en
   rather than sticking small cut-outs on it: loose cut-outs look like stickers floating in the air. Art lives in the game's `art/` folder as WebP: the
   background about 1600 × 1000, cut-out characters with a thin cream rim baked in. How the art is made (prompts,
   style text, the Codex command) is in `tools/art/README.md`.
-- `feed-monster` draws its whole scene itself (`StagePips`, `SpeechBubble`, `SceneTray` from `kit/scene.tsx`,
-  sized from `useSize()` and a small tested `layout.ts`). Do that only for a game that deserves its own room.
+- A painted character with several colours (`feed-monster`'s monster in four furs) gets every face in every colour
+  as its own painted file, recoloured by an image edit of each face; CSS `hue-rotate` also turns cheeks, horns and
+  the cream rim, so it is not used for that.
 - Look: no outlines, flat painted shapes with one lit and one shaded side, big glossy eyes on characters, the
   `--story` font for numbers and names, `var(--grain)` laid over painted areas. Colours are fixed (a printed
   page), so themes do not apply inside a scene. Endings stay calm: one hop, one sound, no confetti.
