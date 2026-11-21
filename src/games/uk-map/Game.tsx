@@ -1,11 +1,28 @@
 import { useLocale } from '../../i18n'
-import { MapHunt } from '../../kit/MapHuntGame'
+import { MapHunt, type PaintedMap } from '../../kit/MapHuntGame'
 import type { GameProps } from '../../kit/types'
+import cottageTall from './art/cottage-tall.webp'
+import cottage from './art/cottage.webp'
+import hedgehogHappy from './art/hedgehog-happy.webp'
+import hedgehog from './art/hedgehog.webp'
+import paper from './art/paper.webp'
 import { nationLabels, places } from './content'
 import { BANDS, DOT_GAP_KM, fromMap, toMap } from './logic'
 import { HEIGHT, INSET, WIDTH, england, neighbours, northernIreland, scotland, shetland, wales } from './outline'
 
 const [ix, iy, iw, ih] = INSET
+
+/** A study in an English country cottage: the map is pinned on the panelled wall, a hedgehog traveller asks. */
+const PAINTED: PaintedMap<'wide' | 'tall'> = {
+  views: [
+    { id: 'wide', painting: cottage, world: { w: 1280, h: 800 }, focus: { x: 0, y: 30, w: 1280, h: 680 }, ground: '#ad6422', sayAt: { x: 150, y: 385 } },
+    { id: 'tall', painting: cottageTall, world: { w: 720, h: 1280 }, focus: { x: 0, y: 40, w: 720, h: 1240 }, ground: '#c8803b', sayAt: { x: 430, y: 285 } },
+  ],
+  paper,
+  margin: { x: 0.08, y: 0.06 },
+  board: { wide: { x: 500, y: 40, w: 369, h: 580 }, tall: { x: 80, y: 290, w: 560, h: 880 } },
+  guide: { idle: hedgehog, happy: hedgehogHappy, at: { wide: { x: 320, bottom: 700, h: 300 }, tall: { x: 95, bottom: 1272, h: 230 } } },
+}
 
 export default function UkMap(props: GameProps) {
   const locale = useLocale()
@@ -48,6 +65,7 @@ export default function UkMap(props: GameProps) {
       dotGapKm={DOT_GAP_KM}
       className="uk-map"
       scene={scene}
+      painted={PAINTED}
     />
   )
 }

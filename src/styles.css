@@ -866,6 +866,14 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .cm2-river { fill: none; stroke: #4a9fe8; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
 .cm2-lake { fill: none; stroke: #4a9fe8; stroke-width: 22; stroke-linecap: round; stroke-linejoin: round; }
 /* UK Map Hunt */
+.mh-painted .ukm-land { stroke: #6f5a34; fill-opacity: 0.88; }
+.mh-painted .ukm-england { fill: #c9d36c; }
+.mh-painted .ukm-scotland { fill: #e6bf6e; }
+.mh-painted .ukm-wales { fill: #e3a48c; }
+.mh-painted .ukm-ni { fill: #bba6d8; }
+.mh-painted .ukm-neighbour { fill: #e9dcbc; fill-opacity: 0.7; stroke: #b19a6e; }
+.mh-painted .ukm-inset { fill: none; stroke: #8a6a44; }
+.mh-painted .ukm-nation { fill: #3a2616; }
 .ukm-land { stroke: #2d3142; stroke-width: 3.5; stroke-linejoin: round; }
 .ukm-england { fill: #b8e994; }
 .ukm-scotland { fill: #f8d58b; }
