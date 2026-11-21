@@ -1,4 +1,4 @@
-import { useMemo, useState, type CSSProperties } from 'react'
+import { useMemo, useRef, useState, type CSSProperties } from 'react'
 import { shownGames } from '../games/registry'
 import { locales, makeGameT, useLocale, useT, type Locale } from '../i18n'
 import { Icon } from '../kit/icon'
@@ -122,6 +122,13 @@ export function Home({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [shown, locale],
   )
+  // Typing or picking a place while scrolled down: bring the list's top back under the search box.
+  const findRef = useRef<HTMLDivElement>(null)
+  const showList = () =>
+    requestAnimationFrame(() => {
+      const el = findRef.current
+      if (el && el.getBoundingClientRect().top <= 1) window.scrollTo({ top: el.offsetTop - 8 })
+    })
   const found = useMemo(() => search(index, query), [index, query])
   const searching = query.trim().length > 0
   const shownRegions = place ? regions.filter((r) => r.id === place) : regions
@@ -198,7 +205,7 @@ export function Home({
           <h1 className="book-ribbon">{t('map.allGames')}</h1>
         </header>
 
-        <div className="book-find" role="search">
+        <div className="book-find" role="search" ref={findRef}>
           <label className="book-search">
             <svg viewBox="0 0 24 24" className="book-search-glass" aria-hidden focusable="false">
               <circle cx="10.5" cy="10.5" r="6.5" />
@@ -207,7 +214,13 @@ export function Home({
             <input
               type="search"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => {
+                setQuery(e.target.value)
+                showList()
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') setQuery('')
+              }}
               placeholder={t('find.placeholder')}
               aria-label={t('find.label')}
               enterKeyHint="search"
@@ -223,7 +236,10 @@ export function Home({
         </div>
           {!searching && (
             <nav className="book-chips" aria-label={t('find.places')}>
-              <button className={`book-chip${place ? '' : ' book-chip-on'}`} aria-pressed={!place} onClick={() => setPlace(null)}>
+              <button className={`book-chip${place ? '' : ' book-chip-on'}`} aria-pressed={!place} onClick={() => {
+                  setPlace(null)
+                  showList()
+                }}>
                 {t('find.all')}
               </button>
               {regions.map((r) => (
@@ -231,7 +247,10 @@ export function Home({
                   key={r.id}
                   className={`book-chip book-${r.id}${place === r.id ? ' book-chip-on' : ''}`}
                   aria-pressed={place === r.id}
-                  onClick={() => setPlace(place === r.id ? null : r.id)}
+                  onClick={() => {
+                    setPlace(place === r.id ? null : r.id)
+                    showList()
+                  }}
                 >
                   <span className="book-chip-guide" aria-hidden>
                     <Guide place={r.id as PlaceId} />

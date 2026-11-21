@@ -516,8 +516,12 @@ html:has(.app-full) { scrollbar-gutter: auto; overflow: hidden; }
 .book-card-pic { position: relative; display: grid; place-items: center; width: 100%; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 16px; background: color-mix(in srgb, var(--game-surface) 30%, #f6ecd2); }
 .book-card-pic img { width: 100%; height: 100%; object-fit: cover; }
 .book-card-pic-icon { background: radial-gradient(circle at 50% 55%, color-mix(in srgb, var(--game-surface) 20%, #fffaf0) 0 30%, color-mix(in srgb, var(--game-surface) 38%, #efe2c0) 75%); }
-.book-played .book-card-pic { box-shadow: inset 0 0 0 3px #ffd24a; }
+/* Played already: a gold frame around the picture (drawn over it, so a painting does not hide it). */
+.book-played .book-card-pic::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 3px #ffd24a; pointer-events: none; }
 .book-played .book-card-pic-icon .book-card-icon { box-shadow: 0 2px 4px rgba(40, 30, 70, 0.18); }
+/* The heart lies on the picture: a soft paper disc keeps it readable on a painting. */
+.book-card .fav-btn { z-index: 1; top: 9px; left: 9px; width: 32px; height: 32px; background: rgba(255, 250, 240, 0.82); box-shadow: 0 1px 3px rgba(40, 30, 70, 0.2); }
+.book-card .fav-heart { width: 20px; height: 20px; }
 @media (max-width: 720px) {
   .book-chips { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; margin: 0 -14px; padding: 2px 14px 4px; scrollbar-width: none; }
   .book-chips::-webkit-scrollbar { display: none; }
@@ -526,16 +530,16 @@ html:has(.app-full) { scrollbar-gutter: auto; overflow: hidden; }
   .book-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 10px 8px 12px; }
   .book-guide { width: 72px; }
   .book-band { padding-left: 12px; }
-  .book-band-painted { background: linear-gradient(90deg, var(--band) 0 42%, color-mix(in srgb, var(--band) 60%, transparent) 62%, transparent 85%), var(--band-art) 80% 50% / cover, var(--band); }
+  .book-band-painted { background: linear-gradient(90deg, var(--band) 0 50%, color-mix(in srgb, var(--band) 60%, transparent) 70%, transparent 92%), var(--band-art) 80% 50% / cover, var(--band); }
   .book-card { border-radius: 18px; }
   .book-card-play { gap: 4px; padding: 5px 5px 8px; }
   .book-card-pic { border-radius: 14px; }
-  .book-card-icon { width: 50px; height: 50px; }
-  .book-card-icon .game-icon { width: 36px; height: 36px; }
+  .book-card-icon { width: 46px; height: 46px; }
+  .book-card-icon .game-icon { width: 33px; height: 33px; }
   .book-card-title { min-height: 2.3em; font-size: 0.88rem; }
   .book-card-stars { font-size: 0.7rem; }
-  .book-card .fav-btn { width: 34px; height: 34px; }
-  .book-card .fav-heart { width: 20px; height: 20px; }
+  .book-card .fav-btn { top: 6px; left: 6px; width: 32px; height: 32px; }
+  .book-card .fav-heart { width: 18px; height: 18px; }
   .book-new { top: 4px; right: 4px; font-size: 0.6rem; padding: 1px 6px; }
 }
 
@@ -544,7 +548,7 @@ html:has(.app-full) { scrollbar-gutter: auto; overflow: hidden; }
 .fav-heart { width: 24px; height: 24px; fill: rgba(255, 250, 240, 0.7); stroke: #c9bfae; stroke-width: 2.2; stroke-linejoin: round; transition: scale 0.15s; }
 .fav-on .fav-heart { fill: #e2607e; stroke: #b63c5c; animation: popIn 0.25s; }
 .fav-btn:active .fav-heart { scale: 0.85; }
-.book-card .fav-btn { position: absolute; top: 2px; left: 2px; }
+.book-card .fav-btn { position: absolute; }
 .wm-card .fav-btn { width: 34px; height: 34px; margin: 0 -4px; }
 .book-card-play { display: grid; justify-items: center; align-content: start; gap: 6px; width: 100%; padding: 7px 7px 10px; border-radius: inherit; background: none; color: inherit; }
 .book-favs { --band: #e2607e; }
