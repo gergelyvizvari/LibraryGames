@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type CSSProperties } from 'react'
 import { shownGames } from '../games/registry'
-import { makeGameT, useLocale, useT, type Locale } from '../i18n'
+import { locales, makeGameT, useLocale, useT, type Locale } from '../i18n'
 import { Icon } from '../kit/icon'
 import { Guide, type PlaceId } from '../kit/places'
 import { currentStreak, dailyDoneToday, gameProgress, isFavourite, isIosBrowser, loadProgress, stickerCount, toggleFavourite } from '../kit/progress'
@@ -11,9 +11,27 @@ import { FavButton, Heart } from '../kit/FavButton'
 import { AUTHOR, facebookUrl, portfolioUrl, SUPPORT_URL } from './contact'
 import { logoIcon } from './logo'
 import { regions } from './map/regions'
+import { search, type Searchable } from './search'
 import { TeaCup } from './TeaCup'
 import { StickerIcon } from './StickerIcon'
 import { Tools } from './Tools'
+
+// A strip of the painted map behind each region's name.
+const bands = import.meta.glob<string>('./map/bands/*.webp', { eager: true, import: 'default' })
+const bandArt = (id: string) => bands[`./map/bands/${id}.webp`]
+
+/** How many games the "played lately" row shows. */
+const RECENT = 4
+
+/** The games played most lately, newest day first, the most played first on the same day. */
+export function recentGames(list: GameDef[], progress: ReturnType<typeof loadProgress>, n = RECENT) {
+  return list
+    .map((g) => ({ g, p: gameProgress(progress, g.meta.id) }))
+    .filter(({ p }) => p.plays > 0 && p.lastPlayed)
+    .sort((a, b) => b.p.lastPlayed!.localeCompare(a.p.lastPlayed!) || b.p.plays - a.p.plays)
+    .slice(0, n)
+    .map(({ g }) => g)
+}
 
 
 const NEW_DAYS = 7
@@ -85,6 +103,28 @@ export function Home({
   const starCount = shown.filter((g) => gameProgress(progress, g.meta.id).plays > 0).length
   const stickers = shown.reduce((n, g) => n + stickerCount(progress, g.meta.id), 0)
   const favourites = (progress.favourites ?? []).flatMap((f) => shown.find((g) => g.meta.id === f.id) ?? [])
+  const recent = useMemo(() => recentGames(shown, progress), [shown, progress])
+
+  // What the search box looks through: every game's name in every language, and in the player's language what it
+  // is about, its skill and its place on the map.
+  const [query, setQuery] = useState('')
+  const [place, setPlace] = useState<string | null>(null)
+  const index = useMemo<Searchable<GameDef>[]>(
+    () =>
+      shown.map((g) => {
+        const region = regions.find((r) => r.skills.includes(g.meta.skill))
+        return {
+          item: g,
+          titles: locales.map((l) => makeGameT(g.strings, l)('title')),
+          more: [makeGameT(g.strings, locale)('howTo'), t(`skill.${g.meta.skill}`), region ? t(region.name) : ''],
+        }
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [shown, locale],
+  )
+  const found = useMemo(() => search(index, query), [index, query])
+  const searching = query.trim().length > 0
+  const shownRegions = place ? regions.filter((r) => r.id === place) : regions
 
   // A card is a box with two buttons side by side in the markup: the game itself and its heart.
   const card = (g: GameDef) => {
@@ -95,9 +135,17 @@ export function Home({
     return (
       <div key={g.meta.id} className={`book-card${played ? ' book-played' : ''}`} style={gameColorVars(g.meta.color)}>
         <button className="book-card-play" onClick={() => onPlay(g.meta.id)}>
-          <span className="book-card-icon">
-            <Icon icon={g.meta.icon} />
-          </span>
+          {g.meta.thumb ? (
+            <span className="book-card-pic">
+              <img src={g.meta.thumb} alt="" loading="lazy" decoding="async" />
+            </span>
+          ) : (
+            <span className="book-card-pic book-card-pic-icon">
+              <span className="book-card-icon">
+                <Icon icon={g.meta.icon} />
+              </span>
+            </span>
+          )}
           <span className="book-card-title">{gt('title')}</span>
           {total > 0 && (
             <span className="book-card-stars" role="img" aria-label={t('stickers.count', { n: have, total })}>
@@ -150,6 +198,60 @@ export function Home({
           <h1 className="book-ribbon">{t('map.allGames')}</h1>
         </header>
 
+        <div className="book-find" role="search">
+          <label className="book-search">
+            <svg viewBox="0 0 24 24" className="book-search-glass" aria-hidden focusable="false">
+              <circle cx="10.5" cy="10.5" r="6.5" />
+              <path d="M15.5 15.5l5 5" />
+            </svg>
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={t('find.placeholder')}
+              aria-label={t('find.label')}
+              enterKeyHint="search"
+              autoComplete="off"
+              spellCheck={false}
+            />
+            {searching && (
+              <button type="button" className="book-search-clear" onClick={() => setQuery('')} aria-label={t('find.clear')}>
+                ×
+              </button>
+            )}
+          </label>
+        </div>
+          {!searching && (
+            <nav className="book-chips" aria-label={t('find.places')}>
+              <button className={`book-chip${place ? '' : ' book-chip-on'}`} aria-pressed={!place} onClick={() => setPlace(null)}>
+                {t('find.all')}
+              </button>
+              {regions.map((r) => (
+                <button
+                  key={r.id}
+                  className={`book-chip book-${r.id}${place === r.id ? ' book-chip-on' : ''}`}
+                  aria-pressed={place === r.id}
+                  onClick={() => setPlace(place === r.id ? null : r.id)}
+                >
+                  <span className="book-chip-guide" aria-hidden>
+                    <Guide place={r.id as PlaceId} />
+                  </span>
+                  {t(r.name)}
+                </button>
+              ))}
+            </nav>
+          )}
+
+        {searching ? (
+          <section className="book-region book-found" aria-live="polite" aria-labelledby="book-found">
+            <header className="book-band">
+              <h2 id="book-found">{t('find.found', { n: found.length })}</h2>
+            </header>
+            {found.length ? <div className="book-grid">{found.map(card)}</div> : <p className="book-none">{t('find.none')}</p>}
+          </section>
+        ) : (
+        <>
+        {!place && (
         <button className="book-daily" onClick={() => onPlay(daily.meta.id, true)}>
           <span className="wm-daily-icon">
             <Icon icon={daily.meta.icon} />
@@ -167,8 +269,18 @@ export function Home({
             {dailyDone ? '✓' : '▶'}
           </span>
         </button>
+        )}
 
-        {favourites.length > 0 && (
+        {!place && recent.length > 0 && (
+          <section className="book-region book-recent" aria-labelledby="book-recent">
+            <header className="book-band">
+              <h2 id="book-recent">{t('recent.title')}</h2>
+            </header>
+            <div className="book-grid">{recent.map(card)}</div>
+          </section>
+        )}
+
+        {!place && favourites.length > 0 && (
           <section className="book-region book-favs" aria-labelledby="book-favs">
             <header className="book-band">
               <span className="book-guide book-guide-heart">
@@ -180,12 +292,12 @@ export function Home({
           </section>
         )}
 
-        {regions.map((r) => {
+        {shownRegions.map((r) => {
           const list = shown.filter((g) => r.skills.includes(g.meta.skill)).sort((a, b) => rank(a) - rank(b))
           if (!list.length) return null
           return (
             <section key={r.id} className={`book-region book-${r.id}`} aria-labelledby={`book-${r.id}`}>
-              <header className="book-band">
+              <header className="book-band book-band-painted" style={{ '--band-art': `url(${bandArt(r.id)})` } as CSSProperties}>
                 <span className="book-guide">
                   <Guide place={r.id as PlaceId} />
                 </span>
@@ -198,6 +310,8 @@ export function Home({
             </section>
           )
         })}
+        </>
+        )}
 
         <footer className="book-foot">
           <span className="book-foot-label">{t('forGrownUps')}</span>
