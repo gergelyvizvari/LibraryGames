@@ -2,7 +2,7 @@ import { useEffect, useState, type CSSProperties } from 'react'
 import { mixColour, type Paint } from './logic'
 
 // The painting corner on the meadow: the painted pony who wishes for a colour, its wish in a thought cloud, and the
-// painted mixing bowl on a tree stump. The paint itself (the drops, the mix, the new mane) is laid over the
+// painted mixing bowl in the grass. The paint itself (the drops, the mix, the new mane) is laid over the
 // paintings, since its colour changes.
 
 /** The painted ponies, each with four faces and a mask of the mane and tail for each: art/<kind>[-<face>][-mask].webp. */

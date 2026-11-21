@@ -9,22 +9,21 @@ import type { GameProps } from '../../kit/types'
 import bowl from './art/bowl.webp'
 import meadowTall from './art/meadow-tall.webp'
 import meadow from './art/meadow.webp'
-import stump from './art/stump.webp'
 import { capFor, makeWishes, mixColour, namedAt, nameOf, PAINTS, sameColour, tip, type Paint } from './logic'
 import { BowlPaint, PaintedPony, Pot, Sum, Wish, type Mood, type PonyKind } from './Studio'
 
 type ViewId = 'wide' | 'tall'
 
-/** The painting corner on the meadow; the focus holds the pony, the stump with the bowl and the wish above them. */
+/** The painting corner on the meadow; the focus holds the pony, the bowl and the wish above them. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: meadow, world: { w: 1280, h: 800 }, focus: { x: 150, y: 90, w: 900, h: 690 }, ground: '#9fa331', sayAt: { x: 200, y: 260 } },
+  { id: 'wide', painting: meadow, world: { w: 1280, h: 800 }, focus: { x: 150, y: 90, w: 900, h: 690 }, ground: '#a9ae2e', sayAt: { x: 200, y: 260 } },
   { id: 'tall', painting: meadowTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 300, w: 720, h: 760 }, ground: '#9cb035', sayAt: { x: 40, y: 250 } },
 ]
 
-/** Where everything stands in each painting: the pony and the stump by their feet, the wish cloud and the sum by their top left / centre. */
-const SPOTS: Record<ViewId, { pony: { x: number; bottom: number; h: number }; stump: { x: number; bottom: number; h: number }; wish: { x: number; y: number; w: number }; sum: { x: number; y: number } }> = {
-  wide: { pony: { x: 380, bottom: 700, h: 380 }, stump: { x: 720, bottom: 712, h: 160 }, wish: { x: 520, y: 120, w: 320 }, sum: { x: 600, y: 752 } },
-  tall: { pony: { x: 230, bottom: 930, h: 340 }, stump: { x: 545, bottom: 950, h: 140 }, wish: { x: 330, y: 290, w: 300 }, sum: { x: 360, y: 1010 } },
+/** Where everything stands in each painting: the pony and the bowl by their feet, the wish cloud and the sum by their top left / centre. */
+const SPOTS: Record<ViewId, { pony: { x: number; bottom: number; h: number }; bowl: { x: number; bottom: number; h: number }; wish: { x: number; y: number; w: number }; sum: { x: number; y: number } }> = {
+  wide: { pony: { x: 380, bottom: 700, h: 380 }, bowl: { x: 740, bottom: 690, h: 120 }, wish: { x: 520, y: 120, w: 320 }, sum: { x: 600, y: 752 } },
+  tall: { pony: { x: 230, bottom: 930, h: 340 }, bowl: { x: 530, bottom: 930, h: 110 }, wish: { x: 330, y: 290, w: 300 }, sum: { x: 360, y: 1010 } },
 }
 
 // One pony after the other comes for a new mane.
@@ -146,8 +145,7 @@ export default function RainbowMix({ level, seed, t, onFinish }: GameProps) {
     >
       {(view) => {
         const at = SPOTS[view]
-        const bowlH = at.stump.h * 0.62
-        const top = at.stump.bottom - at.stump.h * 0.82
+        const bowlTop = at.bowl.bottom - at.bowl.h
         return (
           <div className="rm-board" role="img" aria-label={mixed ? `${t('recipe')}: ${mixed.map((p) => t(p)).join(' + ')}` : undefined}>
             <div className="rm-cloud" style={{ left: at.wish.x, top: at.wish.y, width: at.wish.w }}>
@@ -157,9 +155,8 @@ export default function RainbowMix({ level, seed, t, onFinish }: GameProps) {
             <div key={turn} className="rm-arrive">
               <PaintedPony kind={kind} mood={mood} mane={painted ? wishColour : null} stirring={stirring} style={worldStyle(at.pony.x, at.pony.bottom, at.pony.h)} />
             </div>
-            <img className="rm-prop" src={stump} alt="" draggable={false} style={worldStyle(at.stump.x, at.stump.bottom, at.stump.h)} />
-            <img className="rm-prop" src={bowl} alt="" draggable={false} style={worldStyle(at.stump.x, top + bowlH * 0.95, bowlH)} />
-            <div className="rm-paint-at" style={{ left: at.stump.x, top: top + bowlH * 0.2, width: bowlH * 2.1 }}>
+            <img className="rm-prop" src={bowl} alt="" draggable={false} style={worldStyle(at.bowl.x, at.bowl.bottom, at.bowl.h)} />
+            <div className="rm-paint-at" style={{ left: at.bowl.x, top: bowlTop + at.bowl.h * 0.25, width: at.bowl.h * 2.1 }}>
               <BowlPaint drops={drops} cap={cap} mixed={colour} stirring={stirring} />
             </div>
             {mixed && colour && (
