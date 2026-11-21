@@ -1563,8 +1563,10 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 
 /* Bridge Builder */
 .bb-scene { position: absolute; display: block; overflow: visible; }
-.bb-fox { transform: translate(30px, 122px); transition: transform 1.5s ease-in-out 0.45s; }
-.bb-walk { transform: translate(370px, 122px); }
+.bb-place { position: absolute; inset: 0; }
+.bb-fox { transform: translate(30px, 124px); transition: transform 1.5s ease-in-out 0.45s; }
+/* Up onto the deck and across, then down onto the far bank. */
+.bb-walk { transform: translate(370px, 124px); }
 .bb-plank { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .bb-plank > g { transform-box: fill-box; transform-origin: center; }
 .bb-no > g { animation: psNo 0.35s 2; }
