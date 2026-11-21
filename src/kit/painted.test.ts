@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { fitPainting } from './painted'
+import { fitPainting, pickView } from './painted'
 
 const world = { w: 1280, h: 800 }
 const focus = { x: 330, y: 180, w: 620, h: 540 }
@@ -36,5 +36,16 @@ describe('fitPainting on a tall screen', () => {
   it('hangs the painting from the top', () => {
     const f = fitPainting(390, 844, world, focus, 120)
     expect(f.y).toBe(0)
+  })
+})
+
+describe('pickView', () => {
+  const v = (id: string, w: number, h: number) => ({ id, painting: '', world: { w, h }, focus, ground: '', sayAt: { x: 0, y: 0 } })
+  const views = [v('wide', 1280, 800), v('tall', 720, 1280)]
+  it('takes the painting shaped most like the screen', () => {
+    expect(pickView(views, 1280, 800).id).toBe('wide')
+    expect(pickView(views, 390, 844).id).toBe('tall')
+    expect(pickView(views, 820, 1180).id).toBe('tall')
+    expect(pickView([views[0]], 390, 844).id).toBe('wide')
   })
 })

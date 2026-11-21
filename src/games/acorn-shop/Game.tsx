@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTimeouts } from '../../kit/hooks'
-import { PaintedScene, worldStyle } from '../../kit/painted'
+import { PaintedScene, worldStyle, type PaintedView } from '../../kit/painted'
 import { makeRng } from '../../kit/random'
 import { useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
@@ -12,6 +12,7 @@ import hedgehog from './art/hedgehog.webp'
 import honey from './art/honey.webp'
 import jam from './art/jam.webp'
 import mushroom from './art/mushroom.webp'
+import shopTall from './art/shop-tall.webp'
 import shop from './art/shop.webp'
 import squirrelBlink from './art/squirrel-blink.webp'
 import squirrelHappy from './art/squirrel-happy.webp'
@@ -20,11 +21,45 @@ import { makeTask, pay, specFor, STAGE, type Coin, type Snack, type Task } from 
 
 const snacks: Record<Snack, string> = { apple, berries, mushroom, honey, jam }
 
-/** Where the play happens in the painting (1280 × 800): the stall from its awning to the grass in front. */
-const FOCUS = { x: 330, y: 180, w: 620, h: 540 }
-/** The counter's top edge: the squirrel stands behind it, the awning hangs above it. */
-const COUNTER = 452
-const AWNING = 298
+type ViewId = 'wide' | 'tall'
+
+/** The paintings of the shop; the focus is the stall from its awning to the grass in front. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: shop, world: { w: 1280, h: 800 }, focus: { x: 330, y: 180, w: 620, h: 540 }, ground: '#bcb225', sayAt: { x: 760, y: 250 } },
+  { id: 'tall', painting: shopTall, world: { w: 720, h: 1280 }, focus: { x: 100, y: 250, w: 520, h: 750 }, ground: '#d9b046', sayAt: { x: 420, y: 300 } },
+]
+
+/** Where things stand in each painting. */
+const SPOTS: Record<ViewId, {
+  /** The counter's top edge (the squirrel stands behind it) and the awning's lower edge. */
+  counter: number
+  awning: number
+  keeper: { x: number; bottom: number; h: number }
+  snack: { x: number; bottom: number; h: number }
+  /** Where the price tag's string hangs from the awning. */
+  tag: { x: number; y: number }
+  paid: { x: number; y: number; w: number }
+  guest: { x: number; bottom: number; h: number }
+}> = {
+  wide: {
+    counter: 452,
+    awning: 298,
+    keeper: { x: 648, bottom: 700, h: 410 },
+    snack: { x: 500, bottom: 474, h: 84 },
+    tag: { x: 398, y: 296 },
+    paid: { x: 560, y: 396, w: 340 },
+    guest: { x: 250, bottom: 712, h: 210 },
+  },
+  tall: {
+    counter: 509,
+    awning: 320,
+    keeper: { x: 370, bottom: 760, h: 440 },
+    snack: { x: 205, bottom: 530, h: 92 },
+    tag: { x: 152, y: 318 },
+    paid: { x: 250, y: 453, w: 330 },
+    guest: { x: 150, bottom: 930, h: 240 },
+  },
+}
 
 /** A coin on the counter, and where in the purse it came from (when the purse can run out). */
 interface Paid {
@@ -130,11 +165,8 @@ export default function AcornShop({ level, seed, t, onFinish }: GameProps) {
 
   return (
     <PaintedScene
-      painting={shop}
-      focus={FOCUS}
-      ground="#b9af2e"
+      views={VIEWS}
       say={say}
-      sayAt={{ x: 760, y: 250 }}
       stage={stage}
       className="acorn-shop"
       tray={
@@ -153,43 +185,51 @@ export default function AcornShop({ level, seed, t, onFinish }: GameProps) {
         </div>
       }
     >
-      {/* Jars and fruit on the shelves, either side of the shopkeeper. */}
-      <img className="as-prop" src={jam} alt="" style={worldStyle(440, 346, 44)} />
-      <img className="as-prop" src={honey} alt="" style={worldStyle(486, 346, 42)} />
-      <img className="as-prop" src={apple} alt="" style={worldStyle(836, 346, 38)} />
-      <img className="as-prop" src={mushroom} alt="" style={worldStyle(870, 346, 34)} />
-      <img className="as-prop" src={berries} alt="" style={worldStyle(448, 406, 40)} />
-      <img className="as-prop" src={mushroom} alt="" style={worldStyle(822, 406, 32)} />
-      <img className="as-prop" src={apple} alt="" style={worldStyle(858, 406, 34)} />
+      {(view) => {
+        const at = SPOTS[view]
+        return (
+          <>
+            {/* The squirrel stands behind the counter, under the awning. */}
+            <div className="as-behind" style={{ top: at.awning, height: at.counter - at.awning }}>
+              <div className={`as-keeper as-${stage.mood}`} style={worldStyle(at.keeper.x, at.keeper.bottom - at.awning, at.keeper.h)}>
+                {[squirrel, squirrelBlink, squirrelHappy].map((src, i) => (
+                  <img key={src} src={src} alt="" draggable={false} className={['idle', 'blink', 'happy'][i] === face ? '' : 'as-off'} />
+                ))}
+              </div>
+            </div>
 
-      {/* The squirrel stands behind the counter, under the awning. */}
-      <div className="as-behind" style={{ top: AWNING, height: COUNTER - AWNING }}>
-        <div className={`as-keeper as-${stage.mood}`} style={worldStyle(648, 700 - AWNING, 410)}>
-          {[squirrel, squirrelBlink, squirrelHappy].map((src, i) => (
-            <img key={src} src={src} alt="" draggable={false} className={['idle', 'blink', 'happy'][i] === face ? '' : 'as-off'} />
-          ))}
-        </div>
-      </div>
+            {/* What is for sale, and its price on a tag hanging from the awning. */}
+            <img
+              key={round.id}
+              className={`as-prop as-snack${solved ? ' as-bought' : ''}`}
+              src={snacks[task.snack]}
+              alt=""
+              style={worldStyle(at.snack.x, at.snack.bottom, at.snack.h)}
+            />
+            <div className="as-string" style={{ left: at.tag.x, top: at.tag.y }} />
+            <div className="as-tag" key={`tag-${round.id}`} style={{ left: at.tag.x - 58, top: at.tag.y + 54 }}>
+              <b>{task.price}</b>
+              <img src={acorn} alt="" />
+            </div>
 
-      {/* What is for sale, and its price on a tag hanging from the awning. */}
-      <img key={round.id} className={`as-prop as-snack${solved ? ' as-bought' : ''}`} src={snacks[task.snack]} alt="" style={worldStyle(500, 474, 84)} />
-      <div className="as-string" />
-      <div className="as-tag" key={`tag-${round.id}`}>
-        <b>{task.price}</b>
-        <img src={acorn} alt="" />
-      </div>
+            {/* The coins paid so far, on the counter in front of the squirrel. */}
+            <div
+              className={`as-paid${shake ? ' as-no' : ''}`}
+              style={{ left: at.paid.x, top: at.paid.y, width: at.paid.w }}
+              onAnimationEnd={(e) => e.target === e.currentTarget && setShake(false)}
+            >
+              {paid.map((p) => (
+                <button key={p.key} className={`as-coin as-c${p.coin} as-on`} onPointerDown={() => takeBack(p.key)} disabled={solved} aria-label={t('back', { n: p.coin })}>
+                  <CoinArt value={p.coin} />
+                </button>
+              ))}
+            </div>
 
-      {/* The coins paid so far, on the counter in front of the squirrel. */}
-      <div className={`as-paid${shake ? ' as-no' : ''}`} onAnimationEnd={(e) => e.target === e.currentTarget && setShake(false)}>
-        {paid.map((p) => (
-          <button key={p.key} className={`as-coin as-c${p.coin} as-on`} onPointerDown={() => takeBack(p.key)} disabled={solved} aria-label={t('back', { n: p.coin })}>
-            <CoinArt value={p.coin} />
-          </button>
-        ))}
-      </div>
-
-      {/* A hedgehog waits its turn with a basket. */}
-      <img className="as-prop as-guest" src={hedgehog} alt="" style={worldStyle(250, 712, 210)} />
+            {/* A hedgehog waits its turn with a basket. */}
+            <img className="as-prop as-guest" src={hedgehog} alt="" style={worldStyle(at.guest.x, at.guest.bottom, at.guest.h)} />
+          </>
+        )
+      }}
     </PaintedScene>
   )
 }

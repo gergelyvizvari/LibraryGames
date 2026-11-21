@@ -1448,8 +1448,8 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .as-keeper img.as-off { visibility: hidden; }
 .as-keeper.as-happy { animation: fmHop 0.6s; }
 .as-keeper.as-oops { animation: sgNo 0.5s; }
-.as-string { position: absolute; left: 398px; top: 296px; width: 3px; height: 58px; background: #6d4a3a; border-radius: 2px; }
-.as-tag { position: absolute; left: 340px; top: 350px; width: 112px; height: 74px; display: flex; align-items: center; justify-content: center; gap: 4px; padding-right: 10px; border-radius: 12px 26px 26px 12px; background: #fbf1dc; box-shadow: 0 3px 8px rgba(60, 35, 10, 0.3); rotate: 4deg; animation: popIn 0.35s backwards; }
+.as-string { position: absolute; width: 3px; height: 58px; background: #6d4a3a; border-radius: 2px; }
+.as-tag { position: absolute; width: 112px; height: 74px; display: flex; align-items: center; justify-content: center; gap: 4px; padding-right: 10px; border-radius: 12px 26px 26px 12px; background: #fbf1dc; box-shadow: 0 3px 8px rgba(60, 35, 10, 0.3); rotate: 4deg; animation: popIn 0.35s backwards; }
 .as-tag b { font-family: var(--story); font-weight: 800; font-size: 44px; color: var(--story-ink); line-height: 1; }
 .as-tag img { height: 42px; }
 /* Coins: a painted acorn with its value on a cream badge; the bigger the acorn, the more it is worth. */
@@ -1466,7 +1466,7 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .as-purse { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end; gap: 8px 14px; }
 .as-gone { visibility: hidden; }
 /* On the counter (in painting units) the coins stand in a row; many coins overlap a little. */
-.as-paid { position: absolute; left: 560px; top: 396px; width: 340px; height: 78px; display: flex; align-items: flex-end; justify-content: center; }
+.as-paid { position: absolute; height: 78px; display: flex; align-items: flex-end; justify-content: center; }
 .as-paid .as-on { flex: none; margin: 0 -3px; animation: popIn 0.2s; }
 .as-paid .as-c1 { width: 40px; height: 50px; font-size: 40px; }
 .as-paid .as-c2 { width: 46px; height: 58px; font-size: 44px; }
