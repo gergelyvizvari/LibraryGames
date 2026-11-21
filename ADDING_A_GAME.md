@@ -156,9 +156,11 @@ a character who says what to do, a short stage with a clear goal, and a quiet en
   picture). Draw the pieces too (`kit/things.tsx` or the game's own SVG). `puppy-spots/Den.tsx` and
   `maze-dash/Garden.tsx` are the models: an SVG picture with a grid of transparent buttons on top.
 - **Painted scenes** (`kit/painted.tsx`, first used by `acorn-shop`): a game can use one generated picture-book
-  painting as its whole room instead of `SceneShell`. `<PaintedScene painting focus ground say sayAt stage tray>`
-  scales the painting so the `focus` box always fits above the tray; characters and things are placed on it in the
-  painting's own units with `worldStyle(x, bottom, height)`. Art lives in the game's `art/` folder as WebP: the
+  painting as its whole room instead of `SceneShell`. `<PaintedScene views say stage tray>{(view) => …}</PaintedScene>`
+  takes a wide and an upright painting (`views`, each with its `focus`, `ground` colour and `sayAt`), shows the one
+  shaped most like the screen and scales it so the `focus` box always fits above the tray; characters and things are
+  placed on it in that painting's own units with `worldStyle(x, bottom, height)`. Paint goods into the painting
+  rather than sticking small cut-outs on it: loose cut-outs look like stickers floating in the air. Art lives in the game's `art/` folder as WebP: the
   background about 1600 × 1000, cut-out characters with a thin cream rim baked in. How the art is made (prompts,
   style text, the Codex command) is in `tools/art/README.md`.
 - `feed-monster` draws its whole scene itself (`StagePips`, `SpeechBubble`, `SceneTray` from `kit/scene.tsx`,
