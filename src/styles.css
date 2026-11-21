@@ -735,36 +735,40 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .album-hole { display: grid; place-items: center; border-radius: 50%; border: 3px dashed #cfc4ad; color: #b9ad93; font-size: 1.6rem; font-weight: 700; }
 .album-missing { opacity: 0.75; }
 
-/* Feed the Monster */
-.fm { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-.fm-roombox { position: relative; flex: 1; min-height: 0; overflow: hidden; }
-.fm-roombox::after { content: ''; position: absolute; inset: 0; background: var(--grain); opacity: 0.32; pointer-events: none; }
-.fm-room { position: absolute; left: 0; top: 0; display: block; }
-.fm-need { font-family: var(--story); font-weight: 800; font-size: 76px; fill: var(--story-ink); animation: popIn 0.25s; transform-box: fill-box; transform-origin: center; }
-.fm-heart { animation: popIn 0.3s; transform-box: fill-box; transform-origin: center; }
-.fm-body { transform-box: fill-box; transform-origin: 50% 100%; }
-.fm-idle .fm-body { animation: fmBreathe 3.2s ease-in-out infinite; }
-.fm-chomp .fm-body { animation: fmChomp 0.36s; }
-.fm-yuck .fm-body { animation: fmNo 0.5s; }
-.fm-happy .fm-body { animation: fmHop 0.6s; }
-.fm-arrive { animation: fmArrive 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.15); }
+/* Feed the Monster: the painted monster on the rug of its kitchen */
+.fm-stand { position: absolute; pointer-events: none; animation: fmArrive 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.15); }
+.fm-monster { position: absolute; inset: 0; transform-origin: 50% 100%; }
+.fm-monster::before { content: ''; position: absolute; left: 8%; right: 8%; bottom: -2.5%; height: 7%; border-radius: 50%; background: rgba(90, 30, 40, 0.28); filter: blur(6px); }
+.fm-fur { position: absolute; inset: 0; }
+.fm-fur img { position: absolute; inset: 0; width: 100%; height: 100%; user-select: none; }
+.fm-fur img.fm-off { visibility: hidden; }
+.fm-idle { animation: fmBreathe 3.2s ease-in-out infinite; }
+.fm-chomp { animation: fmChomp 0.4s; }
+.fm-yuck { animation: fmNo 0.5s; }
+.fm-happy { animation: fmHop 0.6s; }
+.fm-belly { position: absolute; translate: -50% -50%; display: grid; place-items: center; line-height: 1; }
+.fm-need { font-family: var(--story); font-weight: 800; font-size: 1.15em; color: #4a3357; opacity: 0.88; animation: popIn 0.25s; }
+.fm-heart { width: 1.1em; animation: popIn 0.3s; }
+.fm-mouth { position: absolute; width: 1px; height: 1px; }
 @keyframes fmBreathe { 50% { transform: scale(1.015, 0.985); } }
 @keyframes fmChomp { 40% { transform: scale(1.05, 0.94); } }
 @keyframes fmNo { 20%, 60% { transform: translateX(-10px) rotate(-2deg); } 40%, 80% { transform: translateX(10px) rotate(2deg); } }
 @keyframes fmHop { 35% { transform: translateY(-22px) scale(0.97, 1.04); } 70% { transform: scale(1.04, 0.96); } }
 @keyframes fmArrive { from { transform: translateX(260px); opacity: 0; } }
-.fm-plate { display: flex; justify-content: center; gap: clamp(4px, 2vw, 14px); padding: 12px clamp(10px, 3vw, 22px); border-radius: 34px; background: #a8484a; box-shadow: inset 0 0 0 8px #8e3b4c, 0 6px 0 rgba(110, 44, 64, 0.35); }
-.fm-cookie { width: clamp(62px, 19vw, 84px); padding: 0; border-radius: 50%; background: none; transition: transform 0.12s; animation: popIn 0.3s backwards; }
-.fm-cookie svg { display: block; width: 100%; overflow: visible; }
+.fm-plate { display: flex; justify-content: center; gap: clamp(4px, 2vw, 14px); padding: 10px clamp(12px, 3vw, 24px); border-radius: 999px; background: radial-gradient(ellipse at 50% 40%, #fffaf0 0 55%, #f1e2c6 75%, #e2cfaa); box-shadow: 0 6px 0 rgba(120, 60, 20, 0.28), 0 10px 18px rgba(90, 40, 10, 0.18); }
+.fm-cookie { width: clamp(62px, 19vw, 88px); padding: 0; border-radius: 50%; background: none; transition: transform 0.12s; animation: popIn 0.3s backwards; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 .fm-cookie:hover { transform: translateY(-3px); }
 .fm-cookie:active { transform: scale(0.92); }
-.fm-cookie:focus-visible { outline: 3px solid var(--story-paper); outline-offset: 2px; }
-.fm-cookie-num { font-family: var(--story); font-weight: 800; font-size: 30px; fill: #5d3b40; }
-/* A phone on its side: a slimmer tray leaves the room more height. */
+.fm-cookie:focus-visible { outline: 3px solid #fffaf0; outline-offset: 2px; }
+.fm-cookie-art { position: relative; display: block; aspect-ratio: 1; filter: drop-shadow(0 3px 2px rgba(90, 40, 10, 0.3)); }
+.fm-cookie-art img, .fm-cookie-art svg { position: absolute; inset: 0; width: 100%; height: 100%; user-select: none; }
+.fm-cookie-art b { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--story); font-weight: 800; font-size: clamp(24px, 7.5vw, 34px); color: #5d3b40; }
+/* A phone on its side: a slimmer plate leaves the room more height. */
 @media (max-height: 480px) {
   .scene-tray { padding: 10px 12px calc(12px + env(safe-area-inset-bottom)); box-shadow: inset 0 -14px 0 #f1e2bd; }
   .fm-plate { padding: 6px 16px; }
   .fm-cookie { width: 60px; }
+  .fm-cookie-art b { font-size: 24px; }
 }
 .fm-ghost { position: fixed; z-index: 20; margin: 0; pointer-events: none; animation: none; }
 

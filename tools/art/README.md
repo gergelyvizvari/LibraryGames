@@ -31,6 +31,11 @@ codex exec --skip-git-repo-check -s workspace-write -C <folder> \
 ```
 
 For an edit, add `-i ./<first>.png` AFTER the prompt (before it, codex reads the prompt as a file name).
+Run it with `< /dev/null`: without a terminal on stdin, `codex exec` otherwise waits for more input forever.
+
+Faces made as edits can come back a few pixels bigger or shifted. Line them up before cutting (same height from
+horn tips to feet, same feet line, same body centre) and cut them all with one shared crop box, or the character
+jumps when its face changes.
 
 ## Preparing the files
 
