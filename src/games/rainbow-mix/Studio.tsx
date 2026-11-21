@@ -5,7 +5,7 @@ import { mixColour, type Paint } from './logic'
 // painted mixing bowl on a tree stump. The paint itself (the drops, the mix, the new mane) is laid over the
 // paintings, since its colour changes.
 
-/** The painted ponies, each with four faces and a mask of its mane and tail: art/<kind>[-<face>|-mask].webp. */
+/** The painted ponies, each with four faces and a mask of the mane and tail for each: art/<kind>[-<face>][-mask].webp. */
 const ART = import.meta.glob<string>('./art/*.webp', { eager: true, import: 'default' })
 const art = (name: string) => ART[`./art/${name}.webp`]
 
@@ -120,7 +120,8 @@ export function PaintedPony({ kind, mood, mane, stirring, style }: { kind: PonyK
     }
   }, [mood])
   const face: Face = mood === 'idle' && shut ? 'blink' : mood
-  const mask = `url(${art(`${kind}-mask`)})`
+  // Each face has its own mask of the hair, so the paint never touches the face.
+  const mask = `url(${art(face === 'idle' ? `${kind}-mask` : `${kind}-${face}-mask`)})`
   return (
     <div className="rm-stand" style={{ ...style, aspectRatio: ASPECT[kind] }}>
       <div className={`rm-pony${mood === 'sad' ? ' rm-no' : mood === 'happy' ? ' rm-hop' : stirring ? ' rm-watch' : ''}`}>
