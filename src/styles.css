@@ -798,6 +798,10 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .cs-c4 { background: #a48cf0; }
 .cs-c5 { background: #f39a5a; }
 .cs-c6 { background: #7cc552; }
+.cs-owl { position: absolute; aspect-ratio: 0.6; transform-origin: 50% 100%; pointer-events: none; animation: fmBreathe 3.4s ease-in-out infinite; }
+.cs-owl img { position: absolute; left: 50%; bottom: 0; height: 100%; translate: -50% 0; user-select: none; }
+.cs-owl img.cs-off { visibility: hidden; }
+.cs-owl.cs-cheer { animation: fmHop 0.6s; }
 .cs-tools { display: flex; justify-content: center; gap: 22px; }
 
 /* Animal Sounds */
