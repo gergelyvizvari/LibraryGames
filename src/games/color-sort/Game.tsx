@@ -1,11 +1,28 @@
 import { useRef, useState } from 'react'
 import { useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
+import { PaintedScene, type PaintedView } from '../../kit/painted'
 import { SceneTool } from '../../kit/scene'
-import { SceneShell, useStage } from '../../kit/SceneShell'
+import { useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
+import workshopTall from './art/workshop-tall.webp'
+import workshop from './art/workshop.webp'
 import { PUZZLES, canPour, isDone, isSolved, makePuzzle, pointsFor, pour, sizeFor, type Tube } from './logic'
+
+type ViewId = 'wide' | 'tall'
+
+/** The colour workshop; the tubes stand on its bench (and, upright with many tubes, also on the rug in front). */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: workshop, world: { w: 1280, h: 800 }, focus: { x: 60, y: 250, w: 1160, h: 470 }, ground: '#a25018', sayAt: { x: 600, y: 330 } },
+  { id: 'tall', painting: workshopTall, world: { w: 720, h: 1025 }, focus: { x: 0, y: 260, w: 720, h: 680 }, ground: '#e48734', sayAt: { x: 380, y: 255 } },
+]
+
+/** Where the tubes stand: the rows' floor lines and their span, and the size of one layer of liquid. */
+const BENCH: Record<ViewId, { rows: number[]; left: number; right: number; layer: number; perRow: number }> = {
+  wide: { rows: [655], left: 90, right: 1100, layer: 56, perRow: 9 },
+  tall: { rows: [568, 905], left: 20, right: 700, layer: 60, perRow: 5 },
+}
 
 /** Shapes shown on the liquid in the high contrast theme, so colours never have to be told apart by hue alone. */
 const SYMBOLS = ['●', '▲', '■', '★', '♥', '◆', '✚']
@@ -106,14 +123,13 @@ export default function ColorSort({ level, seed, t, onFinish }: GameProps) {
     setMessage(t('pickTube'))
   }
 
-  const columns = perRow(tubes.length)
   return (
-    <SceneShell
-      place="woods"
+    <PaintedScene
+      views={VIEWS}
       say={message}
       stage={stage}
-      bare
       className="color-sort"
+      trayHeight={110}
       tray={
         <div className="cs-tools">
           <SceneTool kind="undo" label={t('undo')} onPress={undo} disabled={history.length === 0} />
@@ -121,26 +137,36 @@ export default function ColorSort({ level, seed, t, onFinish }: GameProps) {
         </div>
       }
     >
-      <div className="cs-rack" key={solved} style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 70px))` }}>
-        {tubes.map((tube, i) => (
-          <button
-            key={i}
-            className={`cs-tube${picked === i ? ' cs-picked' : ''}${wobble === i ? ' cs-wobble' : ''}${isDone(tube, cap) ? ' cs-done' : ''}`}
-            style={{ height: `${cap * 46 + 18}px` }}
-            onPointerDown={() => tap(i)}
-            aria-label={t('tube', { n: i + 1 })}
-          >
-            {tube.map((c, k) => (
-              <span key={k} className={`cs-layer cs-c${c}`} data-sym={SYMBOLS[c]} />
-            ))}
-          </button>
-        ))}
-      </div>
-    </SceneShell>
+      {(view) => {
+        const at = BENCH[view]
+        const rows = Math.ceil(tubes.length / at.perRow)
+        const per = Math.ceil(tubes.length / rows)
+        // Never wider apart than a comfortable gap, so a few tubes stand together in the middle.
+        const gap = Math.min((at.right - at.left) / per, at.layer * 2.6)
+        return (
+          <div className="cs-bench" key={solved} style={{ fontSize: at.layer }}>
+            {tubes.map((tube, i) => {
+              const row = Math.floor(i / per)
+              const inRow = Math.min(per, tubes.length - row * per)
+              const x = (at.left + at.right) / 2 + (i - row * per - (inRow - 1) / 2) * gap
+              return (
+                <div key={i} className="cs-spot" style={{ left: x, top: at.rows[row] }}>
+                  <button
+                    className={`cs-tube${picked === i ? ' cs-picked' : ''}${wobble === i ? ' cs-wobble' : ''}${isDone(tube, cap) ? ' cs-done' : ''}`}
+                    style={{ height: `${cap + 0.45}em` }}
+                    onPointerDown={() => tap(i)}
+                    aria-label={t('tube', { n: i + 1 })}
+                  >
+                    {tube.map((c, k) => (
+                      <span key={k} className={`cs-layer cs-c${c}`} data-sym={SYMBOLS[c]} />
+                    ))}
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+        )
+      }}
+    </PaintedScene>
   )
-}
-
-/** Up to five tubes fit side by side on a phone; more go on two rows. */
-function perRow(n: number) {
-  return n <= 5 ? n : Math.ceil(n / 2)
 }
