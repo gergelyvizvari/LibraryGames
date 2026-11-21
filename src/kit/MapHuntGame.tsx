@@ -1,6 +1,7 @@
 import { useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from 'react'
 import { useShake, useTimeouts } from './hooks'
 import { DOT_HIT_R, DOT_R, dotChoices, dotCount, dotGapFor, kmBetween, nearestDot, pickRound, placesFor, pointsForKm, showDots, type KmBands, type MapPlace } from './mapHunt'
+import { PaintedScene, worldStyle, type Box, type PaintedView } from './painted'
 import { makeRng } from './random'
 import { SceneShell, useStage } from './SceneShell'
 import { sound } from './sound'
@@ -29,6 +30,20 @@ export interface MapHuntProps extends GameProps {
   className: string
   /** The map itself, drawn under the dots. Gets whether dots are shown. */
   scene: (dots: boolean) => ReactNode
+  /** A painted room instead of the drawn one: the map lies on a painted sheet of paper pinned in it. */
+  painted?: PaintedMap
+}
+
+/** Where things are in a painted map room, per view of the room. */
+export interface PaintedMap<Id extends string = string> {
+  views: PaintedView<Id>[]
+  /** The painted sheet of paper the map is drawn on, and the share of its width and height left as margin. */
+  paper: string
+  margin: { x: number; y: number }
+  /** Where the sheet hangs in each view, in world units. */
+  board: Record<Id, Box>
+  /** The character who asks: its calm and its happy picture, and where it stands in each view. */
+  guide: { idle: string; happy: string; at: Record<Id, { x: number; bottom: number; h: number }> }
 }
 
 interface Result {
@@ -37,7 +52,7 @@ interface Result {
   label: string
 }
 
-export function MapHunt({ level, seed, t, onFinish, places, width, height, toMap, fromMap, bands, dotGapKm, className, scene }: MapHuntProps) {
+export function MapHunt({ level, seed, t, onFinish, places, width, height, toMap, fromMap, bands, dotGapKm, className, scene, painted }: MapHuntProps) {
   const rng = useRef(makeRng(seed)).current
   const [round] = useState(() => pickRound(rng, places, level))
   const dots = showDots(level)
@@ -97,30 +112,59 @@ export function MapHunt({ level, seed, t, onFinish, places, width, height, toMap
     finishTurn([pt.x, pt.y], pts, pts >= 30 ? word : `${word} ${t('off', { km })}`)
   }
 
+  const say = result ? result.label : t('where', { place: target.name })
+  const map = (
+    <svg ref={svgRef} viewBox={`0 0 ${width} ${height}`} className="mh-map" onPointerDown={tapMap}>
+      {scene(dots)}
+      {choices.map((p) => {
+        const [x, y] = toMap(p.at)
+        return <circle key={`${index}-${p.name}`} cx={x} cy={y} r={DOT_R} className={`mh-dot${result && p === target ? ' mh-dot-right' : ''}`} />
+      })}
+      {result && (
+        <g className="mh-answer">
+          {result.tap && <line x1={result.tap[0]} y1={result.tap[1]} x2={tx} y2={ty} className="mh-line" />}
+          {result.tap && <circle cx={result.tap[0]} cy={result.tap[1]} r={12} className="mh-tap" />}
+          <circle cx={tx} cy={ty} r={20} className="mh-target" />
+          <text x={Math.min(Math.max(tx, 130), width - 130)} y={ty < 80 ? ty + 58 : ty - 32} className="mh-name">
+            {target.name}
+          </text>
+        </g>
+      )}
+    </svg>
+  )
+
+  if (painted) {
+    const happy = !!result && result.pts >= 20
+    return (
+      <PaintedScene views={painted.views} say={say} stage={stage} className={`mh-painted ${className}`}>
+        {(view) => {
+          const b = painted.board[view]
+          const g = painted.guide.at[view]
+          return (
+            <>
+              <div className={`mh-guide${happy ? ' mh-happy' : ''}`} style={worldStyle(g.x, g.bottom, g.h)}>
+                <img src={painted.guide.idle} alt="" draggable={false} className={happy ? 'mh-off' : ''} />
+                <img src={painted.guide.happy} alt="" draggable={false} className={happy ? '' : 'mh-off'} />
+              </div>
+              <div className="mh-board" ref={wrapRef} style={{ left: b.x, top: b.y, width: b.w, height: b.h }}>
+                <img className="mh-paper" src={painted.paper} alt="" draggable={false} />
+                <div className="mh-sheet" style={{ inset: `${painted.margin.y * 100}% ${painted.margin.x * 100}%` }}>
+                  {map}
+                </div>
+              </div>
+            </>
+          )
+        }}
+      </PaintedScene>
+    )
+  }
+
   return (
-    <SceneShell place="coast" say={result ? result.label : t('where', { place: target.name })} stage={stage} bare fill className={className}>
+    <SceneShell place="coast" say={say} stage={stage} bare fill className={className}>
       <MapStage>
-      <div className="mh-wrap map-box" ref={wrapRef} style={{ '--map-ratio': width / height } as CSSProperties}>
-        <svg ref={svgRef} viewBox={`0 0 ${width} ${height}`} className="mh-map" onPointerDown={tapMap}>
-          {scene(dots)}
-          {choices.map((p) => {
-            const [x, y] = toMap(p.at)
-            return (
-              <circle key={`${index}-${p.name}`} cx={x} cy={y} r={DOT_R} className={`mh-dot${result && p === target ? ' mh-dot-right' : ''}`} />
-            )
-          })}
-          {result && (
-            <g className="mh-answer">
-              {result.tap && <line x1={result.tap[0]} y1={result.tap[1]} x2={tx} y2={ty} className="mh-line" />}
-              {result.tap && <circle cx={result.tap[0]} cy={result.tap[1]} r={12} className="mh-tap" />}
-              <circle cx={tx} cy={ty} r={20} className="mh-target" />
-              <text x={Math.min(Math.max(tx, 130), width - 130)} y={ty < 80 ? ty + 58 : ty - 32} className="mh-name">
-                {target.name}
-              </text>
-            </g>
-          )}
-        </svg>
-      </div>
+        <div className="mh-wrap map-box" ref={wrapRef} style={{ '--map-ratio': width / height } as CSSProperties}>
+          {map}
+        </div>
       </MapStage>
     </SceneShell>
   )
