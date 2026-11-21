@@ -965,18 +965,22 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 
 /* Busy Bees */
 .bb-yes { color: var(--good); }
-.bb-meadow { position: relative; width: min(100%, 360px); aspect-ratio: 1; margin: 0 auto; border-radius: 24px; background: radial-gradient(circle at 30% 20%, #c8f7c5, #7bd389 70%, #5cb85c); box-shadow: var(--shadow); overflow: hidden; touch-action: none; }
-.bb-flower { position: absolute; transform: translate(-50%, -50%); font-size: 26px; opacity: 0.85; pointer-events: none; }
-.bb-bee { position: absolute; width: 64px; height: 64px; transform: translate(-50%, -50%); padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.bb-meadow { position: absolute; touch-action: none; }
+.bb-bee { position: absolute; width: var(--bb-bee); height: var(--bb-bee); transform: translate(-50%, -50%); padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .bb-face { display: block; width: 100%; height: 100%; transition: transform 0.15s; }
-.bb-bee-svg { width: 100%; height: 100%; display: block; }
-.bb-flying .bb-bee-svg { animation: bbBuzz 0.18s infinite alternate; }
+.bb-bee-art { width: 100%; height: 100%; display: block; object-fit: contain; user-select: none; filter: drop-shadow(0 6px 4px rgba(60, 50, 10, 0.22)); }
+.bb-flying .bb-bee-art { animation: bbBuzz 0.18s infinite alternate; }
 .bb-picking .bb-bee { animation: bob 1.2s infinite; }
-.bb-target { background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 30%, rgba(254, 202, 87, 0.9) 55%, transparent 72%); animation: pulse 0.35s infinite alternate !important; }
-/* A dark ring with a white edge, so the bee to follow stands out from the yellow flowers and the green meadow. */
-.bb-target { box-shadow: 0 0 0 4px var(--ink-fixed), 0 0 0 8px #fff; z-index: 2; }
-.bb-found { background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 35%, rgba(29, 209, 161, 0.85) 60%, transparent 74%); animation: wobble 0.5s !important; }
-.bb-wrong { opacity: 0.45; filter: grayscale(0.8); }
+.bb-target { background: radial-gradient(circle, rgba(255, 250, 220, 0.95) 30%, rgba(254, 214, 110, 0.85) 55%, transparent 72%); animation: pulse 0.35s infinite alternate !important; z-index: 2; }
+/* A dark ring with a white edge, so the bee to follow stands out from the flowers and the meadow. */
+.bb-target { box-shadow: 0 0 0 4px var(--ink-fixed), 0 0 0 8px #fff; }
+.bb-found { background: radial-gradient(circle, rgba(255, 255, 240, 0.95) 35%, rgba(130, 220, 120, 0.8) 60%, transparent 74%); animation: wobble 0.5s !important; }
+.bb-wrong { opacity: 0.5; filter: grayscale(0.8); }
+.bb-bear { position: absolute; aspect-ratio: 0.8; transform-origin: 50% 100%; pointer-events: none; animation: fmBreathe 3.4s ease-in-out infinite; }
+.bb-bear img { position: absolute; left: 50%; bottom: 0; height: 100%; translate: -50% 0; user-select: none; }
+.bb-bear img.bb-off { visibility: hidden; }
+.bb-bear.bb-yes { animation: fmHop 0.6s; }
+.bb-bear.bb-no { animation: sgNo 0.5s; }
 @keyframes bbBuzz { to { transform: translateY(-2px) rotate(3deg); } }
 
 /* Continent Sort */
@@ -1233,8 +1237,6 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .sg .rc-drum svg { display: block; width: 100%; overflow: visible; }
 .sg .rc-ready { box-shadow: 0 7px 0 rgba(36, 26, 60, 0.25), 0 0 0 7px #ffd24a; }
 .sg .rc-hit .rc-sticks { transform: translateY(8px); }
-.sg .bb-meadow { background: radial-gradient(ellipse at 30% 20%, #d2e27c, #b5d15f 70%); box-shadow: 0 0 0 8px #fff6dc, 0 8px 0 8px rgba(36, 26, 60, 0.22); }
-.sg .bb-flower { width: 34px; opacity: 1; }
 
 /* Letter Sea games: portholes, an open book, shells. */
 .sg .lp-water, .sg .td-sky, .sg .wc-sky, .sg .ts-sky, .sg .lo-area { margin: 0 8px 8px; box-shadow: 0 0 0 8px #fff6dc, 0 8px 0 8px rgba(36, 26, 60, 0.22); }
