@@ -1226,25 +1226,44 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .so-done .so-page { border-left-color: #e2607e; rotate: 0deg; animation: wobble 0.45s backwards; }
 .so-done .so-number { background: #e2607e; }
 
-/* Forest Feast */
-.sg .ff-table { position: relative; align-self: center; width: min(100% - 8px, 760px, (100dvh - 430px) * var(--ff-ratio, 1.2)); min-width: 250px; animation: popIn 0.3s; }
-.ff-art { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.ff-seats { position: absolute; inset: 0 0 18% 0; display: grid; }
-.ff-seat { min-width: 0; padding: 0; background: none; border-radius: 18px; }
-.ff-seat:active { background: rgba(255, 255, 255, 0.18); }
-.ff-seat:focus-visible { outline: 3px solid var(--story-paper); outline-offset: -4px; }
-.ff-guest { transform-box: fill-box; transform-origin: 50% 100%; animation: pkSit 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.3); }
-.ff-picked { animation: ffLift 0.9s ease-in-out infinite alternate; }
-.ff-hop { animation: pkHop 0.55s; }
-.ff-wish { animation: popIn 0.25s; transform-box: fill-box; transform-origin: 50% 100%; }
-.ff-sad { animation: psNo 0.4s 2; }
-.ff-free { animation: psPulse 0.9s infinite alternate ease-in-out; }
-/* Five or six guests wait in two rows on a phone, so each one (and the wish above it) stays big enough to read. */
-.ff-tray { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end; gap: 4px; min-height: 124px; width: 100%; }
-.ff-wait { flex: 0 0 min(92px, calc((100% - 12px) / 4)); min-width: 0; padding: 0; background: none; border-radius: 18px; transition: transform 0.15s; }
-.ff-wait-art { display: block; width: 100%; overflow: visible; }
-.ff-wait-on { transform: translateY(-8px); background: rgba(124, 92, 224, 0.16); }
-.ff-all { font-family: var(--story); font-weight: 800; font-size: 1.3rem; letter-spacing: 2px; text-transform: uppercase; }
+/* Forest Feast: guests behind the painted table (cut off by its top), wishes in cream bubbles sized in em. */
+.fe-room { position: absolute; inset: 0; }
+.fe-prop { position: absolute; display: block; pointer-events: none; user-select: none; }
+.fe-behind { position: absolute; left: 0; top: 0; width: 100%; overflow: hidden; pointer-events: none; }
+.fe-guest { position: absolute; aspect-ratio: 0.8; transform-origin: 50% 100%; animation: pkSit 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.3); }
+.fe-guest img { position: absolute; left: 50%; bottom: 0; height: 100%; translate: -50% 0; user-select: none; }
+.fe-guest img.fe-off, .fe-host img.fe-off { visibility: hidden; }
+.fe-picked { animation: ffLift 0.9s ease-in-out infinite alternate; filter: drop-shadow(0 0 10px #fff6c8) drop-shadow(0 0 4px #fff6c8); }
+.fe-hop { animation: pkHop 0.55s; }
+.fe-free { position: absolute; translate: -50% -50%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 250, 220, 0.85), rgba(255, 250, 220, 0) 70%); animation: psPulse 0.9s infinite alternate ease-in-out; }
+.fe-host { position: absolute; aspect-ratio: 1; transform-origin: 50% 100%; pointer-events: none; animation: fmBreathe 3.4s ease-in-out infinite; }
+.fe-host img { position: absolute; left: 50%; bottom: 0; height: 100%; translate: -50% 0; }
+.fe-host.fe-happy { animation: fmHop 0.6s; }
+.fe-wish-at { position: absolute; translate: -50% -100%; pointer-events: none; }
+.fe-wish { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 0.06em; height: 1em; min-width: 1.1em; padding: 0 0.2em; border-radius: 0.5em; background: #fffaf0; box-shadow: 0 0.05em 0.12em rgba(60, 30, 10, 0.3); animation: popIn 0.25s; transform-origin: 50% 100%; }
+.fe-wish::after { content: ''; position: absolute; left: 50%; bottom: -0.14em; width: 0.22em; height: 0.22em; translate: -50% 0; rotate: 45deg; background: #fffaf0; }
+.fe-wish > img { height: 0.76em; display: block; }
+.fe-head { position: relative; width: 0.74em; height: 0.74em; border-radius: 50%; overflow: hidden; background: #f3e3c4; }
+.fe-head img { position: absolute; left: 50%; top: 0.02em; height: 2.1em; translate: -50% 0; }
+.fe-sign { width: 0.42em; height: 0.42em; }
+.fe-sad { box-shadow: 0 0 0 0.06em #e2607e, 0 0.05em 0.12em rgba(60, 30, 10, 0.3); animation: psNo 0.4s 2; }
+.fe-seat { position: absolute; padding: 0; background: none; border-radius: 24px; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.fe-seat:active { background: rgba(255, 250, 230, 0.14); }
+.fe-seat:focus-visible { outline: 4px solid #fffaf0; outline-offset: -6px; }
+.fe-tray { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end; gap: 6px; width: 100%; }
+.fe-wait { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 0 1 110px; min-width: 0; padding: 4px 0; background: none; border-radius: 20px; font-size: 44px; transition: transform 0.15s; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.fe-wait > img { height: 110px; max-width: 100%; object-fit: contain; filter: drop-shadow(0 4px 3px rgba(60, 30, 10, 0.3)); }
+.fe-wait-on { transform: translateY(-10px); }
+.fe-wait-on > img { filter: drop-shadow(0 0 8px #fff6c8) drop-shadow(0 0 3px #fff6c8); }
+@media (max-aspect-ratio: 3/4) {
+  .fe-wait { flex-basis: 120px; font-size: 48px; }
+  .fe-wait > img { height: 140px; }
+}
+@media (max-height: 499px) {
+  .fe-wait { flex-basis: 80px; gap: 4px; font-size: 30px; }
+  .fe-wait > img { height: 64px; }
+}
+.fe-all { font-family: var(--story); font-weight: 800; font-size: 1.3rem; letter-spacing: 2px; text-transform: uppercase; color: #fffaf0; text-shadow: 0 2px 0 rgba(60, 30, 10, 0.4); }
 @keyframes ffLift { to { transform: translateY(-6%); } }
 
 /* Hedgehog Post */
@@ -1272,8 +1291,6 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .hp-go:disabled { background: #9cc77a; box-shadow: 0 4px 0 #84ad62; cursor: default; }
 .hp-go:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 #4a8a2c; }
 @media (min-aspect-ratio: 11/10) {
-  .sg .ff-table { width: min(100% - 8px, 760px, (100dvh - 360px) * var(--ff-ratio, 1.2)); }
-  .ff-wait { flex-basis: 108px; }
   .sg .hp-board { width: min(100% - 8px, 560px, 100dvh - 360px); }
 }
 

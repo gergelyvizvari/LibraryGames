@@ -109,7 +109,7 @@ export function PaintedScene<Id extends string>({
         {children(id)}
       </div>
       <StagePips done={stage.done} total={stage.total} label={t('scene.progress', { n: stage.done, total: stage.total })} />
-      <SpeechBubble style={{ left: `min(${Math.round(bubbleX)}px, 100% - 12px - var(--ps-bubble-w))`, bottom: bubbleBottom }}>{say}</SpeechBubble>
+      <SpeechBubble style={{ left: `min(${Math.round(bubbleX)}px, 100% - 12px - var(--ps-bubble-w))`, bottom: `min(${Math.round(bubbleBottom)}px, 100% - 104px)` }}>{say}</SpeechBubble>
       {tray && (
         <div className={`ps-tray${stage.over ? ' scene-tray-off' : ''}`} style={{ minHeight: trayHeight }}>
           {tray}
