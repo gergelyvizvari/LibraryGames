@@ -145,7 +145,6 @@ export default function RainbowMix({ level, seed, t, onFinish }: GameProps) {
     >
       {(view) => {
         const at = SPOTS[view]
-        const bowlTop = at.bowl.bottom - at.bowl.h
         return (
           <div className="rm-board" role="img" aria-label={mixed ? `${t('recipe')}: ${mixed.map((p) => t(p)).join(' + ')}` : undefined}>
             <div className="rm-cloud" style={{ left: at.wish.x, top: at.wish.y, width: at.wish.w }}>
@@ -155,8 +154,9 @@ export default function RainbowMix({ level, seed, t, onFinish }: GameProps) {
             <div key={turn} className="rm-arrive">
               <PaintedPony kind={kind} mood={mood} mane={painted ? wishColour : null} stirring={stirring} style={worldStyle(at.pony.x, at.pony.bottom, at.pony.h)} />
             </div>
-            <img className="rm-prop" src={bowl} alt="" draggable={false} style={worldStyle(at.bowl.x, at.bowl.bottom, at.bowl.h)} />
-            <div className="rm-paint-at" style={{ left: at.bowl.x, top: bowlTop + at.bowl.h * 0.25, width: at.bowl.h * 2.1 }}>
+            {/* The bowl and its paint share one box, so the paint lies exactly inside the painted rim. */}
+            <div className="rm-bowl" style={{ ...worldStyle(at.bowl.x, at.bowl.bottom, at.bowl.h), aspectRatio: 350 / 192 }}>
+              <img src={bowl} alt="" draggable={false} />
               <BowlPaint drops={drops} cap={cap} mixed={colour} stirring={stirring} />
             </div>
             {mixed && colour && (

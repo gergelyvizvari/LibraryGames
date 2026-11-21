@@ -135,36 +135,44 @@ export function PaintedPony({ kind, mood, mane, stirring, style }: { kind: PonyK
   )
 }
 
-/** The bowl's paint: the drops (or empty places for them) before mixing, the mixed colour after, and the spoon while stirring. */
+/** The paint surface inside the painted bowl (art/bowl.webp is 350 × 192): its middle and radii, measured from the picture. */
+const SURFACE = { cx: 175, cy: 57, rx: 138, ry: 17 }
+
+/** The bowl's paint, drawn in the bowl picture's own pixels so it lies exactly inside its rim: the drops (or empty places
+ * for them) before mixing, the mixed colour after, and the spoon while stirring. */
 export function BowlPaint({ drops, cap, mixed, stirring }: { drops: readonly Paint[]; cap: number; mixed: string | null; stirring: boolean }) {
+  const { cx, cy, rx, ry } = SURFACE
   return (
-    <svg className="rm-bowl-paint" viewBox="-60 -40 120 60" aria-hidden focusable="false">
-      <ellipse cx="0" cy="0" rx="50" ry="12" fill={mixed ?? 'rgba(216, 203, 176, 0.55)'} className="rm-paint" />
+    <svg className="rm-bowl-paint" viewBox="0 0 350 192" aria-hidden focusable="false">
+      <clipPath id="rm-surface">
+        <ellipse cx={cx} cy={cy} rx={rx} ry={ry} />
+      </clipPath>
+      <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill={mixed ?? 'rgba(216, 203, 176, 0.45)'} className="rm-paint" />
       {mixed ? (
-        <path className="rm-swirl" d="M-20 0 q10 -7 22 -2 q10 4 18 -1" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" opacity="0.5" />
+        <path className="rm-swirl" d={`M${cx - 40} ${cy} q20 -8 40 -2 q20 6 36 -2`} fill="none" stroke="#fff" strokeWidth="4" strokeLinecap="round" opacity="0.5" clipPath="url(#rm-surface)" />
       ) : (
         <g className={stirring ? 'rm-stir' : undefined}>
           {Array.from({ length: cap }, (_, i) => {
-            const x = (i - (cap - 1) / 2) * 25
+            const x = cx + (i - (cap - 1) / 2) * 62
             const p = drops[i]
             return p ? (
-              <g key={`${i}-${p}`} transform={`translate(${x} 0)`}>
+              <g key={`${i}-${p}`} transform={`translate(${x} ${cy})`}>
                 <g className="rm-drop">
-                  <ellipse rx="11" ry="7.5" fill={paintColour(p)} stroke={p === 'white' ? '#d9cdb8' : 'none'} strokeWidth="1.2" />
-                  <ellipse cx="-3" cy="-2.5" rx="3.6" ry="1.8" fill="#fff" opacity="0.55" />
+                  <ellipse rx="26" ry="11" fill={paintColour(p)} stroke={p === 'white' ? '#d9cdb8' : 'none'} strokeWidth="2" />
+                  <ellipse cx="-8" cy="-4" rx="8" ry="2.6" fill="#fff" opacity="0.55" />
                 </g>
               </g>
             ) : (
-              <ellipse key={i} cx={x} cy="0" rx="10" ry="6.5" className="rm-slot" />
+              <ellipse key={i} cx={x} cy={cy} rx="24" ry="10" className="rm-slot" />
             )
           })}
         </g>
       )}
       {stirring && (
-        <g transform="translate(0 -4)">
+        <g transform={`translate(${cx} ${cy - 4})`}>
           <g className="rm-spoon">
-            <rect x="-2.5" y="-34" width="5" height="32" rx="2.5" fill="#b98a5c" />
-            <ellipse cy="2" rx="7" ry="9" fill="#a8774f" />
+            <rect x="-4" y="-70" width="8" height="66" rx="4" fill="#b98a5c" />
+            <ellipse cy="2" rx="12" ry="8" fill="#a8774f" />
           </g>
         </g>
       )}
