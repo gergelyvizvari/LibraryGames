@@ -1,13 +1,54 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTimeouts } from '../../kit/hooks'
-import { PonyGuide, type PonyMood } from '../../kit/ponies'
+import { PaintedScene, type PaintedView } from '../../kit/painted'
 import { makeRng } from '../../kit/random'
 import { SceneTool } from '../../kit/scene'
-import { SceneShell, useStage } from '../../kit/SceneShell'
+import { useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
 import { finish, finished, makeSky, moves, refusal, SKIES, stuck, type Cell, type Sky } from './logic'
-import { PAD, PostBag, SkyMap, TOP, boardH, boardW } from './Sky'
+import skyTall from './art/sky-tall.webp'
+import skyWide from './art/sky.webp'
+import { PAD, SkyMap, TOP, boardH, boardW, type Face } from './Sky'
+
+type Mood = 'idle' | 'happy' | 'sad'
+type ViewId = 'wide' | 'tall'
+
+/** The cloud-top post office in the sky; the open sky in the middle holds the grid of clouds. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: skyWide, world: { w: 1280, h: 800 }, focus: { x: 250, y: 40, w: 780, h: 640 }, ground: '#e6ced6', sayAt: { x: 960, y: 140 } },
+  { id: 'tall', painting: skyTall, world: { w: 720, h: 1152 }, focus: { x: 10, y: 250, w: 700, h: 760 }, ground: '#e5cccf', sayAt: { x: 300, y: 300 } },
+]
+
+/** The box in each painting the cloud grid is fitted into. */
+const BOX: Record<ViewId, { x: number; y: number; w: number; h: number }> = {
+  wide: { x: 300, y: 70, w: 680, h: 600 },
+  tall: { x: 30, y: 320, w: 660, h: 680 },
+}
+
+/** The pegasus blinks now and then while it waits. */
+function useBlink(on: boolean) {
+  const [shut, setShut] = useState(false)
+  useEffect(() => {
+    if (!on) return
+    let timer = 0
+    const next = (open: boolean) => {
+      timer = window.setTimeout(
+        () => {
+          setShut(open)
+          next(!open)
+        },
+        open ? 2600 + Math.random() * 2600 : 150,
+      )
+    }
+    next(true)
+    return () => {
+      clearTimeout(timer)
+      setShut(false)
+    }
+  }, [on])
+  return shut
+}
 
 // A rising scale: every delivered letter sings one note higher.
 const notes = [262, 294, 330, 349, 392, 440, 494, 523]
@@ -16,7 +57,7 @@ export default function PegasusPost({ level, seed, t, onFinish }: GameProps) {
   const rng = useRef(makeRng(seed)).current
   const [sky, setSky] = useState<Sky>(() => makeSky(rng, level))
   const [route, setRoute] = useState<Cell[]>([sky.start])
-  const [mood, setMood] = useState<PonyMood>('idle')
+  const [mood, setMood] = useState<Mood>('idle')
   const [hint, setHint] = useState<Cell | null>(null)
   const [flying, setFlying] = useState(false)
   /** Dead ends in this sky: after the second one the help button appears. */
@@ -116,18 +157,15 @@ export default function PegasusPost({ level, seed, t, onFinish }: GameProps) {
     return c === here ? `${what}, ${t('here')}` : what
   }
 
+  const blink = useBlink(mood === 'idle' && !flying)
+  const face: Face = mood !== 'idle' ? mood : blink ? 'blink' : 'idle'
   return (
-    <SceneShell
-      place="woods"
+    <PaintedScene
+      views={VIEWS}
       say={say}
       stage={stage}
-      bare
       className="pegasus-post"
-      guide={
-        <PonyGuide kind="pegasus" mood={stage.mood === 'happy' ? 'happy' : stage.mood === 'oops' ? 'sad' : 'idle'}>
-          <PostBag />
-        </PonyGuide>
-      }
+      trayHeight={110}
       tray={
         <div className="pp-tray">
           <SceneTool kind="undo" label={t('undo')} onPress={back} disabled={locked || route.length < 2} />
@@ -136,12 +174,27 @@ export default function PegasusPost({ level, seed, t, onFinish }: GameProps) {
         </div>
       }
     >
-      <div key={stage.done} className="pp-board" role="group" aria-label={t('sky')} style={{ ['--pp-cols' as string]: sky.cols, ['--pp-rows' as string]: sky.rows }}>
-        <SkyMap sky={sky} route={route} open={level <= 2 && !locked ? moves(sky, route) : []} hint={hint} mood={mood} flying={flying} />
-        <div className="pp-cells" style={{ inset: `${((PAD + TOP) / boardH(sky)) * 100}% ${(PAD / boardW(sky)) * 100}% ${(PAD / boardH(sky)) * 100}%` }}>
-          {sky.clouds.map((on, c) => (on ? <button key={c} className="pp-cell" onPointerDown={() => fly(c)} disabled={locked} aria-label={label(c)} /> : <span key={c} />))}
-        </div>
-      </div>
-    </SceneShell>
+      {(view) => {
+        // The grid as big as its box allows, centred in it.
+        const box = BOX[view]
+        const W = boardW(sky)
+        const H = boardH(sky)
+        const k = Math.min(box.w / W, box.h / H)
+        return (
+          <div
+            key={stage.done}
+            className="pp-board"
+            role="group"
+            aria-label={t('sky')}
+            style={{ left: box.x + (box.w - W * k) / 2, top: box.y + (box.h - H * k) / 2, width: W * k, height: H * k, ['--pp-cols' as string]: sky.cols, ['--pp-rows' as string]: sky.rows }}
+          >
+            <SkyMap sky={sky} route={route} open={level <= 2 && !locked ? moves(sky, route) : []} hint={hint} face={face} flying={flying} />
+            <div className="pp-cells" style={{ inset: `${((PAD + TOP) / H) * 100}% ${(PAD / W) * 100}% ${(PAD / H) * 100}%` }}>
+              {sky.clouds.map((on, c) => (on ? <button key={c} className="pp-cell" onPointerDown={() => fly(c)} disabled={locked} aria-label={label(c)} /> : <span key={c} />))}
+            </div>
+          </div>
+        )
+      }}
+    </PaintedScene>
   )
 }
