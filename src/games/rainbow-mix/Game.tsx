@@ -1,13 +1,31 @@
 import { useRef, useState } from 'react'
 import { useTimeouts } from '../../kit/hooks'
-import { PonyGuide, type PonyKind, type PonyMood } from '../../kit/ponies'
+import { PaintedScene, worldStyle, type PaintedView } from '../../kit/painted'
 import { makeRng } from '../../kit/random'
 import { SceneTool } from '../../kit/scene'
-import { SceneShell, useStage } from '../../kit/SceneShell'
+import { useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
-import { capFor, makeWishes, mixColour, namedAt, nameOf, PAINTS, sameColour, tint, tip, type Paint } from './logic'
-import { BARE, Pot, StudioArt } from './Studio'
+import bowl from './art/bowl.webp'
+import meadowTall from './art/meadow-tall.webp'
+import meadow from './art/meadow.webp'
+import stump from './art/stump.webp'
+import { capFor, makeWishes, mixColour, namedAt, nameOf, PAINTS, sameColour, tip, type Paint } from './logic'
+import { BowlPaint, PaintedPony, Pot, Sum, Wish, type Mood, type PonyKind } from './Studio'
+
+type ViewId = 'wide' | 'tall'
+
+/** The painting corner on the meadow; the focus holds the pony, the stump with the bowl and the wish above them. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: meadow, world: { w: 1280, h: 800 }, focus: { x: 150, y: 90, w: 900, h: 690 }, ground: '#9fa331', sayAt: { x: 200, y: 260 } },
+  { id: 'tall', painting: meadowTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 300, w: 720, h: 760 }, ground: '#9cb035', sayAt: { x: 40, y: 250 } },
+]
+
+/** Where everything stands in each painting: the pony and the stump by their feet, the wish cloud and the sum by their top left / centre. */
+const SPOTS: Record<ViewId, { pony: { x: number; bottom: number; h: number }; stump: { x: number; bottom: number; h: number }; wish: { x: number; y: number; w: number }; sum: { x: number; y: number } }> = {
+  wide: { pony: { x: 380, bottom: 700, h: 380 }, stump: { x: 720, bottom: 712, h: 160 }, wish: { x: 520, y: 120, w: 320 }, sum: { x: 600, y: 752 } },
+  tall: { pony: { x: 230, bottom: 930, h: 340 }, stump: { x: 545, bottom: 950, h: 140 }, wish: { x: 330, y: 290, w: 300 }, sum: { x: 360, y: 1010 } },
+}
 
 // One pony after the other comes for a new mane.
 const guests: PonyKind[] = ['alicorn', 'unicorn', 'pegasus']
@@ -24,7 +42,7 @@ export default function RainbowMix({ level, seed, t, onFinish }: GameProps) {
   /** The mix that has been stirred and still lies in the bowl. */
   const [mixed, setMixed] = useState<Paint[] | null>(null)
   const [painted, setPainted] = useState(false)
-  const [mood, setMood] = useState<PonyMood>('idle')
+  const [mood, setMood] = useState<Mood>('idle')
   const [tries, setTries] = useState(0)
   const [say, setSay] = useState(() => ask())
   const later = useTimeouts()
@@ -101,15 +119,13 @@ export default function RainbowMix({ level, seed, t, onFinish }: GameProps) {
 
   const colour = mixed ? mixColour(mixed) : null
   const wishColour = mixColour(shown.recipe)
-  const mane = painted ? [wishColour, tint(wishColour, 0.28), tint(wishColour, -0.14)] : BARE
   return (
-    <SceneShell
-      place="woods"
+    <PaintedScene
+      views={VIEWS}
       say={say}
       stage={stage}
-      bare
       className="rainbow-mix"
-      guide={<PonyGuide kind={kind} mood={stage.mood === 'happy' ? 'happy' : stage.mood === 'oops' ? 'sad' : 'idle'} mane={mane} />}
+      trayHeight={130}
       tray={
         <div className="rm-tray">
           <div className="rm-pots" role="group" aria-label={t('paints')}>
@@ -128,9 +144,32 @@ export default function RainbowMix({ level, seed, t, onFinish }: GameProps) {
         </div>
       }
     >
-      <div className="rm-board" role="img" aria-label={mixed ? `${t('recipe')}: ${mixed.map((p) => t(p)).join(' + ')}` : undefined}>
-        <StudioArt guest={turn} kind={kind} mood={mood} mane={painted ? wishColour : null} wish={wishColour} drops={drops} cap={cap} mixed={colour} stirring={stirring} recipe={mixed} right={painted} />
-      </div>
-    </SceneShell>
+      {(view) => {
+        const at = SPOTS[view]
+        const bowlH = at.stump.h * 0.62
+        const top = at.stump.bottom - at.stump.h * 0.82
+        return (
+          <div className="rm-board" role="img" aria-label={mixed ? `${t('recipe')}: ${mixed.map((p) => t(p)).join(' + ')}` : undefined}>
+            <div className="rm-cloud" style={{ left: at.wish.x, top: at.wish.y, width: at.wish.w }}>
+              <Wish colour={wishColour} />
+            </div>
+            {/* Every guest trots in from the edge of the meadow. */}
+            <div key={turn} className="rm-arrive">
+              <PaintedPony kind={kind} mood={mood} mane={painted ? wishColour : null} stirring={stirring} style={worldStyle(at.pony.x, at.pony.bottom, at.pony.h)} />
+            </div>
+            <img className="rm-prop" src={stump} alt="" draggable={false} style={worldStyle(at.stump.x, at.stump.bottom, at.stump.h)} />
+            <img className="rm-prop" src={bowl} alt="" draggable={false} style={worldStyle(at.stump.x, top + bowlH * 0.95, bowlH)} />
+            <div className="rm-paint-at" style={{ left: at.stump.x, top: top + bowlH * 0.2, width: bowlH * 2.1 }}>
+              <BowlPaint drops={drops} cap={cap} mixed={colour} stirring={stirring} />
+            </div>
+            {mixed && colour && (
+              <div key={mixed.join('-')} className="rm-sum-at" style={{ left: at.sum.x, top: at.sum.y }}>
+                <Sum recipe={mixed} made={colour} wish={wishColour} right={painted} />
+              </div>
+            )}
+          </div>
+        )
+      }}
+    </PaintedScene>
   )
 }
