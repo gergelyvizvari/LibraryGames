@@ -658,6 +658,12 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .sg-meadow { --wall: #6fb5d8; --wall-top: #4690bc; --ground: repeating-linear-gradient(90deg, #a5cf5c 0 60px, #98c44f 60px 120px); }
 .sg-coast { --wall: #e3a352; --wall-top: #c27a34; --ground: repeating-linear-gradient(0deg, #d9b488 0 40px, #c79d6c 40px 44px); }
 .sg { background: var(--ground); }
+/* Painted scenes (kit/painted.tsx): one painting as the whole room, things placed on it in its own units. */
+.ps { flex: 1; min-height: 0; position: relative; overflow: hidden; color: var(--story-ink); --ink: var(--story-ink); --ps-bubble-w: min(330px, 100% - 24px); }
+.ps-world { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.ps-painting { position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; -webkit-user-drag: none; mask-image: linear-gradient(to bottom, #000 90%, transparent); }
+.ps .scene-bubble { width: max-content; max-width: var(--ps-bubble-w); margin-bottom: 14px; }
+.ps-tray { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; display: flex; align-items: flex-end; justify-content: center; padding: 0 12px calc(16px + env(safe-area-inset-bottom)); }
 .sg::after { content: ''; position: absolute; inset: 0; z-index: 1; background: var(--grain); opacity: 0.3; pointer-events: none; }
 .sg-room { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .sg-prop { position: absolute; bottom: 4%; display: none; }
@@ -1431,30 +1437,43 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 @keyframes rmSpoon { 0% { transform: translateX(-16px) rotate(-14deg); } 50% { transform: translateX(16px) rotate(14deg); } 100% { transform: translateX(-16px) rotate(-14deg); } }
 @keyframes rmStir { 25% { transform: translateX(-7px); } 75% { transform: translateX(7px); } }
 /* Acorn Shop */
-.as-shop { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; margin-bottom: 10px; }
-.as-awning { display: block; width: 100%; height: clamp(34px, 7dvh, 54px); position: relative; z-index: 1; filter: drop-shadow(0 4px 0 rgba(36, 26, 60, 0.12)); }
-.as-counter { flex: 1; min-height: 0; margin: -18px 4% 0; padding: 28px 12px 12px; display: flex; flex-direction: column; gap: 10px; border-radius: 0 0 26px 26px; background: #c98d5a; box-shadow: inset 0 -14px 0 #b07444, 0 8px 0 rgba(36, 26, 60, 0.14); }
-.as-goods { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; gap: 6%; animation: popIn 0.35s backwards; }
-.as-snack { width: min(30%, 150px, 20dvh); aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; background: #fffaf0; box-shadow: 0 6px 0 #e0cfa4; }
-.as-snack svg { width: 72%; height: 72%; }
+.as-prop { position: absolute; display: block; pointer-events: none; user-select: none; }
+.as-snack { animation: popIn 0.35s backwards; transform-origin: 50% 100%; }
 .as-bought { animation: pkHop 0.5s ease-out; }
-.as-tag { width: min(24%, 120px, 16dvh); }
-.as-tag svg { display: block; width: 100%; }
-.as-paid { min-height: 92px; display: flex; flex-wrap: wrap; align-items: center; align-content: center; justify-content: center; gap: 4px; padding: 8px; border-radius: 20px; background: #b07444; }
-.as-no { animation: shake 0.35s; }
-.as-num { font-family: var(--story); font-weight: 800; fill: var(--story-ink); }
-.as-coin { padding: 0; background: none; border-radius: 50%; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-.as-coin svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.as-guest { transform-origin: 50% 100%; animation: asBob 4.4s ease-in-out infinite; }
+/* The squirrel is cut off by the counter's edge, so it stands behind it; three faces, one shown at a time. */
+.as-behind { position: absolute; left: 0; width: 1280px; overflow: hidden; pointer-events: none; }
+.as-keeper { position: absolute; width: 270px; transform-origin: 50% 100%; animation: fmBreathe 3.4s ease-in-out infinite; }
+.as-keeper img { position: absolute; left: 50%; bottom: 0; height: 100%; translate: -50% 0; }
+.as-keeper img.as-off { visibility: hidden; }
+.as-keeper.as-happy { animation: fmHop 0.6s; }
+.as-keeper.as-oops { animation: sgNo 0.5s; }
+.as-string { position: absolute; width: 3px; height: 58px; background: #6d4a3a; border-radius: 2px; }
+.as-tag { position: absolute; width: 112px; height: 74px; display: flex; align-items: center; justify-content: center; gap: 4px; padding-right: 10px; border-radius: 12px 26px 26px 12px; background: #fbf1dc; box-shadow: 0 3px 8px rgba(60, 35, 10, 0.3); rotate: 4deg; animation: popIn 0.35s backwards; }
+.as-tag b { font-family: var(--story); font-weight: 800; font-size: 44px; color: var(--story-ink); line-height: 1; }
+.as-tag img { height: 42px; }
+/* Coins: a painted acorn with its value on a cream badge; the bigger the acorn, the more it is worth. */
+.as-coin { position: relative; padding: 0; background: none; border-radius: 40%; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 .as-coin:active:not(:disabled) { scale: 0.92; }
 .as-coin:disabled { opacity: 1; }
-.as-c1 { width: 48px; height: 58px; }
-.as-c2 { width: 56px; height: 67px; }
-.as-c5 { width: 66px; height: 79px; }
-/* On the counter the coins keep a size a finger can take back; many small coins wrap into more rows. */
-.as-on { flex: none; animation: popIn 0.2s; }
-.as-paid:has(.as-on:nth-child(7)) .as-on { width: 42px; height: 50px; }
-.as-purse { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end; gap: 8px 12px; }
+.as-coin-art { position: relative; display: block; width: 100%; height: 100%; }
+.as-coin-art img { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 5px 3px rgba(40, 50, 10, 0.35)); }
+.as-coin-art b { position: absolute; left: 50%; top: 64%; translate: -50% -50%; min-width: 1.45em; padding: 0.05em 0.25em; border-radius: 1em; background: #fff8e6; color: var(--story-ink); font-family: var(--story); font-weight: 800; font-size: 0.42em; line-height: 1.25; text-align: center; box-shadow: 0 1px 2px rgba(60, 35, 10, 0.3); }
+.as-c1 { width: 52px; height: 66px; font-size: 52px; }
+.as-c2 { width: 60px; height: 76px; font-size: 56px; }
+.as-c5 { width: 72px; height: 91px; font-size: 62px; }
+.as-c5 .as-coin-art b { background: #ffd866; }
+.as-purse { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end; gap: 8px 14px; }
 .as-gone { visibility: hidden; }
+/* On the counter (in painting units) the coins stand in a row; many coins overlap a little. */
+.as-paid { position: absolute; height: 78px; display: flex; align-items: flex-end; justify-content: center; }
+.as-paid .as-on { flex: none; margin: 0 -3px; animation: popIn 0.2s; }
+.as-paid .as-c1 { width: 40px; height: 50px; font-size: 40px; }
+.as-paid .as-c2 { width: 46px; height: 58px; font-size: 44px; }
+.as-paid .as-c5 { width: 54px; height: 68px; font-size: 48px; }
+.as-paid:has(.as-on:nth-child(8)) .as-on { margin: 0 -9px; }
+.as-no { animation: shake 0.35s; }
+@keyframes asBob { 50% { transform: translateY(-3px) rotate(-1deg); } }
 
 /* Bridge Builder */
 .bb-field { position: relative; flex: 1; min-height: 0; margin-bottom: 10px; display: grid; place-items: center; }
