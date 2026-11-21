@@ -1,70 +1,31 @@
+import basketArt from './art/basket.webp'
 import type { Cell, Regions } from './logic'
 
-// The drawn pieces of the puppies' den: the pups, the patchwork rug they sit on, their basket and the tools.
+// The pieces of the puppies' den: the painted pups, the patchwork rug they sit on (kept crisp, it is the puzzle)
+// and their basket.
 
-const INK = '#33284a'
 const CREAM = '#fff6dc'
 
-/** A pup's coat: body, ears, muzzle. */
-const coats = [
-  ['#e6a862', '#a8683c', '#fff3dc'],
-  ['#fff6e6', '#b5825a', '#ffffff'],
-  ['#bcb7d6', '#7d76a4', '#eeeaf8'],
-  ['#a8683c', '#6d4130', '#f1d9b4'],
-  ['#f2c14e', '#c98f2a', '#fff3c8'],
-] as const
-export const COATS = coats.length
+/** The painted pups, one coat each, with a calm and a happy face: art/pup-<coat>[-happy].webp. */
+const ART = import.meta.glob<string>('./art/pup-*.webp', { eager: true, import: 'default' })
+const COAT_NAMES = ['tan', 'white', 'grey', 'choc', 'cream'] as const
+export const COATS = COAT_NAMES.length
+const pupArt = (coat: number, happy: boolean) => ART[`./art/pup-${COAT_NAMES[coat % COATS]}${happy ? '-happy' : ''}.webp`]
 
-function Eye({ x, y, r }: { x: number; y: number; r: number }) {
-  return (
-    <>
-      <circle cx={x} cy={y} r={r} fill="#fff" />
-      <circle cx={x + r * 0.1} cy={y + r * 0.08} r={r * 0.78} fill={INK} />
-      <circle cx={x - r * 0.2} cy={y - r * 0.28} r={r * 0.3} fill="#fff" />
-      <circle cx={x + r * 0.36} cy={y + r * 0.36} r={r * 0.14} fill="#fff" />
-    </>
-  )
-}
-
-/** A sitting pup, drawn around (0, 0): about 50 wide and 60 tall. Happy pups smile with closed eyes. */
+/** A sitting pup, drawn around (0, 0): about 50 wide and 60 tall, its paws at y 28. Happy pups smile with closed eyes. */
 export function Pup({ coat, happy = false, bow = false }: { coat: number; happy?: boolean; bow?: boolean }) {
-  const [body, ear, muzzle] = coats[coat % COATS]
   return (
     <>
-      <ellipse cx="1" cy="25" rx="20" ry="5.5" fill="#241a3c" opacity="0.28" />
-      <path d="M14 16 q12 -2 10 -13" fill="none" stroke={ear} strokeWidth="6" strokeLinecap="round" />
-      <ellipse cx="0" cy="12" rx="15.5" ry="13" fill={body} />
-      <ellipse cx="0" cy="15" rx="8" ry="9" fill={muzzle} opacity="0.8" />
-      <ellipse cx="-8" cy="23" rx="6" ry="4.2" fill={muzzle} />
-      <ellipse cx="8" cy="23" rx="6" ry="4.2" fill={muzzle} />
-      {bow && (
-        <>
-          <path d="M0 8 l-10 -6 v12Z M0 8 l10 -6 v12Z" fill="#d9506a" />
-          <circle cx="0" cy="8" r="3.2" fill="#b63c5c" />
-        </>
-      )}
+      <ellipse cx="0" cy="27" rx="19" ry="5" fill="#241a3c" opacity="0.25" />
       <g className="pk-head">
-        <ellipse cx="-17" cy="-8" rx="7.5" ry="13" fill={ear} transform="rotate(18 -17 -8)" />
-        <ellipse cx="17" cy="-8" rx="7.5" ry="13" fill={ear} transform="rotate(-18 17 -8)" />
-        <circle cx="0" cy="-9" r="18.5" fill={body} />
-        {coat % COATS === 1 && <path d="M2 -27 Q18 -26 18 -10 Q10 -4 3 -12Z" fill={ear} opacity="0.9" />}
-        <ellipse cx="0" cy="-1" rx="9.5" ry="7.5" fill={muzzle} />
-        <path d="M-3.4 -5.5 h6.8 q0 4.6 -3.4 4.6 q-3.4 0 -3.4 -4.6Z" fill={INK} />
-        {happy ? (
-          <>
-            <path d="M-11.5 -12 q3.8 -4.5 7.6 0 M3.9 -12 q3.8 -4.5 7.6 0" fill="none" stroke={INK} strokeWidth="2.4" strokeLinecap="round" />
-            <path d="M-4 1 q4 4 8 0 q-1 7 -4 7 q-3 0 -4 -7Z" fill="#f08aa6" />
-          </>
-        ) : (
-          <>
-            <Eye x={-7.5} y={-12} r={4.9} />
-            <Eye x={7.5} y={-12} r={4.9} />
-            <path d="M-3.5 1.5 q3.5 3 7 0" fill="none" stroke={INK} strokeWidth="1.5" strokeLinecap="round" />
-          </>
-        )}
-        <circle cx="-13" cy="-3" r="3" fill="#f08aa6" opacity="0.6" />
-        <circle cx="13" cy="-3" r="3" fill="#f08aa6" opacity="0.6" />
+        <image href={pupArt(coat, happy)} x="-27" y="-33" width="54" height="62" preserveAspectRatio="xMidYMax meet" />
       </g>
+      {bow && (
+        <g transform="translate(0 6)">
+          <path d="M0 0 l-9 -5 v10Z M0 0 l9 -5 v10Z" fill="#d9506a" />
+          <circle r="2.8" fill="#b63c5c" />
+        </g>
+      )}
     </>
   )
 }
@@ -166,54 +127,18 @@ export function Rug({ regions, pups, gifts, marks, blocked, why, bad, stuck, tip
 /** The basket where the pups wait for their spot: one head peeks out for each (three at most fit). */
 export function Basket({ waiting, coats: list }: { waiting: number; coats: number[] }) {
   const seats = [
-    [-30, -12],
-    [30, -10],
-    [0, -22],
+    [-34, -14],
+    [34, -12],
+    [0, -24],
   ]
   return (
     <svg className="pk-basket-art" viewBox="-96 -62 192 114" aria-hidden focusable="false">
-      <ellipse cx="0" cy="38" rx="84" ry="12" fill="#241a3c" opacity="0.25" />
       {seats.slice(0, Math.min(waiting, seats.length)).map(([x, y], i) => (
         <g key={`${i}-${list[i]}`} className="pk-wait" transform={`translate(${x} ${y}) scale(1.25)`}>
           <Pup coat={list[i] ?? i} />
         </g>
       ))}
-      <path d="M-72 0 Q-70 40 -50 40 H50 Q70 40 72 0Z" fill="#b5825a" />
-      <path d="M20 0 H72 Q70 40 50 40 H30 Q40 20 20 0Z" fill="#94694a" opacity="0.6" />
-      <path d="M-60 4 q4 16 0 32 M-40 4 q4 16 0 32 M-20 4 q4 16 0 32 M0 4 q4 16 0 32 M20 4 q4 16 0 32 M40 4 q4 16 0 32 M60 4 q4 16 0 32" fill="none" stroke="#8a5a3c" strokeWidth="2.5" strokeLinecap="round" opacity="0.6" />
-      <rect x="-78" y="-8" width="156" height="16" rx="8" fill="#c99a6a" />
-      <rect x="-78" y="2" width="156" height="6" rx="3" fill="#94694a" opacity="0.6" />
-    </svg>
-  )
-}
-
-/** The den's round window onto the pines of the Maze Woods. */
-export function DenWindow() {
-  const pine = (x: number, y: number, q: number) => (
-    <>
-      <rect x={x - 2} y={y} width="4" height={q} fill="#5d4038" />
-      <path
-        d={`M${x - q} ${y} L${x} ${y - q * 1.6} L${x + q} ${y}Z M${x - q * 0.8} ${y - q * 0.9} L${x} ${y - q * 2.4} L${x + q * 0.8} ${y - q * 0.9}Z M${x - q * 0.6} ${y - q * 1.8} L${x} ${y - q * 3.1} L${x + q * 0.6} ${y - q * 1.8}Z`}
-        fill="#1f6a5c"
-      />
-    </>
-  )
-  return (
-    <svg className="pk-window" viewBox="0 0 100 100" aria-hidden focusable="false">
-      <circle cx="50" cy="50" r="50" fill={CREAM} />
-      <clipPath id="pk-pane">
-        <circle cx="50" cy="50" r="42" />
-      </clipPath>
-      <g clipPath="url(#pk-pane)">
-        <rect width="100" height="100" fill="#9fdcee" />
-        <circle cx="33" cy="31" r="8.5" fill="#fff" />
-        <circle cx="44" cy="33" r="6.5" fill="#fff" />
-        <path d="M8 92 Q50 54 92 71 V92Z" fill="#c5d86b" />
-        {pine(29, 81, 8.4)}
-        {pine(52, 75, 10.5)}
-        {pine(71, 84, 8.8)}
-      </g>
-      <path d="M50 8 V92 M8 50 H92" stroke={CREAM} strokeWidth="5" />
+      <image href={basketArt} x="-90" y="-8" width="180" height="58" preserveAspectRatio="xMidYMax meet" />
     </svg>
   )
 }
