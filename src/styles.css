@@ -510,7 +510,9 @@ html:has(.app-full) { scrollbar-gutter: auto; overflow: hidden; }
 .book-none { margin: 0; padding: 26px 16px 30px; font-size: 1.1rem; font-weight: 600; text-align: center; }
 .book-region:first-of-type { margin-top: 26px; }
 /* A strip of the painted map behind the region's name, fading into the band colour under the text. */
-.book-band-painted { background: linear-gradient(90deg, var(--band) 0 32%, color-mix(in srgb, var(--band) 60%, transparent) 50%, transparent 72%), var(--band-art) 70% 50% / cover, var(--band); }
+/* The painting is a wide strip whose left side fades out; it fills the band's height generously and sits on the
+   right, where its scene is. */
+.book-band-painted { background: linear-gradient(90deg, var(--band) 0 30%, color-mix(in srgb, var(--band) 55%, transparent) 45%, transparent 62%), var(--band-art) right 55% / auto 185% no-repeat, var(--band); }
 .book-band-painted h2, .book-band-painted small { text-shadow: 0 1px 3px color-mix(in srgb, var(--band) 80%, #000); }
 /* The card's picture: the game's painted scene, or its icon on a soft wash until the scene is painted. */
 .book-card-pic { position: relative; display: grid; place-items: center; width: 100%; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 16px; background: color-mix(in srgb, var(--game-surface) 30%, #f6ecd2); }
@@ -530,7 +532,7 @@ html:has(.app-full) { scrollbar-gutter: auto; overflow: hidden; }
   .book-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 10px 8px 12px; }
   .book-guide { width: 72px; }
   .book-band { padding-left: 12px; }
-  .book-band-painted { background: linear-gradient(90deg, var(--band) 0 50%, color-mix(in srgb, var(--band) 60%, transparent) 70%, transparent 92%), var(--band-art) 80% 50% / cover, var(--band); }
+  .book-band-painted { background: linear-gradient(90deg, var(--band) 0 38%, color-mix(in srgb, var(--band) 55%, transparent) 58%, transparent 80%), var(--band-art) right 55% / auto 185% no-repeat, var(--band); }
   .book-card { border-radius: 18px; }
   .book-card-play { gap: 4px; padding: 5px 5px 8px; }
   .book-card-pic { border-radius: 14px; }
