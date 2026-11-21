@@ -16,11 +16,11 @@ const [ix, iy, iw, ih] = INSET
 const PAINTED: PaintedMap<'wide' | 'tall'> = {
   views: [
     { id: 'wide', painting: cottage, world: { w: 1280, h: 800 }, focus: { x: 0, y: 30, w: 1280, h: 680 }, ground: '#ad6422', sayAt: { x: 150, y: 385 } },
-    { id: 'tall', painting: cottageTall, world: { w: 720, h: 1280 }, focus: { x: 0, y: 40, w: 720, h: 1240 }, ground: '#c8803b', sayAt: { x: 430, y: 285 } },
+    { id: 'tall', painting: cottageTall, world: { w: 720, h: 1280 }, focus: { x: 15, y: 40, w: 690, h: 1240 }, ground: '#c8803b', sayAt: { x: 430, y: 175 } },
   ],
   paper,
-  margin: { x: 0.08, y: 0.06 },
-  board: { wide: { x: 500, y: 40, w: 369, h: 580 }, tall: { x: 80, y: 290, w: 560, h: 880 } },
+  margin: { x: 0.035, y: 0.025 },
+  board: { wide: { x: 500, y: 40, w: 369, h: 580 }, tall: { x: 15, y: 175, w: 690, h: 1085 } },
   guide: { idle: hedgehog, happy: hedgehogHappy, at: { wide: { x: 320, bottom: 700, h: 300 }, tall: { x: 95, bottom: 1272, h: 230 } } },
 }
 

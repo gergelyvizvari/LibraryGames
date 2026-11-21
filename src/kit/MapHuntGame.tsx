@@ -142,15 +142,16 @@ export function MapHunt({ level, seed, t, onFinish, places, width, height, toMap
           const g = painted.guide.at[view]
           return (
             <>
-              <div className={`mh-guide${happy ? ' mh-happy' : ''}`} style={worldStyle(g.x, g.bottom, g.h)}>
-                <img src={painted.guide.idle} alt="" draggable={false} className={happy ? 'mh-off' : ''} />
-                <img src={painted.guide.happy} alt="" draggable={false} className={happy ? '' : 'mh-off'} />
-              </div>
               <div className="mh-board" ref={wrapRef} style={{ left: b.x, top: b.y, width: b.w, height: b.h }}>
                 <img className="mh-paper" src={painted.paper} alt="" draggable={false} />
                 <div className="mh-sheet" style={{ inset: `${painted.margin.y * 100}% ${painted.margin.x * 100}%` }}>
                   {map}
                 </div>
+              </div>
+              {/* The guide stands in front of the map's edge. */}
+              <div className={`mh-guide${happy ? ' mh-happy' : ''}`} style={worldStyle(g.x, g.bottom, g.h)}>
+                <img src={painted.guide.idle} alt="" draggable={false} className={happy ? 'mh-off' : ''} />
+                <img src={painted.guide.happy} alt="" draggable={false} className={happy ? '' : 'mh-off'} />
               </div>
             </>
           )

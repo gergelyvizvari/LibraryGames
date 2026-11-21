@@ -18,11 +18,11 @@ const lake = line(balaton)
 const PAINTED: PaintedMap<'wide' | 'tall'> = {
   views: [
     { id: 'wide', painting: study, world: { w: 1280, h: 800 }, focus: { x: 0, y: 70, w: 1280, h: 640 }, ground: '#984825', sayAt: { x: 150, y: 300 } },
-    { id: 'tall', painting: studyTall, world: { w: 720, h: 1280 }, focus: { x: 0, y: 380, w: 720, h: 870 }, ground: '#db833b', sayAt: { x: 360, y: 968 } },
+    { id: 'tall', painting: studyTall, world: { w: 720, h: 1280 }, focus: { x: 12, y: 380, w: 696, h: 870 }, ground: '#db833b', sayAt: { x: 360, y: 968 } },
   ],
   paper,
-  margin: { x: 0.06, y: 0.08 },
-  board: { wide: { x: 290, y: 85, w: 800, h: 508 }, tall: { x: 30, y: 400, w: 660, h: 420 } },
+  margin: { x: 0.035, y: 0.045 },
+  board: { wide: { x: 290, y: 85, w: 800, h: 508 }, tall: { x: 12, y: 410, w: 696, h: 442 } },
   guide: { idle: stork, happy: storkHappy, at: { wide: { x: 150, bottom: 690, h: 380 }, tall: { x: 360, bottom: 1272, h: 300 } } },
 }
 
