@@ -1,17 +1,33 @@
-import { useRef, useState } from 'react'
-import { CritterGuide } from '../../kit/critters'
+import { useEffect, useRef, useState } from 'react'
 import { useTimeouts } from '../../kit/hooks'
+import { PaintedScene, type PaintedView } from '../../kit/painted'
 import { makeRng } from '../../kit/random'
 import { SceneTool } from '../../kit/scene'
-import { SceneShell, useStage } from '../../kit/SceneShell'
+import { useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
+import officeTall from './art/office-tall.webp'
+import office from './art/office.webp'
 import { DELIVERIES, makeVillage, run, slotsFor, type Cell, type Dir, type Village } from './logic'
-import { PostCap, VillageMap } from './Village'
+import { VillageMap, type Face } from './Village'
 
 /** Time for one step of the hedgehog, in ms. */
 const STEP = 430
 const turn = { up: 0, right: 90, down: 180, left: 270 } as const
+
+type ViewId = 'wide' | 'tall'
+
+/** The post office; the village map hangs on its back wall and is the focus. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: office, world: { w: 1280, h: 800 }, focus: { x: 290, y: 60, w: 600, h: 640 }, ground: '#c67231', sayAt: { x: 880, y: 250 } },
+  { id: 'tall', painting: officeTall, world: { w: 720, h: 1152 }, focus: { x: 20, y: 200, w: 680, h: 700 }, ground: '#b76b2d', sayAt: { x: 330, y: 250 } },
+]
+
+/** Where the map hangs in each painting (a square). */
+const MAP: Record<ViewId, { x: number; y: number; size: number }> = {
+  wide: { x: 340, y: 120, size: 510 },
+  tall: { x: 50, y: 270, size: 620 },
+}
 
 function Arrow({ dir }: { dir: Dir }) {
   return (
@@ -19,6 +35,30 @@ function Arrow({ dir }: { dir: Dir }) {
       <path transform={`rotate(${turn[dir]})`} d="M0 -11 L12 4 H5 V12 H-5 V4 H-12Z" fill="currentColor" stroke="currentColor" strokeWidth="3" strokeLinejoin="round" />
     </svg>
   )
+}
+
+/** The hedgehog blinks now and then while it waits. */
+function useBlink(on: boolean) {
+  const [shut, setShut] = useState(false)
+  useEffect(() => {
+    if (!on) return
+    let timer = 0
+    const next = (open: boolean) => {
+      timer = window.setTimeout(
+        () => {
+          setShut(open)
+          next(!open)
+        },
+        open ? 2600 + Math.random() * 2600 : 150,
+      )
+    }
+    next(true)
+    return () => {
+      clearTimeout(timer)
+      setShut(false)
+    }
+  }, [on])
+  return shut
 }
 
 export default function HedgehogPost({ level, seed, t, onFinish }: GameProps) {
@@ -37,6 +77,8 @@ export default function HedgehogPost({ level, seed, t, onFinish }: GameProps) {
   const later = useTimeouts()
   const slots = slotsFor(village)
   const locked = walking || delivered || stage.over
+  const blink = useBlink(!walking && !delivered && !oops)
+  const face: Face = delivered ? 'happy' : oops ? 'sad' : blink ? 'blink' : 'idle'
 
   const add = (d: Dir) => {
     if (locked) return
@@ -120,55 +162,58 @@ export default function HedgehogPost({ level, seed, t, onFinish }: GameProps) {
     }, end + 1100)
   }
 
+  // A phone held sideways has little height: one row of buttons beside the cards.
+  const short = window.innerHeight < 500
   return (
-    <SceneShell
-      place="woods"
+    <PaintedScene
+      views={VIEWS}
       say={say}
       stage={stage}
-      bare
       className="hedgehog-post"
-      guide={
-        <CritterGuide kind="hedgehog" mood={delivered ? 'happy' : oops ? 'sad' : 'idle'}>
-          <PostCap />
-        </CritterGuide>
-      }
+      trayHeight={short ? 118 : 178}
       tray={
         <div className="hp-tray">
-          <div className="hp-arrows">
-            {(['up', 'down', 'left', 'right'] as const).map((d) => (
-              <SceneTool key={d} kind={d} label={t(d)} hideLabel onPress={() => add(d)} disabled={locked} />
-            ))}
-          </div>
-          <div className="hp-actions">
-            <SceneTool kind="undo" label={t('undo')} hideLabel onPress={back} disabled={locked || !cards.length} />
-            <button className="hp-go" onPointerDown={go} disabled={locked || !cards.length}>
-              <svg viewBox="-10 -10 20 20" aria-hidden focusable="false">
-                <path d="M-6 -8 L8 0 L-6 8Z" fill="currentColor" />
-              </svg>
-              {t('go')}
-            </button>
+          <ol className="hp-cards" aria-label={t('cards')} style={{ ['--hp-slots' as string]: slots }}>
+            {Array.from({ length: slots }, (_, i) => {
+              const d = cards[i]
+              if (!d) return <li key={i} className="hp-slot" />
+              const state = wrong === i ? ' hp-wrong' : active === i ? ' hp-now' : active !== null && i < active ? ' hp-past' : ''
+              return (
+                <li key={i}>
+                  <button className={`hp-card${state}`} onPointerDown={() => remove(i)} aria-label={t(d)} disabled={locked}>
+                    <Arrow dir={d} />
+                  </button>
+                </li>
+              )
+            })}
+          </ol>
+          <div className="hp-buttons">
+            <div className="hp-arrows">
+              {(['up', 'down', 'left', 'right'] as const).map((d) => (
+                <SceneTool key={d} kind={d} label={t(d)} hideLabel onPress={() => add(d)} disabled={locked} />
+              ))}
+            </div>
+            <div className="hp-actions">
+              <SceneTool kind="undo" label={t('undo')} hideLabel onPress={back} disabled={locked || !cards.length} />
+              <button className="hp-go" onPointerDown={go} disabled={locked || !cards.length}>
+                <svg viewBox="-10 -10 20 20" aria-hidden focusable="false">
+                  <path d="M-6 -8 L8 0 L-6 8Z" fill="currentColor" />
+                </svg>
+                {t('go')}
+              </button>
+            </div>
           </div>
         </div>
       }
     >
-      <div key={stage.done} className="hp-board">
-        <VillageMap village={village} at={at} trail={trail} delivered={delivered} oops={oops} />
-      </div>
-      <ol className="hp-cards" aria-label={t('cards')} style={{ ['--hp-slots' as string]: slots }}>
-        {Array.from({ length: slots }, (_, i) => {
-          const d = cards[i]
-          if (!d) return <li key={i} className="hp-slot" />
-          const state = wrong === i ? ' hp-wrong' : active === i ? ' hp-now' : active !== null && i < active ? ' hp-past' : ''
-          return (
-            <li key={i}>
-              <button className={`hp-card${state}`} onPointerDown={() => remove(i)} aria-label={t(d)} disabled={locked}>
-                <Arrow dir={d} />
-              </button>
-            </li>
-          )
-        })}
-      </ol>
-    </SceneShell>
+      {(view) => {
+        const m = MAP[view]
+        return (
+          <div key={stage.done} className="hp-board" style={{ left: m.x, top: m.y, width: m.size, height: m.size }}>
+            <VillageMap village={village} at={at} trail={trail} delivered={delivered} face={face} oops={oops} />
+          </div>
+        )
+      }}
+    </PaintedScene>
   )
 }
-
