@@ -1,9 +1,17 @@
-import { useRef, useState, type PointerEvent } from 'react'
+import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import { useShake, useTimeouts } from '../../kit/hooks'
+import { PaintedScene, type PaintedView } from '../../kit/painted'
 import { makeRng } from '../../kit/random'
-import { SceneShell, useStage } from '../../kit/SceneShell'
+import { useStage } from '../../kit/SceneShell'
 import { tone } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
+import frogBlink from './art/frog-blink.webp'
+import frogHappy from './art/frog-happy.webp'
+import frogSad from './art/frog-sad.webp'
+import frog from './art/frog.webp'
+import stone from './art/stone.webp'
+import streamTall from './art/stream-tall.webp'
+import stream from './art/stream.webp'
 import { jumpText, makeQuestion, pathOf, showsLabel, specFor, WINDOW, type Question } from './logic'
 
 /** Landings to find in one stage. */
@@ -23,25 +31,45 @@ function hopsOf(q: Question) {
   return out
 }
 
-/** The little frog that hops along the stones. */
-function Frog() {
-  return (
-    <svg className="nl-frog-art" viewBox="-30 -30 60 56" aria-hidden focusable="false">
-      <ellipse cx="0" cy="20" rx="24" ry="5" fill="#241a3c" opacity="0.25" />
-      <path d="M-24 20 C-28 8 -16 2 -10 10Z M24 20 C28 8 16 2 10 10Z" fill="#4a9a4e" />
-      <ellipse cx="0" cy="6" rx="22" ry="16" fill="#6cbf5c" />
-      <ellipse cx="0" cy="11" rx="13" ry="8" fill="#e3f4b8" />
-      <circle cx="-11" cy="-13" r="10" fill="#6cbf5c" />
-      <circle cx="11" cy="-13" r="10" fill="#6cbf5c" />
-      <circle cx="-11" cy="-13" r="6.6" fill="#fff" />
-      <circle cx="11" cy="-13" r="6.6" fill="#fff" />
-      <circle cx="-10.4" cy="-12.5" r="4.8" fill="#33284a" />
-      <circle cx="11.6" cy="-12.5" r="4.8" fill="#33284a" />
-      <circle cx="-12.2" cy="-14.6" r="1.8" fill="#fff" />
-      <circle cx="9.8" cy="-14.6" r="1.8" fill="#fff" />
-      <path d="M-7 3 q7 6 14 0" fill="none" stroke="#33284a" strokeWidth="2.2" strokeLinecap="round" />
-    </svg>
-  )
+type ViewId = 'wide' | 'tall'
+type Face = 'idle' | 'blink' | 'happy' | 'sad'
+const FROG: [Face, string][] = [
+  ['idle', frog],
+  ['blink', frogBlink],
+  ['happy', frogHappy],
+  ['sad', frogSad],
+]
+
+/** The stream with its stepping stones across the middle; the jump cards sit on the far bank above it. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: stream, world: { w: 1280, h: 800 }, focus: { x: 0, y: 120, w: 1280, h: 680 }, ground: '#a2b832', sayAt: { x: 640, y: 210 } },
+  { id: 'tall', painting: streamTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 260, w: 720, h: 800 }, ground: '#aeb731', sayAt: { x: 360, y: 380 } },
+]
+
+/** The stones' row (its box: the line runs at 62% of its height), and where the jump cards sit. */
+const SPOTS: Record<ViewId, { line: { x: number; y: number; w: number; h: number }; jumps: number }> = {
+  wide: { line: { x: 20, y: 380, w: 1240, h: 300 }, jumps: 300 },
+  tall: { line: { x: 0, y: 560, w: 720, h: 230 }, jumps: 455 },
+}
+
+/** The frog blinks now and then while it waits. */
+function useBlink() {
+  const [shut, setShut] = useState(false)
+  useEffect(() => {
+    let timer = 0
+    const next = (open: boolean) => {
+      timer = window.setTimeout(
+        () => {
+          setShut(open)
+          next(!open)
+        },
+        open ? 2600 + Math.random() * 2600 : 150,
+      )
+    }
+    next(true)
+    return () => clearTimeout(timer)
+  }, [])
+  return shut
 }
 
 export default function NumberLine({ level, seed, t, onFinish }: GameProps) {
@@ -65,6 +93,7 @@ export default function NumberLine({ level, seed, t, onFinish }: GameProps) {
   const over = stage.over
   const [lineRef, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
+  const blink = useBlink()
 
   const sum = `${q.start} ${q.jumps.map(jumpText).join(' ')} = ${q.end}`
 
@@ -113,9 +142,14 @@ export default function NumberLine({ level, seed, t, onFinish }: GameProps) {
   }
 
   const ticks = Array.from({ length: WINDOW + 1 }, (_, i) => q.lo + i)
+  const face: Face = message.kind === 'yes' ? 'happy' : message.kind === 'no' ? 'sad' : blink ? 'blink' : 'idle'
   return (
-    <SceneShell place="peaks" say={message.text} stage={stage} bare className="number-line">
-      <div className="nl-jumps" key={`${q.start}-${q.jumps.join()}-${q.lo}`}>
+    <PaintedScene views={VIEWS} say={message.text} stage={stage} className="number-line">
+      {(view) => {
+        const at = SPOTS[view]
+        return (
+          <>
+      <div className="nl-jumps" key={`${q.start}-${q.jumps.join()}-${q.lo}`} style={{ top: at.jumps }}>
         {q.jumps.map((j, i) => (
           <span key={i} className={`nl-jump ${j > 0 ? 'nl-fwd' : 'nl-back'}`}>
             <svg viewBox="-14 -12 28 24" aria-hidden focusable="false" style={{ transform: j > 0 ? undefined : 'scaleX(-1)' }}>
@@ -128,6 +162,7 @@ export default function NumberLine({ level, seed, t, onFinish }: GameProps) {
       <div
         className="nl-stage"
         ref={lineRef}
+        style={{ left: at.line.x, top: at.line.y, width: at.line.w, height: at.line.h }}
         onPointerDown={(e) => {
           if (over || busy) return
           e.currentTarget.setPointerCapture?.(e.pointerId)
@@ -142,7 +177,9 @@ export default function NumberLine({ level, seed, t, onFinish }: GameProps) {
         onPointerCancel={() => setAim(null)}
       >
         <span key={hop} className="nl-frog" style={{ left: `${xOf(frog, q.lo)}%` }}>
-          <Frog />
+          {FROG.map(([f, src]) => (
+            <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'nl-off'} />
+          ))}
           {count !== null && <span className="nl-count">{count}</span>}
         </span>
         <div className="nl-line" />
@@ -158,12 +195,15 @@ export default function NumberLine({ level, seed, t, onFinish }: GameProps) {
               disabled={over}
               aria-label={String(n)}
             >
-              <span className="nl-mark" />
+              <img className="nl-mark" src={stone} alt="" draggable={false} />
               <span className="nl-num">{showsLabel(n, q, spec.labels) || (busy && n === q.end) ? n : ''}</span>
             </button>
           )
         })}
       </div>
-    </SceneShell>
+          </>
+        )
+      }}
+    </PaintedScene>
   )
 }

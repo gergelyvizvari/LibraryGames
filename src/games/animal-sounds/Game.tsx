@@ -2,13 +2,51 @@ import { useEffect, useRef, useState } from 'react'
 import { useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
 import { SceneTool } from '../../kit/scene'
-import { SceneShell, useStage } from '../../kit/SceneShell'
+import { useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
 import { ANIMALS, animalCount, makeSequence, roundPoints, seqLength, showLights, stepMs } from './logic'
 import { preloadVoices, voices } from './voices'
 
+import { PaintedScene, worldStyle, type PaintedView } from '../../kit/painted'
+import farmTall from './art/farm-tall.webp'
+import farm from './art/farm.webp'
 const faces = { cat: '🐱', dog: '🐶', cow: '🐮', duck: '🦆', bird: '🐦', frog: '🐸', sheep: '🐑', pig: '🐷', rooster: '🐓', horse: '🐴' }
+
+/** Each animal's painted pictures: calm, and calling with its mouth open (art/<animal>[-call].webp). */
+const ART = import.meta.glob<string>('./art/*.webp', { eager: true, import: 'default' })
+const art = (name: string) => ART[`./art/${name}.webp`]
+
+type ViewId = 'wide' | 'tall'
+
+/** The farmyard; the animals stand in rows in the open yard. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: farm, world: { w: 1280, h: 800 }, focus: { x: 140, y: 60, w: 1000, h: 740 }, ground: '#b7ac25', sayAt: { x: 640, y: 300 } },
+  { id: 'tall', painting: farmTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 330, w: 720, h: 780 }, ground: '#c0b224', sayAt: { x: 360, y: 400 } },
+]
+
+/** The yard the animals stand in (their feet from `top` to `bottom`) and the front row's animal height. */
+const YARD: Record<ViewId, { left: number; right: number; top: number; bottom: number; h: number }> = {
+  wide: { left: 250, right: 1030, top: 520, bottom: 775, h: 210 },
+  tall: { left: 40, right: 680, top: 640, bottom: 1060, h: 230 },
+}
+
+/** Big animals stand taller than small ones, so they look right next to each other. */
+const SIZE: Record<string, number> = { cow: 1.12, horse: 1.15, sheep: 0.98, pig: 0.9, dog: 0.92, cat: 0.92, rooster: 1, duck: 0.82, bird: 0.78, frog: 0.75 }
+
+/** Where each animal stands: rows of 2 or 3, the back rows a little smaller. */
+function spots(count: number, y: (typeof YARD)[ViewId]) {
+  const perRow = count <= 4 ? 2 : 3
+  const rows = Math.ceil(count / perRow)
+  return Array.from({ length: count }, (_, i) => {
+    const r = Math.floor(i / perRow)
+    const c = i % perRow
+    const k = rows > 1 ? r / (rows - 1) : 1
+    const w = (y.right - y.left) * (0.86 + 0.14 * k)
+    const cx = (y.left + y.right) / 2
+    return { x: cx - w / 2 + (w / perRow) * (c + 0.5), bottom: y.top + (y.bottom - y.top) * (rows > 1 ? k : 1), h: y.h * (0.8 + 0.2 * k) }
+  })
+}
 
 /** Calls to repeat in one stage. */
 const STAGE = 5
@@ -103,32 +141,42 @@ export default function AnimalSounds({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <SceneShell
-      place="lake"
+    <PaintedScene
+      views={VIEWS}
       say={message}
       stage={stage}
-      bare
       className="animal-sounds"
+      trayHeight={110}
       tray={
-        <SceneTool kind="listen" label={t('again')} onPress={replay} disabled={phase !== 'input' || pos > 0 || replayed} />
+        <div className="an-tray">
+          <span className={`an-ear${calling ? ' an-calling' : ''}`} aria-hidden>
+            {phase === 'listen' ? '♪' : phase === 'input' ? `${pos} / ${seq.length}` : ''}
+          </span>
+          <SceneTool kind="listen" label={t('again')} onPress={replay} disabled={phase !== 'input' || pos > 0 || replayed} />
+        </div>
       }
     >
-      <div className={`as-ear${calling ? ' as-calling' : ''}`} aria-hidden>
-        {phase === 'listen' ? '♪' : phase === 'input' ? `${pos} / ${seq.length}` : ''}
-      </div>
-      <div ref={boardRef} className={`as-farm as-farm-${count}`}>
-        {farm.map((a, i) => (
-          <button
-            key={a}
-            className={`as-animal${lit === i ? ' as-lit' : ''}`}
-            onPointerDown={() => tap(i)}
-            disabled={phase !== 'input'}
-            aria-label={t(a)}
-          >
-            <span className="as-face">{faces[a]}</span>
-          </button>
-        ))}
-      </div>
-    </SceneShell>
+      {(view) => {
+        const at = spots(count, YARD[view])
+        return (
+          <div ref={boardRef} className="an-yard">
+            {farm.map((a, i) => (
+              <button
+                key={a}
+                className={`an-animal${lit === i ? ' an-lit' : ''}`}
+                style={worldStyle(at[i].x, at[i].bottom, at[i].h * SIZE[a])}
+                onPointerDown={() => tap(i)}
+                disabled={phase !== 'input'}
+                aria-label={t(a)}
+              >
+                <span className="an-glow" />
+                <img src={art(a)} alt="" draggable={false} className={lit === i ? 'an-off' : ''} />
+                <img src={art(`${a}-call`)} alt="" draggable={false} className={lit === i ? '' : 'an-off'} />
+              </button>
+            ))}
+          </div>
+        )
+      }}
+    </PaintedScene>
   )
 }
