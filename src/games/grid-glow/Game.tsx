@@ -1,10 +1,37 @@
 import { useEffect, useRef, useState } from 'react'
 import { useShake, useTimeouts } from '../../kit/hooks'
 import { clamp, makeRng } from '../../kit/random'
-import { SceneShell, useStage } from '../../kit/SceneShell'
+import { Cast, useMood } from '../../kit/cast'
+import { PaintedScene, type PaintedView } from '../../kit/painted'
+import { useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
 import { gridFor, pattern, startCount } from './logic'
+import bgTall from './art/bg-tall.webp'
+import pad from './art/pad.webp'
+import bg from './art/bg.webp'
+import charBlink from './art/char-blink.webp'
+import charHappy from './art/char-happy.webp'
+import charSad from './art/char-sad.webp'
+import char from './art/char.webp'
+
+const FACES = { idle: char, blink: charBlink, happy: charHappy, sad: charSad }
+/** The character's width / height. */
+const ASPECT = 0.56
+
+type ViewId = 'wide' | 'tall'
+
+/** The twilight pond; the lily pads to remember float on its water. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 120, y: 60, w: 1160, h: 740 }, ground: '#a59c51', sayAt: { x: 1000, y: 180 } },
+  { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 180, w: 720, h: 960 }, ground: '#74817a', sayAt: { x: 360, y: 260 } },
+]
+
+/** Where the play sits in each painting (its content zoomed to suit the painting's scale), and the character. */
+const SPOTS: Record<ViewId, { box: { x: number; y: number; w: number; h: number }; zoom: number; char: { x: number; bottom: number; h: number } }> = {
+  wide: { box: { x: 360, y: 150, w: 560, h: 560 }, zoom: 1.3, char: { x: 180, bottom: 770, h: 260 } },
+  tall: { box: { x: 70, y: 320, w: 580, h: 580 }, zoom: 1.5, char: { x: 610, bottom: 1140, h: 200 } },
+}
 
 /** Patterns to remember in one stage. Each one glows one square more; a slip brings an easier one. */
 const STAGE = 5
@@ -19,6 +46,7 @@ export default function GridGlow({ level, seed, t, onFinish }: GameProps) {
   const [wrongCell, setWrongCell] = useState<number | null>(null)
   const [rounds, setRounds] = useState(0)
   const stage = useStage(STAGE, onFinish)
+  const [mood, feel] = useMood()
   const [ref, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
 
@@ -40,6 +68,7 @@ export default function GridGlow({ level, seed, t, onFinish }: GameProps) {
   const tap = (i: number) => {
     if (mode !== 'input' || picked.includes(i)) return
     if (!cells.includes(i)) {
+      feel('sad')
       stage.slip()
       shake()
       setWrongCell(i)
@@ -52,12 +81,20 @@ export default function GridGlow({ level, seed, t, onFinish }: GameProps) {
     sound.tone(500 + next.length * 60, 0.08, 'triangle', 0.15)
     if (next.length < cells.length) return
     setMode('wait')
+    feel('happy')
     if (!stage.good(count * 10)) later(() => newRound(count + 1), 800)
   }
 
   return (
-    <SceneShell place="lake" say={mode === 'show' ? t('watch') : t('yourTurn')} stage={stage} bare className="grid-glow">
-      <div className="gg-grid" ref={ref} style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}>
+    <PaintedScene views={VIEWS} say={mode === 'show' ? t('watch') : t('yourTurn')} stage={stage} className="grid-glow">
+      {(view) => {
+        const at = SPOTS[view]
+        return (
+          <>
+            <Cast faces={FACES} mood={mood} at={at.char} aspect={ASPECT} />
+            {/* `zoom` scales the box's own position too, so it is given in zoomed units. */}
+            <div className="pb-box" style={{ left: at.box.x / at.zoom, top: at.box.y / at.zoom, width: at.box.w / at.zoom, height: at.box.h / at.zoom, zoom: at.zoom }}>
+      <div className="gg-grid" ref={ref} style={{ gridTemplateColumns: `repeat(${size}, 1fr)`, ['--gg-pad' as string]: `url(${pad})` }}>
         {Array.from({ length: size * size }, (_, i) => {
           const lit = mode === 'show' || (mode === 'wait' && wrongCell !== null) ? cells.includes(i) : picked.includes(i)
           return (
@@ -70,6 +107,10 @@ export default function GridGlow({ level, seed, t, onFinish }: GameProps) {
           )
         })}
       </div>
-    </SceneShell>
+            </div>
+          </>
+        )
+      }}
+    </PaintedScene>
   )
 }
