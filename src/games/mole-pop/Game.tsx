@@ -27,8 +27,8 @@ const GRID: Record<ViewId, { cols: number[]; rows: number[]; w: number }> = {
   tall: { cols: [130, 360, 590], rows: [510, 740, 970], w: 215 },
 }
 
-/** Where the hole is in the molehill picture (364 × 150): its middle, and the height of its front rim, as fractions. */
-const HOLE = { x: 0.5, y: 0.38 }
+/** Where the hole is in the molehill picture (364 × 150): its middle, and the lowest point of its front rim, as fractions. */
+const HOLE = { x: 0.488, y: 0.415 }
 
 interface Up {
   kind: Critter
@@ -84,12 +84,14 @@ export default function MolePop({ level, seed, t, onFinish }: GameProps) {
               return (
                 <button key={i} className="mp-hole" onPointerDown={() => whack(i)} aria-label={`hole ${i + 1}`} style={{ left: x - g.w / 2, top: top - g.w * 0.62, width: g.w, height: mh + g.w * 0.62 }}>
                   <img className="mp-mound" src={art('hole')} alt="" draggable={false} />
-                  {/* The critter rises out of the hole: cut off at the hole's middle. */}
+                  {/* The critter rises out of the hole, in front of its back rim. */}
                   <span className="mp-pit" style={{ bottom: mh * (1 - HOLE.y) }}>
                     <span className={`mp-critter${h ? ' mp-up' : ''}${h?.hit ? ' mp-hit' : ''}`}>
                       {h && <img src={art(h.hit ? `${h.kind}-hit` : h.kind)} alt="" draggable={false} />}
                     </span>
                   </span>
+                  {/* The front of the molehill, over the critter: it climbs out of the hole, not in front of it. */}
+                  <img className="mp-mound" src={art('hole-front')} alt="" draggable={false} />
                 </button>
               )
             })}
