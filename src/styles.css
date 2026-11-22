@@ -1734,3 +1734,10 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .ps.lights-out .lo-go .lo-light { background: radial-gradient(circle at 36% 30%, #e6ffe0, #4fd36a 55%, #22a447); box-shadow: 0 0 30px rgba(80, 220, 110, 0.9), inset 0 -5px 0 rgba(0, 90, 30, 0.25); }
 /* The big label on the track says what to do (and how fast you were), so no speech bubble too. */
 .ps.lights-out .scene-bubble { display: none; }
+
+/* number-ninja: its storybook pieces inside the painted scene. */
+
+.ps.number-ninja .pb-box { display: block; }
+.ps.number-ninja .nn-field { position: absolute; inset: 0; margin: 0; border-radius: 0; box-shadow: none; background: none; overflow: visible; }
+.ps.number-ninja .nn-target { color: rgba(255, 255, 255, 0.55); font-size: 260px; text-shadow: 0 4px 12px rgba(80, 60, 120, 0.25); }
+.ps.number-ninja .nn-bubble { width: 130px; height: 130px; font-size: 38px; }
