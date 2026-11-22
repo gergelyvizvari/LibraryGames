@@ -1122,33 +1122,25 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .wf-basket-show { background: var(--good-soft); border-color: var(--good); animation: wobble 0.5s; }
 
 /* Number Line Jump */
-.nl-jumps { display: flex; justify-content: center; gap: 10px; animation: popIn 0.25s; }
-.nl-jump { display: inline-flex; align-items: center; gap: 6px; padding: 4px 18px; border-radius: 14px; font-family: var(--story); font-size: 2rem; font-weight: 800; color: #fff6dc; box-shadow: 0 5px 0 rgba(36, 26, 60, 0.28); }
-.nl-jump svg { width: 34px; }
+.nl-jumps { position: absolute; left: 0; right: 0; display: flex; justify-content: center; gap: 16px; animation: popIn 0.25s; }
+.nl-jump { display: inline-flex; align-items: center; gap: 8px; padding: 6px 24px; border-radius: 20px; font-family: var(--story); font-size: 54px; font-weight: 800; color: #fff6dc; box-shadow: 0 6px 0 rgba(36, 26, 60, 0.28); }
+.nl-jump svg { width: 48px; }
 .nl-fwd { background: #2c9690; }
 .nl-back { background: #c94a6b; }
-.nl-msg { min-height: 2.6em; display: grid; place-items: center; font-size: 1.25rem; }
-.nl-yes { color: var(--good); }
-.nl-no { color: var(--bad); }
-.nl-stage { position: relative; height: clamp(230px, 34vh, 320px); border-radius: 28px; overflow: hidden; box-shadow: 0 0 0 8px #fff6dc, 0 8px 0 8px rgba(36, 26, 60, 0.25); margin: 8px;
-  background: radial-gradient(circle at 84% 14%, #fff6dc 0 18px, transparent 19px), linear-gradient(to bottom left, transparent 49.6%, #a39ee0 50%) 35.9% 21.6% / 22.0% 26% no-repeat, linear-gradient(to bottom right, transparent 49.6%, #a39ee0 50%) 7.7% 21.6% / 22.0% 26% no-repeat, linear-gradient(to bottom left, transparent 49.6%, #8f8ad0 50%) 88.9% 12.1% / 28.0% 34% no-repeat, linear-gradient(to bottom right, transparent 49.6%, #8f8ad0 50%) 50.0% 12.1% / 28.0% 34% no-repeat, linear-gradient(#bfe4f4 0 42%, #c5d86b 42% 54%, #62b6dc 54% 78%, #c5d86b 78%); }
-.nl-line { position: absolute; left: 2%; right: 2%; top: calc(62% + 2px); height: 5px; border-radius: 3px; background: rgba(255, 255, 255, 0.5); }
-.nl-tick { position: absolute; top: calc(62% - 30px); width: 8.4%; height: 110px; padding: 0; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; background: none; border: 0; border-radius: 14px; color: var(--ink); -webkit-tap-highlight-color: transparent; }
-.nl-tick:active { background: var(--highlight); }
-.nl-mark { width: 86%; max-width: 30px; aspect-ratio: 1.5; margin-top: 22px; border-radius: 50%; background: #d8d3ea; box-shadow: inset 0 -4px 0 #a9a2cb; }
-.nl-num { min-height: 1.6rem; font-size: clamp(1rem, 4.6vw, 1.3rem); font-weight: 800; }
-.nl-start .nl-num { color: var(--game-text); }
-.nl-right { background: none; }
-.nl-right .nl-mark { background: #ffd24a; box-shadow: inset 0 -4px 0 #d9a52e; }
+.nl-stage { position: absolute; touch-action: none; }
+.nl-line { display: none; }
+.nl-tick { position: absolute; top: calc(62% - 40px); width: 8.4%; height: 130px; padding: 0; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: 0; border-radius: 18px; color: var(--story-ink); -webkit-tap-highlight-color: transparent; }
+.nl-mark { display: block; width: 100%; max-width: 92px; margin-top: 18px; user-select: none; transition: transform 0.12s, filter 0.2s; }
+.nl-num { min-height: 44px; font-family: var(--story); font-size: 40px; font-weight: 800; line-height: 1; color: #fffaf0; text-shadow: 0 2px 3px rgba(20, 60, 70, 0.7); }
+.nl-start .nl-num { color: #ffe27a; }
+.nl-right .nl-mark { filter: drop-shadow(0 0 10px #ffe27a) drop-shadow(0 0 4px #ffd24a) brightness(1.08); }
 .nl-wrong { animation: shake 0.35s; }
-.nl-wrong .nl-mark { background: #e2607e; box-shadow: inset 0 -4px 0 #c94a6b; }
-.nl-frog-art { display: block; width: 3.3rem; }
-.nl-frog { position: absolute; top: calc(62% - 46px); font-size: 2.6rem; line-height: 1; translate: -50% 0; transition: left 0.14s ease-out; animation: nlHop 0.16s ease-out; pointer-events: none; z-index: 1; }
-.nl-count { position: absolute; left: 50%; top: -30px; translate: -50% 0; font-size: 1.3rem; font-weight: 800; color: var(--bad); }
-/* The stone under a resting finger; the answer counts when the finger lifts, so it can slide to the right stone first. */
-.nl-aim { background: rgba(255, 246, 220, 0.55); }
-.nl-aim .nl-mark { transform: scale(1.25); }
-.nl-stage { touch-action: none; }
+.nl-wrong .nl-mark { filter: drop-shadow(0 0 10px #ff7d9b) sepia(0.4) hue-rotate(-30deg) saturate(2); }
+.nl-aim .nl-mark { transform: scale(1.18); filter: brightness(1.12); }
+.nl-frog { position: absolute; top: calc(62% - 110px); width: 96px; aspect-ratio: 0.77; translate: -50% 0; transition: left 0.14s ease-out; animation: nlHop 0.16s ease-out; pointer-events: none; z-index: 1; }
+.nl-frog img { position: absolute; inset: 0; width: 100%; height: 100%; user-select: none; }
+.nl-frog img.nl-off { visibility: hidden; }
+.nl-count { position: absolute; left: 50%; top: -46px; translate: -50% 0; font-family: var(--story); font-size: 44px; font-weight: 800; color: #ffe0e8; text-shadow: 0 2px 3px rgba(120, 20, 50, 0.7); }
 @keyframes nlHop { 50% { transform: translateY(-34px); } }
 
 /* Puppy Spots: the patchwork rug on the floor of the painted den, the mother dog beside it */
