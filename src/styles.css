@@ -1734,3 +1734,7 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .ps.lights-out .lo-go .lo-light { background: radial-gradient(circle at 36% 30%, #e6ffe0, #4fd36a 55%, #22a447); box-shadow: 0 0 30px rgba(80, 220, 110, 0.9), inset 0 -5px 0 rgba(0, 90, 30, 0.25); }
 /* The big label on the track says what to do (and how fast you were), so no speech bubble too. */
 .ps.lights-out .scene-bubble { display: none; }
+
+/* mirror-match: its storybook pieces inside the painted scene. */
+
+.ps.mirror-match .mm-board { width: 100%; box-shadow: 0 10px 14px rgba(20, 50, 60, 0.35); }
