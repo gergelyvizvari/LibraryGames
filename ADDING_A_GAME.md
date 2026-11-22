@@ -163,6 +163,7 @@ a character who says what to do, a short stage with a clear goal, and a quiet en
   rather than sticking small cut-outs on it: loose cut-outs look like stickers floating in the air. Art lives in the game's `art/` folder as WebP: the
   background about 1600 × 1000, cut-out characters with a thin cream rim baked in. How the art is made (prompts,
   style text, the Codex command) is in `tools/art/README.md`.
+- A painted scene's character goes through `kit/cast.tsx`: `<Cast faces={{ idle, blink, happy, sad }} mood={mood} at={{ x, bottom, h }} aspect={w / h} />` breathes, blinks while idle, and hops or shakes for `useMood()`'s `feel('happy' | 'sad')`. A game that keeps its own HTML pieces can lay them in a `.pb-box` in the painting with CSS `zoom` per view (position given in zoomed units).
 - A painted character with several colours (`feed-monster`'s monster in four furs) gets every face in every colour
   as its own painted file, recoloured by an image edit of each face; CSS `hue-rotate` also turns cheeks, horns and
   the cream rim, so it is not used for that.
