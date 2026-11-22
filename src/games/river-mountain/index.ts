@@ -1,10 +1,11 @@
 import { medals } from '../../kit/SceneShell'
 import type { GameDef } from '../../kit/types'
+import thumb from './art/thumb.webp'
 import { icon } from './icon'
 import strings from './strings'
 
 const game: GameDef = {
-  meta: { id: 'river-mountain', skill: 'geography', icon, color: '#16a085', added: '2026-11-05', scene: true },
+  meta: { id: 'river-mountain', skill: 'geography', icon, color: '#16a085', added: '2026-11-05', scene: true, thumb },
   strings,
   stickers: medals(icon),
   // The game's code is only downloaded when someone opens it.
