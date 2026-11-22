@@ -1,9 +1,59 @@
 import { useEffect, useRef, useState } from 'react'
 import { useGameLoop, useLatest, useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
-import { SceneShell, useStage } from '../../kit/SceneShell'
+import { PaintedScene, worldStyle, type PaintedView } from '../../kit/painted'
+import { useStage } from '../../kit/SceneShell'
 import type { GameProps } from '../../kit/types'
+import hedgehogBlink from './art/hedgehog-blink.webp'
+import hedgehogHappy from './art/hedgehog-happy.webp'
+import hedgehogSad from './art/hedgehog-sad.webp'
+import hedgehog from './art/hedgehog.webp'
+import basket from './art/basket.webp'
+import orchardTall from './art/orchard-tall.webp'
+import orchard from './art/orchard.webp'
 import { binFor, explain, fallSeconds, makeDealer, showDots, swipeBin, type Bin } from './logic'
+
+type Face = 'idle' | 'blink' | 'happy' | 'sad'
+const HEDGEHOG: [Face, string][] = [
+  ['idle', hedgehog],
+  ['blink', hedgehogBlink],
+  ['happy', hedgehogHappy],
+  ['sad', hedgehogSad],
+]
+
+/** The hedgehog blinks now and then while it waits. */
+function useBlink() {
+  const [shut, setShut] = useState(false)
+  useEffect(() => {
+    let timer = 0
+    const next = (open: boolean) => {
+      timer = window.setTimeout(
+        () => {
+          setShut(open)
+          next(!open)
+        },
+        open ? 2600 + Math.random() * 2600 : 150,
+      )
+    }
+    next(true)
+    return () => clearTimeout(timer)
+  }, [])
+  return shut
+}
+
+type ViewId = 'wide' | 'tall'
+
+/** The orchard; the numbers fall from the apple tree into the baskets below. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: orchard, world: { w: 1280, h: 800 }, focus: { x: 140, y: 60, w: 1000, h: 740 }, ground: '#a0a52f', sayAt: { x: 900, y: 260 } },
+  { id: 'tall', painting: orchardTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 160, w: 720, h: 960 }, ground: '#8ca023', sayAt: { x: 360, y: 250 } },
+]
+
+/** The air the numbers fall through, and the hedgehog. */
+const SPOTS: Record<ViewId, { field: { x: number; y: number; w: number; h: number }; hedgehog: { x: number; bottom: number; h: number } }> = {
+  wide: { field: { x: 380, y: 150, w: 520, h: 640 }, hedgehog: { x: 1080, bottom: 780, h: 260 } },
+  tall: { field: { x: 110, y: 270, w: 500, h: 860 }, hedgehog: { x: 620, bottom: 1130, h: 220 } },
+}
 
 /** Numbers to sort in one stage. */
 const STAGE = 10
@@ -51,6 +101,7 @@ export default function EvenOdd({ level, seed, t, onFinish }: GameProps) {
   const over = stage.over
   const [fieldRef, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
+  const blink = useBlink()
   const swipeFrom = useRef<{ x: number; y: number } | null>(null)
   const dots = showDots(level)
   const fall = fallSeconds(level)
@@ -110,40 +161,68 @@ export default function EvenOdd({ level, seed, t, onFinish }: GameProps) {
   const binClass = (bin: Bin) =>
     `eo-bin eo-bin-${bin}${glow?.bin === bin ? (glow.right ? ' eo-bin-right' : ' eo-bin-wrong') : ''}`
 
+  const face: Face = message.kind === 'yes' ? 'happy' : message.kind === 'no' ? 'sad' : blink ? 'blink' : 'idle'
   return (
-    <SceneShell place="peaks" say={message.text} stage={stage} bare fill className="even-odd">
-      <div
-        ref={fieldRef}
-        className="eo-field"
-        onPointerDown={(e) => (swipeFrom.current = { x: e.clientX, y: e.clientY })}
-        onPointerUp={(e) => {
-          const from = swipeFrom.current
-          swipeFrom.current = null
-          if (!from) return
-          const bin = swipeBin(e.clientX - from.x, e.clientY - from.y)
-          if (bin) answer(bin)
-        }}
-        onPointerCancel={() => (swipeFrom.current = null)}
-      >
-        <div
-          key={drop.id}
-          className={`eo-drop${dots ? ' eo-drop-dots' : ''}${drop.gone ? ` eo-gone-${drop.gone.bin}` : ''}${drop.gone && !drop.gone.right ? ' eo-drop-wrong' : ''}`}
-          style={{ top: `${drop.y * 0.78}%` }}
-        >
-          <span className="eo-num">{drop.n}</span>
-          {dots && <Dots n={drop.n} />}
+    <PaintedScene
+      views={VIEWS}
+      say={message.text}
+      stage={stage}
+      className="even-odd"
+      trayHeight={130}
+      tray={
+        <div className="eo-bins">
+          <button className={binClass('even')} onPointerDown={() => answer('even')} disabled={over}>
+            <img src={basket} alt="" draggable={false} />
+            <span className="eo-bin-label">
+              <span className="eo-bin-dots">●●<br />●●</span>
+              {t('even')}
+            </span>
+          </button>
+          <button className={binClass('odd')} onPointerDown={() => answer('odd')} disabled={over}>
+            <img src={basket} alt="" draggable={false} />
+            <span className="eo-bin-label">
+              <span className="eo-bin-dots">●●●<br />●●</span>
+              {t('odd')}
+            </span>
+          </button>
         </div>
-      </div>
-      <div className="eo-bins">
-        <button className={binClass('even')} onPointerDown={() => answer('even')} disabled={over}>
-          <span className="eo-bin-dots">●●<br />●●</span>
-          {t('even')}
-        </button>
-        <button className={binClass('odd')} onPointerDown={() => answer('odd')} disabled={over}>
-          <span className="eo-bin-dots">●●●<br />●●</span>
-          {t('odd')}
-        </button>
-      </div>
-    </SceneShell>
+      }
+    >
+      {(view) => {
+        const at = SPOTS[view]
+        return (
+          <>
+            <div className={`eo-char${message.kind === 'yes' ? ' eo-cheer' : ''}`} style={worldStyle(at.hedgehog.x, at.hedgehog.bottom, at.hedgehog.h)}>
+              {HEDGEHOG.map(([f, src]) => (
+                <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'eo-off'} />
+              ))}
+            </div>
+            <div
+              ref={fieldRef}
+              className="eo-field"
+              style={{ left: at.field.x, top: at.field.y, width: at.field.w, height: at.field.h }}
+              onPointerDown={(e) => (swipeFrom.current = { x: e.clientX, y: e.clientY })}
+              onPointerUp={(e) => {
+                const from = swipeFrom.current
+                swipeFrom.current = null
+                if (!from) return
+                const bin = swipeBin(e.clientX - from.x, e.clientY - from.y)
+                if (bin) answer(bin)
+              }}
+              onPointerCancel={() => (swipeFrom.current = null)}
+            >
+              <div
+                key={drop.id}
+                className={`eo-drop${dots ? ' eo-drop-dots' : ''}${drop.gone ? ` eo-gone-${drop.gone.bin}` : ''}${drop.gone && !drop.gone.right ? ' eo-drop-wrong' : ''}`}
+                style={{ top: `${drop.y * 0.78}%` }}
+              >
+                <span className="eo-num">{drop.n}</span>
+                {dots && <Dots n={drop.n} />}
+              </div>
+            </div>
+          </>
+        )
+      }}
+    </PaintedScene>
   )
 }
