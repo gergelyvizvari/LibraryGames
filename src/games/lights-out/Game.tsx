@@ -110,7 +110,7 @@ export default function LightsOut({ level, seed, t, onFinish }: GameProps) {
             <span key={i} className={`lo-light${i <= lit ? ' lo-on' : ''}`} />
           ))}
         </div>
-        <div className="lo-label">{label}</div>
+        <div className="lo-label">{message || label || t('tapToStart')}</div>
       </button>
             </div>
           </>

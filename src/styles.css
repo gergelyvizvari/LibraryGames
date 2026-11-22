@@ -1688,14 +1688,14 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .ps.lights-out .lo-lights { gap: 18px; padding: 12px 22px; margin-top: 0; border-radius: 0 0 26px 26px; background: #3a2a22; box-shadow: 0 6px 8px rgba(40, 20, 10, 0.35); }
 .ps.lights-out .lo-light { width: 78px; height: 78px; background: #5a4a40; box-shadow: inset 0 -5px 0 rgba(0, 0, 0, 0.25); }
 .ps-tall.lights-out .lo-light { width: 86px; height: 86px; }
-.ps.lights-out .lo-label { margin-top: 170px; max-width: 80%; padding: 10px 28px; border-radius: 999px; background: rgba(255, 250, 235, 0.92); font-family: inherit; font-weight: 800; font-variant: normal; text-transform: none; text-align: center; font-size: 36px; box-shadow: 0 4px 8px rgba(40, 40, 10, 0.25); }
+.ps.lights-out .lo-label { margin-top: 170px; max-width: 80%; padding: 10px 28px; border-radius: 999px; background: rgba(255, 250, 235, 0.92); font-family: inherit; font-weight: 800; font-variant: normal; text-transform: none; text-align: center; font-size: 50px; box-shadow: 0 4px 8px rgba(40, 40, 10, 0.25); }
 .ps.lights-out .lo-label:empty { display: none; }
-.ps-tall.lights-out .lo-label { margin-top: 420px; }
+.ps-tall.lights-out .lo-label { margin-top: 320px; font-size: 56px; }
 .ps.lights-out .lo-go .lo-label { font-size: 72px; color: #2c8a5a; }
 .ps.lights-out .lo-go { background: none; }
 .ps.lights-out .lo-light.lo-on { background: radial-gradient(circle at 36% 30%, #ffd9d0, #ff4a3d 55%, #d42a2a); box-shadow: 0 0 30px rgba(255, 70, 60, 0.9), inset 0 -5px 0 rgba(160, 90, 0, 0.25); }
 /* Like a real start: three red, then two yellow, and when they go out all five turn green. */
 .ps.lights-out .lo-light.lo-on:nth-child(n+4) { background: radial-gradient(circle at 36% 30%, #fff6d0, #ffd24a 55%, #e9a51e); box-shadow: 0 0 30px rgba(255, 210, 74, 0.9), inset 0 -5px 0 rgba(160, 90, 0, 0.25); }
 .ps.lights-out .lo-go .lo-light { background: radial-gradient(circle at 36% 30%, #e6ffe0, #4fd36a 55%, #22a447); box-shadow: 0 0 30px rgba(80, 220, 110, 0.9), inset 0 -5px 0 rgba(0, 90, 30, 0.25); }
-/* The speech bubble already says what to do: no second label under the lights. */
-.ps.lights-out .lo-label { display: none; }
+/* The big label on the track says what to do (and how fast you were), so no speech bubble too. */
+.ps.lights-out .scene-bubble { display: none; }
