@@ -57,6 +57,8 @@ const SPOTS: Record<ViewId, { grid: { x: number; y: number; size: number }; magp
 export default function OddOne({ level, seed, t, onFinish }: GameProps) {
   const rng = useRef(makeRng(seed)).current
   const [board, setBoard] = useState(() => makeBoard(rng, level, 0))
+  /** Counts the boards, so only a new board pops in (the last one stays put when the stage ends). */
+  const [boardId, setBoardId] = useState(0)
   const stage = useStage(STAGE, onFinish)
   const [ref, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
@@ -76,7 +78,9 @@ export default function OddOne({ level, seed, t, onFinish }: GameProps) {
       return
     }
     feel('happy')
-    if (!stage.good(10 + board.size)) setBoard(makeBoard(rng, level, stage.done + 1))
+    if (stage.good(10 + board.size)) return
+    setBoard(makeBoard(rng, level, stage.done + 1))
+    setBoardId((n) => n + 1)
   }
 
   const face: Face = mood ?? (blink ? 'blink' : 'idle')
@@ -94,7 +98,7 @@ export default function OddOne({ level, seed, t, onFinish }: GameProps) {
             <div
               className="oo-grid"
               ref={ref}
-              key={stage.done}
+              key={boardId}
               style={{ left: at.grid.x, top: at.grid.y, width: at.grid.size, height: at.grid.size, gridTemplateColumns: `repeat(${board.size}, 1fr)`, fontSize: (at.grid.size / board.size) * 0.62 }}
             >
               {Array.from({ length: board.size * board.size }, (_, i) => (
