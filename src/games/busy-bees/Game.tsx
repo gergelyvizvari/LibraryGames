@@ -1,11 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
 import { useGameLoop, useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
-import { SceneShell, useStage } from '../../kit/SceneShell'
+import { PaintedScene, worldStyle, type PaintedView } from '../../kit/painted'
+import { useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
-import { Thing, type ThingId } from '../../kit/things'
 import type { GameProps } from '../../kit/types'
-import { Bee } from './Bee'
+import bearBlink from './art/bear-blink.webp'
+import bearHappy from './art/bear-happy.webp'
+import bearSad from './art/bear-sad.webp'
+import bear from './art/bear.webp'
+import beeHappy from './art/bee-happy.webp'
+import bee from './art/bee.webp'
+import meadowTall from './art/meadow-tall.webp'
+import meadow from './art/meadow.webp'
 import { makeTurn, pointsFor, positionAt, SHOW_MS } from './logic'
 
 /** Flights to follow in one stage. */
@@ -13,10 +20,50 @@ const STAGE = 5
 
 type Phase = 'show' | 'fly' | 'pick' | 'done'
 
-// Flowers that decorate the meadow, as [emoji, x %, y %].
-const FLOWERS: [ThingId, number, number][] = [
-  ['flower', 8, 10], ['flower', 88, 6], ['mushroom', 50, 92], ['flower', 92, 60], ['leaf', 4, 70], ['flower', 34, 4], ['flower', 70, 34], ['leaf', 26, 48],
+type ViewId = 'wide' | 'tall'
+type Face = 'idle' | 'blink' | 'happy' | 'sad'
+const BEAR: [Face, string][] = [
+  ['idle', bear],
+  ['blink', bearBlink],
+  ['happy', bearHappy],
+  ['sad', bearSad],
 ]
+
+/** The flower meadow by the pond; the focus is the open air where the bees fly, and the honey bear beside it. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: meadow, world: { w: 1280, h: 800 }, focus: { x: 40, y: 90, w: 1000, h: 690 }, ground: '#8e9d35', sayAt: { x: 60, y: 300 } },
+  { id: 'tall', painting: meadowTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 200, w: 720, h: 930 }, ground: '#859432', sayAt: { x: 40, y: 290 } },
+]
+
+/** Where the bees fly (a square of the painting) and where the bear sits. */
+const SPOTS: Record<ViewId, { air: { x: number; y: number; size: number }; bear: { x: number; bottom: number; h: number } }> = {
+  wide: { air: { x: 360, y: 110, size: 620 }, bear: { x: 190, bottom: 760, h: 300 } },
+  tall: { air: { x: 40, y: 300, size: 640 }, bear: { x: 120, bottom: 1120, h: 200 } },
+}
+
+/** The bear blinks now and then while it waits. */
+function useBlink(on: boolean) {
+  const [shut, setShut] = useState(false)
+  useEffect(() => {
+    if (!on) return
+    let timer = 0
+    const next = (open: boolean) => {
+      timer = window.setTimeout(
+        () => {
+          setShut(open)
+          next(!open)
+        },
+        open ? 2600 + Math.random() * 2600 : 150,
+      )
+    }
+    next(true)
+    return () => {
+      clearTimeout(timer)
+      setShut(false)
+    }
+  }, [on])
+  return shut
+}
 
 export default function BusyBees({ level, seed, t, onFinish }: GameProps) {
   const rng = useRef(makeRng(seed)).current
@@ -90,43 +137,53 @@ export default function BusyBees({ level, seed, t, onFinish }: GameProps) {
 
   const reveal = phase === 'show' || result === 'no'
 
+  const blink = useBlink(!result)
+  const face: Face = result === 'yes' ? 'happy' : result === 'no' ? 'sad' : blink ? 'blink' : 'idle'
   return (
-    <SceneShell place="lake" say={prompt()} stage={stage} bare fill className="busy-bees">
-      <div ref={ref} className={`bb-meadow${phase === 'pick' && !result ? ' bb-picking' : ''}`}>
-        {FLOWERS.map(([f, x, y], i) => (
-          <span key={i} className="bb-flower" style={{ left: `${x}%`, top: `${y}%` }}>
-            <Thing id={f} />
-          </span>
-        ))}
-        {turn.paths.map((path, b) => {
-          const p = positionAt(path, ms, turn.legMs)
-          // A little buzzing wobble while flying.
-          const wob = phase === 'fly' ? Math.sin(ms / 70 + b * 2) * 0.012 : 0
-          const x = (p.x + wob) * 100
-          const y = (p.y + Math.cos(ms / 90 + b) * wob) * 100
-          const cls = [
-            'bb-bee',
-            reveal && turn.targets.includes(b) ? 'bb-target' : '',
-            found.includes(b) ? 'bb-found' : '',
-            wrong === b ? 'bb-wrong' : '',
-            phase === 'fly' ? 'bb-flying' : '',
-          ].join(' ')
-          return (
-            <button
-              key={`${index}-${b}`}
-              className={cls}
-              style={{ left: `${x}%`, top: `${y}%` }}
-              onPointerDown={() => tap(b)}
-              aria-label={`bee ${b + 1}`}
-              disabled={phase === 'done'}
-            >
-              <span className="bb-face" style={{ transform: `scaleX(${p.dir})` }}>
-                <Bee />
-              </span>
-            </button>
-          )
-        })}
-      </div>
-    </SceneShell>
+    <PaintedScene views={VIEWS} say={prompt()} stage={stage} className="busy-bees">
+      {(view) => {
+        const { air, bear: b } = SPOTS[view]
+        return (
+          <>
+            <div className={`bb-bear bb-${result ?? 'idle'}`} style={worldStyle(b.x, b.bottom, b.h)}>
+              {BEAR.map(([f, src]) => (
+                <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'bb-off'} />
+              ))}
+            </div>
+            <div ref={ref} className={`bb-meadow${phase === 'pick' && !result ? ' bb-picking' : ''}`} style={{ left: air.x, top: air.y, width: air.size, height: air.size, ['--bb-bee' as string]: `${air.size * 0.19}px` }}>
+              {turn.paths.map((path, i) => {
+                const p = positionAt(path, ms, turn.legMs)
+                // A little buzzing wobble while flying.
+                const wob = phase === 'fly' ? Math.sin(ms / 70 + i * 2) * 0.012 : 0
+                const x = (p.x + wob) * 100
+                const y = (p.y + Math.cos(ms / 90 + i) * wob) * 100
+                const cls = [
+                  'bb-bee',
+                  reveal && turn.targets.includes(i) ? 'bb-target' : '',
+                  found.includes(i) ? 'bb-found' : '',
+                  wrong === i ? 'bb-wrong' : '',
+                  phase === 'fly' ? 'bb-flying' : '',
+                ].join(' ')
+                const happy = found.includes(i)
+                return (
+                  <button
+                    key={`${index}-${i}`}
+                    className={cls}
+                    style={{ left: `${x}%`, top: `${y}%` }}
+                    onPointerDown={() => tap(i)}
+                    aria-label={`bee ${i + 1}`}
+                    disabled={phase === 'done'}
+                  >
+                    <span className="bb-face" style={{ transform: `scaleX(${p.dir})` }}>
+                      <img src={happy ? beeHappy : bee} alt="" draggable={false} className="bb-bee-art" />
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+          </>
+        )
+      }}
+    </PaintedScene>
   )
 }

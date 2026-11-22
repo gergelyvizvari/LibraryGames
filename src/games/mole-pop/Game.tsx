@@ -1,14 +1,34 @@
 import { useRef, useState } from 'react'
 import { useGameLoop, useShake } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
-import { SceneShell, useStage } from '../../kit/SceneShell'
+import { PaintedScene, type PaintedView } from '../../kit/painted'
+import { useStage } from '../../kit/SceneShell'
 import type { GameProps } from '../../kit/types'
 import { HOLES, pickCritter, points, spawnGap, upTime, type Critter } from './logic'
 
 /** Moles to tap in one stage. */
 const STAGE = 10
 
-const faces: Record<Critter, string> = { mole: '🐹', gold: '🌟', bunny: '🐰' }
+/** Each critter's painted pictures: peeking, and tapped (art/<critter>[-hit].webp). */
+const ART = import.meta.glob<string>('./art/*.webp', { eager: true, import: 'default' })
+const art = (name: string) => ART[`./art/${name}.webp`]
+
+type ViewId = 'wide' | 'tall'
+
+/** The vegetable garden; the molehills lie on its soil in three rows of three. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: art('garden'), world: { w: 1280, h: 800 }, focus: { x: 200, y: 100, w: 880, h: 640 }, ground: '#aaa92b', sayAt: { x: 640, y: 150 } },
+  { id: 'tall', painting: art('garden-tall'), world: { w: 720, h: 1152 }, focus: { x: 0, y: 200, w: 720, h: 840 }, ground: '#a29e3d', sayAt: { x: 360, y: 270 } },
+]
+
+/** The molehills' columns, the rows (the bottom of each molehill) and a molehill's width. */
+const GRID: Record<ViewId, { cols: number[]; rows: number[]; w: number }> = {
+  wide: { cols: [370, 630, 890], rows: [400, 560, 720], w: 245 },
+  tall: { cols: [130, 360, 590], rows: [510, 740, 970], w: 215 },
+}
+
+/** Where the hole is in the molehill picture (364 × 150): its middle, as fractions. */
+const HOLE = { x: 0.5, y: 0.27 }
 
 interface Up {
   kind: Critter
@@ -51,14 +71,31 @@ export default function MolePop({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <SceneShell place="meadow" say={t('say')} stage={stage} bare className="mole-pop">
-      <div className="mp-field" ref={ref}>
-        {holes.map((h, i) => (
-          <button key={i} className="mp-hole" onPointerDown={() => whack(i)} aria-label={`hole ${i + 1}`}>
-            <span className={`mp-critter${h ? ' mp-up' : ''}${h?.hit ? ' mp-hit' : ''}`}>{h ? faces[h.kind] : ''}</span>
-          </button>
-        ))}
-      </div>
-    </SceneShell>
+    <PaintedScene views={VIEWS} say={t('say')} stage={stage} className="mole-pop">
+      {(view) => {
+        const g = GRID[view]
+        const mh = (g.w * 150) / 364
+        return (
+          <div className="mp-field" ref={ref}>
+            {holes.map((h, i) => {
+              const x = g.cols[i % 3]
+              const bottom = g.rows[Math.floor(i / 3)]
+              const top = bottom - mh
+              return (
+                <button key={i} className="mp-hole" onPointerDown={() => whack(i)} aria-label={`hole ${i + 1}`} style={{ left: x - g.w / 2, top: top - g.w * 0.62, width: g.w, height: mh + g.w * 0.62 }}>
+                  <img className="mp-mound" src={art('hole')} alt="" draggable={false} />
+                  {/* The critter rises out of the hole: cut off at the hole's middle. */}
+                  <span className="mp-pit" style={{ bottom: mh * (1 - HOLE.y) }}>
+                    <span className={`mp-critter${h ? ' mp-up' : ''}${h?.hit ? ' mp-hit' : ''}`}>
+                      {h && <img src={art(h.hit ? `${h.kind}-hit` : h.kind)} alt="" draggable={false} />}
+                    </span>
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+        )
+      }}
+    </PaintedScene>
   )
 }

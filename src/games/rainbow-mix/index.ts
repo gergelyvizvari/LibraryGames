@@ -1,11 +1,12 @@
 import { medals } from '../../kit/SceneShell'
 import type { GameDef } from '../../kit/types'
+import thumb from './art/thumb.webp'
 import { icon } from './icon'
 import { stickers } from './stickers'
 import strings from './strings'
 
 const game: GameDef = {
-  meta: { id: 'rainbow-mix', skill: 'logic', icon, color: '#c9628f', added: '2026-11-15', scene: true },
+  meta: { id: 'rainbow-mix', skill: 'logic', icon, color: '#c9628f', added: '2026-11-15', scene: true, thumb },
   strings,
   // Its own drawn stickers first, then the medals for the higher levels.
   stickers: [...stickers, ...medals(icon)],
