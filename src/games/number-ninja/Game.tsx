@@ -1,10 +1,36 @@
 import { useRef, useState } from 'react'
 import { useGameLoop, usePops, useShake } from '../../kit/hooks'
 import { clamp, makeRng } from '../../kit/random'
-import { SceneShell, useStage } from '../../kit/SceneShell'
+import { Cast, useMood } from '../../kit/cast'
+import { PaintedScene, type PaintedView } from '../../kit/painted'
+import { useStage } from '../../kit/SceneShell'
 import type { GameProps } from '../../kit/types'
 import { Pops } from '../../kit/ui'
 import { decoyFor, expressionFor, targetRange, type Expr } from './logic'
+import bgTall from './art/bg-tall.webp'
+import bg from './art/bg.webp'
+import charBlink from './art/char-blink.webp'
+import charHappy from './art/char-happy.webp'
+import charSad from './art/char-sad.webp'
+import char from './art/char.webp'
+
+const FACES = { idle: char, blink: charBlink, happy: charHappy, sad: charSad }
+/** The character's width / height. */
+const ASPECT = 0.64
+
+type ViewId = 'wide' | 'tall'
+
+/** The mountain meadow; the sum bubbles rise into the open sky. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 60, y: 40, w: 1220, h: 760 }, ground: '#9fa635', sayAt: { x: 1000, y: 150 } },
+  { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 120, w: 720, h: 1030 }, ground: '#9a9634', sayAt: { x: 360, y: 200 } },
+]
+
+/** Where the play sits in each painting (its content zoomed to suit the painting's scale), and the character. */
+const SPOTS: Record<ViewId, { box: { x: number; y: number; w: number; h: number }; zoom: number; char: { x: number; bottom: number; h: number } }> = {
+  wide: { box: { x: 200, y: 40, w: 820, h: 740 }, zoom: 1, char: { x: 1140, bottom: 790, h: 260 } },
+  tall: { box: { x: 20, y: 180, w: 680, h: 960 }, zoom: 1, char: { x: 610, bottom: 1150, h: 200 } },
+}
 
 /** Right bubbles to pop in one stage, and how many of them before the number changes. */
 const STAGE = 8
@@ -24,6 +50,7 @@ export default function NumberNinja({ level, seed, t, onFinish }: GameProps) {
   const [bubbles, setBubbles] = useState<Bubble[]>([])
   const state = useRef({ bubbles: [] as Bubble[], spawnIn: 0, nextId: 0 })
   const stage = useStage(STAGE, onFinish)
+  const [mood, feel] = useMood()
   const [pops, addPop] = usePops()
   const [ref, shake] = useShake<HTMLDivElement>()
 
@@ -48,12 +75,14 @@ export default function NumberNinja({ level, seed, t, onFinish }: GameProps) {
     s.bubbles = s.bubbles.filter((q) => q.id !== b.id)
     setBubbles(s.bubbles)
     if (b.value !== target) {
+      feel('sad')
       stage.slip()
       shake()
       addPop(`${b.text} = ${b.value}`, b.x + 6, b.y, 'bad')
       return
     }
     const hits = stage.done + 1
+    feel('happy')
     if (stage.good() || hits % PER_TARGET !== 0) return
     let n = newTarget()
     while (n === target) n = newTarget()
@@ -63,7 +92,14 @@ export default function NumberNinja({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <SceneShell place="peaks" say={t('say', { n: target })} stage={stage} bare fill className="number-ninja">
+    <PaintedScene views={VIEWS} say={t('say', { n: target })} stage={stage} className="number-ninja">
+      {(view) => {
+        const at = SPOTS[view]
+        return (
+          <>
+            <Cast faces={FACES} mood={mood} at={at.char} aspect={ASPECT} />
+            {/* `zoom` scales the box's own position too, so it is given in zoomed units. */}
+            <div className="pb-box" style={{ left: at.box.x / at.zoom, top: at.box.y / at.zoom, width: at.box.w / at.zoom, height: at.box.h / at.zoom, zoom: at.zoom }}>
       <div className="nn-field" ref={ref}>
         <span className="nn-target" key={target}>
           {target}
@@ -75,6 +111,10 @@ export default function NumberNinja({ level, seed, t, onFinish }: GameProps) {
         ))}
         <Pops pops={pops} />
       </div>
-    </SceneShell>
+            </div>
+          </>
+        )
+      }}
+    </PaintedScene>
   )
 }
