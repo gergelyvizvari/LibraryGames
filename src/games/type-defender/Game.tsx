@@ -2,10 +2,36 @@ import { useEffect, useRef, useState } from 'react'
 import { useLocale } from '../../i18n'
 import { useGameLoop, useShake } from '../../kit/hooks'
 import { clamp, makeRng } from '../../kit/random'
-import { SceneShell, useStage } from '../../kit/SceneShell'
+import { Cast, useMood } from '../../kit/cast'
+import { PaintedScene, type PaintedView } from '../../kit/painted'
+import { useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
 import { typedPrefix, typedWhole, wordLists, wordsForLevel } from './content'
+import bgTall from './art/bg-tall.webp'
+import bg from './art/bg.webp'
+import charBlink from './art/char-blink.webp'
+import charHappy from './art/char-happy.webp'
+import charSad from './art/char-sad.webp'
+import char from './art/char.webp'
+
+const FACES = { idle: char, blink: charBlink, happy: charHappy, sad: charSad }
+/** The character's width / height. */
+const ASPECT = 0.756
+
+type ViewId = 'wide' | 'tall'
+
+/** The beach: words drift down from the sky towards the sandcastle, guarded by the seagull knight. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 100, y: 0, w: 1080, h: 800 }, ground: '#e4bf63', sayAt: { x: 60, y: 760 } },
+  { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 60, w: 720, h: 1092 }, ground: '#f5bf7c', sayAt: { x: 190, y: 1080 } },
+]
+
+/** Where the play sits in each painting (its content zoomed to suit the painting's scale), and the character. */
+const SPOTS: Record<ViewId, { box: { x: number; y: number; w: number; h: number }; zoom: number; char: { x: number; bottom: number; h: number } }> = {
+  wide: { box: { x: 200, y: 20, w: 880, h: 620 }, zoom: 1.6, char: { x: 1100, bottom: 780, h: 300 } },
+  tall: { box: { x: 20, y: 130, w: 680, h: 780 }, zoom: 1.8, char: { x: 100, bottom: 1130, h: 240 } },
+}
 
 /** Words to type in one stage. */
 const STAGE = 8
@@ -25,6 +51,7 @@ export default function TypeDefender({ level, seed, t, onFinish }: GameProps) {
   const [enemies, setEnemies] = useState<Enemy[]>([])
   const [typed, setTyped] = useState('')
   const stage = useStage(STAGE, onFinish)
+  const [mood, feel] = useMood()
   const over = stage.over
   const [ref, shake] = useShake<HTMLDivElement>()
   const input = useRef<HTMLInputElement>(null)
@@ -54,6 +81,7 @@ export default function TypeDefender({ level, seed, t, onFinish }: GameProps) {
     })
     if (hit) {
       // A word that reaches the castle bounces off its wall: nothing is lost, another one comes.
+      feel('sad')
       stage.slip()
       shake()
       setTyped('')
@@ -75,7 +103,8 @@ export default function TypeDefender({ level, seed, t, onFinish }: GameProps) {
     if (typedWhole(target.word, v, level)) {
       s.enemies = s.enemies.filter((e) => e.id !== target.id)
       setEnemies(s.enemies)
-      stage.good(target.word.length * 5)
+      feel('happy')
+    stage.good(target.word.length * 5)
       setTyped('')
       return
     }
@@ -83,7 +112,27 @@ export default function TypeDefender({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <SceneShell place="sea" say={t('say')} stage={stage} bare fill className="type-defender">
+    <PaintedScene views={VIEWS} say={t('say')} stage={stage} className="type-defender" trayHeight={90} tray={
+      <input
+        ref={input}
+        className="td-input"
+        value={typed}
+        onChange={(e) => onType(e.target.value)}
+        placeholder={t('typeHere')}
+        autoCapitalize="none"
+        autoCorrect="off"
+        autoComplete="off"
+        spellCheck={false}
+        enterKeyHint="done"
+      />
+      }>
+      {(view) => {
+        const at = SPOTS[view]
+        return (
+          <>
+            <Cast faces={FACES} mood={mood} at={at.char} aspect={ASPECT} />
+            {/* `zoom` scales the box's own position too, so it is given in zoomed units. */}
+            <div className="pb-box" style={{ left: at.box.x / at.zoom, top: at.box.y / at.zoom, width: at.box.w / at.zoom, height: at.box.h / at.zoom, zoom: at.zoom }}>
       <div className="td-sky" ref={ref} onPointerDown={() => input.current?.focus()}>
         {enemies.map((e) => {
           const active = typed && typedPrefix(e.word, typed, level)
@@ -100,20 +149,11 @@ export default function TypeDefender({ level, seed, t, onFinish }: GameProps) {
             </div>
           )
         })}
-        <div className="td-castle">🏰</div>
       </div>
-      <input
-        ref={input}
-        className="td-input"
-        value={typed}
-        onChange={(e) => onType(e.target.value)}
-        placeholder={t('typeHere')}
-        autoCapitalize="none"
-        autoCorrect="off"
-        autoComplete="off"
-        spellCheck={false}
-        enterKeyHint="done"
-      />
-    </SceneShell>
+            </div>
+          </>
+        )
+      }}
+    </PaintedScene>
   )
 }

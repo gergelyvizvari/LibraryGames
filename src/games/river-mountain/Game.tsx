@@ -3,13 +3,38 @@ import { useLocale } from '../../i18n'
 import { useShake, useTimeouts } from '../../kit/hooks'
 import { DOT_HIT_R, DOT_R, dotChoices, dotCount, dotGapFor, nearestDot, pickRound, placesFor as poolFor, pointsForKm, showDots } from '../../kit/mapHunt'
 import { makeRng } from '../../kit/random'
-import { SceneShell } from '../../kit/SceneShell'
+import { Cast, useMood } from '../../kit/cast'
+import { PaintedScene, type PaintedView } from '../../kit/painted'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
 import { MapStage } from '../../kit/ui'
 import { features, type Feature } from './content'
 import { BANDS, DOT_GAP_KM, kindLabel, kmToFeature, placesFor, type FeaturePlace } from './logic'
 import { HEIGHT, WIDTH, fromMap, linePath, loadLand, toMap } from './map'
+import bgTall from './art/bg-tall.webp'
+import bg from './art/bg.webp'
+import charBlink from './art/char-blink.webp'
+import charHappy from './art/char-happy.webp'
+import charSad from './art/char-sad.webp'
+import char from './art/char.webp'
+
+const FACES = { idle: char, blink: charBlink, happy: charHappy, sad: charSad }
+/** The character's width / height. */
+const ASPECT = 0.624
+
+type ViewId = 'wide' | 'tall'
+
+/** The mountain camp: the map stands on the camp table in the meadow, with the marmot beside it. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 0, y: 40, w: 1280, h: 760 }, ground: '#b0a536', sayAt: { x: 20, y: 770 } },
+  { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 180, w: 720, h: 972 }, ground: '#9e9e37', sayAt: { x: 40, y: 1110 } },
+]
+
+/** Where the play sits in each painting (its content zoomed to suit the painting's scale), and the character. */
+const SPOTS: Record<ViewId, { box: { x: number; y: number; w: number; h: number }; zoom: number; char: { x: number; bottom: number; h: number } }> = {
+  wide: { box: { x: 240, y: 130, w: 800, h: 410 }, zoom: 1.2, char: { x: 1170, bottom: 780, h: 270 } },
+  tall: { box: { x: 20, y: 260, w: 680, h: 450 }, zoom: 1.2, char: { x: 600, bottom: 1120, h: 260 } },
+}
 
 const KIND_ICON: Record<Feature['kind'], string> = { river: '〰️', mountain: '⛰️', sea: '🌊', lake: '💧' }
 
@@ -48,6 +73,7 @@ export default function RiverMountain({ level, seed, t, onFinish }: GameProps) {
   const svgRef = useRef<SVGSVGElement>(null)
   const [wrapRef, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
+  const [mood, feel] = useMood()
   const target = round[index]
   const [tx, ty] = toMap(target.at)
 
@@ -66,6 +92,7 @@ export default function RiverMountain({ level, seed, t, onFinish }: GameProps) {
     setCombo(c)
     setScore((s) => s + gained)
     setResult({ tap, pts: gained, label })
+    feel(pts >= 20 ? 'happy' : 'sad')
     if (pts >= 20) sound.good(c)
     else if (pts > 0) sound.tone(500, 0.12, 'triangle')
     else {
@@ -115,9 +142,7 @@ export default function RiverMountain({ level, seed, t, onFinish }: GameProps) {
   const ly = ty < 90 ? ty + 64 : ty - 36
 
   return (
-    <SceneShell
-      place="coast"
-      say={<>
+    <PaintedScene views={VIEWS} say={<>
         {result ? (
           result.label
         ) : (
@@ -128,12 +153,14 @@ export default function RiverMountain({ level, seed, t, onFinish }: GameProps) {
             {t('where', { place: target.name })}
           </>
         )}
-      </>}
-      stage={{ done: index + (result ? 1 : 0), total: ROUNDS, over: false, mood: !result ? 'idle' : result.pts >= 20 ? 'happy' : 'oops' }}
-      bare
-      fill
-      className="river-mountain"
-    >
+      </>} stage={{ done: index + (result ? 1 : 0), total: ROUNDS, over: false }} className="river-mountain">
+      {(view) => {
+        const at = SPOTS[view]
+        return (
+          <>
+            <Cast faces={FACES} mood={mood} at={at.char} aspect={ASPECT} />
+            {/* `zoom` scales the box's own position too, so it is given in zoomed units. */}
+            <div className="pb-box" style={{ left: at.box.x / at.zoom, top: at.box.y / at.zoom, width: at.box.w / at.zoom, height: at.box.h / at.zoom, zoom: at.zoom }}>
       <MapStage>
       <div className="rm-wrap map-box" ref={wrapRef} style={{ '--map-ratio': WIDTH / HEIGHT } as CSSProperties}>
         {land ? (
@@ -170,6 +197,10 @@ export default function RiverMountain({ level, seed, t, onFinish }: GameProps) {
         )}
       </div>
       </MapStage>
-    </SceneShell>
+            </div>
+          </>
+        )
+      }}
+    </PaintedScene>
   )
 }
