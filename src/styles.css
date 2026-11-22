@@ -1767,6 +1767,62 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .ps.shape-spin .ss-target { width: 250px; height: 250px; min-height: 0; flex: none; }
 .ps.shape-spin .ss-options { box-shadow: inset 0 0 0 7px #8a5a3c, 0 8px 10px rgba(70, 30, 5, 0.3); }
 
+/* capital-match: its storybook pieces inside the painted scene. */
+.ps.capital-match .cm-country { display: block; margin-top: 4px; font-family: var(--story); font-weight: 800; font-size: 1.5rem; letter-spacing: 1px; }
+.ps.capital-match .cm-card { text-align: center; }
+.ps.capital-match .cm-card { align-self: center; width: min(100%, 420px); background: var(--story-paper); border-radius: 12px; box-shadow: inset 0 0 0 7px #fffaf0, inset 0 0 0 9px #e2607e, 0 7px 0 rgba(36, 26, 60, 0.25); rotate: -1.5deg; }
+.ps.capital-match .cm-country { font-family: var(--story); }
+.ps.capital-match .pb-box { justify-content: flex-start; }
+.ps.capital-match .cm-card { width: 100%; background: none; box-shadow: none; }
+.ps.capital-match .choices { width: 100%; margin-top: auto; }
+.ps-tall.capital-match .choices { width: 74%; align-self: flex-start; }
+/* flag-friends: its storybook pieces inside the painted scene. */
+.ps.flag-friends .ff-miss .ff-front { background: #f7dfe2; }
+.ps.flag-friends .ff-group { align-self: center; background: #fff6dc; color: var(--story-ink); font-family: var(--story); letter-spacing: 1px; box-shadow: 0 4px 0 rgba(36, 26, 60, 0.22); }
+.ps.flag-friends .ff-grid { padding: 10px; background: none; box-shadow: none; max-width: 440px; }
+/* sentence-builder: its storybook pieces inside the painted scene. */
+.ps.sentence-builder .sb-picture { align-self: center; padding: 8px 26px; border-radius: 22px; background: var(--story-paper); box-shadow: 0 0 0 6px #c99a6a, 0 6px 0 6px rgba(36, 26, 60, 0.22); }
+.ps.sentence-builder .sb-built { background: var(--story-paper); border: 0; box-shadow: inset 0 -3px 0 #e0cfa4, 0 5px 0 rgba(36, 26, 60, 0.2); }
+.ps.sentence-builder .sb-tiles { padding: 14px; border-radius: 26px; background: #a8744e; box-shadow: inset 0 0 0 7px #8a5a3c, 0 7px 0 rgba(36, 26, 60, 0.28); }
+.ps.sentence-builder .sb-tile { background: var(--story-paper); color: var(--story-ink); border: 0; box-shadow: 0 4px 0 #e0cfa4; }
+.ps.sentence-builder .sb-picture::before { display: none; }
+/* stroop-clash: its storybook pieces inside the painted scene. */
+.ps.stroop-clash .sc-word { align-self: center; position: relative; margin: 26px 0 10px; padding: 6px 30px 12px; border-radius: 18px; background: var(--story-paper); box-shadow: inset 0 0 0 6px #c99a6a, 0 8px 0 rgba(36, 26, 60, 0.25); font-family: var(--story); font-weight: 800; }
+.ps.stroop-clash .sc-word::before { content: ''; position: absolute; left: 22%; right: 22%; bottom: 100%; height: 26px; border: 4px solid #8a5a3c; border-bottom: 0; border-radius: 50% 50% 0 0 / 100% 100% 0 0; }
+.ps.stroop-clash .sc-buttons { padding: 14px; border-radius: 28px; background: #a8744e; box-shadow: inset 0 0 0 7px #8a5a3c, 0 7px 0 rgba(36, 26, 60, 0.28); }
+.ps.stroop-clash .sc-btn { border-radius: 50%; height: auto; aspect-ratio: 1.6; box-shadow: inset 0 0 0 7px #fff6dc, inset 0 14px 0 7px rgba(255, 255, 255, 0.25), 0 5px 0 rgba(36, 26, 60, 0.3); }
+.ps.stroop-clash .sc-word, .ps.stroop .sc-word { margin: 0; padding: 0; background: none; box-shadow: none; font-family: var(--story); font-size: 120px; }
+.ps.stroop .sc-word::before { display: none; }
+.ps.stroop .sc-buttons { display: flex; gap: 12px; padding: 12px; border-radius: 28px; background: #a8744e; box-shadow: inset 0 0 0 7px #8a5a3c, 0 7px 0 rgba(36, 26, 60, 0.28); }
+.ps.stroop .sc-btn { width: 74px; height: 74px; aspect-ratio: auto; border-radius: 50%; box-shadow: inset 0 0 0 6px #fff6dc, inset 0 12px 0 6px rgba(255, 255, 255, 0.25), 0 5px 0 rgba(36, 26, 60, 0.3); }
+/* what-next: its storybook pieces inside the painted scene. */
+
+.ps.what-next .pb-box { justify-content: space-between; gap: 0; }
+.ps.what-next .wn-shelf { width: 100%; padding: 0; border-radius: 0; background: none; box-shadow: none; display: flex; flex-direction: column; justify-content: flex-end; height: 128px; }
+.ps-tall.what-next .wn-shelf { height: 306px; }
+.ps.what-next .wn-row { min-height: 0; padding: 0; align-content: end; gap: 98px 4px; }
+.ps.what-next .wn-slot { border-color: #8a5a3c; color: #8a5a3c; background: rgba(255, 246, 220, 0.6); }
+.ps.what-next .wn-choices { padding: 0; background: none; box-shadow: none; }
+.ps.what-next .wn-choice { width: 92px; box-shadow: inset 0 0 0 5px #c99a6a, 0 5px 0 rgba(36, 26, 60, 0.3); }
+.ps.what-next .wn-solved { border-color: transparent; background: none; }
+/* word-families: its storybook pieces inside the painted scene. */
+.ps.word-families .wf-belt { border-radius: 24px; background: linear-gradient(to top, #8a5a3c 0 14px, transparent 14px), #f3d9c0; box-shadow: 0 0 0 8px #fff6dc, 0 8px 0 8px rgba(36, 26, 60, 0.22); margin: 8px; }
+.ps.word-families .wf-card { border: 0; background: var(--story-paper); color: var(--story-ink); box-shadow: 0 5px 0 #e0cfa4, 0 7px 8px rgba(20, 15, 50, 0.2); }
+.ps.word-families .wf-basket { border: 0; border-top: 12px solid #e2607e; border-radius: 10px 10px 34px 34px; color: var(--story-ink); background: repeating-linear-gradient(90deg, transparent 0 16px, rgba(138, 90, 60, 0.35) 16px 19px), #c99a6a; box-shadow: 0 6px 0 rgba(36, 26, 60, 0.28); }
+.ps.word-families .wf-basket:nth-child(2) { border-top-color: #3fb0a8; }
+.ps.word-families .wf-basket:nth-child(3) { border-top-color: #f2c14e; }
+.ps.word-families .pb-box { justify-content: flex-end; gap: 14px; }
+.ps.word-families .wf-belt { width: 100%; height: 190px; margin: 0; }
+.ps.word-families .wf-word { font-size: 1.7rem; }
+.ps.word-families .wf-baskets { display: flex; width: 100%; gap: 12px; }
+.ps.word-families .wf-basket { flex: 1; min-width: 0; min-height: 118px; }
+.ps.word-families .wf-basket-name { font-size: 1.25rem; }
+.ps.word-families .wf-belt { height: 170px; overflow: visible; border: 0; border-radius: 0; background: none; box-shadow: none; }
+.ps-tall.word-families .wf-belt { height: 240px; }
+.ps.word-families .wf-rail { top: 8px; bottom: auto; height: 7px; border-radius: 4px; background: #8a5a3c; opacity: 1; box-shadow: 0 3px 0 rgba(36, 26, 60, 0.2); }
+.ps.word-families .wf-card { top: 44px; }
+.ps.word-families .wf-card::before { content: ''; position: absolute; left: 50%; bottom: 100%; width: 4px; height: 36px; margin-left: -2px; background: #8a5a3c; }
+.ps.word-families .wf-in, .ps.word-families .wf-away { opacity: 0; }
 /* type-defender: its storybook pieces inside the painted scene. */
 .ps.type-defender .td-sky { margin: 0 8px 8px; box-shadow: 0 0 0 8px #fff6dc, 0 8px 0 8px rgba(36, 26, 60, 0.22); }
 .ps.type-defender .td-sky { background: radial-gradient(circle at 80% 14%, #fff6dc 0 20px, rgba(255, 246, 220, 0.22) 21px 36px, transparent 37px), radial-gradient(circle at 12px 0, transparent 0 13px, #157889 13.5px) 0 100% / 24px 26px repeat-x, linear-gradient(#1c2a66, #4b4690 70%, #c2607a); }
