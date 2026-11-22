@@ -1679,6 +1679,21 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .ps.anagram-race .ar-tile { background: #f2c14e; color: var(--story-ink); border: 0; border-radius: 12px; box-shadow: inset 0 5px 0 #f7d572, 0 5px 0 #c98f2a; font-family: var(--story); }
 .ps.anagram-race .ar-picture::before { display: none; }
 
+/* flash-read: its storybook pieces inside the painted scene. */
+.ps.flash-read .fr-stage { align-self: center; width: min(100%, 460px); padding: 26px 22px; border-radius: 10px 10px 22px 22px; background: linear-gradient(90deg, transparent calc(50% - 1px), rgba(51, 40, 74, 0.12) 0 calc(50% + 1px), transparent 0), linear-gradient(90deg, #fffaf0 0 46%, #f3ead6 50%, #fffaf0 54%); box-shadow: 0 0 0 9px #94405e, 0 9px 0 9px rgba(36, 26, 60, 0.25); margin: 9px; }
+.ps.flash-read .fr-word { font-family: var(--story); }
+.ps.flash-read .pb-box { justify-content: flex-start; gap: 22px; }
+.ps.flash-read .fr-stage { flex: none; min-height: 0; align-self: stretch; width: auto; height: 240px; margin: 0; padding: 18px 40px; background: none; box-shadow: none; }
+.ps-tall.flash-read .fr-stage { height: 160px; padding: 10px 30px; }
+.ps.flash-read .fr-word { font-family: var(--story); font-size: 84px; color: var(--story-ink); }
+.ps-tall.flash-read .fr-word { font-size: 56px; }
+.ps.flash-read .fr-progress { background: rgba(120, 80, 40, 0.2); }
+.ps.flash-read .fr-progress div { background: #3fb0a8; }
+.ps.flash-read .fr-question { align-self: stretch; }
+.ps.flash-read .fr-question h2 { display: grid; place-items: center; height: 240px; margin: 0; padding: 0 40px; font-size: 40px; color: var(--story-ink); }
+.ps-tall.flash-read .fr-question h2 { height: 160px; font-size: 30px; padding: 0 24px; }
+.ps.flash-read .fr-question .choices { margin-top: 70px; }
+.ps-tall.flash-read .fr-question .choices { margin-top: 150px; }
 /* grid-glow: its storybook pieces inside the painted scene. */
 .ps.grid-glow .gg-grid { padding: 16px; border-radius: 40% 44% 42% 46% / 44% 40% 46% 42%; background: #62c4d8; box-shadow: 0 0 0 10px #f1dc9a, 0 9px 0 10px rgba(36, 26, 60, 0.22); width: min(100% - 28px, 420px, 100dvh - 420px); min-width: 220px; align-self: center; }
 .ps.grid-glow .gg-grid { padding: 9%; gap: 6px; }
