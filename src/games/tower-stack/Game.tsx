@@ -46,9 +46,10 @@ function useBlink() {
 }
 
 /** Floors to build in one stage. */
-const STAGE = 8
+const STAGE = 18
 const START: Block = { x: 30, w: 40 }
-const VISIBLE = 9
+/** Floors on screen: the tower grows to about 70% of the sky, then slides down as it climbs on. */
+const VISIBLE = 7
 // Soft painted-wood tints, multiplied over the painted grain.
 const colors = ['#ffb3b3', '#ffe48f', '#aaf0cc', '#ace0ff', '#d6ccff', '#ffcaee', '#ffcf98']
 
@@ -115,7 +116,7 @@ export default function TowerStack({ level, t, onFinish }: GameProps) {
 
   const base = Math.max(0, tower.length - VISIBLE)
   const shown = tower.slice(base)
-  const rowH = 100 / (VISIBLE + 2)
+  const rowH = 100 / 11
   const y = (floor: number) => 100 - (floor - base + 1) * rowH
 
   const face: Face = over ? 'happy' : mood ?? (blink ? 'blink' : 'idle')

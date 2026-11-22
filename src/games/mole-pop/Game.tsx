@@ -27,8 +27,8 @@ const GRID: Record<ViewId, { cols: number[]; rows: number[]; w: number }> = {
   tall: { cols: [130, 360, 590], rows: [510, 740, 970], w: 215 },
 }
 
-/** Where the hole is in the molehill picture (364 × 150): its middle, as fractions. */
-const HOLE = { x: 0.5, y: 0.27 }
+/** Where the hole is in the molehill picture (364 × 150): its middle, and the height of its front rim, as fractions. */
+const HOLE = { x: 0.5, y: 0.38 }
 
 interface Up {
   kind: Critter

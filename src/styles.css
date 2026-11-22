@@ -328,10 +328,11 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .mp-field { position: absolute; inset: 0; }
 .mp-hole { position: absolute; padding: 0; background: none; border-radius: 30%; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 .mp-mound { position: absolute; left: 0; bottom: 0; width: 100%; user-select: none; pointer-events: none; }
-.mp-pit { position: absolute; left: 0; right: 0; top: 0; overflow: hidden; pointer-events: none; }
-.mp-critter { position: absolute; left: 14%; right: 14%; bottom: -100%; height: 74%; display: flex; justify-content: center; align-items: flex-end; transition: bottom 0.12s ease-out; }
-.mp-critter img { height: 100%; user-select: none; }
-.mp-up { bottom: -4%; }
+.mp-pit { position: absolute; left: 0; right: 0; top: 0; overflow: hidden; pointer-events: none; border-radius: 0 0 50% 50% / 0 0 9% 9%; }
+/* Just as wide as the hole's opening, rising from behind its front rim. */
+.mp-critter { position: absolute; left: 25%; right: 25%; bottom: -130%; display: flex; justify-content: center; align-items: flex-end; transition: bottom 0.12s ease-out; }
+.mp-critter img { width: 100%; user-select: none; }
+.mp-up { bottom: 4%; }
 .mp-hit { transform: scale(0.92) rotate(-6deg); }
 
 /* Anagram Race */
@@ -755,6 +756,9 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 /* Many stars need smaller stars. */
 .scene-pips:has(svg:nth-child(7)) { gap: 3px; padding: 7px 10px; }
 .scene-pips:has(svg:nth-child(7)) svg { width: 19px; height: 19px; }
+/* A long stage (Tower Stack): small stars, so the row still fits between the back and heart buttons on a phone. */
+.scene-pips:has(svg:nth-child(13)) { gap: 0; padding: 6px 8px; }
+.scene-pips:has(svg:nth-child(13)) svg { width: 12px; height: 12px; }
 @media (min-width: 900px) and (min-height: 560px) {
   .sg-wall { height: 170px; padding: 0 max(60px, 50% - 380px) 0 0; }
   .sg-window { left: max(60px, 50% - 380px); }
@@ -1139,15 +1143,17 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .nl-back { background: #c94a6b; }
 .nl-stage { position: absolute; touch-action: none; }
 .nl-line { display: none; }
-.nl-tick { position: absolute; top: calc(62% - 40px); width: 8.4%; height: 130px; padding: 0; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: 0; border-radius: 18px; color: var(--story-ink); -webkit-tap-highlight-color: transparent; }
-.nl-mark { display: block; width: 100%; max-width: 92px; margin-top: 18px; user-select: none; transition: transform 0.12s, filter 0.2s; }
-.nl-num { min-height: 44px; font-family: var(--story); font-size: 40px; font-weight: 800; line-height: 1; color: #fffaf0; text-shadow: 0 2px 3px rgba(20, 60, 70, 0.7); }
+.nl-tick { position: absolute; top: calc(var(--nl-row) - 40px * var(--nl-k)); bottom: 0; width: 9%; padding: 0; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: 0; border-radius: 18px; color: var(--story-ink); -webkit-tap-highlight-color: transparent; transition: background 0.12s; }
+.nl-mark { display: block; width: 100%; max-width: calc(92px * var(--nl-k)); margin-top: calc(18px * var(--nl-k)); user-select: none; transition: transform 0.12s, filter 0.2s; }
+.nl-num { min-height: calc(44px * var(--nl-k)); font-family: var(--story); font-size: calc(40px * var(--nl-k)); font-weight: 800; line-height: 1; color: #fffaf0; text-shadow: 0 2px 3px rgba(20, 60, 70, 0.7); }
 .nl-start .nl-num { color: #ffe27a; }
 .nl-right .nl-mark { filter: drop-shadow(0 0 10px #ffe27a) drop-shadow(0 0 4px #ffd24a) brightness(1.08); }
 .nl-wrong { animation: shake 0.35s; }
 .nl-wrong .nl-mark { filter: drop-shadow(0 0 10px #ff7d9b) sepia(0.4) hue-rotate(-30deg) saturate(2); }
+/* The column under the finger lights up softly, all the way down: the whole column is the stone's tap area. */
+.nl-aim { background: linear-gradient(rgba(255, 250, 225, 0.5), rgba(255, 250, 225, 0.12)); }
 .nl-aim .nl-mark { transform: scale(1.18); filter: brightness(1.12); }
-.nl-frog { position: absolute; top: calc(62% - 110px); width: 96px; aspect-ratio: 0.77; translate: -50% 0; transition: left 0.14s ease-out; animation: nlHop 0.16s ease-out; pointer-events: none; z-index: 1; }
+.nl-frog { position: absolute; top: calc(var(--nl-row) - 110px * var(--nl-k)); width: calc(96px * var(--nl-k)); aspect-ratio: 0.77; translate: -50% 0; transition: left 0.14s ease-out; animation: nlHop 0.16s ease-out; pointer-events: none; z-index: 1; }
 .nl-frog img { position: absolute; inset: 0; width: 100%; height: 100%; user-select: none; }
 .nl-frog img.nl-off { visibility: hidden; }
 .nl-count { position: absolute; left: 50%; top: -46px; translate: -50% 0; font-family: var(--story); font-size: 44px; font-weight: 800; color: #ffe0e8; text-shadow: 0 2px 3px rgba(120, 20, 50, 0.7); }
@@ -1410,6 +1416,8 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .lp-pic { display: block; width: 100%; height: 100%; padding: 0; background: none; border-radius: 50%; transition: transform 0.12s, opacity 0.3s; -webkit-tap-highlight-color: transparent; }
 .lp-pic:active { transform: scale(0.92); }
 .lp-art { display: block; width: 100%; height: 100%; overflow: visible; }
+/* A faint cream rim, so a green leaf or a dark critter never melts into the painted pad. */
+.lily-pads .lp-art { filter: drop-shadow(1.6px 0 0 rgba(255, 252, 240, 0.85)) drop-shadow(-1.6px 0 0 rgba(255, 252, 240, 0.85)) drop-shadow(0 1.6px 0 rgba(255, 252, 240, 0.85)) drop-shadow(0 -1.6px 0 rgba(255, 252, 240, 0.85)); }
 .lp-hop { animation: pkHop 0.55s; filter: drop-shadow(0 0 6px #fff6dc) drop-shadow(0 0 3px #fff6dc); }
 .lp-no { animation: psNo 0.4s 2; }
 .lp-fade { opacity: 0.35; }
