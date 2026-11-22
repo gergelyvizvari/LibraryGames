@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from 'react'
+import { createPortal } from 'react-dom'
 import { useLocale } from '../../i18n'
 import { useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
-import { SceneShell } from '../../kit/SceneShell'
+import { Cast, useMood } from '../../kit/cast'
+import { PaintedScene, type PaintedView } from '../../kit/painted'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
 import { MapStage } from '../../kit/ui'
@@ -10,6 +12,30 @@ import { continentNames, names, type Item } from './content'
 import { CONTINENTS, type Continent } from './continents'
 import { coloured, pickItems, pointsFor, showLabels } from './logic'
 import { WIDTH, loadWorld, type WorldMap } from './map'
+import bgTall from './art/bg-tall.webp'
+import bg from './art/bg.webp'
+import charBlink from './art/char-blink.webp'
+import charHappy from './art/char-happy.webp'
+import charSad from './art/char-sad.webp'
+import char from './art/char.webp'
+
+const FACES = { idle: char, blink: charBlink, happy: charHappy, sad: charSad }
+/** The character's width / height. */
+const ASPECT = 0.806
+
+type ViewId = 'wide' | 'tall'
+
+/** The explorer study: the world map lies on the big desk, with the koala explorer beside it. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 0, y: 100, w: 1280, h: 700 }, ground: '#a44716', sayAt: { x: 30, y: 350 } },
+  { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 240, w: 720, h: 912 }, ground: '#7d3723', sayAt: { x: 40, y: 1110 } },
+]
+
+/** Where the play sits in each painting (its content zoomed to suit the painting's scale), and the character. */
+const SPOTS: Record<ViewId, { box: { x: number; y: number; w: number; h: number }; zoom: number; char: { x: number; bottom: number; h: number } }> = {
+  wide: { box: { x: 270, y: 250, w: 880, h: 540 }, zoom: 1.3, char: { x: 130, bottom: 640, h: 290 } },
+  tall: { box: { x: 20, y: 380, w: 680, h: 560 }, zoom: 1.3, char: { x: 600, bottom: 1135, h: 300 } },
+}
 
 const COLOURS: Record<Continent, string> = {
   northAmerica: '#ff9f43',
@@ -22,7 +48,7 @@ const COLOURS: Record<Continent, string> = {
 }
 
 // Stickers on one continent spread out around its anchor, in map units.
-const SPOTS: [number, number][] = [[0, 0], [-34, -22], [34, -22], [-34, 22], [34, 22], [0, -40], [0, 40], [-60, 0], [60, 0]]
+const STICKER_SPOTS: [number, number][] = [[0, 0], [-34, -22], [34, -22], [-34, 22], [34, 22], [0, -40], [0, 40], [-60, 0], [60, 0]]
 
 export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
   const locale = useLocale()
@@ -43,6 +69,7 @@ export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
   const askedAt = useRef(0)
   const [shakeRef, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
+  const [mood, feel] = useMood()
   const q = questions[index]
   const done = index >= questions.length
 
@@ -82,13 +109,15 @@ export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
       if (tries === 0) stats.current.firstTry++
       setCombo(nc)
       setScore(score + gained)
-      setSolved('yes')
+      feel('happy')
+    setSolved('yes')
       setPlaced((p) => [...p, q])
       sound.good(nc)
       next(score + gained)
       return
     }
-    sound.bad()
+    feel('sad')
+      sound.bad()
     vibrate(40)
     shake()
     setCombo(0)
@@ -149,14 +178,15 @@ export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
   const stickers = CONTINENTS.flatMap((c) => placed.filter((p) => p.continent === c).map((p, i) => ({ p, c, i })))
 
   return (
-    <SceneShell
-      place="coast"
-      say={q ? hint() : ' '}
-      stage={{ done: Math.min(index + (solved ? 1 : 0), questions.length), total: questions.length, over: !q, mood: solved === 'yes' ? 'happy' : wrong ? 'oops' : 'idle' }}
-      bare
-      fill
-      className="continent-sort"
-    >
+    <>
+    <PaintedScene views={VIEWS} say={q ? hint() : ' '} stage={{ done: Math.min(index + (solved ? 1 : 0), questions.length), total: questions.length, over: !q }} className="continent-sort">
+      {(view) => {
+        const at = SPOTS[view]
+        return (
+          <>
+            <Cast faces={FACES} mood={mood} at={at.char} aspect={ASPECT} />
+            {/* `zoom` scales the box's own position too, so it is given in zoomed units. */}
+            <div className="pb-box" style={{ left: at.box.x / at.zoom, top: at.box.y / at.zoom, width: at.box.w / at.zoom, height: at.box.h / at.zoom, zoom: at.zoom }}>
       {q && (
         <div className={`cs2-card${solved ? ' cs2-card-done' : ''}${drag ? ' cs2-card-lifted' : ''}`} key={index} onPointerDown={onCardDown}>
           <span className="cs2-emoji">{q.emoji}</span>
@@ -185,7 +215,7 @@ export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
                 </text>
               ))}
             {stickers.map(({ p, c, i }) => {
-              const [dx, dy] = SPOTS[i % SPOTS.length]
+              const [dx, dy] = STICKER_SPOTS[i % STICKER_SPOTS.length]
               return (
                 <text key={p.id} x={world.anchors[c][0] + dx} y={world.anchors[c][1] + dy + 24} className="cs2-sticker">
                   {p.emoji}
@@ -198,11 +228,19 @@ export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
         )}
       </div>
       </MapStage>
-      {drag && q && (
-        <div className="cs2-ghost" style={{ left: drag.x, top: drag.y }}>
-          {q.emoji}
-        </div>
-      )}
-    </SceneShell>
+            </div>
+          </>
+        )
+      }}
+      </PaintedScene>
+      {drag &&
+        q &&
+        createPortal(
+          <div className="cs2-ghost" style={{ left: drag.x, top: drag.y }}>
+            {q.emoji}
+          </div>,
+          document.body,
+        )}
+    </>
   )
 }
