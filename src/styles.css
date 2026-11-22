@@ -362,13 +362,15 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .sim-animal:active { transform: translateY(4px); box-shadow: 0 0 0 2px var(--line), 0 2px 0 var(--line); }
 
 /* How Many? */
-.hm-board { position: relative; aspect-ratio: 1; width: min(100%, 420px); margin: 0 auto; background: #2c6e62; border-radius: 22px; box-shadow: inset 0 0 0 10px #a8744e, inset 0 0 0 13px #8a5a3c, 0 8px 0 rgba(36, 26, 60, 0.28); }
-.hm-chalk { position: absolute; left: 12%; right: 12%; bottom: 3px; height: 9px; border-radius: 4px; background: #c99a6a; box-shadow: inset 0 -3px 0 #94694a; }
-.hm-chalk::after { content: ''; position: absolute; left: 12%; top: -5px; width: 26px; height: 7px; border-radius: 3px; background: #fff6dc; box-shadow: 34px 0 0 #f7b3c6; }
-.hm-dot { position: absolute; width: 14%; aspect-ratio: 1; display: grid; place-items: center; transform: translate(-50%, -50%); animation: popIn 0.2s; }
+.hm-board { position: absolute; }
+.hm-char { position: absolute; aspect-ratio: 0.49; transform-origin: 50% 100%; pointer-events: none; animation: fmBreathe 3.4s ease-in-out infinite; }
+.hm-char img { position: absolute; left: 50%; bottom: 0; height: 100%; translate: -50% 0; user-select: none; }
+.hm-char img.hm-off { visibility: hidden; }
+.hm-cheer { animation: fmHop 0.6s; }
+.hm-dot { position: absolute; height: 13%; aspect-ratio: 1; display: grid; place-items: center; transform: translate(-50%, -50%); animation: popIn 0.2s; }
 .hm-dot .thing { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 3px 0 rgba(20, 15, 50, 0.3)); }
-.hm-question { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--story); font-size: 7rem; font-weight: 800; color: #fff6dc; opacity: 0.85; }
-.hm-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.hm-question { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--story); font-size: 200px; font-weight: 800; color: #fff6dc; opacity: 0.85; }
+.hm-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: min(100%, 460px); }
 .hm-options .choice-btn:disabled { opacity: 0.6; }
 
 /* Sentence Builder */
@@ -1221,7 +1223,6 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 
 /* Games inside the shared scene: boards sized so the whole scene fits one screen. */
 .sg .md-maze { width: min(100% - 40px, 440px, (100dvh - 470px) * var(--md-ratio, 1)); min-width: 190px; }
-.sg .hm-board { width: min(100%, 420px, 100dvh - 420px); min-width: 220px; }
 .sg .cm-country { display: block; margin-top: 4px; font-family: var(--story); font-weight: 800; font-size: 1.5rem; letter-spacing: 1px; }
 .sg .cm-card { text-align: center; }
 .scene-frame:has(.scene-end) .sg-guide { visibility: hidden; }
