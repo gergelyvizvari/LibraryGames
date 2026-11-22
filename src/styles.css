@@ -1734,3 +1734,16 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .ps.lights-out .lo-go .lo-light { background: radial-gradient(circle at 36% 30%, #e6ffe0, #4fd36a 55%, #22a447); box-shadow: 0 0 30px rgba(80, 220, 110, 0.9), inset 0 -5px 0 rgba(0, 90, 30, 0.25); }
 /* The big label on the track says what to do (and how fast you were), so no speech bubble too. */
 .ps.lights-out .scene-bubble { display: none; }
+
+/* opposites: its storybook pieces inside the painted scene. */
+.ps.opposites .op-board { padding: 14px; border-radius: 26px; background: #a8744e; box-shadow: inset 0 0 0 7px #8a5a3c, 0 7px 0 rgba(36, 26, 60, 0.28); }
+.ps.opposites .op-board > * { background: var(--story-paper); border: 0; box-shadow: 0 4px 0 #e0cfa4; }
+.ps.opposites .op-board { padding: 0; background: none; box-shadow: none; max-width: none; }
+.ps.opposites .op-board > * { box-shadow: 0 3px 4px rgba(70, 30, 5, 0.3); }
+.ps.opposites .op-board > *::before { content: ""; position: absolute; left: 50%; top: 5px; width: 12px; height: 12px; translate: -50% 0; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ff9aa8, #d9506a); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35); }
+.ps.opposites .pb-box { justify-content: center; }
+.ps.opposites .op-board { gap: 8px; }
+.ps.opposites .op-card { min-height: 0; padding: 14px 6px 4px; }
+.ps.opposites .op-emoji { font-size: 30px; }
+.ps.opposites .op-word { font-size: 19px; }
+.ps.opposites .op-selected { background: #ffe9a0; color: var(--story-ink); }
