@@ -1678,3 +1678,11 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .ps.anagram-race .ar-filled { background: var(--story-paper); border-style: solid; }
 .ps.anagram-race .ar-tile { background: #f2c14e; color: var(--story-ink); border: 0; border-radius: 12px; box-shadow: inset 0 5px 0 #f7d572, 0 5px 0 #c98f2a; font-family: var(--story); }
 .ps.anagram-race .ar-picture::before { display: none; }
+
+/* letter-pop: its storybook pieces inside the painted scene. */
+.ps.letter-pop .lp-water { margin: 0 8px 8px; box-shadow: 0 0 0 8px #fff6dc, 0 8px 0 8px rgba(36, 26, 60, 0.22); }
+.ps.letter-pop .lp-water { background: radial-gradient(ellipse 60px 26px at 18% 100%, #1f8a6c 0 99%, transparent), radial-gradient(ellipse 40px 60px at 84% 100%, #2c9c7a 0 99%, transparent), linear-gradient(to top, #ecd27c 0 6%, transparent 6%), linear-gradient(#8fe0ea, #27a3b4 60%, #157889); }
+.ps.letter-pop .pb-box { display: block; }
+.ps.letter-pop .lp-water { position: absolute; inset: 0; min-height: 0; margin: 0; background: none; box-shadow: none; border-radius: 0; overflow: visible; }
+.ps.letter-pop .lp-bubble { width: 96px; height: 96px; font-family: var(--story); font-size: 52px; background: radial-gradient(circle at 34% 30%, #ffffff, rgba(240, 252, 255, 0.85) 45%, rgba(200, 240, 250, 0.6)); border-width: 5px; box-shadow: inset -6px -8px 0 rgba(120, 200, 220, 0.25), 0 4px 10px rgba(20, 80, 110, 0.25); }
+.ps.letter-pop .td-input { width: min(100%, 360px); }
