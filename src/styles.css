@@ -337,7 +337,8 @@ h1, h2 { margin: 0; line-height: 1.1; }
 /* The cut-outs' cream rim runs along their straight bottom edge too: hide it, it lies inside the hole. */
 .mp-critter img { clip-path: inset(0 0 4% 0); margin-bottom: -4%; }
 .mp-up { bottom: 0; }
-.mp-hit { transform: scale(0.92) rotate(-6deg); }
+/* Tapped: a little squash down into the hole, no tilt, so its bottom edge stays hidden. */
+.mp-hit { transform: translateY(6%) scale(0.95, 0.9); transform-origin: 50% 100%; }
 
 /* Anagram Race */
 .ar-picture, .sb-picture { text-align: center; font-size: 5rem; animation: zoom 0.3s; }
