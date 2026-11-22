@@ -1697,3 +1697,5 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 /* Like a real start: three red, then two yellow, and when they go out all five turn green. */
 .ps.lights-out .lo-light.lo-on:nth-child(n+4) { background: radial-gradient(circle at 36% 30%, #fff6d0, #ffd24a 55%, #e9a51e); box-shadow: 0 0 30px rgba(255, 210, 74, 0.9), inset 0 -5px 0 rgba(160, 90, 0, 0.25); }
 .ps.lights-out .lo-go .lo-light { background: radial-gradient(circle at 36% 30%, #e6ffe0, #4fd36a 55%, #22a447); box-shadow: 0 0 30px rgba(80, 220, 110, 0.9), inset 0 -5px 0 rgba(0, 90, 30, 0.25); }
+/* The speech bubble already says what to do: no second label under the lights. */
+.ps.lights-out .lo-label { display: none; }
