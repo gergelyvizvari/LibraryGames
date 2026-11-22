@@ -1678,3 +1678,17 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .ps.anagram-race .ar-filled { background: var(--story-paper); border-style: solid; }
 .ps.anagram-race .ar-tile { background: #f2c14e; color: var(--story-ink); border: 0; border-radius: 12px; box-shadow: inset 0 5px 0 #f7d572, 0 5px 0 #c98f2a; font-family: var(--story); }
 .ps.anagram-race .ar-picture::before { display: none; }
+
+/* grid-glow: its storybook pieces inside the painted scene. */
+.ps.grid-glow .gg-grid { padding: 16px; border-radius: 40% 44% 42% 46% / 44% 40% 46% 42%; background: #62c4d8; box-shadow: 0 0 0 10px #f1dc9a, 0 9px 0 10px rgba(36, 26, 60, 0.22); width: min(100% - 28px, 420px, 100dvh - 420px); min-width: 220px; align-self: center; }
+.ps.grid-glow .gg-grid { padding: 9%; gap: 6px; }
+.ps.grid-glow .gg-cell { border-radius: 50%; background: conic-gradient(from 20deg, #5aa850 0 328deg, transparent 0); box-shadow: none; filter: drop-shadow(0 4px 0 rgba(20, 60, 90, 0.3)); }
+.ps.grid-glow .gg-lit { background: radial-gradient(circle, #ffd24a 0 16%, transparent 17%), radial-gradient(circle at 50% 22%, #f7b3c6 0 22%, transparent 23%), radial-gradient(circle at 50% 78%, #f7b3c6 0 22%, transparent 23%), radial-gradient(circle at 22% 50%, #f7b3c6 0 22%, transparent 23%), radial-gradient(circle at 78% 50%, #f7b3c6 0 22%, transparent 23%), conic-gradient(from 20deg, #7cc552 0 328deg, transparent 0); transform: scale(1.06); box-shadow: none; }
+.ps.grid-glow .gg-wrong { background: conic-gradient(from 20deg, #7d6a8a 0 328deg, transparent 0); }
+.ps.grid-glow .gg-grid { width: 100%; padding: 0; background: none; box-shadow: none; border-radius: 0; gap: 10px; }
+/* Painted lily pads (from Lily Pad Pairs); a pad to remember carries a pink flower and glows. */
+.ps.grid-glow .gg-cell { background: var(--gg-pad) center / contain no-repeat; filter: drop-shadow(3px 6px 3px rgba(20, 30, 80, 0.3)); }
+.ps.grid-glow .gg-cell:nth-child(3n+1) { rotate: 70deg; }
+.ps.grid-glow .gg-cell:nth-child(4n+2) { rotate: -110deg; }
+.ps.grid-glow .gg-lit { background: radial-gradient(circle, #ffd24a 0 11%, transparent 12%), radial-gradient(circle at 50% 33%, #f7b3c6 0 15%, transparent 16%), radial-gradient(circle at 50% 67%, #f7b3c6 0 15%, transparent 16%), radial-gradient(circle at 33% 50%, #f7b3c6 0 15%, transparent 16%), radial-gradient(circle at 67% 50%, #f7b3c6 0 15%, transparent 16%), var(--gg-pad) center / contain no-repeat; filter: drop-shadow(0 0 12px #fff3b0) drop-shadow(3px 6px 3px rgba(20, 30, 80, 0.3)); transform: scale(1.06); }
+.ps.grid-glow .gg-wrong { background: var(--gg-pad) center / contain no-repeat; filter: grayscale(0.8) brightness(0.7); }
