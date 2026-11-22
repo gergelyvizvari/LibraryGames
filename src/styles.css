@@ -1735,6 +1735,9 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 /* The big label on the track says what to do (and how fast you were), so no speech bubble too. */
 .ps.lights-out .scene-bubble { display: none; }
 
+/* mirror-match: its storybook pieces inside the painted scene. */
+
+.ps.mirror-match .mm-board { width: 100%; box-shadow: 0 10px 14px rgba(20, 50, 60, 0.35); }
 /* number-ninja: its storybook pieces inside the painted scene. */
 
 .ps.number-ninja .pb-box { display: block; }
