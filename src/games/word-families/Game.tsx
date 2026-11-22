@@ -2,11 +2,37 @@ import { useEffect, useRef, useState } from 'react'
 import { useLocale } from '../../i18n'
 import { useGameLoop, useLatest, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
-import { SceneShell, useStage } from '../../kit/SceneShell'
+import { Cast, useMood } from '../../kit/cast'
+import { PaintedScene, type PaintedView } from '../../kit/painted'
+import { useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
 import { words, type Group, type GroupId } from './content'
 import { beltSeconds, makeDealer, showPictures, type Item } from './logic'
+import bgTall from './art/bg-tall.webp'
+import bg from './art/bg.webp'
+import charBlink from './art/char-blink.webp'
+import charHappy from './art/char-happy.webp'
+import charSad from './art/char-sad.webp'
+import char from './art/char.webp'
+
+const FACES = { idle: char, blink: charBlink, happy: charHappy, sad: charSad }
+/** The character's width / height. */
+const ASPECT = 0.554
+
+type ViewId = 'wide' | 'tall'
+
+/** The market square: the words ride along above the counter and the baskets stand on it, with the pig seller in front. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 40, y: 0, w: 1240, h: 800 }, ground: '#d6b081', sayAt: { x: 300, y: 150 } },
+  { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 100, w: 720, h: 1052 }, ground: '#b0a532', sayAt: { x: 60, y: 180 } },
+]
+
+/** Where the play sits in each painting (its content zoomed to suit the painting's scale), and the character. */
+const SPOTS: Record<ViewId, { box: { x: number; y: number; w: number; h: number }; zoom: number; char: { x: number; bottom: number; h: number } }> = {
+  wide: { box: { x: 160, y: 150, w: 840, h: 340 }, zoom: 1.1, char: { x: 1140, bottom: 790, h: 340 } },
+  tall: { box: { x: 30, y: 190, w: 660, h: 430 }, zoom: 1, char: { x: 580, bottom: 1080, h: 300 } },
+}
 
 /** Words to sort in one stage. */
 const STAGE = 10
@@ -32,6 +58,7 @@ export default function WordFamilies({ level, seed, t, onFinish }: GameProps) {
   const [message, setMessage] = useState<{ text: string; kind: '' | 'yes' | 'no' }>(() => ({ text: t('hint'), kind: '' }))
   const [flash, setFlash] = useState<{ id: GroupId; kind: 'right' | 'wrong' | 'show' }[]>([])
   const stage = useStage(STAGE, onFinish)
+  const [mood, feel] = useMood()
   const over = stage.over
   const later = useTimeouts()
   const pictures = showPictures(level)
@@ -63,7 +90,8 @@ export default function WordFamilies({ level, seed, t, onFinish }: GameProps) {
   const wrong = (r: Ride, picked: GroupId | null) => {
     setMessage({ text: t('belongs', { word: r.word.word, group: t(`group.${r.group}`) }), kind: 'no' })
     flashFor(picked ? [{ id: picked, kind: 'wrong' }, { id: r.group, kind: 'show' }] : [{ id: r.group, kind: 'show' }])
-    stage.slip()
+    feel('sad')
+      stage.slip()
   }
 
   useGameLoop((dt) => {
@@ -86,6 +114,7 @@ export default function WordFamilies({ level, seed, t, onFinish }: GameProps) {
       nextRide()
       return wrong(r, g)
     }
+    feel('happy')
     setMessage({ text: t('yes'), kind: 'yes' })
     flashFor([{ id: g, kind: 'right' }])
     if (!stage.good()) nextRide()
@@ -105,7 +134,14 @@ export default function WordFamilies({ level, seed, t, onFinish }: GameProps) {
 
   const doneClass = ride.done ? (ride.done.right ? ' wf-in' : ride.done.picked ? ' wf-miss' : ' wf-away') : ''
   return (
-    <SceneShell place="village" say={message.text} stage={stage} bare className="word-families">
+    <PaintedScene views={VIEWS} say={message.text} stage={stage} className="word-families">
+      {(view) => {
+        const at = SPOTS[view]
+        return (
+          <>
+            <Cast faces={FACES} mood={mood} at={at.char} aspect={ASPECT} />
+            {/* `zoom` scales the box's own position too, so it is given in zoomed units. */}
+            <div className="pb-box" style={{ left: at.box.x / at.zoom, top: at.box.y / at.zoom, width: at.box.w / at.zoom, height: at.box.h / at.zoom, zoom: at.zoom }}>
       <div className="wf-belt">
         <div key={ride.id} className={`wf-card${doneClass}`} style={{ left: `${88 - ride.t * 76}%` }}>
           {pictures && <span className="wf-emoji">{ride.word.emoji}</span>}
@@ -130,6 +166,10 @@ export default function WordFamilies({ level, seed, t, onFinish }: GameProps) {
           )
         })}
       </div>
-    </SceneShell>
+            </div>
+          </>
+        )
+      }}
+    </PaintedScene>
   )
 }
