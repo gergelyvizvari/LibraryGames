@@ -1766,3 +1766,8 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .ps.rhyme-time .rt-options { width: 100%; }
 .ps.shape-spin .ss-target { width: 250px; height: 250px; min-height: 0; flex: none; }
 .ps.shape-spin .ss-options { box-shadow: inset 0 0 0 7px #8a5a3c, 0 8px 10px rgba(70, 30, 5, 0.3); }
+
+/* flag-friends: its storybook pieces inside the painted scene. */
+.ps.flag-friends .ff-miss .ff-front { background: #f7dfe2; }
+.ps.flag-friends .ff-group { align-self: center; background: #fff6dc; color: var(--story-ink); font-family: var(--story); letter-spacing: 1px; box-shadow: 0 4px 0 rgba(36, 26, 60, 0.22); }
+.ps.flag-friends .ff-grid { padding: 10px; background: none; box-shadow: none; max-width: 440px; }
