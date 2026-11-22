@@ -326,12 +326,16 @@ h1, h2 { margin: 0; line-height: 1.1; }
 
 /* Mole Pop */
 .mp-field { position: absolute; inset: 0; }
-.mp-hole { position: absolute; padding: 0; background: none; border-radius: 30%; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-.mp-mound { position: absolute; left: 0; bottom: 0; width: 100%; user-select: none; pointer-events: none; }
+.mp-hole { position: absolute; padding: 0; background: none; border-radius: 30%; -webkit-tap-highlight-color: transparent; touch-action: manipulation; pointer-events: none; }
+/* Only the molehill and a critter that is up take taps (they bubble to the hole's button), so the holes' boxes, which overlap the row behind, never steal a tap. */
+.mp-hole .mp-mound, .mp-hole .mp-up { pointer-events: auto; }
+.mp-mound { position: absolute; left: 0; bottom: 0; width: 100%; user-select: none; }
 .mp-pit { position: absolute; left: 0; right: 0; top: 0; overflow: hidden; pointer-events: none; }
 /* Just as wide as the hole's opening, rising from behind its front rim. */
 .mp-critter { position: absolute; left: 27%; right: 29%; bottom: -130%; display: flex; justify-content: center; align-items: flex-end; transition: bottom 0.12s ease-out; }
 .mp-critter img { width: 100%; user-select: none; }
+/* The cut-outs' cream rim runs along their straight bottom edge too: hide it, it lies inside the hole. */
+.mp-critter img { clip-path: inset(0 0 4% 0); margin-bottom: -4%; }
 .mp-up { bottom: 0; }
 .mp-hit { transform: scale(0.92) rotate(-6deg); }
 

@@ -81,8 +81,9 @@ export default function MolePop({ level, seed, t, onFinish }: GameProps) {
               const x = g.cols[i % 3]
               const bottom = g.rows[Math.floor(i / 3)]
               const top = bottom - mh
+              // A hole's tap area reaches up over the row behind it: a hole with a critter up lies on top, so it always takes the tap.
               return (
-                <button key={i} className="mp-hole" onPointerDown={() => whack(i)} aria-label={`hole ${i + 1}`} style={{ left: x - g.w / 2, top: top - g.w * 0.62, width: g.w, height: mh + g.w * 0.62 }}>
+                <button key={i} className="mp-hole" onPointerDown={() => whack(i)} aria-label={`hole ${i + 1}`} style={{ left: x - g.w / 2, top: top - g.w * 0.62, width: g.w, height: mh + g.w * 0.62, zIndex: h && !h.hit ? 2 : 1 }}>
                   <img className="mp-mound" src={art('hole')} alt="" draggable={false} />
                   {/* The critter rises out of the hole, in front of its back rim. */}
                   <span className="mp-pit" style={{ bottom: mh * (1 - HOLE.y) }}>
