@@ -190,10 +190,18 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .confetti i { position: absolute; top: -12px; width: 10px; height: 14px; border-radius: 2px; animation: fall linear forwards; }
 
 /* Sequence Echo */
-.se-board { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: min(100%, 420px); aspect-ratio: 1; margin: 0 auto; }
-.se-pad { border-radius: 28px; opacity: 0.55; box-shadow: 0 8px 0 rgba(0, 0, 0, 0.18); transition: opacity 0.08s, transform 0.08s; }
+.se-board { position: absolute; inset: 0; }
+.se-pad { position: absolute; padding: 0; background: none; border-radius: 40%; transform-origin: 50% 0; animation: seSway 3.2s ease-in-out infinite alternate; -webkit-tap-highlight-color: transparent; }
+.se-pad:nth-child(2n) { animation-duration: 3.8s; animation-delay: -1s; }
 .se-pad:disabled { cursor: default; }
-.se-lit { opacity: 1; transform: scale(1.05); filter: brightness(1.15); box-shadow: 0 0 40px currentColor; }
+.se-string { position: absolute; left: 50%; top: 0; width: 3px; height: 44px; translate: -50% 0; background: #7a5234; border-radius: 2px; }
+.se-pad img { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; user-select: none; filter: saturate(0.75) brightness(0.88); transition: filter 0.08s, transform 0.08s; transform-origin: 50% 0; }
+.se-lit img { filter: saturate(1.15) brightness(1.18) drop-shadow(0 0 18px rgba(255, 248, 200, 0.95)) drop-shadow(0 0 6px rgba(255, 248, 200, 0.9)); transform: scale(1.08) rotate(-4deg); }
+@keyframes seSway { from { rotate: -2deg; } to { rotate: 2deg; } }
+.se-char { position: absolute; aspect-ratio: 0.73; transform-origin: 50% 100%; pointer-events: none; animation: fmBreathe 3.4s ease-in-out infinite; }
+.se-char img { position: absolute; left: 50%; bottom: 0; height: 100%; translate: -50% 0; user-select: none; }
+.se-char img.se-off { visibility: hidden; }
+.se-cheer { animation: fmHop 0.6s; }
 
 /* Lights Out */
 .lo-area { flex: 1; border-radius: 28px; background: #2d3142; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; min-height: 360px; }
@@ -1227,14 +1235,11 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .scene-frame:has(.scene-end) .sg-guide { visibility: hidden; }
 
 /* Mirror Lake games: ponds, lily pads, cards on a blanket. */
-.sg .gg-grid, .sg .se-board { padding: 16px; border-radius: 40% 44% 42% 46% / 44% 40% 46% 42%; background: #62c4d8; box-shadow: 0 0 0 10px #f1dc9a, 0 9px 0 10px rgba(36, 26, 60, 0.22); width: min(100% - 28px, 420px, 100dvh - 420px); min-width: 220px; align-self: center; }
+.sg .gg-grid { padding: 16px; border-radius: 40% 44% 42% 46% / 44% 40% 46% 42%; background: #62c4d8; box-shadow: 0 0 0 10px #f1dc9a, 0 9px 0 10px rgba(36, 26, 60, 0.22); width: min(100% - 28px, 420px, 100dvh - 420px); min-width: 220px; align-self: center; }
 .sg .gg-grid { padding: 9%; gap: 6px; }
 .sg .gg-cell { border-radius: 50%; background: conic-gradient(from 20deg, #5aa850 0 328deg, transparent 0); box-shadow: none; filter: drop-shadow(0 4px 0 rgba(20, 60, 90, 0.3)); }
 .sg .gg-lit { background: radial-gradient(circle, #ffd24a 0 16%, transparent 17%), radial-gradient(circle at 50% 22%, #f7b3c6 0 22%, transparent 23%), radial-gradient(circle at 50% 78%, #f7b3c6 0 22%, transparent 23%), radial-gradient(circle at 22% 50%, #f7b3c6 0 22%, transparent 23%), radial-gradient(circle at 78% 50%, #f7b3c6 0 22%, transparent 23%), conic-gradient(from 20deg, #7cc552 0 328deg, transparent 0); transform: scale(1.06); box-shadow: none; }
 .sg .gg-wrong { background: conic-gradient(from 20deg, #7d6a8a 0 328deg, transparent 0); }
-.sg .se-board { padding: 12%; gap: 12px; aspect-ratio: 1; }
-.sg .se-pad { border-radius: 50%; opacity: 1; background: radial-gradient(circle, #fff6dc 0 12%, var(--pad) 13% 42%, transparent 43%), conic-gradient(from 20deg, #5aa850 0 328deg, transparent 0); box-shadow: none; filter: drop-shadow(0 5px 0 rgba(20, 60, 90, 0.3)) saturate(0.75) brightness(0.92); }
-.sg .se-lit { transform: scale(1.08); filter: drop-shadow(0 0 16px #fff6dc) saturate(1.2) brightness(1.12); box-shadow: none; }
 .sg .oo-grid, .sg .pr-grid, .sg .ff-grid { padding: 14px; border-radius: 20px; background: conic-gradient(#e2607e 25%, #f1a8b8 0 50%, #e2607e 0 75%, #f1a8b8 0) 0 0 / 56px 56px; box-shadow: 0 0 0 6px #fff6dc, 0 8px 0 6px rgba(36, 26, 60, 0.22); }
 .sg .oo-grid { width: min(100% - 12px, 460px, 100dvh - 400px); align-self: center; }
 .sg .oo-cell { border-radius: 50%; background: var(--story-paper); box-shadow: 0 4px 0 rgba(120, 40, 60, 0.35); }
