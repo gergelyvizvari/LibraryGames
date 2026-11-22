@@ -1738,3 +1738,9 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 /* mirror-match: its storybook pieces inside the painted scene. */
 
 .ps.mirror-match .mm-board { width: 100%; box-shadow: 0 10px 14px rgba(20, 50, 60, 0.35); }
+/* number-ninja: its storybook pieces inside the painted scene. */
+
+.ps.number-ninja .pb-box { display: block; }
+.ps.number-ninja .nn-field { position: absolute; inset: 0; margin: 0; border-radius: 0; box-shadow: none; background: none; overflow: visible; }
+.ps.number-ninja .nn-target { color: rgba(255, 255, 255, 0.55); font-size: 260px; text-shadow: 0 4px 12px rgba(80, 60, 120, 0.25); }
+.ps.number-ninja .nn-bubble { width: 130px; height: 130px; font-size: 38px; }
