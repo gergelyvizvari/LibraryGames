@@ -1495,18 +1495,27 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 @keyframes ppPuff { from { transform: scale(0.4); opacity: 0.9; } to { transform: scale(2.2) translateY(-2px); opacity: 0; } }
 
 /* Rainbow Mix */
-.sg .rm-board { position: relative; align-self: center; width: min(100%, 620px, (100dvh - 440px) * 1.176); min-width: 240px; aspect-ratio: 360 / 306; animation: popIn 0.3s; }
-.rm-art { display: block; width: 100%; height: 100%; border-radius: 7.8% / 9.2%; }
-.rm-pony path { transition: fill 0.9s ease-in-out; }
+.rm-board { position: absolute; inset: 0; }
+.rm-prop { position: absolute; display: block; pointer-events: none; user-select: none; }
+.rm-cloud { position: absolute; }
+.rm-wish { display: block; width: 100%; overflow: visible; filter: drop-shadow(0 4px 6px rgba(60, 40, 90, 0.18)); }
+.rm-stand { position: absolute; transform-origin: 50% 100%; }
+.rm-pony { position: absolute; inset: 0; transform-origin: 50% 100%; animation: fmBreathe 3.4s ease-in-out infinite; }
+.rm-pony img, .rm-mane { position: absolute; inset: 0; width: 100%; height: 100%; user-select: none; }
+.rm-pony img.rm-off { visibility: hidden; }
+.rm-mane { mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mix-blend-mode: multiply; opacity: 0; transition: opacity 0.9s ease-in-out; pointer-events: none; }
+.rm-mane-on { opacity: 0.92; }
+.rm-hop { animation: fmHop 0.6s; }
+.rm-bowl { position: absolute; pointer-events: none; }
+.rm-bowl img, .rm-bowl-paint { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: visible; user-select: none; }
+.rm-sum-at { position: absolute; translate: -50% -50%; }
+.rm-sum { display: block; animation: ppFade 0.4s ease-out; filter: drop-shadow(0 3px 4px rgba(40, 30, 10, 0.25)); }
 .rm-pop { animation: popIn 0.25s; transform-box: fill-box; transform-origin: center; }
 .rm-drop { animation: rmFall 0.3s ease-in; }
 .rm-spoon { animation: rmSpoon 0.4s linear 2; transform-origin: 0 0; }
-.rm-sum { animation: ppFade 0.4s ease-out; }
-/* While the bowl is stirred the pony leans over to peek into it. */
-.rm-watch .pony-head { animation: none; transform: rotate(11deg); transition: transform 0.25s; }
-.rm-arrive { animation: rmArrive 0.9s cubic-bezier(0.3, 0.6, 0.4, 1); }
-@keyframes rmArrive { from { transform: translateX(-190px); } }
-.rm-no { animation: psNo 0.4s 2; transform-box: fill-box; transform-origin: 50% 80%; }
+.rm-watch { animation: none; }
+.rm-arrive { position: absolute; inset: 0; animation: rmArrive 0.9s cubic-bezier(0.3, 0.6, 0.4, 1); pointer-events: none; }
+.rm-no { animation: psNo 0.4s 2; }
 .rm-slot { fill: rgba(255, 255, 255, 0.35); stroke: #fffaf0; stroke-width: 1.6; stroke-dasharray: 3 3; }
 .rm-stir { animation: rmStir 0.4s linear 2; transform-box: fill-box; transform-origin: center; }
 .rm-paint { transition: fill 0.3s; }
@@ -1514,7 +1523,7 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .rm-tray { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 16px; }
 .rm-pots, .rm-actions { display: flex; align-items: center; gap: 8px; }
 .rm-pot { width: 62px; height: 62px; padding: 0; background: none; filter: drop-shadow(0 3px 3px rgba(20, 15, 50, 0.25)); }
-.rm-pot svg { display: block; width: 100%; height: 100%; }
+.rm-pot img { display: block; width: 100%; height: 100%; object-fit: contain; user-select: none; }
 .rm-pot:active:not(:disabled) { transform: translateY(3px); }
 .rm-pot:disabled { cursor: default; }
 .rm-tray .scene-tool-btn { width: 54px; height: 54px; }
@@ -1590,3 +1599,4 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .ff-in { animation: popIn 0.3s; }
 .ff-full { animation: pkHop 0.5s ease-out; }
 @keyframes ffTrail { to { left: 50%; top: 88%; scale: 0.4; opacity: 0.4; } }
+@keyframes rmArrive { from { transform: translateX(-190px); opacity: 0; } }
