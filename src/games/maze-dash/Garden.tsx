@@ -1,31 +1,17 @@
+import cheese from './art/cheese.webp'
+import mouse from './art/mouse.webp'
 import { E, S, type Maze } from './logic'
 
-// The maze is a garden seen from above: grass paths between clipped hedges, a little mouse and its cheese.
+// The maze is a hedge garden seen from above, laid on the painted lawn: grass paths between clipped hedges, a painted mouse and its cheese.
 
-const INK = '#33284a'
 const U = 100
 
+/** The painted mouse (from above) and its cheese, drawn around (0, 0). */
 function Mouse() {
   return (
     <>
-      <ellipse cx="2" cy="27" rx="24" ry="6" fill="#241a3c" opacity="0.25" />
-      <path d="M16 18 q20 4 16 -14" fill="none" stroke="#e79ab0" strokeWidth="4" strokeLinecap="round" />
-      <circle cx="-19" cy="-17" r="13" fill="#a9a3c8" />
-      <circle cx="19" cy="-17" r="13" fill="#a9a3c8" />
-      <circle cx="-19" cy="-16" r="7.5" fill="#f3b2c4" />
-      <circle cx="19" cy="-16" r="7.5" fill="#f3b2c4" />
-      <ellipse cx="0" cy="6" rx="24" ry="22" fill="#cfcbe2" />
-      <ellipse cx="0" cy="15" rx="13" ry="10" fill="#f4f1fb" />
-      <circle cx="-9" cy="-1" r="6.4" fill="#fff" />
-      <circle cx="9" cy="-1" r="6.4" fill="#fff" />
-      <circle cx="-8.4" cy="-0.5" r="5" fill={INK} />
-      <circle cx="9.6" cy="-0.5" r="5" fill={INK} />
-      <circle cx="-10.2" cy="-2.6" r="1.9" fill="#fff" />
-      <circle cx="7.8" cy="-2.6" r="1.9" fill="#fff" />
-      <ellipse cx="0" cy="9" rx="4" ry="3" fill="#e2607e" />
-      <path d="M-4 14 q4 3.5 8 0" fill="none" stroke={INK} strokeWidth="1.8" strokeLinecap="round" />
-      <circle cx="-15" cy="9" r="3.4" fill="#f08aa6" opacity="0.6" />
-      <circle cx="15" cy="9" r="3.4" fill="#f08aa6" opacity="0.6" />
+      <ellipse cx="2" cy="30" rx="22" ry="6" fill="#241a3c" opacity="0.25" />
+      <image href={mouse} x="-32" y="-40" width="64" height="80" preserveAspectRatio="xMidYMid meet" />
     </>
   )
 }
@@ -33,14 +19,8 @@ function Mouse() {
 function Cheese() {
   return (
     <>
-      <ellipse cx="0" cy="22" rx="28" ry="6" fill="#241a3c" opacity="0.22" />
-      <path d="M-28 6 L20 -22 Q30 -10 28 6 Z" fill="#f7d572" />
-      <path d="M-28 6 H28 V22 H-28 Z" fill="#f2c14e" />
-      <path d="M8 6 H28 V22 H14 Q18 14 8 6Z" fill="#d9a52e" opacity="0.7" />
-      <circle cx="-12" cy="14" r="4.5" fill="#d9a52e" />
-      <circle cx="4" cy="16" r="3" fill="#d9a52e" />
-      <circle cx="10" cy="-6" r="4" fill="#e6b93f" />
-      <circle cx="19" cy="13" r="2.4" fill="#c48f1e" />
+      <ellipse cx="0" cy="24" rx="28" ry="6" fill="#241a3c" opacity="0.22" />
+      <image href={cheese} x="-34" y="-30" width="68" height="62" preserveAspectRatio="xMidYMax meet" />
     </>
   )
 }

@@ -414,7 +414,7 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .lp-bubble { position: absolute; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 255, 255, 0.92); border: 4px solid; font-size: 1.9rem; font-weight: 700; box-shadow: inset -6px -6px 0 rgba(0, 0, 0, 0.06); }
 
 /* Maze Dash */
-.md-maze { position: relative; width: min(100% - 40px, 440px); margin: 0 auto; touch-action: none; animation: popIn 0.3s; }
+.md-maze { position: absolute; touch-action: none; animation: popIn 0.3s; }
 .md-art { display: block; width: 100%; height: 100%; overflow: visible; }
 .md-mouse { transition: transform 0.14s ease-out; }
 .md-crumb { animation: popIn 0.2s; transform-box: fill-box; transform-origin: center; }
@@ -806,7 +806,6 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
   .sg-bubble { margin-bottom: 52px; }
   .sg-prop { display: block; }
   .sg:has(.scene-tray) .sg-prop { display: none; }
-  .sg.maze-dash .md-maze { width: min(100% - 40px, 520px, (100dvh - 410px) * var(--md-ratio, 1)); }
 }
 /* A phone on its side: the wall becomes a strip on the left, the board gets the rest. */
 @media (max-height: 480px) and (orientation: landscape) {
@@ -1260,7 +1259,6 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 @keyframes psNo { 25% { transform: rotate(-12deg); } 75% { transform: rotate(12deg); } }
 
 /* Games inside the shared scene: boards sized so the whole scene fits one screen. */
-.sg .md-maze { width: min(100% - 40px, 440px, (100dvh - 470px) * var(--md-ratio, 1)); min-width: 190px; }
 .sg .cm-country { display: block; margin-top: 4px; font-family: var(--story); font-weight: 800; font-size: 1.5rem; letter-spacing: 1px; }
 .sg .cm-card { text-align: center; }
 .scene-frame:has(.scene-end) .sg-guide { visibility: hidden; }
