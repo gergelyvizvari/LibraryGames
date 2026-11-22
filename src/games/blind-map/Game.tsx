@@ -2,13 +2,38 @@ import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } fr
 import { useLocale } from '../../i18n'
 import { useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
-import { SceneShell } from '../../kit/SceneShell'
+import { Cast, useMood } from '../../kit/cast'
+import { PaintedScene, type PaintedView } from '../../kit/painted'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
 import { MapStage } from '../../kit/ui'
 import { displayName, flag } from './content'
 import { pickQuestions, pointsFor } from './logic'
 import { WIDTH, loadMap, nearEnough, type RegionMap } from './map'
+import bgTall from './art/bg-tall.webp'
+import bg from './art/bg.webp'
+import charBlink from './art/char-blink.webp'
+import charHappy from './art/char-happy.webp'
+import charSad from './art/char-sad.webp'
+import char from './art/char.webp'
+
+const FACES = { idle: char, blink: charBlink, happy: charHappy, sad: charSad }
+/** The character's width / height. */
+const ASPECT = 0.562
+
+type ViewId = 'wide' | 'tall'
+
+/** The ship cabin: the blank map lies on the captain table, with the polar bear captain beside it. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 0, y: 40, w: 1280, h: 760 }, ground: '#7a3826', sayAt: { x: 1060, y: 780 } },
+  { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 180, w: 720, h: 972 }, ground: '#863c18', sayAt: { x: 40, y: 1130 } },
+]
+
+/** Where the play sits in each painting (its content zoomed to suit the painting's scale), and the character. */
+const SPOTS: Record<ViewId, { box: { x: number; y: number; w: number; h: number }; zoom: number; char: { x: number; bottom: number; h: number } }> = {
+  wide: { box: { x: 270, y: 160, w: 780, h: 550 }, zoom: 1.2, char: { x: 150, bottom: 790, h: 330 } },
+  tall: { box: { x: 20, y: 370, w: 680, h: 500 }, zoom: 1.2, char: { x: 600, bottom: 1140, h: 260 } },
+}
 
 export default function BlindMap({ level, seed, t, onFinish }: GameProps) {
   const locale = useLocale()
@@ -29,6 +54,7 @@ export default function BlindMap({ level, seed, t, onFinish }: GameProps) {
   const svg = useRef<SVGSVGElement>(null)
   const [shakeRef, shake] = useShake<HTMLDivElement>()
   const later = useTimeouts()
+  const [mood, feel] = useMood()
 
   const q = questions[index]
   const region = q.region
@@ -75,11 +101,13 @@ export default function BlindMap({ level, seed, t, onFinish }: GameProps) {
       setCombo(nc)
       setScore(score + gained)
       setFound(q.atlas)
-      sound.good(nc)
+      feel('happy')
+    sound.good(nc)
       next(tries === 0, score + gained)
       return
     }
-    sound.bad()
+    feel('sad')
+      sound.bad()
     vibrate(40)
     shake()
     setCombo(0)
@@ -95,9 +123,7 @@ export default function BlindMap({ level, seed, t, onFinish }: GameProps) {
   }
 
   return (
-    <SceneShell
-      place="coast"
-      say={
+    <PaintedScene views={VIEWS} say={
         found && reveal ? (
           t('hereItIs')
         ) : wrongName && !found ? (
@@ -107,12 +133,14 @@ export default function BlindMap({ level, seed, t, onFinish }: GameProps) {
             <span className="bm-flag">{flag(q.iso)}</span> {t('find', { name: displayName(q.atlas, locale) })}
           </>
         )
-      }
-      stage={{ done: index + (found ? 1 : 0), total: questions.length, over: done, mood: found && !reveal ? 'happy' : wrongName && !found ? 'oops' : 'idle' }}
-      bare
-      fill
-      className="blind-map"
-    >
+      } stage={{ done: index + (found ? 1 : 0), total: questions.length, over: done }} className="blind-map">
+      {(view) => {
+        const at = SPOTS[view]
+        return (
+          <>
+            <Cast faces={FACES} mood={mood} at={at.char} aspect={ASPECT} />
+            {/* `zoom` scales the box's own position too, so it is given in zoomed units. */}
+            <div className="pb-box" style={{ left: at.box.x / at.zoom, top: at.box.y / at.zoom, width: at.box.w / at.zoom, height: at.box.h / at.zoom, zoom: at.zoom }}>
       <MapStage>
       <div className="bm-sea map-box" ref={shakeRef} style={{ '--map-ratio': map ? WIDTH / map.height : 1 } as CSSProperties}>
         {map && shapes ? (
@@ -131,6 +159,10 @@ export default function BlindMap({ level, seed, t, onFinish }: GameProps) {
         )}
       </div>
       </MapStage>
-    </SceneShell>
+            </div>
+          </>
+        )
+      }}
+    </PaintedScene>
   )
 }
