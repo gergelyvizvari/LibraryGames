@@ -65,7 +65,7 @@ type ViewId = 'wide' | 'tall'
 /** The river valley: the bridge spans the river between two piles of stones, and the planks lie on the near meadow. */
 const VIEWS: PaintedView<ViewId>[] = [
   { id: 'wide', painting: valley, world: { w: 1280, h: 800 }, focus: { x: 60, y: 120, w: 1000, h: 680 }, ground: '#b9be27', sayAt: { x: 560, y: 200 } },
-  { id: 'tall', painting: valleyTall, world: { w: 720, h: 1152 }, focus: { x: 80, y: 120, w: 560, h: 960 }, ground: '#bbbc23', sayAt: { x: 150, y: 250 } },
+  { id: 'tall', painting: valleyTall, world: { w: 720, h: 1440 }, focus: { x: 60, y: 420, w: 600, h: 1000 }, ground: '#c9cb1a', sayAt: { x: 150, y: 520 } },
 ]
 
 /**
@@ -75,7 +75,8 @@ const VIEWS: PaintedView<ViewId>[] = [
  */
 const BOX: Record<ViewId, { k: number; bridge: { x: number; y: number }; meadow: { x: number; top: number; bottom: number } }> = {
   wide: { k: 1.68, bridge: { x: 249, y: 375 - (DECK_Y + THICK) * 1.68 }, meadow: { x: 80, top: 590, bottom: 790 } },
-  tall: { k: 1.35, bridge: { x: 89, y: 357 - (DECK_Y + THICK) * 1.35 }, meadow: { x: 100, top: 690, bottom: 1080 } },
+  // The upright painting is extra tall (1:2), so the bridge sits lower on a phone.
+  tall: { k: 1.336, bridge: { x: 90, y: 648 - (DECK_Y + THICK) * 1.336 }, meadow: { x: 100, top: 980, bottom: 1400 } },
 }
 
 /** The fox blinks now and then while it waits. */

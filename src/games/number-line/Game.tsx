@@ -18,7 +18,7 @@ import { jumpText, makeQuestion, pathOf, showsLabel, specFor, WINDOW, type Quest
 const STAGE = 6
 
 /** Where a number sits across the line, in % of its width. */
-const xOf = (n: number, lo: number) => 8 + ((n - lo) / WINDOW) * 84
+const xOf = (n: number, lo: number) => 5 + ((n - lo) / WINDOW) * 90
 
 /** Every single hop the frog makes, one number at a time. */
 function hopsOf(q: Question) {
@@ -46,10 +46,14 @@ const VIEWS: PaintedView<ViewId>[] = [
   { id: 'tall', painting: streamTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 260, w: 720, h: 800 }, ground: '#aeb731', sayAt: { x: 360, y: 380 } },
 ]
 
-/** The stones' row (its box: the line runs at 62% of its height), and where the jump cards sit. */
-const SPOTS: Record<ViewId, { line: { x: number; y: number; w: number; h: number }; jumps: number }> = {
-  wide: { line: { x: 20, y: 380, w: 1240, h: 300 }, jumps: 300 },
-  tall: { line: { x: 0, y: 560, w: 720, h: 230 }, jumps: 455 },
+/**
+ * The tap area (a box reaching from the stones down over the near bank, so a finger anywhere in a stone's column
+ * picks it), where in it the stones sit (`row`, a fraction of its height), how big stones, numbers and frog are
+ * (`k`; bigger on a phone, whose painting is shown smaller), and where the jump cards sit.
+ */
+const SPOTS: Record<ViewId, { line: { x: number; y: number; w: number; h: number }; row: number; k: number; jumps: number }> = {
+  wide: { line: { x: 20, y: 380, w: 1240, h: 410 }, row: 0.46, k: 1, jumps: 300 },
+  tall: { line: { x: 0, y: 590, w: 720, h: 540 }, row: 0.19, k: 1.25, jumps: 455 },
 }
 
 /** The frog blinks now and then while it waits. */
@@ -138,7 +142,7 @@ export default function NumberLine({ level, seed, t, onFinish }: GameProps) {
   const tickAt = (e: PointerEvent<HTMLDivElement>) => {
     const box = e.currentTarget.getBoundingClientRect()
     const pct = ((e.clientX - box.left) / box.width) * 100
-    return Math.min(q.lo + WINDOW, Math.max(q.lo, q.lo + Math.round(((pct - 8) / 84) * WINDOW)))
+    return Math.min(q.lo + WINDOW, Math.max(q.lo, q.lo + Math.round(((pct - 5) / 90) * WINDOW)))
   }
 
   const ticks = Array.from({ length: WINDOW + 1 }, (_, i) => q.lo + i)
@@ -162,7 +166,7 @@ export default function NumberLine({ level, seed, t, onFinish }: GameProps) {
       <div
         className="nl-stage"
         ref={lineRef}
-        style={{ left: at.line.x, top: at.line.y, width: at.line.w, height: at.line.h }}
+        style={{ left: at.line.x, top: at.line.y, width: at.line.w, height: at.line.h, ['--nl-row' as string]: `${at.row * 100}%`, ['--nl-k' as string]: at.k }}
         onPointerDown={(e) => {
           if (over || busy) return
           e.currentTarget.setPointerCapture?.(e.pointerId)

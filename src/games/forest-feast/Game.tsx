@@ -66,10 +66,11 @@ const TABLE_AT: Record<ViewId, {
   /** Tallest guest, and the size of a wish bubble. */
   maxH: number
   bubble: number
-  host: { x: number; bottom: number; h: number }
+  /** Where the fox stands, or null: on an upright phone the waiting guests stand on its rug. */
+  host: { x: number; bottom: number; h: number } | null
 }> = {
   wide: { top: 452, front: 478, left: 200, right: 1060, maxH: 290, bubble: 64, host: { x: 1178, bottom: 730, h: 340 } },
-  tall: { top: 518, front: 545, left: 40, right: 680, maxH: 300, bubble: 84, host: { x: 360, bottom: 1040, h: 360 } },
+  tall: { top: 518, front: 545, left: 40, right: 680, maxH: 300, bubble: 84, host: null },
 }
 
 /** How much of a seated guest shows above the table. */
@@ -251,11 +252,13 @@ export default function ForestFeast({ level, seed, t, onFinish }: GameProps) {
               ),
             )}
 
-            {/* The fox hosts the feast. */}
-            <div className={`fe-host${busy ? ' fe-happy' : ''}`} style={worldStyle(at.host.x, at.host.bottom, at.host.h)}>
-              <img src={fox} alt="" draggable={false} className={busy ? 'fe-off' : ''} />
-              <img src={foxHappy} alt="" draggable={false} className={busy ? '' : 'fe-off'} />
-            </div>
+            {/* The fox hosts the feast (on a wide screen). */}
+            {at.host && (
+              <div className={`fe-host${busy ? ' fe-happy' : ''}`} style={worldStyle(at.host.x, at.host.bottom, at.host.h)}>
+                <img src={fox} alt="" draggable={false} className={busy ? 'fe-off' : ''} />
+                <img src={foxHappy} alt="" draggable={false} className={busy ? '' : 'fe-off'} />
+              </div>
+            )}
 
             {/* A seated guest shows its wish while it is not kept, or while it is picked. */}
             {seating.map((g, s) => {
