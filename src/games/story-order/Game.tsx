@@ -53,8 +53,8 @@ const VIEWS: PaintedView<ViewId>[] = [
 
 /** The part of the desk the pages lie on, and the owl. */
 const SPOTS: Record<ViewId, { desk: { x: number; y: number; w: number; h: number }; owl: { x: number; bottom: number; h: number } }> = {
-  wide: { desk: { x: 200, y: 230, w: 760, h: 550 }, owl: { x: 1110, bottom: 780, h: 300 } },
-  tall: { desk: { x: 24, y: 470, w: 672, h: 660 }, owl: { x: 600, bottom: 450, h: 200 } },
+  wide: { desk: { x: 240, y: 230, w: 640, h: 540 }, owl: { x: 1110, bottom: 780, h: 300 } },
+  tall: { desk: { x: 40, y: 480, w: 640, h: 620 }, owl: { x: 600, bottom: 450, h: 200 } },
 }
 
 interface Round {

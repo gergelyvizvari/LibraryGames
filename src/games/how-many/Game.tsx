@@ -126,13 +126,15 @@ export default function HowMany({ level, seed, t, onFinish }: GameProps) {
               ))}
             </div>
             <div className="hm-board" style={{ left: at.board.x, top: at.board.y, width: at.board.w, height: at.board.h }}>
+              {/* After the answer the things come back faint, with how many there were on top: an answer, not a new question. */}
               {(phase === 'show' || phase === 'result') &&
                 round.dots.map((d, i) => (
-                  <span key={`${index}-${i}`} className="hm-dot" style={{ left: `${d.x}%`, top: `${d.y}%` }}>
+                  <span key={`${index}-${i}`} className={`hm-dot${phase === 'result' ? ' hm-faint' : ''}`} style={{ left: `${d.x}%`, top: `${d.y}%` }}>
                     <Thing id={round.thing} />
                   </span>
                 ))}
               {phase === 'guess' && <span className="hm-question">?</span>}
+              {phase === 'result' && <span className={`hm-answer${result === 'happy' ? ' hm-right' : ''}`}>{round.n}</span>}
             </div>
           </>
         )
