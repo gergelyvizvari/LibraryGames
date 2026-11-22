@@ -1693,3 +1693,4 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .ps-tall.lights-out .lo-label { margin-top: 420px; }
 .ps.lights-out .lo-go .lo-label { font-size: 72px; color: #2c8a5a; }
 .ps.lights-out .lo-go { background: none; }
+.ps.lights-out .lo-light.lo-on { background: radial-gradient(circle at 36% 30%, #ffd9d0, #ff4a3d 55%, #d42a2a); box-shadow: 0 0 30px rgba(255, 70, 60, 0.9), inset 0 -5px 0 rgba(160, 90, 0, 0.25); }
