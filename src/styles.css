@@ -1735,6 +1735,15 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 /* The big label on the track says what to do (and how fast you were), so no speech bubble too. */
 .ps.lights-out .scene-bubble { display: none; }
 
+/* mirror-match: its storybook pieces inside the painted scene. */
+
+.ps.mirror-match .mm-board { width: 100%; box-shadow: 0 10px 14px rgba(20, 50, 60, 0.35); }
+/* number-ninja: its storybook pieces inside the painted scene. */
+
+.ps.number-ninja .pb-box { display: block; }
+.ps.number-ninja .nn-field { position: absolute; inset: 0; margin: 0; border-radius: 0; box-shadow: none; background: none; overflow: visible; }
+.ps.number-ninja .nn-target { color: rgba(255, 255, 255, 0.55); font-size: 260px; text-shadow: 0 4px 12px rgba(80, 60, 120, 0.25); }
+.ps.number-ninja .nn-bubble { width: 130px; height: 130px; font-size: 38px; }
 /* opposites: its storybook pieces inside the painted scene. */
 .ps.opposites .op-board { padding: 14px; border-radius: 26px; background: #a8744e; box-shadow: inset 0 0 0 7px #8a5a3c, 0 7px 0 rgba(36, 26, 60, 0.28); }
 .ps.opposites .op-board > * { background: var(--story-paper); border: 0; box-shadow: 0 4px 0 #e0cfa4; }
