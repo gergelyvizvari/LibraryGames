@@ -307,10 +307,14 @@ h1, h2 { margin: 0; line-height: 1.1; }
 .bm-loading { padding: 80px 0; text-align: center; font-weight: 700; color: #2d6a85; }
 
 /* Tower Stack */
-.ts-sky { position: relative; flex: 1; min-height: 440px; border-radius: 28px; background: linear-gradient(#ffeaa7, #fab1a0); overflow: hidden; touch-action: manipulation; cursor: pointer; }
-.ts-block { position: absolute; border-radius: 8px; box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.15); transition: top 0.25s ease-out; }
+.ts-sky { position: absolute; touch-action: manipulation; cursor: pointer; }
+.ts-block { position: absolute; border-radius: 8px; background-image: var(--ts-wood); background-size: auto 100%; background-blend-mode: multiply; box-shadow: inset 0 -7px 0 rgba(60, 30, 0, 0.18), inset 0 3px 0 rgba(255, 255, 240, 0.35), 0 3px 4px rgba(60, 40, 10, 0.25); transition: top 0.25s ease-out; }
+.ts-beaver { position: absolute; aspect-ratio: 0.73; transform-origin: 50% 100%; pointer-events: none; animation: fmBreathe 3.4s ease-in-out infinite; }
+.ts-beaver img { position: absolute; left: 50%; bottom: 0; height: 100%; translate: -50% 0; user-select: none; }
+.ts-beaver img.ts-off { visibility: hidden; }
+.ts-hop { animation: fmHop 0.6s; }
 .ts-moving { transition: none; }
-.ts-falling { background: #b2bec3; animation: dropAway 0.8s ease-in forwards; transition: none; }
+.ts-falling { background-color: #c9c2b4; animation: dropAway 0.8s ease-in forwards; transition: none; }
 .ts-tap { position: absolute; top: 18%; width: 100%; text-align: center; font-size: 1.8rem; font-weight: 700; color: #6c5ce7; animation: pulse 0.6s infinite alternate; }
 @keyframes dropAway { to { transform: translateY(400px) rotate(25deg); opacity: 0; } }
 
@@ -1254,7 +1258,7 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .sg .rc-hit .rc-sticks { transform: translateY(8px); }
 
 /* Letter Sea games: portholes, an open book, shells. */
-.sg .lp-water, .sg .td-sky, .sg .wc-sky, .sg .ts-sky, .sg .lo-area { margin: 0 8px 8px; box-shadow: 0 0 0 8px #fff6dc, 0 8px 0 8px rgba(36, 26, 60, 0.22); }
+.sg .lp-water, .sg .td-sky, .sg .wc-sky, .sg .lo-area { margin: 0 8px 8px; box-shadow: 0 0 0 8px #fff6dc, 0 8px 0 8px rgba(36, 26, 60, 0.22); }
 .sg .lp-water { background: radial-gradient(ellipse 60px 26px at 18% 100%, #1f8a6c 0 99%, transparent), radial-gradient(ellipse 40px 60px at 84% 100%, #2c9c7a 0 99%, transparent), linear-gradient(to top, #ecd27c 0 6%, transparent 6%), linear-gradient(#8fe0ea, #27a3b4 60%, #157889); }
 .sg .td-sky { background: radial-gradient(circle at 80% 14%, #fff6dc 0 20px, rgba(255, 246, 220, 0.22) 21px 36px, transparent 37px), radial-gradient(circle at 12px 0, transparent 0 13px, #157889 13.5px) 0 100% / 24px 26px repeat-x, linear-gradient(#1c2a66, #4b4690 70%, #c2607a); }
 .sg .fr-stage { align-self: center; width: min(100%, 460px); padding: 26px 22px; border-radius: 10px 10px 22px 22px; background: linear-gradient(90deg, transparent calc(50% - 1px), rgba(51, 40, 74, 0.12) 0 calc(50% + 1px), transparent 0), linear-gradient(90deg, #fffaf0 0 46%, #f3ead6 50%, #fffaf0 54%); box-shadow: 0 0 0 9px #94405e, 0 9px 0 9px rgba(36, 26, 60, 0.25); margin: 9px; }
@@ -1281,7 +1285,6 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 /* Nimble Meadow games. */
 .sg .lo-area { background: radial-gradient(circle at 84% 12%, #fff6dc 0 18px, transparent 19px), radial-gradient(circle at 16px 0, transparent 0 17px, #3f7a44 17.5px) 0 100% / 32px 34px repeat-x, linear-gradient(#2a2560, #47428c); }
 .sg .lo-on { background: radial-gradient(circle at 36% 30%, #fff6dc, #ffd24a 55%, #f2a94e); box-shadow: 0 0 24px rgba(255, 210, 74, 0.8); }
-.sg .ts-sky { background: radial-gradient(circle at 18% 16%, #fff 0 16px, transparent 17px), radial-gradient(circle at 25% 18%, #fff 0 12px, transparent 13px), linear-gradient(#8fd0ee, #e8f5d8); }
 /* Explorers' Coast games: a postcard and framed wall maps. */
 .sg .cm-card { align-self: center; width: min(100%, 420px); background: var(--story-paper); border-radius: 12px; box-shadow: inset 0 0 0 7px #fffaf0, inset 0 0 0 9px #e2607e, 0 7px 0 rgba(36, 26, 60, 0.25); rotate: -1.5deg; }
 .sg .cm-country { font-family: var(--story); }
