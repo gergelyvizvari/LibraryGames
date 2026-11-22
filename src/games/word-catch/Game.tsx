@@ -1,10 +1,59 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocale } from '../../i18n'
-import { useGameLoop, useShake } from '../../kit/hooks'
+import { useGameLoop, useShake, useTimeouts } from '../../kit/hooks'
+import { PaintedScene, worldStyle, type PaintedView } from '../../kit/painted'
 import { clamp, makeRng } from '../../kit/random'
-import { SceneShell, useStage } from '../../kit/SceneShell'
+import { useStage } from '../../kit/SceneShell'
 import type { GameProps } from '../../kit/types'
+import foxBlink from './art/fox-blink.webp'
+import foxHappy from './art/fox-happy.webp'
+import foxSad from './art/fox-sad.webp'
+import fox from './art/fox.webp'
+import squareTall from './art/square-tall.webp'
+import square from './art/square.webp'
 import { words, wordsForLevel, type Word } from './content'
+
+type Face = 'idle' | 'blink' | 'happy' | 'sad'
+const FOX: [Face, string][] = [
+  ['idle', fox],
+  ['blink', foxBlink],
+  ['happy', foxHappy],
+  ['sad', foxSad],
+]
+
+/** The fox blinks now and then while it waits. */
+function useBlink() {
+  const [shut, setShut] = useState(false)
+  useEffect(() => {
+    let timer = 0
+    const next = (open: boolean) => {
+      timer = window.setTimeout(
+        () => {
+          setShut(open)
+          next(!open)
+        },
+        open ? 2600 + Math.random() * 2600 : 150,
+      )
+    }
+    next(true)
+    return () => clearTimeout(timer)
+  }, [])
+  return shut
+}
+
+type ViewId = 'wide' | 'tall'
+
+/** The village square; the pictures fall from the sky above it. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: square, world: { w: 1280, h: 800 }, focus: { x: 140, y: 40, w: 1140, h: 760 }, ground: '#c99f98', sayAt: { x: 640, y: 120 } },
+  { id: 'tall', painting: squareTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 140, w: 720, h: 1000 }, ground: '#d1aaa3', sayAt: { x: 360, y: 220 } },
+]
+
+/** The sky the pictures fall through (x and y are percentages of it), and the fox. */
+const SPOTS: Record<ViewId, { sky: { x: number; y: number; w: number; h: number }; fox: { x: number; bottom: number; h: number } }> = {
+  wide: { sky: { x: 230, y: 150, w: 820, h: 600 }, fox: { x: 1150, bottom: 790, h: 260 } },
+  tall: { sky: { x: 40, y: 280, w: 560, h: 830 }, fox: { x: 610, bottom: 1140, h: 230 } },
+}
 
 /** Pictures to name in one stage. */
 const STAGE = 8
@@ -41,10 +90,18 @@ export default function WordCatch({ level, seed, t, onFinish }: GameProps) {
   const stage = useStage(STAGE, onFinish)
   const over = stage.over
   const [ref, shake] = useShake<HTMLDivElement>()
+  const later = useTimeouts()
+  const blink = useBlink()
+  const [mood, setMood] = useState<'happy' | 'sad' | null>(null)
+  const feel = (m: 'happy' | 'sad') => {
+    setMood(m)
+    later(() => setMood((now) => (now === m ? null : now)), 700)
+  }
 
   const fallSeconds = clamp(7.5 - level * 0.45, 3, 7.5)
 
   const miss = () => {
+    feel('sad')
     stage.slip()
     shake()
   }
@@ -63,17 +120,18 @@ export default function WordCatch({ level, seed, t, onFinish }: GameProps) {
   const choose = (option: string) => {
     if (over) return
     if (option !== drop.answer.word) return miss()
+    feel('happy')
     if (!stage.good()) setDrop(makeDrop(drop.answer))
   }
 
+  const face: Face = mood ?? (blink ? 'blink' : 'idle')
   return (
-    <SceneShell
-      place="village"
+    <PaintedScene
+      views={VIEWS}
       say={t('say')}
       stage={stage}
-      bare
-      fill
       className="word-catch"
+      trayHeight={100}
       tray={
         <div className="choices">
           {drop.options.map((o) => (
@@ -84,12 +142,23 @@ export default function WordCatch({ level, seed, t, onFinish }: GameProps) {
         </div>
       }
     >
-      <div className="wc-sky" ref={ref}>
-        <div className="wc-drop" style={{ left: `${drop.x}%`, top: `${drop.y}%` }}>
-          {drop.answer.emoji}
-        </div>
-        <div className="wc-ground" />
-      </div>
-    </SceneShell>
+      {(view) => {
+        const at = SPOTS[view]
+        return (
+          <>
+            <div className={`wc-char${mood === 'happy' ? ' wc-cheer' : ''}`} style={worldStyle(at.fox.x, at.fox.bottom, at.fox.h)}>
+              {FOX.map(([f, src]) => (
+                <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'wc-off'} />
+              ))}
+            </div>
+            <div className="wc-sky" ref={ref} style={{ left: at.sky.x, top: at.sky.y, width: at.sky.w, height: at.sky.h }}>
+              <div className="wc-drop" style={{ left: `${drop.x}%`, top: `${drop.y}%` }}>
+                {drop.answer.emoji}
+              </div>
+            </div>
+          </>
+        )
+      }}
+    </PaintedScene>
   )
 }

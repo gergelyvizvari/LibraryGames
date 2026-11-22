@@ -1,10 +1,60 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLatest, useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
-import { SceneShell, useStage } from '../../kit/SceneShell'
+import { PaintedScene, worldStyle, type PaintedView } from '../../kit/painted'
+import { useStage } from '../../kit/SceneShell'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
+import bearBlink from './art/bear-blink.webp'
+import bearHappy from './art/bear-happy.webp'
+import bearSad from './art/bear-sad.webp'
+import bear from './art/bear.webp'
+import drumArt from './art/drum.webp'
+import stageTall from './art/stage-tall.webp'
+import stageArt from './art/stage.webp'
 import { BAR, beatMs, cellBeats, grade, judge, makePattern, showWhilePlaying } from './logic'
+
+type Face = 'idle' | 'blink' | 'happy' | 'sad'
+const BEAR: [Face, string][] = [
+  ['idle', bear],
+  ['blink', bearBlink],
+  ['happy', bearHappy],
+  ['sad', bearSad],
+]
+
+/** The bear blinks now and then while it waits. */
+function useBlink() {
+  const [shut, setShut] = useState(false)
+  useEffect(() => {
+    let timer = 0
+    const next = (open: boolean) => {
+      timer = window.setTimeout(
+        () => {
+          setShut(open)
+          next(!open)
+        },
+        open ? 2600 + Math.random() * 2600 : 150,
+      )
+    }
+    next(true)
+    return () => clearTimeout(timer)
+  }, [])
+  return shut
+}
+
+type ViewId = 'wide' | 'tall'
+
+/** The little forest stage; the drum and the bear drummer stand on its log platform. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: stageArt, world: { w: 1280, h: 800 }, focus: { x: 180, y: 120, w: 920, h: 680 }, ground: '#a5a236', sayAt: { x: 640, y: 290 } },
+  { id: 'tall', painting: stageTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 260, w: 720, h: 860 }, ground: '#a0a53a', sayAt: { x: 360, y: 400 } },
+]
+
+/** The drum and the bear on the platform. */
+const SPOTS: Record<ViewId, { drum: { x: number; bottom: number; h: number }; bear: { x: number; bottom: number; h: number } }> = {
+  wide: { drum: { x: 560, bottom: 640, h: 230 }, bear: { x: 830, bottom: 630, h: 290 } },
+  tall: { drum: { x: 270, bottom: 900, h: 250 }, bear: { x: 530, bottom: 890, h: 300 } },
+}
 
 /** Rhythms to play back in one stage. */
 const STAGE = 5
@@ -29,10 +79,12 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
   const [lit, setLit] = useState(-1)
   const [hit, setHit] = useState(false)
   const [credits, setCredits] = useState<number[] | null>(null)
+  const [oops, setOops] = useState(false)
   const stage = useStage(STAGE, onFinish)
   const [message, setMessage] = useState('')
   const [ref, shake] = useShake<HTMLButtonElement>()
   const later = useTimeouts()
+  const blink = useBlink()
   const tapTimes = useRef<number[]>([])
   const notes = useRef<(OscillatorNode | undefined)[]>([])
   const idle = useRef<number | undefined>(undefined)
@@ -47,6 +99,7 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
     const j = judge(pattern.hits, tapTimes.current, beat, level)
     const g = grade(j.score)
     setCredits(j.credits)
+    setOops(g === 'oops')
     setPhase('result')
     setMessage(t(g))
     let last: boolean
@@ -115,53 +168,69 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
   let hitIndex = 0
   let cellStart = 0
 
+  const face: Face = phase === 'result' ? (oops ? 'sad' : 'happy') : blink ? 'blink' : 'idle'
   return (
-    <SceneShell place="lake" say={phase === 'result' ? message : phase === 'listen' ? t('listen') : t('yourTurn')} stage={stage} bare className="rhythm-copy">
-      {/* The rhythm shows while the drum plays it, then hides on the player's turn so it has to be remembered. */}
-      <div className="rc-bar">
-        {shown
-          ? pattern.cells.map((c, ci) => {
-              const from = cellStart
-              cellStart += cellBeats[c]
-              const dots = c === 'titi' ? 2 : c === 'rest' ? 0 : 1
-              const first = hitIndex
-              hitIndex += dots
-              return (
-                <span
-                  key={`${round}-${ci}`}
-                  className={`rc-cell rc-c-${c}${phase === 'play' ? ' rc-faded' : ''}${lit >= first && lit < first + dots ? ' rc-now' : ''}${from > 0 && from % BAR === 0 ? ' rc-newbar' : ''}`}
-                  style={{ flexGrow: cellBeats[c] }}
-                >
-                  {dots === 0 ? (
-                    <span className="rc-rest" />
-                  ) : (
-                    Array.from({ length: dots }, (_, k) => (
-                      <span key={k} className={`rc-dot${credits ? (credits[first + k] >= 0.5 ? ' rc-good' : ' rc-miss') : ''}`} />
-                    ))
-                  )}
-                </span>
-              )
-            })
-          : Array.from({ length: pattern.beats }, (_, b) => (
-              <span key={`${round}-${b}`} className={`rc-cell${b > 0 && b % BAR === 0 ? ' rc-newbar' : ''}`} style={{ flexGrow: 1 }} />
-            ))}
-      </div>
-      <button ref={ref} className={`rc-drum${hit ? ' rc-hit' : ''}${phase === 'play' ? ' rc-ready' : ''}`} onPointerDown={tap} aria-label={t('drum')}>
-        <svg viewBox="-100 -100 200 200" aria-hidden focusable="false">
-          <ellipse cx="0" cy="62" rx="84" ry="16" fill="#241a3c" opacity="0.25" />
-          <path d="M-78 -18 V34 A78 26 0 0 0 78 34 V-18Z" fill="#e2607e" />
-          <path d="M30 4 V58 A78 26 0 0 0 78 34 V-18 A78 26 0 0 1 30 4Z" fill="#c94a6b" />
-          <path d="M-78 -8 L-52 46 L-26 0 L0 54 L26 0 L52 46 L78 -8" fill="none" stroke="#fff6dc" strokeWidth="5" strokeLinejoin="round" />
-          <path d="M-78 30 A78 26 0 0 0 78 30" fill="none" stroke="#f2c14e" strokeWidth="10" />
-          <ellipse cx="0" cy="-18" rx="78" ry="26" fill="#f2c14e" />
-          <ellipse cx="0" cy="-18" rx="66" ry="20" fill="#fff6dc" />
-          <g className="rc-sticks">
-            <path d="M-66 -86 L-14 -24 M66 -86 L14 -24" stroke="#a8683c" strokeWidth="9" strokeLinecap="round" />
-            <circle cx="-12" cy="-22" r="9" fill="#8a5a3c" />
-            <circle cx="12" cy="-22" r="9" fill="#8a5a3c" />
-          </g>
-        </svg>
-      </button>
-    </SceneShell>
+    <PaintedScene
+      views={VIEWS}
+      say={phase === 'result' ? message : phase === 'listen' ? t('listen') : t('yourTurn')}
+      stage={stage}
+      className="rhythm-copy"
+      trayHeight={110}
+      tray={
+        <>
+          {/* The rhythm shows while the drum plays it, then hides on the player's turn so it has to be remembered. */}
+          <div className="rc-bar">
+            {shown
+              ? pattern.cells.map((c, ci) => {
+                  const from = cellStart
+                  cellStart += cellBeats[c]
+                  const dots = c === 'titi' ? 2 : c === 'rest' ? 0 : 1
+                  const first = hitIndex
+                  hitIndex += dots
+                  return (
+                    <span
+                      key={`${round}-${ci}`}
+                      className={`rc-cell rc-c-${c}${phase === 'play' ? ' rc-faded' : ''}${lit >= first && lit < first + dots ? ' rc-now' : ''}${from > 0 && from % BAR === 0 ? ' rc-newbar' : ''}`}
+                      style={{ flexGrow: cellBeats[c] }}
+                    >
+                      {dots === 0 ? (
+                        <span className="rc-rest" />
+                      ) : (
+                        Array.from({ length: dots }, (_, k) => (
+                          <span key={k} className={`rc-dot${credits ? (credits[first + k] >= 0.5 ? ' rc-good' : ' rc-miss') : ''}`} />
+                        ))
+                      )}
+                    </span>
+                  )
+                })
+              : Array.from({ length: pattern.beats }, (_, b) => (
+                  <span key={`${round}-${b}`} className={`rc-cell${b > 0 && b % BAR === 0 ? ' rc-newbar' : ''}`} style={{ flexGrow: 1 }} />
+                ))}
+          </div>
+        </>
+      }
+    >
+      {(view) => {
+        const at = SPOTS[view]
+        return (
+          <>
+            <div className={`rc-char${face === 'happy' ? ' rc-cheer' : ''}`} style={worldStyle(at.bear.x, at.bear.bottom, at.bear.h)}>
+              {BEAR.map(([f, src]) => (
+                <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'rc-off'} />
+              ))}
+            </div>
+            <button
+              ref={ref}
+              className={`rc-drum${hit ? ' rc-hit' : ''}${phase === 'play' ? ' rc-ready' : ''}`}
+              style={{ ...worldStyle(at.drum.x, at.drum.bottom, at.drum.h), aspectRatio: 296 / 252 }}
+              onPointerDown={tap}
+              aria-label={t('drum')}
+            >
+              <img src={drumArt} alt="" draggable={false} />
+            </button>
+          </>
+        )
+      }}
+    </PaintedScene>
   )
 }

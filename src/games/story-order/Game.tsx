@@ -2,11 +2,60 @@ import { useEffect, useRef, useState } from 'react'
 import { useLocale } from '../../i18n'
 import { useLatest, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
-import { SceneShell, useStage } from '../../kit/SceneShell'
+import { PaintedScene, worldStyle, type PaintedView } from '../../kit/painted'
+import { useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
+import owlBlink from './art/owl-blink.webp'
+import owlHappy from './art/owl-happy.webp'
+import owlSad from './art/owl-sad.webp'
+import owl from './art/owl.webp'
+import nookTall from './art/nook-tall.webp'
+import nook from './art/nook.webp'
 import { stories } from './content'
 import { askKey, makeDealer, shuffleCards, showPictures, STAGE, type Card } from './logic'
+
+type Face = 'idle' | 'blink' | 'happy' | 'sad'
+const OWL: [Face, string][] = [
+  ['idle', owl],
+  ['blink', owlBlink],
+  ['happy', owlHappy],
+  ['sad', owlSad],
+]
+
+/** The owl blinks now and then while it waits. */
+function useBlink() {
+  const [shut, setShut] = useState(false)
+  useEffect(() => {
+    let timer = 0
+    const next = (open: boolean) => {
+      timer = window.setTimeout(
+        () => {
+          setShut(open)
+          next(!open)
+        },
+        open ? 2600 + Math.random() * 2600 : 150,
+      )
+    }
+    next(true)
+    return () => clearTimeout(timer)
+  }, [])
+  return shut
+}
+
+type ViewId = 'wide' | 'tall'
+
+/** The seaside reading nook; the story's pages lie on the big desk. */
+const VIEWS: PaintedView<ViewId>[] = [
+  { id: 'wide', painting: nook, world: { w: 1280, h: 800 }, focus: { x: 140, y: 40, w: 1140, h: 760 }, ground: '#973d19', sayAt: { x: 1000, y: 230 } },
+  { id: 'tall', painting: nookTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 160, w: 720, h: 980 }, ground: '#983e10', sayAt: { x: 300, y: 260 } },
+]
+
+/** The part of the desk the pages lie on, and the owl. */
+const SPOTS: Record<ViewId, { desk: { x: number; y: number; w: number; h: number }; owl: { x: number; bottom: number; h: number } }> = {
+  wide: { desk: { x: 200, y: 230, w: 760, h: 550 }, owl: { x: 1110, bottom: 780, h: 300 } },
+  tall: { desk: { x: 24, y: 470, w: 672, h: 660 }, owl: { x: 600, bottom: 450, h: 200 } },
+}
 
 interface Round {
   id: number
@@ -25,6 +74,7 @@ export default function StoryOrder({ level, seed, t, onFinish }: GameProps) {
   const [wrong, setWrong] = useState<number | null>(null)
   const stage = useStage(STAGE, onFinish)
   const later = useTimeouts()
+  const blink = useBlink()
   const pictures = showPictures(level)
   const total = round.cards.length
   const done = round.placed === total
@@ -62,9 +112,19 @@ export default function StoryOrder({ level, seed, t, onFinish }: GameProps) {
   // Once the story is complete, the pages hop into story order (same keys, so they move instead of popping in again).
   const shown = done ? [...round.cards].sort((a, b) => a.step - b.step) : round.cards
   const say = done ? t('theEnd') : wrong !== null ? t('notYet') : t(askKey(round.placed, total))
+  const face: Face = done ? 'happy' : wrong !== null ? 'sad' : blink ? 'blink' : 'idle'
   return (
-    <SceneShell place="sea" say={say} stage={stage} bare fill className="story-order">
-      <div className={`so-desk so-desk-${total}${done ? ' so-done' : ''}`} key={round.id}>
+    <PaintedScene views={VIEWS} say={say} stage={stage} className="story-order">
+      {(view) => {
+        const at = SPOTS[view]
+        return (
+          <>
+            <div className={`so-char${done ? ' so-cheer' : ''}`} style={worldStyle(at.owl.x, at.owl.bottom, at.owl.h)}>
+              {OWL.map(([f, src]) => (
+                <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'so-off'} />
+              ))}
+            </div>
+      <div className={`so-desk so-desk-${total}${done ? ' so-done' : ''}`} key={round.id} style={{ left: at.desk.x, top: at.desk.y, width: at.desk.w, height: at.desk.h }}>
         {shown.map((c, i) => {
           const isPlaced = c.step < round.placed
           const shake = wrong === c.step
@@ -84,6 +144,9 @@ export default function StoryOrder({ level, seed, t, onFinish }: GameProps) {
           )
         })}
       </div>
-    </SceneShell>
+          </>
+        )
+      }}
+    </PaintedScene>
   )
 }
