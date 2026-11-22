@@ -353,13 +353,17 @@ h1, h2 { margin: 0; line-height: 1.1; }
 /* Simon Says */
 .sim-order { background: var(--card); border-radius: 24px; padding: 18px; text-align: center; font-size: 1.5rem; font-weight: 700; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px; align-items: center; animation: zoom 0.3s; }
 .sim-face { font-size: 3rem; }
-.sim-timer { width: 100%; height: 8px; background: var(--line); border-radius: 999px; overflow: hidden; }
-.sim-timer div { height: 100%; background: var(--game-color); }
-.sim-animals { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.sim-animal { aspect-ratio: 1.3; border-radius: 24px; background: var(--card); font-size: 3.4rem; box-shadow: 0 0 0 2px var(--line), 0 6px 0 var(--line); }
-.sim-six { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-.sim-six .sim-animal { aspect-ratio: 1; font-size: 2.6rem; }
-.sim-animal:active { transform: translateY(4px); box-shadow: 0 0 0 2px var(--line), 0 2px 0 var(--line); }
+.sim-timer { position: absolute; height: 18px; border-radius: 999px; overflow: hidden; background: rgba(255, 246, 220, 0.75); box-shadow: 0 3px 6px rgba(40, 60, 10, 0.25); }
+.sim-timer div { height: 100%; border-radius: 999px; background: #ffd24a; }
+.sim-animals { position: absolute; inset: 0; }
+.sim-animal { position: absolute; padding: 0; background: none; border-radius: 40px; transform-origin: 50% 100%; -webkit-tap-highlight-color: transparent; }
+.sim-disc { position: absolute; left: 4%; right: 4%; bottom: -10%; width: 92%; height: 32%; object-fit: fill; user-select: none; filter: drop-shadow(0 6px 4px rgba(40, 60, 10, 0.3)); }
+.sim-pic { position: relative; display: block; height: 82%; margin: 0 auto; user-select: none; filter: drop-shadow(0 4px 3px rgba(60, 40, 10, 0.25)); }
+.sim-animal:active { transform: translateY(4px) scale(0.97); }
+.sim-char { position: absolute; aspect-ratio: 0.54; transform-origin: 50% 100%; pointer-events: none; animation: fmBreathe 3.4s ease-in-out infinite; }
+.sim-char img { position: absolute; left: 50%; bottom: 0; height: 100%; translate: -50% 0; user-select: none; }
+.sim-char img.sim-off { visibility: hidden; }
+.sim-cheer { animation: fmHop 0.6s; }
 
 /* How Many? */
 .hm-board { position: relative; aspect-ratio: 1; width: min(100%, 420px); margin: 0 auto; background: #2c6e62; border-radius: 22px; box-shadow: inset 0 0 0 10px #a8744e, inset 0 0 0 13px #8a5a3c, 0 8px 0 rgba(36, 26, 60, 0.28); }
@@ -1249,10 +1253,8 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .sg .sc-word::before { content: ''; position: absolute; left: 22%; right: 22%; bottom: 100%; height: 26px; border: 4px solid #8a5a3c; border-bottom: 0; border-radius: 50% 50% 0 0 / 100% 100% 0 0; }
 .sg .sc-buttons { padding: 14px; border-radius: 28px; background: #a8744e; box-shadow: inset 0 0 0 7px #8a5a3c, 0 7px 0 rgba(36, 26, 60, 0.28); }
 .sg .sc-btn { border-radius: 50%; height: auto; aspect-ratio: 1.6; box-shadow: inset 0 0 0 7px #fff6dc, inset 0 14px 0 7px rgba(255, 255, 255, 0.25), 0 5px 0 rgba(36, 26, 60, 0.3); }
-.sg .sim-timer { height: 10px; background: rgba(255, 246, 220, 0.6); }
-.sg .sim-timer div { background: #ffd24a; }
-.sg .sim-animals, .sg .as-farm { padding: 14px; border-radius: 28px; background: #a8744e; box-shadow: inset 0 0 0 7px #8a5a3c, 0 7px 0 rgba(36, 26, 60, 0.28); }
-.sg .sim-animal, .sg .as-animal { border: 0; border-radius: 50%; aspect-ratio: 1; background: radial-gradient(circle, #bfe4f4 0 64%, #fff6dc 65%); box-shadow: 0 5px 0 rgba(36, 26, 60, 0.3); }
+.sg .as-farm { padding: 14px; border-radius: 28px; background: #a8744e; box-shadow: inset 0 0 0 7px #8a5a3c, 0 7px 0 rgba(36, 26, 60, 0.28); }
+.sg .as-animal { border: 0; border-radius: 50%; aspect-ratio: 1; background: radial-gradient(circle, #bfe4f4 0 64%, #fff6dc 65%); box-shadow: 0 5px 0 rgba(36, 26, 60, 0.3); }
 .sg .as-lit { background: radial-gradient(circle, #ffe9a0 0 64%, #ffd24a 65%); }
 .sg .as-farm { align-self: center; width: min(100%, 380px, 100dvh - 440px); min-width: 230px; }
 .sg .as-ear { height: 44px; color: #fff6dc; font-family: var(--story); text-shadow: 0 2px 0 rgba(36, 26, 60, 0.3); }
