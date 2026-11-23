@@ -1851,3 +1851,7 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .ps.blind-map .map-stage { width: 100%; min-height: 0; }
 .ps.blind-map .map-box { border-radius: 14px; box-shadow: 0 0 0 6px #fff6dc, 0 9px 0 6px rgba(36, 26, 60, 0.25); }
 .ps-tall.blind-map { --ps-bubble-w: 230px; }
+
+/* A painted sticker in place of an emoji (kit/stickers.tsx): as big as the emoji would be. */
+.sticker { display: inline-block; width: 1.2em; height: 1.2em; object-fit: contain; vertical-align: -0.25em; user-select: none; -webkit-user-drag: none; pointer-events: none; }
+.pr-front .sticker { width: 1.5em; height: 1.5em; }
