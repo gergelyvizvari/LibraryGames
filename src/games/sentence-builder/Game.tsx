@@ -6,6 +6,7 @@ import { Cast, useMood } from '../../kit/cast'
 import { PaintedScene, type PaintedView } from '../../kit/painted'
 import { useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
+import { Emoji } from '../../kit/stickers'
 import type { GameProps } from '../../kit/types'
 import { sentences, sentencesForLevel } from './content'
 import { isNext, tilesFor } from './logic'
@@ -83,7 +84,7 @@ export default function SentenceBuilder({ level, seed, t, onFinish }: GameProps)
             {/* `zoom` scales the box's own position too, so it is given in zoomed units. */}
             <div className="pb-box" style={{ left: at.box.x / at.zoom, top: at.box.y / at.zoom, width: at.box.w / at.zoom, height: at.box.h / at.zoom, zoom: at.zoom }}>
       <div className="sb-picture" key={index}>
-        {sentence.picture}
+        <Emoji e={sentence.picture} />
       </div>
       <div className={`sb-built${built.length === total ? ' sb-done' : ''}`}>
         {built.map((id) => (
