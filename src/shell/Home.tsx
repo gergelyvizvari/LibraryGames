@@ -15,6 +15,7 @@ import { search, type Searchable } from './search'
 import { TeaCup } from './TeaCup'
 import { StickerIcon } from './StickerIcon'
 import { Tools } from './Tools'
+import { Emoji } from '../kit/stickers'
 
 // A strip of the painted map behind each region's name.
 const bands = import.meta.glob<string>('./map/bands/*.webp', { eager: true, import: 'default' })
@@ -281,7 +282,7 @@ export function Home({
           </span>
           {streak >= 2 && (
             <span className="book-streak" title={t('streakHint')}>
-              🔥 {t('streakDays', { n: streak })}
+              <Emoji e="🔥" /> {t('streakDays', { n: streak })}
             </span>
           )}
           <span className={`wm-daily-go${dailyDone ? ' wm-daily-done' : ''}`} aria-label={dailyDone ? t('doneToday') : undefined}>

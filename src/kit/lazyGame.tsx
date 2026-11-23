@@ -1,6 +1,7 @@
 import { lazy, type ComponentType } from 'react'
 import { useT } from '../i18n'
 import type { GameDef, GameProps } from './types'
+import { Emoji } from './stickers'
 
 // One lazy component per game, kept for the whole visit, so "play again" never shows the loading state twice.
 const lazyGames = new WeakMap<GameDef, ComponentType<GameProps>>()
@@ -20,7 +21,7 @@ export function OopsCard({ onAgain, onHome }: { onAgain: () => void; onHome: () 
   return (
     <div className="card oops" role="alert">
       <div className="oops-face" aria-hidden>
-        🙈
+        <Emoji e="🙈" />
       </div>
       <h1>{t('oops')}</h1>
       <p className="muted">{t('oopsHint')}</p>
