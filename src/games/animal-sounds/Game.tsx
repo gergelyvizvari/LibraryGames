@@ -4,6 +4,7 @@ import { makeRng } from '../../kit/random'
 import { SceneTool } from '../../kit/scene'
 import { useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
+import { Emoji } from '../../kit/stickers'
 import type { GameProps } from '../../kit/types'
 import { ANIMALS, animalCount, makeSequence, roundPoints, seqLength, showLights, stepMs } from './logic'
 import { preloadVoices, voices } from './voices'
@@ -143,7 +144,7 @@ export default function AnimalSounds({ level, seed, t, onFinish }: GameProps) {
   return (
     <PaintedScene
       views={VIEWS}
-      say={message}
+      say={<Emoji e={message} />}
       stage={stage}
       className="animal-sounds"
       trayHeight={110}

@@ -5,6 +5,7 @@ import { Cast, useMood } from '../../kit/cast'
 import { PaintedScene, type PaintedView } from '../../kit/painted'
 import { useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
+import { Emoji } from '../../kit/stickers'
 import type { GameProps } from '../../kit/types'
 import { ROUNDS, animalKey, holdRange, pointsFor } from './logic'
 import bgTall from './art/bg-tall.webp'
@@ -96,7 +97,7 @@ export default function LightsOut({ level, seed, t, onFinish }: GameProps) {
     state === 'go' ? t('tapNow') : state === 'lighting' || state === 'holding' ? t('waitForIt') : state === 'done' ? '' : t('tapToStart')
 
   return (
-    <PaintedScene views={VIEWS} say={message || label || t('tapToStart')} stage={stage} className="lights-out">
+    <PaintedScene views={VIEWS} say={<Emoji e={message || label || t('tapToStart')} />} stage={stage} className="lights-out">
       {(view) => {
         const at = SPOTS[view]
         return (
@@ -110,7 +111,9 @@ export default function LightsOut({ level, seed, t, onFinish }: GameProps) {
             <span key={i} className={`lo-light${i <= lit ? ' lo-on' : ''}`} />
           ))}
         </div>
-        <div className="lo-label">{message || label || t('tapToStart')}</div>
+        <div className="lo-label">
+          <Emoji e={message || label || t('tapToStart')} />
+        </div>
       </button>
             </div>
           </>
