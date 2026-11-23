@@ -764,10 +764,9 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .sg-coast { --wall: #e3a352; --wall-top: #c27a34; --ground: repeating-linear-gradient(0deg, #d9b488 0 40px, #c79d6c 40px 44px); }
 .sg { background: var(--ground); }
 /* Painted scenes (kit/painted.tsx): one painting as the whole room, things placed on it in its own units. */
-.ps { flex: 1; min-height: 0; position: relative; overflow: hidden; color: var(--story-ink); --ink: var(--story-ink); --ps-bubble-w: min(330px, 100% - 24px); }
+.ps { flex: 1; min-height: 0; position: relative; overflow: hidden; color: var(--story-ink); --ink: var(--story-ink); }
 .ps-world { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
 .ps-painting { position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; -webkit-user-drag: none; mask-image: linear-gradient(to bottom, #000 90%, transparent); }
-.ps .scene-bubble { width: max-content; max-width: var(--ps-bubble-w); margin-bottom: 14px; }
 /* The play area of a painted scene that keeps its game's own pieces. */
 .pb-box { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; }
 /* A painted character (kit/cast.tsx). */
@@ -1733,7 +1732,7 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .ps.lights-out .lo-light.lo-on:nth-child(n+4) { background: radial-gradient(circle at 36% 30%, #fff6d0, #ffd24a 55%, #e9a51e); box-shadow: 0 0 30px rgba(255, 210, 74, 0.9), inset 0 -5px 0 rgba(160, 90, 0, 0.25); }
 .ps.lights-out .lo-go .lo-light { background: radial-gradient(circle at 36% 30%, #e6ffe0, #4fd36a 55%, #22a447); box-shadow: 0 0 30px rgba(80, 220, 110, 0.9), inset 0 -5px 0 rgba(0, 90, 30, 0.25); }
 /* The big label on the track says what to do (and how fast you were), so no speech bubble too. */
-.ps.lights-out .scene-bubble { display: none; }
+.ps.lights-out .ps-task { display: none; }
 
 /* mirror-match: its storybook pieces inside the painted scene. */
 
@@ -1831,37 +1830,31 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .ps.type-defender .td-enemy { font-family: var(--story); background: var(--story-paper); color: var(--story-ink); border-radius: 18px; box-shadow: inset 0 0 0 4px #c99a6a, 0 5px 0 rgba(36, 26, 60, 0.25); padding: 4px 14px 6px; }
 .ps.type-defender .td-active { background: #ffe39a; }
 .ps.type-defender .td-input { width: min(100%, 360px); }
-.ps-tall.type-defender { --ps-bubble-w: 230px; }
 /* continent-sort: its storybook pieces inside the painted scene. */
 .ps.continent-sort .cs2-card { background: var(--story-paper); border: 0; box-shadow: inset 0 0 0 5px #c99a6a, 0 6px 0 rgba(36, 26, 60, 0.25); }
 .ps.continent-sort .pb-box { justify-content: flex-start; }
 .ps.continent-sort .cs2-card { min-width: 0; }
 .ps.continent-sort .map-stage { width: 100%; min-height: 0; }
-.ps-tall.continent-sort { --ps-bubble-w: 230px; }
 .ps.continent-sort .map-box { border-radius: 14px; box-shadow: 0 0 0 6px #fff6dc, 0 9px 0 6px rgba(36, 26, 60, 0.25); }
 /* river-mountain: its storybook pieces inside the painted scene. */
 
 .ps.river-mountain .pb-box { justify-content: flex-end; }
 .ps.river-mountain .map-stage { width: 100%; min-height: 0; }
 .ps.river-mountain .map-box { border-radius: 14px; box-shadow: 0 0 0 6px #fff6dc, 0 9px 0 6px rgba(36, 26, 60, 0.25); }
-.ps-tall.river-mountain { --ps-bubble-w: 230px; }
 /* blind-map: its storybook pieces inside the painted scene. */
 
 .ps.blind-map .pb-box { justify-content: flex-end; }
 .ps.blind-map .map-stage { width: 100%; min-height: 0; }
 .ps.blind-map .map-box { border-radius: 14px; box-shadow: 0 0 0 6px #fff6dc, 0 9px 0 6px rgba(36, 26, 60, 0.25); }
-.ps-tall.blind-map { --ps-bubble-w: 230px; }
 
 /* A painted sticker in place of an emoji (kit/stickers.tsx): as big as the emoji would be. */
 .sticker { display: inline-block; width: 1.2em; height: 1.2em; object-fit: contain; vertical-align: -0.25em; user-select: none; -webkit-user-drag: none; pointer-events: none; }
 .pr-front .sticker { width: 1.5em; height: 1.5em; }
 
-/* The speech bubble of a painted scene, placed by its speaker (kit/painted.tsx placeBubble): its tail points at the
-   speaker's head from below the bubble, or from its side when the bubble sits beside the head. */
-.ps-say { position: absolute; z-index: 3; width: max-content; pointer-events: none; }
-.ps .ps-say .scene-bubble { position: relative; left: auto; bottom: auto; margin: 0; }
-.ps .ps-say .scene-bubble::after { transform: none; border: 12px solid transparent; }
-.ps .ps-say.ps-tail-down .scene-bubble::after { left: calc(var(--along) - 12px); top: calc(100% - 1px); border-top: var(--reach, 20px) solid var(--story-paper); border-bottom: 0; }
-.ps .ps-say.ps-tail-right .scene-bubble::after { left: calc(100% - 1px); top: calc(var(--along) - 12px); border-left: var(--reach, 20px) solid var(--story-paper); border-right: 0; }
-.ps .ps-say.ps-tail-left .scene-bubble::after { left: auto; right: calc(100% - 1px); top: calc(var(--along) - 12px); border-right: var(--reach, 20px) solid var(--story-paper); border-left: 0; }
-.ps .ps-say.ps-tail-up .scene-bubble::after { left: calc(var(--along) - 12px); top: auto; bottom: calc(100% - 1px); border-bottom: var(--reach, 20px) solid var(--story-paper); border-top: 0; }
+/* The task of a painted scene: one line on a paper strip under the progress pips, always in the same place. */
+.ps-task { position: absolute; z-index: 3; top: calc(64px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); width: max-content; max-width: min(560px, 100% - 24px); margin: 0; padding: 8px 20px; border-radius: 16px; background: var(--story-paper); box-shadow: 0 3px 6px rgba(20, 15, 50, 0.3); font-weight: 700; font-size: 1.15rem; line-height: 1.2; text-align: center; text-wrap: balance; pointer-events: none; animation: popIn 0.25s; }
+.scene-frame:has(.scene-end) .ps-task { visibility: hidden; }
+@media (max-height: 499px) {
+  .scene-frame:has(.ps) .scene-pips { left: auto; right: calc(64px + env(safe-area-inset-right)); transform: none; }
+  .ps-task { top: calc(14px + env(safe-area-inset-top)); left: calc(64px + env(safe-area-inset-left)); transform: none; max-width: min(520px, 100% - 360px); padding: 6px 16px; font-size: 1rem; }
+}

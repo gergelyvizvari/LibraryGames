@@ -140,7 +140,7 @@ export default function SequenceEcho({ level, seed, t, onFinish }: GameProps) {
         const at = SPOTS[view]
         return (
           <>
-            <div data-speaker className={`se-char${mood === 'happy' ? ' se-cheer' : ''}`} style={worldStyle(at.frog.x, at.frog.bottom, at.frog.h)}>
+            <div className={`se-char${mood === 'happy' ? ' se-cheer' : ''}`} style={worldStyle(at.frog.x, at.frog.bottom, at.frog.h)}>
               {FROG.map(([f, src]) => (
                 <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'se-off'} />
               ))}

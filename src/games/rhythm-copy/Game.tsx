@@ -214,7 +214,7 @@ export default function RhythmCopy({ level, seed, t, onFinish }: GameProps) {
         const at = SPOTS[view]
         return (
           <>
-            <div data-speaker className={`rc-char${face === 'happy' ? ' rc-cheer' : ''}`} style={worldStyle(at.bear.x, at.bear.bottom, at.bear.h)}>
+            <div className={`rc-char${face === 'happy' ? ' rc-cheer' : ''}`} style={worldStyle(at.bear.x, at.bear.bottom, at.bear.h)}>
               {BEAR.map(([f, src]) => (
                 <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'rc-off'} />
               ))}

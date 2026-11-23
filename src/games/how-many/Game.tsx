@@ -120,7 +120,7 @@ export default function HowMany({ level, seed, t, onFinish }: GameProps) {
         const at = SPOTS[view]
         return (
           <>
-            <div data-speaker className={`hm-char${result === 'happy' ? ' hm-cheer' : ''}`} style={worldStyle(at.badger.x, at.badger.bottom, at.badger.h)}>
+            <div className={`hm-char${result === 'happy' ? ' hm-cheer' : ''}`} style={worldStyle(at.badger.x, at.badger.bottom, at.badger.h)}>
               {BADGER.map(([f, src]) => (
                 <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'hm-off'} />
               ))}

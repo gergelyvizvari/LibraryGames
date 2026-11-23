@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { fitPainting, pickView, placeBubble } from './painted'
+import { fitPainting, pickView } from './painted'
 
 const world = { w: 1280, h: 800 }
 const focus = { x: 330, y: 180, w: 620, h: 540 }
@@ -50,22 +50,3 @@ describe('pickView', () => {
   })
 })
 
-describe('placeBubble', () => {
-  const speaker = { x: 300, y: 500, w: 60, h: 120 }
-  it('puts the bubble above the head, its tail on the head', () => {
-    const p = placeBubble(speaker, 200, 60, 390, 800)
-    expect(p.tail).toBe('down')
-    expect(p.top + 60 + p.reach).toBeCloseTo(500 + 4.8)
-    expect(p.left + p.along).toBeCloseTo(330)
-  })
-  it('goes beside the head when there is no room above', () => {
-    const p = placeBubble({ ...speaker, y: 70 }, 200, 60, 390, 800)
-    expect(p.tail).toBe('right')
-    expect(p.left + 200).toBeLessThanOrEqual(300 + 60 * 0.12 - 20 + 0.01)
-  })
-  it('keeps off the things to play with when it can', () => {
-    const buttons = [{ x: 0, y: 400, w: 390, h: 90 }]
-    const p = placeBubble(speaker, 200, 60, 390, 800, buttons)
-    expect(p.top >= 490 || p.top + 60 <= 400).toBe(true)
-  })
-})

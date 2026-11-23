@@ -191,7 +191,7 @@ export default function AcornShop({ level, seed, t, onFinish }: GameProps) {
           <>
             {/* The squirrel stands behind the counter, under the awning. */}
             <div className="as-behind" style={{ top: at.awning, height: at.counter - at.awning }}>
-              <div data-speaker className={`as-keeper as-${stage.mood}`} style={worldStyle(at.keeper.x, at.keeper.bottom - at.awning, at.keeper.h)}>
+              <div className={`as-keeper as-${stage.mood}`} style={worldStyle(at.keeper.x, at.keeper.bottom - at.awning, at.keeper.h)}>
                 {[squirrel, squirrelBlink, squirrelHappy].map((src, i) => (
                   <img key={src} src={src} alt="" draggable={false} className={['idle', 'blink', 'happy'][i] === face ? '' : 'as-off'} />
                 ))}

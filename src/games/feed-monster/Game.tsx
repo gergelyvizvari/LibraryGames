@@ -207,7 +207,7 @@ export default function FeedMonster({ level, seed, t, onFinish }: GameProps) {
       {(view) => {
         const at = STAND[view]
         return (
-          <div key={arrival} data-speaker className="fm-stand" style={{ ...worldStyle(at.x, at.bottom, at.h), aspectRatio: MONSTER.aspect }}>
+          <div key={arrival} className="fm-stand" style={{ ...worldStyle(at.x, at.bottom, at.h), aspectRatio: MONSTER.aspect }}>
             <div className={`fm-monster fm-${mood}`}>
               <div className="fm-fur">
                 {FACE_LIST.map((f, i) => (

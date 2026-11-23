@@ -149,7 +149,7 @@ export function MapHunt({ level, seed, t, onFinish, places, width, height, toMap
                 </div>
               </div>
               {/* The guide stands in front of the map's edge. */}
-              <div data-speaker className={`mh-guide${happy ? ' mh-happy' : ''}`} style={worldStyle(g.x, g.bottom, g.h)}>
+              <div className={`mh-guide${happy ? ' mh-happy' : ''}`} style={worldStyle(g.x, g.bottom, g.h)}>
                 <img src={painted.guide.idle} alt="" draggable={false} className={happy ? 'mh-off' : ''} />
                 <img src={painted.guide.happy} alt="" draggable={false} className={happy ? '' : 'mh-off'} />
               </div>

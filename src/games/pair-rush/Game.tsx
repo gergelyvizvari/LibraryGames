@@ -104,7 +104,7 @@ export default function PairRush({ level, seed, t, onFinish }: GameProps) {
         const h = rows * ch + (rows - 1) * cw * 0.1
         return (
           <>
-            <div data-speaker className={`pr-char${mood === 'happy' ? ' pr-cheer' : ''}`} style={worldStyle(at.mouse.x, at.mouse.bottom, at.mouse.h)}>
+            <div className={`pr-char${mood === 'happy' ? ' pr-cheer' : ''}`} style={worldStyle(at.mouse.x, at.mouse.bottom, at.mouse.h)}>
               {MOUSE.map(([f, src]) => (
                 <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'pr-off'} />
               ))}

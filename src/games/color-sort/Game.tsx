@@ -210,7 +210,7 @@ export default function ColorSort({ level, seed, t, onFinish }: GameProps) {
           <>
             {/* The painter owl cheers whenever a tube is filled with one colour. */}
             <div
-              data-speaker className={`cs-owl${cheer ? " cs-cheer" : ""}`}
+              className={`cs-owl${cheer ? " cs-cheer" : ""}`}
               style={worldStyle(at.owl.x, at.owl.bottom, at.owl.h)}
             >
               <img

@@ -316,7 +316,7 @@ export default function PuppySpots({ level, seed, t, onFinish }: GameProps) {
         const { rug, mama: m } = SPOTS[view]
         return (
           <>
-            <div data-speaker className={`pk-mama pk-${mood}`} style={worldStyle(m.x, m.bottom, m.h)}>
+            <div className={`pk-mama pk-${mood}`} style={worldStyle(m.x, m.bottom, m.h)}>
               {MAMA.map(([f, src]) => (
                 <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'pk-off'} />
               ))}

@@ -147,7 +147,7 @@ export default function WordCatch({ level, seed, t, onFinish }: GameProps) {
         const at = SPOTS[view]
         return (
           <>
-            <div data-speaker className={`wc-char${mood === 'happy' ? ' wc-cheer' : ''}`} style={worldStyle(at.fox.x, at.fox.bottom, at.fox.h)}>
+            <div className={`wc-char${mood === 'happy' ? ' wc-cheer' : ''}`} style={worldStyle(at.fox.x, at.fox.bottom, at.fox.h)}>
               {FOX.map(([f, src]) => (
                 <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'wc-off'} />
               ))}

@@ -126,7 +126,7 @@ export default function TowerStack({ level, t, onFinish }: GameProps) {
         const at = SPOTS[view]
         return (
           <>
-      <div data-speaker className={`ts-beaver${mood === 'happy' || over ? ' ts-hop' : ''}`} style={worldStyle(at.beaver.x, at.beaver.bottom, at.beaver.h)}>
+      <div className={`ts-beaver${mood === 'happy' || over ? ' ts-hop' : ''}`} style={worldStyle(at.beaver.x, at.beaver.bottom, at.beaver.h)}>
         {FACES.map((f) => (
           <img key={f} src={art(f === 'idle' ? 'beaver' : `beaver-${f}`)} alt="" draggable={false} className={f === face ? '' : 'ts-off'} />
         ))}

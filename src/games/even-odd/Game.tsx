@@ -192,7 +192,7 @@ export default function EvenOdd({ level, seed, t, onFinish }: GameProps) {
         const at = SPOTS[view]
         return (
           <>
-            <div data-speaker className={`eo-char${message.kind === 'yes' ? ' eo-cheer' : ''}`} style={worldStyle(at.hedgehog.x, at.hedgehog.bottom, at.hedgehog.h)}>
+            <div className={`eo-char${message.kind === 'yes' ? ' eo-cheer' : ''}`} style={worldStyle(at.hedgehog.x, at.hedgehog.bottom, at.hedgehog.h)}>
               {HEDGEHOG.map(([f, src]) => (
                 <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'eo-off'} />
               ))}
