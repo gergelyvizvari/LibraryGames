@@ -6,6 +6,7 @@ import { Cast, useMood } from '../../kit/cast'
 import { PaintedScene, type PaintedView } from '../../kit/painted'
 import { useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
+import { Emoji } from '../../kit/stickers'
 import type { GameProps } from '../../kit/types'
 import { pairs } from './content'
 import { dealBoard, isMatch, makeDealer, showPictures, type Card } from './logic'
@@ -101,7 +102,7 @@ feel('happy')
           const r = board.right[row]
           return [l, r].map((c) => (
             <button key={keyOf(c)} className={cardClass(c)} onPointerDown={() => tap(c)} disabled={over}>
-              {pictures && c.emoji && <span className="op-emoji">{c.emoji}</span>}
+              {pictures && c.emoji && <span className="op-emoji"><Emoji e={c.emoji} /></span>}
               <span className="op-word">{c.word}</span>
             </button>
           ))
