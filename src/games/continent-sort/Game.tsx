@@ -6,6 +6,7 @@ import { makeRng } from '../../kit/random'
 import { Cast, useMood } from '../../kit/cast'
 import { PaintedScene, type PaintedView } from '../../kit/painted'
 import { sound, vibrate } from '../../kit/sound'
+import { Emoji, SvgEmoji } from '../../kit/stickers'
 import type { GameProps } from '../../kit/types'
 import { MapStage } from '../../kit/ui'
 import { continentNames, names, type Item } from './content'
@@ -189,7 +190,7 @@ export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
             <div className="pb-box" style={{ left: at.box.x / at.zoom, top: at.box.y / at.zoom, width: at.box.w / at.zoom, height: at.box.h / at.zoom, zoom: at.zoom }}>
       {q && (
         <div className={`cs2-card${solved ? ' cs2-card-done' : ''}${drag ? ' cs2-card-lifted' : ''}`} key={index} onPointerDown={onCardDown}>
-          <span className="cs2-emoji">{q.emoji}</span>
+          <span className="cs2-emoji"><Emoji e={q.emoji} /></span>
           <span className="cs2-name">{itemNames[q.id]}</span>
         </div>
       )}
@@ -217,9 +218,7 @@ export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
             {stickers.map(({ p, c, i }) => {
               const [dx, dy] = STICKER_SPOTS[i % STICKER_SPOTS.length]
               return (
-                <text key={p.id} x={world.anchors[c][0] + dx} y={world.anchors[c][1] + dy + 24} className="cs2-sticker">
-                  {p.emoji}
-                </text>
+                <SvgEmoji key={p.id} e={p.emoji} x={world.anchors[c][0] + dx} y={world.anchors[c][1] + dy + 6} size={58} className="cs2-sticker" />
               )
             })}
           </svg>
@@ -237,7 +236,7 @@ export default function ContinentSort({ level, seed, t, onFinish }: GameProps) {
         q &&
         createPortal(
           <div className="cs2-ghost" style={{ left: drag.x, top: drag.y }}>
-            {q.emoji}
+            <Emoji e={q.emoji} />
           </div>,
           document.body,
         )}
