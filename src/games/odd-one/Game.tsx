@@ -3,6 +3,7 @@ import { useShake, useTimeouts } from '../../kit/hooks'
 import { PaintedScene, worldStyle, type PaintedView } from '../../kit/painted'
 import { makeRng } from '../../kit/random'
 import { useStage } from '../../kit/SceneShell'
+import { Emoji } from '../../kit/stickers'
 import type { GameProps } from '../../kit/types'
 import magpieBlink from './art/magpie-blink.webp'
 import magpieHappy from './art/magpie-happy.webp'
@@ -103,7 +104,7 @@ export default function OddOne({ level, seed, t, onFinish }: GameProps) {
             >
               {Array.from({ length: board.size * board.size }, (_, i) => (
                 <button key={i} className="oo-cell" onPointerDown={() => tap(i)}>
-                  {i === board.oddIndex ? board.odd : board.common}
+                  <Emoji e={i === board.oddIndex ? board.odd : board.common} />
                 </button>
               ))}
             </div>
