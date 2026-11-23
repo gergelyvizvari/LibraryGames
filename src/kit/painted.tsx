@@ -63,6 +63,10 @@ export interface PaintedView<Id extends string = string> {
   ground: string
   /** Where the speech bubble points when the scene has no speaker (see `placeBubble`). */
   sayAt: { x: number; y: number }
+  /** A spot picked for this painting: the bubble's centre, in world units. The tail still finds the speaker. */
+  bubble?: { x: number; y: number }
+  /** Where the speaker's head is in its picture (0 to 1 across and down), when not at the top middle. */
+  head?: { x: number; y: number }
 }
 
 /** A rectangle on screen, in px from the scene's top left. */
@@ -78,7 +82,7 @@ export interface BubblePlace {
   left: number
   top: number
   /** The side the tail comes out of, and how far along that side its tip is, in px. */
-  tail: 'down' | 'left' | 'right'
+  tail: 'down' | 'up' | 'left' | 'right'
   along: number
   /** How long the tail is, in px. */
   reach: number
@@ -97,12 +101,32 @@ const overlap = (a: Rect, b: Rect) =>
  * covering as little as possible of the things to play with (`avoid`) and of the speaker: above the speaker's head
  * with the tail pointing down at it if it can, else beside the head with the tail pointing sideways at it.
  */
-export function placeBubble(speaker: Rect, w: number, h: number, width: number, height: number, avoid: Rect[] = []): BubblePlace {
-  const headX = speaker.x + speaker.w / 2
-  const headY = speaker.y + Math.min(speaker.h * 0.04, 8)
-  const faceY = speaker.y + Math.min(speaker.h * 0.2, 60)
+export function placeBubble(
+  speaker: Rect,
+  w: number,
+  h: number,
+  width: number,
+  height: number,
+  avoid: Rect[] = [],
+  { head, spot }: { head?: { x: number; y: number }; spot?: { x: number; y: number } } = {},
+): BubblePlace {
+  const headX = speaker.x + speaker.w * (head?.x ?? 0.5)
+  const headY = speaker.y + (head ? speaker.h * head.y : Math.min(speaker.h * 0.04, 8))
+  const faceY = head ? headY + Math.min(speaker.h * 0.08, 24) : speaker.y + Math.min(speaker.h * 0.2, 60)
   const clampX = (x: number) => Math.max(EDGE, Math.min(x, width - EDGE - w))
   const clampY = (y: number) => Math.max(TOP, Math.min(y, height - EDGE - h))
+  if (spot) {
+    // The game's own spot: the tail comes out of the side facing the head and reaches towards it.
+    const left = clampX(spot.x - w / 2)
+    const top = clampY(spot.y - h / 2)
+    const reachTo = (d: number) => Math.max(12, Math.min(d - 4, 90))
+    const alongX = Math.max(22, Math.min(headX - left, w - 22))
+    const alongY = Math.max(18, Math.min(headY - top, h - 18))
+    if (headY > top + h) return { left, top, tail: 'down', along: alongX, reach: reachTo(headY - top - h) }
+    if (headX > left + w) return { left, top, tail: 'right', along: alongY, reach: reachTo(headX - left - w) }
+    if (headX < left) return { left, top, tail: 'left', along: alongY, reach: reachTo(left - headX) }
+    return { left, top, tail: 'up', along: alongX, reach: reachTo(top - headY) }
+  }
   const candidates: BubblePlace[] = []
   // Above the head: centred on it, or reaching out to either side with the tail near the bubble's end; raised a
   // little on a longer tail when that keeps it off the things to play with.
@@ -161,7 +185,7 @@ export function PaintedScene<Id extends string>({
 }) {
   const t = useT()
   const [ref, size] = useSize<HTMLDivElement>({ w: 390, h: 700 })
-  const { id, painting, world, focus, ground, sayAt } = pickView(views, size.w, size.h)
+  const { id, painting, world, focus, ground, sayAt, bubble: spotAt, head } = pickView(views, size.w, size.h)
   const fit = fitPainting(size.w, size.h, world, focus, tray ? trayHeight : 0)
   const bubbleRef = useRef<HTMLParagraphElement>(null)
   const [place, setPlace] = useState<BubblePlace | null>(null)
@@ -184,10 +208,11 @@ export function PaintedScene<Id extends string>({
       .map((e) => e.getBoundingClientRect())
       .filter((r) => r.width * r.height < box.width * box.height * 0.5)
       .map((r) => ({ x: r.left - box.left, y: r.top - box.top, w: r.width, h: r.height }))
-    const next = placeBubble(speaker, bubble.offsetWidth, bubble.offsetHeight, box.width, box.height, avoid)
+    const spot = spotAt && { x: fit.x + spotAt.x * fit.s, y: fit.y + spotAt.y * fit.s }
+    const next = placeBubble(speaker, bubble.offsetWidth, bubble.offsetHeight, box.width, box.height, avoid, { head, spot })
     // `say` may be new JSX on every render: only a real move re-renders.
     setPlace((now) => (now && now.left === next.left && now.top === next.top && now.tail === next.tail && now.along === next.along && now.reach === next.reach ? now : next))
-  }, [say, size.w, size.h, id, fit.x, fit.y, fit.s, sayAt.x, sayAt.y, ref])
+  }, [say, size.w, size.h, id, fit.x, fit.y, fit.s, sayAt.x, sayAt.y, spotAt?.x, spotAt?.y, head?.x, head?.y, ref])
   return (
     <div ref={ref} className={`scene ps ps-${id} ${className}`} style={{ background: ground }}>
       <div

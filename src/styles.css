@@ -1861,6 +1861,7 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .ps-say { position: absolute; z-index: 3; width: max-content; pointer-events: none; }
 .ps .ps-say .scene-bubble { position: relative; left: auto; bottom: auto; margin: 0; }
 .ps .ps-say .scene-bubble::after { transform: none; border: 12px solid transparent; }
-.ps-tail-down .scene-bubble::after { left: calc(var(--along) - 12px); top: calc(100% - 1px); border-top: var(--reach, 20px) solid var(--story-paper); border-bottom: 0; }
-.ps-tail-right .scene-bubble::after { left: calc(100% - 1px); top: calc(var(--along) - 12px); border-left: 20px solid var(--story-paper); border-right: 0; }
-.ps-tail-left .scene-bubble::after { left: auto; right: calc(100% - 1px); top: calc(var(--along) - 12px); border-right: 20px solid var(--story-paper); border-left: 0; }
+.ps .ps-say.ps-tail-down .scene-bubble::after { left: calc(var(--along) - 12px); top: calc(100% - 1px); border-top: var(--reach, 20px) solid var(--story-paper); border-bottom: 0; }
+.ps .ps-say.ps-tail-right .scene-bubble::after { left: calc(100% - 1px); top: calc(var(--along) - 12px); border-left: var(--reach, 20px) solid var(--story-paper); border-right: 0; }
+.ps .ps-say.ps-tail-left .scene-bubble::after { left: auto; right: calc(100% - 1px); top: calc(var(--along) - 12px); border-right: var(--reach, 20px) solid var(--story-paper); border-left: 0; }
+.ps .ps-say.ps-tail-up .scene-bubble::after { left: calc(var(--along) - 12px); top: auto; bottom: calc(100% - 1px); border-bottom: var(--reach, 20px) solid var(--story-paper); border-top: 0; }
