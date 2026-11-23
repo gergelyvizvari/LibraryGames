@@ -4,6 +4,7 @@ import { PaintedScene, worldStyle, type PaintedView } from '../../kit/painted'
 import { makeRng } from '../../kit/random'
 import { useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
+import { Emoji } from '../../kit/stickers'
 import type { GameProps } from '../../kit/types'
 import mouseBlink from './art/mouse-blink.webp'
 import mouseHappy from './art/mouse-happy.webp'
@@ -117,7 +118,9 @@ export default function PairRush({ level, seed, t, onFinish }: GameProps) {
                 return (
                   <button key={c.id} className={`pr-card${up ? ' pr-up' : ''}${c.matched ? ' pr-matched' : ''}`} onClick={() => flip(i)}>
                     <span className="pr-inner">
-                      <span className="pr-front">{c.face}</span>
+                      <span className="pr-front">
+                        <Emoji e={c.face} />
+                      </span>
                       <img className="pr-back" src={cardback} alt="" draggable={false} />
                     </span>
                   </button>
