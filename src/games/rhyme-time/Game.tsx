@@ -5,6 +5,7 @@ import { makeRng } from '../../kit/random'
 import { Cast, useMood } from '../../kit/cast'
 import { PaintedScene, type PaintedView } from '../../kit/painted'
 import { useStage } from '../../kit/SceneShell'
+import { Emoji } from '../../kit/stickers'
 import type { GameProps } from '../../kit/types'
 import { rhymes, type Word } from './content'
 import { makeDealer, makeQuestion, optionCount, showPictures } from './logic'
@@ -87,7 +88,7 @@ export default function RhymeTime({ level, seed, t, onFinish }: GameProps) {
             {/* `zoom` scales the box's own position too, so it is given in zoomed units. */}
             <div className="pb-box" style={{ left: at.box.x / at.zoom, top: at.box.y / at.zoom, width: at.box.w / at.zoom, height: at.box.h / at.zoom, zoom: at.zoom }}>
       <div className="rt-target" key={qIndex}>
-        <span className="rt-emoji">{q.target.emoji}</span>
+        <span className="rt-emoji"><Emoji e={q.target.emoji} /></span>
         <span className="rt-word">{q.target.word}</span>
       </div>
       <div ref={ref} className={`rt-options rt-options-${q.options.length}`}>
@@ -98,7 +99,7 @@ export default function RhymeTime({ level, seed, t, onFinish }: GameProps) {
             onPointerDown={() => pick(o)}
             disabled={over}
           >
-            {pictures && <span className="rt-opt-emoji">{o.emoji}</span>}
+            {pictures && <span className="rt-opt-emoji"><Emoji e={o.emoji} /></span>}
             <span className="rt-opt-word">{o.word}</span>
           </button>
         ))}
