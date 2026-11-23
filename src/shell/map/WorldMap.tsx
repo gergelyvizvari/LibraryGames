@@ -12,6 +12,7 @@ import { StickerIcon } from '../StickerIcon'
 import { Tools } from '../Tools'
 import mapArt from './map.webp'
 import { MAP_H, MAP_W, mapScale, placeGames, regions } from './regions'
+import { Emoji } from '../../kit/stickers'
 
 const SCROLL_KEY = 'lg.map.x'
 const STAR = 'M0 -14 L4.1 -5.6 L13.3 -4.3 L6.6 2.1 L8.2 11.3 L0 7 L-8.2 11.3 L-6.6 2.1 L-13.3 -4.3 L-4.1 -5.6 Z'
@@ -275,7 +276,7 @@ export function WorldMap({
         </span>
         {streak >= 2 && (
           <span className="wm-pill wm-red" role="img" aria-label={`${t('streakHint')}: ${streak}`} title={t('streakHint')}>
-            🔥 {streak}
+            <Emoji e="🔥" /> {streak}
           </span>
         )}
         <button className="wm-pill wm-stickers" onClick={onStickers} aria-label={t('stickers.open', { n: stickers })} title={t('stickers.title')}>

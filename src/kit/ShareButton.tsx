@@ -4,6 +4,7 @@ import { useTimeouts } from './hooks'
 import { Icon, type GameIcon } from './icon'
 import { canNativeShare, copyShare, facebookShareUrl, share, type ShareData } from './share'
 import { sound } from './sound'
+import { Emoji } from './stickers'
 
 /** The share sticker: a red arrow coming out of a yellow box, in the same toy-sticker style as the game icons. */
 export const shareIcon: GameIcon = [
@@ -86,7 +87,9 @@ export function ShareButton({ data, label, hint, up = false }: { data: () => Sha
             <FacebookGlyph /> Facebook
           </a>
           <button role="menuitem" onClick={copy}>
-            <span aria-hidden>🔗</span> {t('share.copy')}
+            <span aria-hidden>
+              <Emoji e="🔗" />
+            </span> {t('share.copy')}
           </button>
           {native && (
             <button role="menuitem" onClick={more}>
