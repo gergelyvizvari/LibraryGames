@@ -49,3 +49,4 @@ describe('pickView', () => {
     expect(pickView([views[0]], 390, 844).id).toBe('wide')
   })
 })
+

@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react'
 import { useT } from '../i18n'
 import { useSize } from './hooks'
-import { SpeechBubble, StagePips } from './scene'
+import { StagePips } from './scene'
 import type { Stage } from './SceneShell'
 
 /**
@@ -27,9 +27,10 @@ export interface Fit {
   y: number
 }
 
-/** How to lay a `world`-sized painting over a `w` × `h` screen, keeping `focus` in the part above `bottom` pixels. */
-export function fitPainting(w: number, h: number, world: { w: number; h: number }, focus: Box, bottom = 0): Fit {
-  const room = Math.max(1, h - bottom)
+/** How to lay a `world`-sized painting over a `w` × `h` screen, keeping `focus` between `top` and `bottom` pixels
+ * from the edges. */
+export function fitPainting(w: number, h: number, world: { w: number; h: number }, focus: Box, bottom = 0, top = 0): Fit {
+  const room = Math.max(1, h - bottom - top)
   const s = Math.min(Math.max(w / world.w, h / world.h), w / focus.w, room / focus.h)
   // Centre the focus in the room it has; a painting bigger than the screen never shows its edge, a smaller one
   // never leaves the screen.
@@ -43,7 +44,9 @@ export function fitPainting(w: number, h: number, world: { w: number; h: number 
     s,
     x: place(w, world.w * s, focus.x + focus.w / 2, w),
     // Shorter than the screen: hang it from the top (the ground goes on below it), but keep the focus above the tray.
-    y: tall >= h ? place(h, tall, focus.y + focus.h / 2, room) : Math.min(0, room - (focus.y + focus.h) * s),
+    y: tall >= h
+      ? Math.min(0, Math.max(h - tall, top + room / 2 - (focus.y + focus.h / 2) * s))
+      : Math.max(Math.min(0, top + room - (focus.y + focus.h) * s), Math.min(top - focus.y * s, h - bottom - tall)),
   }
 }
 
@@ -61,9 +64,13 @@ export interface PaintedView<Id extends string = string> {
   focus: Box
   /** The colour of the painting's bottom edge, which goes on below it on screens taller than the painting. */
   ground: string
-  /** The world point the speech bubble's tail points down at. */
+  /** Where the character speaks from (kept for the scene's layout notes; the task line sits at the top). */
   sayAt: { x: number; y: number }
 }
+
+/** Room at the top for the back button, the progress pips and the task line under them; a phone held sideways has
+ * the pips beside the back button and the task line level with them (see `.ps-task` in styles.css). */
+const taskRoom = (h: number) => (h < 500 ? 60 : 116)
 
 /** The view whose painting's shape is closest to the screen's. */
 export function pickView<V extends PaintedView>(views: V[], w: number, h: number): V {
@@ -83,7 +90,7 @@ export function PaintedScene<Id extends string>({
   children,
 }: {
   views: PaintedView<Id>[]
-  /** The character's one sentence. */
+  /** The task, in one short sentence, shown on the paper strip at the top (and read out by screen readers). */
   say: ReactNode
   stage: Pick<Stage, 'done' | 'total' | 'over'>
   /** Things to tap, laid on the ground at the bottom edge (not scaled with the painting). */
@@ -95,10 +102,9 @@ export function PaintedScene<Id extends string>({
 }) {
   const t = useT()
   const [ref, size] = useSize<HTMLDivElement>({ w: 390, h: 700 })
-  const { id, painting, world, focus, ground, sayAt } = pickView(views, size.w, size.h)
-  const fit = fitPainting(size.w, size.h, world, focus, tray ? trayHeight : 0)
-  const bubbleX = fit.x + sayAt.x * fit.s
-  const bubbleBottom = size.h - (fit.y + sayAt.y * fit.s)
+  const { id, painting, world, focus, ground } = pickView(views, size.w, size.h)
+  // The task line sits under the back button and the progress pips; the play is kept below it.
+  const fit = fitPainting(size.w, size.h, world, focus, tray ? trayHeight : 0, taskRoom(size.h))
   return (
     <div ref={ref} className={`scene ps ps-${id} ${className}`} style={{ background: ground }}>
       <div
@@ -109,7 +115,9 @@ export function PaintedScene<Id extends string>({
         {children(id)}
       </div>
       <StagePips done={stage.done} total={stage.total} label={t('scene.progress', { n: stage.done, total: stage.total })} />
-      <SpeechBubble style={{ left: `min(${Math.round(bubbleX)}px, 100% - 12px - var(--ps-bubble-w))`, bottom: `min(${Math.round(bubbleBottom)}px, 100% - 104px)` }}>{say}</SpeechBubble>
+      <p className="ps-task" role="status" aria-live="polite">
+        {say}
+      </p>
       {tray && (
         <div className={`ps-tray${stage.over ? ' scene-tray-off' : ''}`} style={{ minHeight: trayHeight }}>
           {tray}
