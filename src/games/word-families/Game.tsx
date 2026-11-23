@@ -6,6 +6,7 @@ import { Cast, useMood } from '../../kit/cast'
 import { PaintedScene, type PaintedView } from '../../kit/painted'
 import { useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
+import { Emoji } from '../../kit/stickers'
 import type { GameProps } from '../../kit/types'
 import { words, type Group, type GroupId } from './content'
 import { beltSeconds, makeDealer, showPictures, type Item } from './logic'
@@ -144,7 +145,7 @@ export default function WordFamilies({ level, seed, t, onFinish }: GameProps) {
             <div className="pb-box" style={{ left: at.box.x / at.zoom, top: at.box.y / at.zoom, width: at.box.w / at.zoom, height: at.box.h / at.zoom, zoom: at.zoom }}>
       <div className="wf-belt">
         <div key={ride.id} className={`wf-card${doneClass}`} style={{ left: `${88 - ride.t * 76}%` }}>
-          {pictures && <span className="wf-emoji">{ride.word.emoji}</span>}
+          {pictures && <span className="wf-emoji"><Emoji e={ride.word.emoji} /></span>}
           <span className="wf-word">{ride.word.word}</span>
         </div>
         <div className="wf-rail" />
@@ -160,7 +161,7 @@ export default function WordFamilies({ level, seed, t, onFinish }: GameProps) {
               onPointerDown={() => pick(b.id)}
               disabled={over}
             >
-              <span className="wf-basket-emoji">{b.emoji}</span>
+              <span className="wf-basket-emoji"><Emoji e={b.emoji} /></span>
               <span className="wf-basket-name">{t(`group.${b.id}`)}</span>
             </button>
           )
