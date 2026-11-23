@@ -6,6 +6,7 @@ import { makeRng } from '../../kit/random'
 import { Cast, useMood } from '../../kit/cast'
 import { PaintedScene, type PaintedView } from '../../kit/painted'
 import { sound, vibrate } from '../../kit/sound'
+import { Emoji } from '../../kit/stickers'
 import type { GameProps } from '../../kit/types'
 import { MapStage } from '../../kit/ui'
 import { features, type Feature } from './content'
@@ -148,7 +149,7 @@ export default function RiverMountain({ level, seed, t, onFinish }: GameProps) {
         ) : (
           <>
             <span className="rm-kind">
-              {KIND_ICON[target.feature.kind]} {t(`kind.${kindLabel(target.feature)}`)}
+              <Emoji e={KIND_ICON[target.feature.kind]} /> {t(`kind.${kindLabel(target.feature)}`)}
             </span>{' '}
             {t('where', { place: target.name })}
           </>
