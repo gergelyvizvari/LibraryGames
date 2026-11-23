@@ -4,6 +4,7 @@ import { useGameLoop, useShake, useTimeouts } from '../../kit/hooks'
 import { PaintedScene, worldStyle, type PaintedView } from '../../kit/painted'
 import { clamp, makeRng } from '../../kit/random'
 import { useStage } from '../../kit/SceneShell'
+import { Emoji } from '../../kit/stickers'
 import type { GameProps } from '../../kit/types'
 import foxBlink from './art/fox-blink.webp'
 import foxHappy from './art/fox-happy.webp'
@@ -153,7 +154,7 @@ export default function WordCatch({ level, seed, t, onFinish }: GameProps) {
             </div>
             <div className="wc-sky" ref={ref} style={{ left: at.sky.x, top: at.sky.y, width: at.sky.w, height: at.sky.h }}>
               <div className="wc-drop" style={{ left: `${drop.x}%`, top: `${drop.y}%` }}>
-                {drop.answer.emoji}
+                <Emoji e={drop.answer.emoji} />
               </div>
             </div>
           </>
