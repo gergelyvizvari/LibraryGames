@@ -5,6 +5,7 @@ import { makeRng } from '../../kit/random'
 import { PaintedScene, worldStyle, type PaintedView } from '../../kit/painted'
 import { useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
+import { Emoji } from '../../kit/stickers'
 import type { GameProps } from '../../kit/types'
 import owlBlink from './art/owl-blink.webp'
 import owlHappy from './art/owl-happy.webp'
@@ -138,7 +139,7 @@ export default function StoryOrder({ level, seed, t, onFinish }: GameProps) {
               disabled={stage.over}
             >
               <span className="so-number">{isPlaced ? c.step + 1 : ''}</span>
-              {pictures && <span className="so-emoji">{c.emoji}</span>}
+              {pictures && <span className="so-emoji"><Emoji e={c.emoji} /></span>}
               <span className="so-text">{c.text}</span>
             </button>
           )
