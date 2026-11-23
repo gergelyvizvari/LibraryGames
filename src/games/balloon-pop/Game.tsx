@@ -137,7 +137,7 @@ export default function BalloonPop({ level, seed, t, onFinish }: GameProps) {
         const w = at.balloon * big
         return (
           <>
-            <div className={`bp-otter${done ? ' bp-hop' : ''}`} style={worldStyle(at.otter.x, at.otter.bottom, at.otter.h)}>
+            <div data-speaker className={`bp-otter${done ? ' bp-hop' : ''}`} style={worldStyle(at.otter.x, at.otter.bottom, at.otter.h)}>
               {OTTER.map(([f, src]) => (
                 <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'bp-off'} />
               ))}

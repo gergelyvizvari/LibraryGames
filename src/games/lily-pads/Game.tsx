@@ -92,7 +92,7 @@ export default function LilyPads({ level, seed, t, onFinish }: GameProps) {
         const at = SPOTS[view]
         return (
           <>
-            <div className={`lp-frog${solved ? ' lp-frog-hop' : ''}`} style={worldStyle(at.frog.x, at.frog.bottom, at.frog.h)}>
+            <div data-speaker className={`lp-frog${solved ? ' lp-frog-hop' : ''}`} style={worldStyle(at.frog.x, at.frog.bottom, at.frog.h)}>
               {FROG.map(([f, src]) => (
                 <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'lp-off'} />
               ))}

@@ -132,7 +132,7 @@ export default function SimonSays({ level, seed, t, onFinish }: GameProps) {
         const h = Math.min(at.h, step * 0.95)
         return (
           <>
-            <div className={`sim-char${mood === 'happy' ? ' sim-cheer' : ''}`} style={worldStyle(at.bear.x, at.bear.bottom, at.bear.h)}>
+            <div data-speaker className={`sim-char${mood === 'happy' ? ' sim-cheer' : ''}`} style={worldStyle(at.bear.x, at.bear.bottom, at.bear.h)}>
               {BEAR.map(([f, src]) => (
                 <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'sim-off'} />
               ))}

@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react'
+import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { useT } from '../i18n'
 import { useSize } from './hooks'
 import { SpeechBubble, StagePips } from './scene'
@@ -61,8 +61,74 @@ export interface PaintedView<Id extends string = string> {
   focus: Box
   /** The colour of the painting's bottom edge, which goes on below it on screens taller than the painting. */
   ground: string
-  /** The world point the speech bubble's tail points down at. */
+  /** Where the speech bubble points when the scene has no speaker (see `placeBubble`). */
   sayAt: { x: number; y: number }
+}
+
+/** A rectangle on screen, in px from the scene's top left. */
+export interface Rect {
+  x: number
+  y: number
+  w: number
+  h: number
+}
+
+/** Where the speech bubble goes and where its tail points from. */
+export interface BubblePlace {
+  left: number
+  top: number
+  /** The side the tail comes out of, and how far along that side its tip is, in px. */
+  tail: 'down' | 'left' | 'right'
+  along: number
+  /** How long the tail is, in px. */
+  reach: number
+}
+
+/** Room kept clear at the top for the back button and the progress pips, and the tail's length. */
+const TOP = 64
+const TAIL = 20
+const EDGE = 10
+
+const overlap = (a: Rect, b: Rect) =>
+  Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)) * Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y))
+
+/**
+ * Puts the speech bubble (w × h) by the speaker (its picture's box on screen), in a scene of `width` × `height`,
+ * covering as little as possible of the things to play with (`avoid`) and of the speaker: above the speaker's head
+ * with the tail pointing down at it if it can, else beside the head with the tail pointing sideways at it.
+ */
+export function placeBubble(speaker: Rect, w: number, h: number, width: number, height: number, avoid: Rect[] = []): BubblePlace {
+  const headX = speaker.x + speaker.w / 2
+  const headY = speaker.y + Math.min(speaker.h * 0.04, 8)
+  const faceY = speaker.y + Math.min(speaker.h * 0.2, 60)
+  const clampX = (x: number) => Math.max(EDGE, Math.min(x, width - EDGE - w))
+  const clampY = (y: number) => Math.max(TOP, Math.min(y, height - EDGE - h))
+  const candidates: BubblePlace[] = []
+  // Above the head: centred on it, or reaching out to either side with the tail near the bubble's end; raised a
+  // little on a longer tail when that keeps it off the things to play with.
+  for (const lift of [0, 28, 56]) {
+    const top = headY - TAIL - lift - h
+    if (top < TOP) break
+    for (const left of [headX - w / 2, headX - w + 34, headX - 34]) {
+      const x = clampX(left)
+      candidates.push({ left: x, top, tail: 'down', along: Math.max(22, Math.min(headX - x, w - 22)), reach: TAIL + lift })
+    }
+  }
+  // Beside the head, either side, from level with the face to a little higher or lower.
+  for (const dy of [0, -h / 3, h / 3]) {
+    const top = clampY(faceY - h / 2 + dy)
+    const along = Math.max(18, Math.min(faceY - top, h - 18))
+    candidates.push({ left: clampX(speaker.x + speaker.w * 0.12 - TAIL - w), top, tail: 'right', along, reach: TAIL })
+    candidates.push({ left: clampX(speaker.x + speaker.w * 0.88 + TAIL), top, tail: 'left', along, reach: TAIL })
+  }
+  const body: Rect = { x: speaker.x + speaker.w * 0.15, y: speaker.y, w: speaker.w * 0.7, h: speaker.h }
+  const cost = (c: BubblePlace, i: number) => {
+    const r = { x: c.left, y: c.top, w, h }
+    // A tail that cannot reach the speaker (the bubble was pushed off it by the screen's edge) counts against it.
+    const reach = c.tail === 'down' ? Math.abs(c.left + c.along - headX) : c.tail === 'right' ? Math.abs(c.left + w + TAIL - (speaker.x + speaker.w * 0.12)) : Math.abs(c.left - TAIL - (speaker.x + speaker.w * 0.88))
+    return avoid.reduce((sum, a) => sum + overlap(r, a), 0) + overlap(r, body) * 2 + reach * 40 + (c.reach - TAIL) * 30 + i
+  }
+  return candidates.reduce((best, c, i) => (cost(c, i) < cost(best.c, best.i) ? { c, i } : best), { c: candidates[0], i: 0 }).c
 }
 
 /** The view whose painting's shape is closest to the screen's. */
@@ -97,8 +163,31 @@ export function PaintedScene<Id extends string>({
   const [ref, size] = useSize<HTMLDivElement>({ w: 390, h: 700 })
   const { id, painting, world, focus, ground, sayAt } = pickView(views, size.w, size.h)
   const fit = fitPainting(size.w, size.h, world, focus, tray ? trayHeight : 0)
-  const bubbleX = fit.x + sayAt.x * fit.s
-  const bubbleBottom = size.h - (fit.y + sayAt.y * fit.s)
+  const bubbleRef = useRef<HTMLParagraphElement>(null)
+  const [place, setPlace] = useState<BubblePlace | null>(null)
+  // The bubble goes by the speaker: the scene's character (marked `data-speaker`, or a kit Cast), measured on screen.
+  useLayoutEffect(() => {
+    const root = ref.current
+    const bubble = bubbleRef.current?.firstElementChild ?? bubbleRef.current
+    if (!root || !(bubble instanceof HTMLElement)) return
+    const box = root.getBoundingClientRect()
+    const el = root.querySelector('[data-speaker], .cast')
+    let speaker: Rect
+    if (el) {
+      const r = el.getBoundingClientRect()
+      speaker = { x: r.left - box.left, y: r.top - box.top, w: r.width, h: r.height }
+    } else {
+      speaker = { x: fit.x + sayAt.x * fit.s, y: fit.y + sayAt.y * fit.s, w: 0, h: 0 }
+    }
+    // The things to play with, so the bubble keeps off them (whole backdrops, half the scene or more, do not count).
+    const avoid = [...root.querySelectorAll('.ps-world button, .ps-world input, .ps-world svg, .ps-world .map-box, .ps-world [data-play], .ps-tray button, .ps-tray input')]
+      .map((e) => e.getBoundingClientRect())
+      .filter((r) => r.width * r.height < box.width * box.height * 0.5)
+      .map((r) => ({ x: r.left - box.left, y: r.top - box.top, w: r.width, h: r.height }))
+    const next = placeBubble(speaker, bubble.offsetWidth, bubble.offsetHeight, box.width, box.height, avoid)
+    // `say` may be new JSX on every render: only a real move re-renders.
+    setPlace((now) => (now && now.left === next.left && now.top === next.top && now.tail === next.tail && now.along === next.along && now.reach === next.reach ? now : next))
+  }, [say, size.w, size.h, id, fit.x, fit.y, fit.s, sayAt.x, sayAt.y, ref])
   return (
     <div ref={ref} className={`scene ps ps-${id} ${className}`} style={{ background: ground }}>
       <div
@@ -109,7 +198,9 @@ export function PaintedScene<Id extends string>({
         {children(id)}
       </div>
       <StagePips done={stage.done} total={stage.total} label={t('scene.progress', { n: stage.done, total: stage.total })} />
-      <SpeechBubble style={{ left: `min(${Math.round(bubbleX)}px, 100% - 12px - var(--ps-bubble-w))`, bottom: `min(${Math.round(bubbleBottom)}px, 100% - 104px)` }}>{say}</SpeechBubble>
+      <div ref={bubbleRef} className={`ps-say ps-tail-${place?.tail ?? 'down'}`} style={{ left: place?.left ?? 0, top: place?.top ?? 0, visibility: place ? undefined : 'hidden', ['--along' as string]: `${place?.along ?? 0}px`, ['--reach' as string]: `${place?.reach ?? 20}px` }}>
+        <SpeechBubble>{say}</SpeechBubble>
+      </div>
       {tray && (
         <div className={`ps-tray${stage.over ? ' scene-tray-off' : ''}`} style={{ minHeight: trayHeight }}>
           {tray}

@@ -163,7 +163,7 @@ export default function BridgeBuilder({ level, seed, t, onFinish }: GameProps) {
               <Deck from={end} to={DECK_RIGHT} seed={1} />
               {solved && <Board className="bb-drop" x={task.gapAt} y={DECK_Y} length={task.gap} wood={task.planks[task.fits].wood} />}
               {ghost && <Board className={`bb-ghost bb-${tried.how}`} key={tried.n} x={task.gapAt} y={DECK_Y} length={ghost.length} wood={ghost.wood} />}
-              <g className={`bb-fox${solved ? ' bb-walk' : ''}`}>
+              <g data-speaker className={`bb-fox${solved ? ' bb-walk' : ''}`}>
                 {[
                   [fox, !solved && !blink],
                   [foxBlink, !solved && blink],

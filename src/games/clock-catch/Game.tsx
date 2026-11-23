@@ -137,7 +137,7 @@ export default function ClockCatch({ level, seed, t, onFinish }: GameProps) {
         const d = at.frame.w * HOLE.d
         return (
           <>
-            <div className={`cc-owl${solved ? ' cc-hop' : ''}`} style={worldStyle(at.owl.x, at.owl.bottom, at.owl.h)}>
+            <div data-speaker className={`cc-owl${solved ? ' cc-hop' : ''}`} style={worldStyle(at.owl.x, at.owl.bottom, at.owl.h)}>
               {OWL.map(([f, src]) => (
                 <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'cc-off'} />
               ))}

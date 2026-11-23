@@ -120,7 +120,7 @@ export default function StoryOrder({ level, seed, t, onFinish }: GameProps) {
         const at = SPOTS[view]
         return (
           <>
-            <div className={`so-char${done ? ' so-cheer' : ''}`} style={worldStyle(at.owl.x, at.owl.bottom, at.owl.h)}>
+            <div data-speaker className={`so-char${done ? ' so-cheer' : ''}`} style={worldStyle(at.owl.x, at.owl.bottom, at.owl.h)}>
               {OWL.map(([f, src]) => (
                 <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'so-off'} />
               ))}

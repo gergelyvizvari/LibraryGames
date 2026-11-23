@@ -1855,3 +1855,12 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 /* A painted sticker in place of an emoji (kit/stickers.tsx): as big as the emoji would be. */
 .sticker { display: inline-block; width: 1.2em; height: 1.2em; object-fit: contain; vertical-align: -0.25em; user-select: none; -webkit-user-drag: none; pointer-events: none; }
 .pr-front .sticker { width: 1.5em; height: 1.5em; }
+
+/* The speech bubble of a painted scene, placed by its speaker (kit/painted.tsx placeBubble): its tail points at the
+   speaker's head from below the bubble, or from its side when the bubble sits beside the head. */
+.ps-say { position: absolute; z-index: 3; width: max-content; pointer-events: none; }
+.ps .ps-say .scene-bubble { position: relative; left: auto; bottom: auto; margin: 0; }
+.ps .ps-say .scene-bubble::after { transform: none; border: 12px solid transparent; }
+.ps-tail-down .scene-bubble::after { left: calc(var(--along) - 12px); top: calc(100% - 1px); border-top: var(--reach, 20px) solid var(--story-paper); border-bottom: 0; }
+.ps-tail-right .scene-bubble::after { left: calc(100% - 1px); top: calc(var(--along) - 12px); border-left: 20px solid var(--story-paper); border-right: 0; }
+.ps-tail-left .scene-bubble::after { left: auto; right: calc(100% - 1px); top: calc(var(--along) - 12px); border-right: 20px solid var(--story-paper); border-left: 0; }

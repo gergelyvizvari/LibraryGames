@@ -91,7 +91,7 @@ export default function OddOne({ level, seed, t, onFinish }: GameProps) {
         const at = SPOTS[view]
         return (
           <>
-            <div className={`oo-char${mood === 'happy' ? ' oo-cheer' : ''}`} style={worldStyle(at.magpie.x, at.magpie.bottom, at.magpie.h)}>
+            <div data-speaker className={`oo-char${mood === 'happy' ? ' oo-cheer' : ''}`} style={worldStyle(at.magpie.x, at.magpie.bottom, at.magpie.h)}>
               {MAGPIE.map(([f, src]) => (
                 <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'oo-off'} />
               ))}

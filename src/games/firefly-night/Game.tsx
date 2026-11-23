@@ -125,7 +125,7 @@ export default function FireflyNight({ level, seed, t, onFinish }: GameProps) {
         } as CSSProperties
         return (
           <>
-            <div className={`ff-bunny${cheer > 0 || stage.over ? ' ff-hop' : ''}`} style={worldStyle(at.bunny.x, at.bunny.bottom, at.bunny.h)}>
+            <div data-speaker className={`ff-bunny${cheer > 0 || stage.over ? ' ff-hop' : ''}`} style={worldStyle(at.bunny.x, at.bunny.bottom, at.bunny.h)}>
               {BUNNY.map(([f, src]) => (
                 <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'ff-off'} />
               ))}

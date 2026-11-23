@@ -123,7 +123,7 @@ export function PaintedPony({ kind, mood, mane, stirring, style }: { kind: PonyK
   // Each face has its own mask of the hair, so the paint never touches the face.
   const mask = `url(${art(face === 'idle' ? `${kind}-mask` : `${kind}-${face}-mask`)})`
   return (
-    <div className="rm-stand" style={{ ...style, aspectRatio: ASPECT[kind] }}>
+    <div data-speaker className="rm-stand" style={{ ...style, aspectRatio: ASPECT[kind] }}>
       <div className={`rm-pony${mood === 'sad' ? ' rm-no' : mood === 'happy' ? ' rm-hop' : stirring ? ' rm-watch' : ''}`}>
         {FACES.map((f) => (
           <img key={f} src={art(f === 'idle' ? kind : `${kind}-${f}`)} alt="" draggable={false} className={f === face ? '' : 'rm-off'} />

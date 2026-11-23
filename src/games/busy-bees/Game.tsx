@@ -145,7 +145,7 @@ export default function BusyBees({ level, seed, t, onFinish }: GameProps) {
         const { air, bear: b } = SPOTS[view]
         return (
           <>
-            <div className={`bb-bear bb-${result ?? 'idle'}`} style={worldStyle(b.x, b.bottom, b.h)}>
+            <div data-speaker className={`bb-bear bb-${result ?? 'idle'}`} style={worldStyle(b.x, b.bottom, b.h)}>
               {BEAR.map(([f, src]) => (
                 <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'bb-off'} />
               ))}

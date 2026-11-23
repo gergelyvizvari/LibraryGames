@@ -95,7 +95,7 @@ export default function ShadowMatch({ level, seed, t, onFinish }: GameProps) {
         const size = Math.min(at.shelf.size, step * 0.92)
         return (
           <>
-            <div className={`sm-raccoon${solved ? ' sm-cheer' : ''}`} style={worldStyle(at.raccoon.x, at.raccoon.bottom, at.raccoon.h)}>
+            <div data-speaker className={`sm-raccoon${solved ? ' sm-cheer' : ''}`} style={worldStyle(at.raccoon.x, at.raccoon.bottom, at.raccoon.h)}>
               {RACCOON.map(([f, src]) => (
                 <img key={f} src={src} alt="" draggable={false} className={f === face ? '' : 'sm-off'} />
               ))}

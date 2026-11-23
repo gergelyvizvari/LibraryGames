@@ -254,7 +254,7 @@ export default function ForestFeast({ level, seed, t, onFinish }: GameProps) {
 
             {/* The fox hosts the feast (on a wide screen). */}
             {at.host && (
-              <div className={`fe-host${busy ? ' fe-happy' : ''}`} style={worldStyle(at.host.x, at.host.bottom, at.host.h)}>
+              <div data-speaker className={`fe-host${busy ? ' fe-happy' : ''}`} style={worldStyle(at.host.x, at.host.bottom, at.host.h)}>
                 <img src={fox} alt="" draggable={false} className={busy ? 'fe-off' : ''} />
                 <img src={foxHappy} alt="" draggable={false} className={busy ? '' : 'fe-off'} />
               </div>
