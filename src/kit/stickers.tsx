@@ -1,3 +1,5 @@
+import { Fragment } from 'react'
+
 /**
  * Painted stickers that stand in for emoji: every picture a game shows as an emoji has a painted twin in
  * kit/stickers/, named by its code points in hex (🦁 → 1f981.webp, 🧑‍🚀 → 1f9d1-200d-1f680.webp). Games keep their
@@ -13,11 +15,19 @@ export const stickerKey = (e: string) =>
 /** The URL of an emoji's painted sticker, if there is one. */
 export const stickerUrl = (e: string): string | undefined => ART[`./stickers/${stickerKey(e)}.webp`]
 
-/** An emoji drawn as its painted sticker, sized like the text around it (1em, set by `font-size`). */
+const graphemes = new Intl.Segmenter(undefined, { granularity: 'grapheme' })
+
+/** Emoji drawn as painted stickers, sized like the text around them (1em, set by `font-size`). A string of several
+ * (a sentence's picture, 🐦🎶) becomes a row of stickers; any character without a sticker stays as it is. */
 export function Emoji({ e, className = '' }: { e: string; className?: string }) {
-  const src = stickerUrl(e)
-  if (!src) return <>{e}</>
-  return <img className={`sticker ${className}`} src={src} alt={e} draggable={false} />
+  return (
+    <>
+      {[...graphemes.segment(e)].map(({ segment }, i) => {
+        const src = stickerUrl(segment)
+        return src ? <img key={i} className={`sticker ${className}`} src={src} alt={segment} draggable={false} /> : <Fragment key={i}>{segment}</Fragment>
+      })}
+    </>
+  )
 }
 
 /** The same sticker inside an SVG, by its centre and size in the SVG's units. */
