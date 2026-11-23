@@ -4,7 +4,8 @@ import { stickerKey, stickerUrl } from './stickers'
 const SOURCES = import.meta.glob<string>(['../games/*/*.{ts,tsx}', '!**/*.test.ts', '!**/index.ts', '!**/icon.tsx'], { query: '?raw', import: 'default', eager: true })
 /** Games that draw their emoji as painted stickers (they use kit/stickers): every emoji in their code needs one. */
 const PAINTED = [...new Set(Object.entries(SOURCES).filter(([, src]) => src.includes("from '../../kit/stickers'")).map(([path]) => path.split('/')[2]))]
-const EMOJI = /\p{Extended_Pictographic}️?(?:‍\p{Extended_Pictographic}️?)*/gu
+/** Pictures shown as emoji: those drawn in colour by default, or asked to be with U+FE0F (not ♥ or ★ as plain text). */
+const EMOJI = /(?:\p{Emoji_Presentation}|\p{Extended_Pictographic}\uFE0F)(?:\u200D\p{Extended_Pictographic}\uFE0F?)*/gu
 
 describe('stickers', () => {
   it('names a sticker by its code points, without the variation selector', () => {

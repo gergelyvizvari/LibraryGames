@@ -5,6 +5,7 @@ import { PaintedScene, worldStyle, type PaintedView } from "../../kit/painted";
 import { SceneTool } from "../../kit/scene";
 import { useStage } from "../../kit/SceneShell";
 import { sound } from "../../kit/sound";
+import { Emoji } from "../../kit/stickers";
 import type { GameProps } from "../../kit/types";
 import owlHappy from "./art/owl-happy.webp";
 import owl from "./art/owl.webp";
@@ -180,7 +181,7 @@ export default function ColorSort({ level, seed, t, onFinish }: GameProps) {
   return (
     <PaintedScene
       views={VIEWS}
-      say={message}
+      say={<Emoji e={message} />}
       stage={stage}
       className="color-sort"
       trayHeight={110}
