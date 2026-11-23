@@ -6,6 +6,7 @@ import { Cast, useMood } from '../../kit/cast'
 import { PaintedScene, type PaintedView } from '../../kit/painted'
 import { useStage } from '../../kit/SceneShell'
 import { sound } from '../../kit/sound'
+import { Emoji } from '../../kit/stickers'
 import type { GameProps } from '../../kit/types'
 import { words, wordsForLevel, type Word } from './content'
 import { scramble } from './logic'
@@ -84,7 +85,7 @@ export default function AnagramRace({ level, seed, t, onFinish }: GameProps) {
             <Cast faces={FACES} mood={mood} at={at.char} aspect={ASPECT} />
             <div className="pb-box" style={{ left: at.box.x / at.zoom, top: at.box.y / at.zoom, width: at.box.w / at.zoom, height: at.box.h / at.zoom, zoom: at.zoom }}>
       <div className="ar-picture" key={index}>
-        {word.emoji}
+        <Emoji e={word.emoji} />
       </div>
       <div className="ar-slots">
         {[...word.word].map((_, i) => (
