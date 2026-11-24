@@ -22,7 +22,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The farmyard; the animals stand in rows in the open yard. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: farm, world: { w: 1280, h: 800 }, focus: { x: 140, y: 60, w: 1000, h: 740 }, ground: '#b7ac25', sayAt: { x: 640, y: 300 } },
+  { id: 'wide', painting: farm, world: { w: 1280, h: 800 }, focus: { x: 140, y: 60, w: 1000, h: 740 }, play: { x: 250, y: 300, w: 780, h: 475 }, ground: '#b7ac25', sayAt: { x: 640, y: 300 } },
   { id: 'tall', painting: farmTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 330, w: 720, h: 780 }, ground: '#c0b224', sayAt: { x: 360, y: 400 } },
 ]
 

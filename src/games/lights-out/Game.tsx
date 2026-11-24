@@ -23,7 +23,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The meadow race track; the five start lights hang on the wooden gantry. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 60, y: 60, w: 1220, h: 740 }, ground: '#b1a72c', sayAt: { x: 1000, y: 330 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 60, y: 60, w: 1220, h: 740 }, play: { x: 180, y: 168, w: 930, h: 620 }, ground: '#b1a72c', sayAt: { x: 1000, y: 330 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 180, w: 720, h: 960 }, ground: '#9fa824', sayAt: { x: 360, y: 560 } },
 ]
 

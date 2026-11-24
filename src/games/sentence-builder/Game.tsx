@@ -25,7 +25,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The sunny beach; the words are laid out on the smooth sand. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 100, y: 60, w: 1180, h: 740 }, ground: '#f8bd6d', sayAt: { x: 1000, y: 200 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 100, y: 60, w: 1180, h: 740 }, play: { x: 180, y: 230, w: 820, h: 540 }, ground: '#f8bd6d', sayAt: { x: 1000, y: 200 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 180, w: 720, h: 960 }, ground: '#fccc74', sayAt: { x: 360, y: 260 } },
 ]
 

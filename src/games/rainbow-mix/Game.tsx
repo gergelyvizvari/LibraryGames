@@ -16,7 +16,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The painting corner on the meadow; the focus holds the pony, the bowl and the wish above them. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: meadow, world: { w: 1280, h: 800 }, focus: { x: 150, y: 90, w: 900, h: 690 }, ground: '#a9ae2e', sayAt: { x: 200, y: 260 } },
+  { id: 'wide', painting: meadow, world: { w: 1280, h: 800 }, focus: { x: 150, y: 90, w: 900, h: 690 }, play: { x: 190, y: 110, w: 650, h: 590 }, ground: '#a9ae2e', sayAt: { x: 200, y: 260 } },
   { id: 'tall', painting: meadowTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 300, w: 720, h: 760 }, ground: '#9cb035', sayAt: { x: 40, y: 250 } },
 ]
 

@@ -22,7 +22,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The still forest lake; the two halves of the picture mirror each other over the water. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 120, y: 60, w: 1160, h: 740 }, ground: '#8d8723', sayAt: { x: 1000, y: 170 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 120, y: 60, w: 1160, h: 740 }, play: { x: 340, y: 190, w: 600, h: 560 }, ground: '#8d8723', sayAt: { x: 1000, y: 170 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 180, w: 720, h: 960 }, ground: '#7c7f20', sayAt: { x: 360, y: 260 } },
 ]
 

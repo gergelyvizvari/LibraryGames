@@ -15,7 +15,7 @@ const FACES: Face[] = ['idle', 'blink', 'happy', 'sad']
 
 /** The meadow building site; the tower rises from the stone foundation into the open sky. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: art('site'), world: { w: 1280, h: 800 }, focus: { x: 180, y: 20, w: 920, h: 780 }, ground: '#b7b145', sayAt: { x: 980, y: 260 } },
+  { id: 'wide', painting: art('site'), world: { w: 1280, h: 800 }, focus: { x: 180, y: 20, w: 920, h: 780 }, play: { x: 320, y: 40, w: 600, h: 665 }, ground: '#b7b145', sayAt: { x: 980, y: 260 } },
   { id: 'tall', painting: art('site-tall'), world: { w: 720, h: 1152 }, focus: { x: 0, y: 60, w: 720, h: 1060 }, ground: '#b3b14e', sayAt: { x: 360, y: 150 } },
 ]
 

@@ -26,7 +26,7 @@ const OWL: [Face, string][] = [
 
 /** The clockmaker's shop; the big clock hangs on the plain middle of its wall. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: shop, world: { w: 1280, h: 800 }, focus: { x: 180, y: 40, w: 920, h: 740 }, ground: '#c07435', sayAt: { x: 860, y: 190 } },
+  { id: 'wide', painting: shop, world: { w: 1280, h: 800 }, focus: { x: 180, y: 40, w: 920, h: 740 }, play: { x: 360, y: 90, w: 440, h: 450 }, ground: '#c07435', sayAt: { x: 860, y: 190 } },
   { id: 'tall', painting: shopTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 120, w: 720, h: 880 }, ground: '#7f3d1f', sayAt: { x: 360, y: 200 } },
 ]
 

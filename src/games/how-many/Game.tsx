@@ -46,7 +46,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The woodland schoolroom; the things flash on its painted chalkboard. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: room, world: { w: 1280, h: 800 }, focus: { x: 300, y: 0, w: 960, h: 800 }, ground: '#d67e35', sayAt: { x: 1000, y: 330 } },
+  { id: 'wide', painting: room, world: { w: 1280, h: 800 }, focus: { x: 300, y: 0, w: 960, h: 800 }, play: { x: 410, y: 106, w: 476, h: 400 }, ground: '#d67e35', sayAt: { x: 1000, y: 330 } },
   { id: 'tall', painting: roomTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 180, w: 720, h: 940 }, ground: '#d97d36', sayAt: { x: 360, y: 250 } },
 ]
 

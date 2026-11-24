@@ -24,7 +24,7 @@ const RACCOON: [Face, string][] = [
 
 /** The shadow theatre in the cabin: the lit screen up top, the things on the shelf below it. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: theatre, world: { w: 1280, h: 800 }, focus: { x: 120, y: 40, w: 1160, h: 720 }, ground: '#8b3610', sayAt: { x: 640, y: 175 } },
+  { id: 'wide', painting: theatre, world: { w: 1280, h: 800 }, focus: { x: 120, y: 40, w: 1160, h: 720 }, play: { x: 230, y: 250, w: 820, h: 450 }, ground: '#8b3610', sayAt: { x: 640, y: 175 } },
   { id: 'tall', painting: theatreTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 120, w: 720, h: 1000 }, ground: '#be5b1e', sayAt: { x: 360, y: 255 } },
 ]
 

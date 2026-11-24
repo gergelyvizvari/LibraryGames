@@ -16,7 +16,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The cloud-top post office in the sky; the open sky in the middle holds the grid of clouds. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: skyWide, world: { w: 1280, h: 800 }, focus: { x: 250, y: 40, w: 780, h: 640 }, ground: '#e6ced6', sayAt: { x: 960, y: 140 } },
+  { id: 'wide', painting: skyWide, world: { w: 1280, h: 800 }, focus: { x: 250, y: 40, w: 780, h: 640 }, play: { x: 300, y: 70, w: 680, h: 600 }, ground: '#e6ced6', sayAt: { x: 960, y: 140 } },
   { id: 'tall', painting: skyTall, world: { w: 720, h: 1152 }, focus: { x: 10, y: 250, w: 700, h: 760 }, ground: '#e5cccf', sayAt: { x: 300, y: 300 } },
 ]
 

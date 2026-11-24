@@ -22,7 +22,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The woodpecker's carpentry workshop; the shapes lie on its workbench. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 100, y: 60, w: 1180, h: 740 }, ground: '#bf662f', sayAt: { x: 1000, y: 200 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 100, y: 60, w: 1180, h: 740 }, play: { x: 240, y: 90, w: 760, h: 690 }, ground: '#bf662f', sayAt: { x: 1000, y: 200 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 180, w: 720, h: 960 }, ground: '#c96d36', sayAt: { x: 360, y: 260 } },
 ]
 

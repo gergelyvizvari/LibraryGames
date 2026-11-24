@@ -21,7 +21,7 @@ type ViewId = 'wide' | 'tall'
 
 /** Under the sea; the letter bubbles rise through the open water. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 100, y: 40, w: 1180, h: 760 }, ground: '#eec57c', sayAt: { x: 640, y: 120 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 100, y: 40, w: 1180, h: 760 }, play: { x: 160, y: 60, w: 840, h: 720 }, ground: '#eec57c', sayAt: { x: 640, y: 120 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 140, w: 720, h: 1000 }, ground: '#e0c771', sayAt: { x: 360, y: 220 } },
 ]
 

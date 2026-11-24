@@ -22,7 +22,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The woodland store: the pattern stands on its shelves and the choices lie on the counter, with the mole shopkeeper in front. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 80, y: 0, w: 1200, h: 800 }, ground: '#9a8660', sayAt: { x: 990, y: 400 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 80, y: 0, w: 1200, h: 800 }, play: { x: 200, y: 100, w: 880, h: 380 }, ground: '#9a8660', sayAt: { x: 990, y: 400 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 120, w: 720, h: 1032 }, ground: '#d37e46', sayAt: { x: 360, y: 400 } },
 ]
 

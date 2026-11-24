@@ -6,7 +6,7 @@ const focus = { x: 330, y: 180, w: 620, h: 540 }
 
 describe('fitPainting', () => {
   it('covers a wide screen and keeps the focus on it', () => {
-    const f = fitPainting(1280, 800, world, focus, 120)
+    const f = fitPainting(1280, 800, world, focus, 80)
     expect(f.s).toBeCloseTo(1)
     expect(f.x).toBe(0)
     expect(f.y).toBe(0)
@@ -24,7 +24,7 @@ describe('fitPainting', () => {
   })
 
   it('never leaves a gap at the edge of a screen the painting covers', () => {
-    const f = fitPainting(1280, 900, world, focus, 120)
+    const f = fitPainting(1280, 900, world, focus, 80)
     expect(f.x).toBeLessThanOrEqual(0)
     expect(f.x + world.w * f.s).toBeGreaterThanOrEqual(1280 - 0.01)
     expect(f.y).toBeLessThanOrEqual(0)
@@ -36,6 +36,29 @@ describe('fitPainting on a tall screen', () => {
   it('hangs the painting from the top', () => {
     const f = fitPainting(390, 844, world, focus, 120)
     expect(f.y).toBe(0)
+  })
+})
+
+describe('fitPainting keeps the play clear of the task line and in the middle', () => {
+  // An iPad held sideways in Safari, with a tall focus: the painting cannot cover the screen.
+  const tall = { x: 250, y: 90, w: 860, h: 650 }
+  it('never puts the focus under the task line', () => {
+    const f = fitPainting(1194, 703, world, tall, 130, 110)
+    expect(f.y + tall.y * f.s).toBeGreaterThanOrEqual(110 - 0.01)
+    expect(f.y + (tall.y + tall.h) * f.s).toBeLessThanOrEqual(703 - 130 + 0.01)
+  })
+
+  it("puts the play's middle in the middle of the screen", () => {
+    const f = fitPainting(1194, 703, world, tall, 130, 110, { x: 320, y: 140, w: 520, h: 520 })
+    expect(f.x + 580 * f.s).toBeCloseTo(597)
+    const g = fitPainting(1280, 800, world, focus, 120, 0, { x: 500, y: 200, w: 200, h: 300 })
+    expect(g.x + 600 * g.s).toBeCloseTo(640)
+  })
+
+  it('keeps the whole focus on screen even when its middle is far off centre', () => {
+    const f = fitPainting(390, 800, world, focus, 120, 0, { x: focus.x, y: 300, w: 20, h: 100 })
+    expect(f.x + focus.x * f.s).toBeGreaterThanOrEqual(-0.01)
+    expect(f.x + (focus.x + focus.w) * f.s).toBeLessThanOrEqual(390.01)
   })
 })
 
@@ -53,7 +76,7 @@ describe('pickView', () => {
 
 describe('uncovered', () => {
   it('finds no bare edge when the painting covers the screen', () => {
-    expect(uncovered(fitPainting(1280, 800, world, focus, 120), world, 1280, 800)).toEqual([])
+    expect(uncovered(fitPainting(1280, 800, world, focus, 80), world, 1280, 800)).toEqual([])
   })
 
   it('names the sides and corners a shrunken painting leaves bare', () => {

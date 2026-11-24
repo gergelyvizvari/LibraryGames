@@ -45,7 +45,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The orchard; the numbers fall from the apple tree into the baskets below. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: orchard, world: { w: 1280, h: 800 }, focus: { x: 140, y: 60, w: 1000, h: 740 }, ground: '#a0a52f', sayAt: { x: 900, y: 260 } },
+  { id: 'wide', painting: orchard, world: { w: 1280, h: 800 }, focus: { x: 140, y: 60, w: 1000, h: 740 }, play: { x: 380, y: 150, w: 520, h: 480 }, ground: '#a0a52f', sayAt: { x: 900, y: 260 } },
   { id: 'tall', painting: orchardTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 160, w: 720, h: 960 }, ground: '#8ca023', sayAt: { x: 360, y: 250 } },
 ]
 

@@ -24,7 +24,7 @@ const FROG: [Face, string][] = [
 
 /** The pond; the two pads float in the middle, side by side when wide and one above the other when upright. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: pond, world: { w: 1280, h: 800 }, focus: { x: 40, y: 90, w: 1200, h: 700 }, ground: '#37b8a8', sayAt: { x: 640, y: 130 } },
+  { id: 'wide', painting: pond, world: { w: 1280, h: 800 }, focus: { x: 40, y: 90, w: 1200, h: 700 }, play: { x: 205, y: 235, w: 880, h: 430 }, ground: '#37b8a8', sayAt: { x: 640, y: 130 } },
   { id: 'tall', painting: pondTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 150, w: 720, h: 980 }, ground: '#2fac9c', sayAt: { x: 360, y: 200 } },
 ]
 

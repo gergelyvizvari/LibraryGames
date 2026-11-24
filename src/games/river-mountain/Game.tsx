@@ -27,7 +27,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The mountain camp: the map stands on the camp table in the meadow, with the marmot beside it. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 0, y: 40, w: 1280, h: 760 }, ground: '#b0a536', sayAt: { x: 20, y: 770 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 0, y: 40, w: 1280, h: 760 }, play: { x: 240, y: 130, w: 800, h: 410 }, ground: '#b0a536', sayAt: { x: 20, y: 770 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 180, w: 720, h: 972 }, ground: '#9e9e37', sayAt: { x: 40, y: 1110 } },
 ]
 

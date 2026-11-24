@@ -28,27 +28,42 @@ export interface Fit {
   y: number
 }
 
-/** How to lay a `world`-sized painting over a `w` × `h` screen, keeping `focus` between `top` and `bottom` pixels
- * from the edges. */
-export function fitPainting(w: number, h: number, world: { w: number; h: number }, focus: Box, bottom = 0, top = 0): Fit {
+/** How to lay a `world`-sized painting over a `w` × `h` screen. The `play` box (the board, the cards, the baskets:
+ * what is tapped and read) goes in the middle of the screen across, and never under the task line (`top` pixels from
+ * the top) or the tray (`bottom` pixels from the bottom). The `focus` box (the play and the characters with it) is kept
+ * on screen. Where it can, the painting covers the whole screen. */
+export function fitPainting(
+  w: number,
+  h: number,
+  world: { w: number; h: number },
+  focus: Box,
+  bottom = 0,
+  top = 0,
+  play: Box = focus,
+): Fit {
   const room = Math.max(1, h - bottom - top)
-  const s = Math.min(Math.max(w / world.w, h / world.h), w / focus.w, room / focus.h)
-  // Centre the focus in the room it has; a painting bigger than the screen never shows its edge, a smaller one
-  // never leaves the screen.
-  const place = (screen: number, size: number, centre: number, keep: number) => {
-    const at = keep / 2 - centre * s
-    const [lo, hi] = size >= screen ? [screen - size, 0] : [0, screen - size]
-    return Math.min(hi, Math.max(lo, at))
-  }
+  const middle = play.x + play.w / 2
+  // Big enough to cover the screen with the play in the middle (but never more than a fifth past plain covering),
+  // small enough for the focus to fit on screen and the play between the task line and the tray.
+  const cover = Math.max(w / world.w, h / world.h)
+  const centred = Math.max(cover, w / 2 / Math.max(1, Math.min(middle, world.w - middle)))
+  // The play between the task line and the tray, and the rest of the focus still on screen above and below it.
+  const fit = [w / focus.w, h / focus.h, w / play.w, room / play.h]
+  const above = play.y - focus.y
+  const below = focus.y + focus.h - (play.y + play.h)
+  if (above > 0) fit.push((h - bottom) / (above + play.h))
+  if (below > 0) fit.push((h - top) / (below + play.h))
+  const s = Math.min(centred, cover * 1.2, ...fit)
+  const clamp = (v: number, lo: number, hi: number) => Math.min(Math.max(lo, hi), Math.max(lo, v))
   const tall = world.h * s
-  return {
-    s,
-    x: place(w, world.w * s, focus.x + focus.w / 2, w),
-    // Shorter than the screen: hang it from the top (the ground goes on below it), but keep the focus above the tray.
-    y: tall >= h
-      ? Math.min(0, Math.max(h - tall, top + room / 2 - (focus.y + focus.h / 2) * s))
-      : Math.max(Math.min(0, top + room - (focus.y + focus.h) * s), Math.min(top - focus.y * s, h - bottom - tall)),
-  }
+  // Across: the play in the middle of the screen, as long as the whole focus stays on it.
+  const x = clamp(w / 2 - middle * s, -focus.x * s, w - (focus.x + focus.w) * s)
+  // Down: the play in the middle of its room; a painting taller than the screen keeps covering it, a shorter one hangs
+  // from the top. The focus stays on screen, and the play never goes under the task line or the tray.
+  const want = tall >= h ? clamp(top + room / 2 - (play.y + play.h / 2) * s, h - tall, 0) : 0
+  const onScreen = clamp(want, -focus.y * s, h - (focus.y + focus.h) * s)
+  const y = clamp(onScreen, top - play.y * s, h - bottom - (play.y + play.h) * s)
+  return { s, x, y }
 }
 
 /** Places a picture in world units by its bottom centre, `h` units tall. */
@@ -61,8 +76,11 @@ export interface PaintedView<Id extends string = string> {
   id: Id
   painting: string
   world: { w: number; h: number }
-  /** Where the play happens; it always fits above the tray. */
+  /** The play and the characters that take part in it: always on screen. */
   focus: Box
+  /** What is tapped and read (the board, the cards, the baskets), when it is smaller than the focus: it goes in the
+   * middle of the screen, between the task line and the tray (without it, the whole focus does). */
+  play?: Box
   /** The colour of the painting's bottom edge, which goes on below it on screens taller than the painting. */
   ground: string
   /** Where the character speaks from (kept for the scene's layout notes; the task line sits at the top). */
@@ -127,23 +145,22 @@ export function PaintedScene<Id extends string>({
 }) {
   const t = useT()
   const [ref, size] = useSize<HTMLDivElement>({ w: 390, h: 700 })
-  const { id, painting, world, focus, ground } = pickView(views, size.w, size.h)
+  const { id, painting, world, focus, ground, play } = pickView(views, size.w, size.h)
   const key = `${size.w}x${size.h}`
   // The task line sits under the back button and the progress pips; the play is kept below it, and above the tray.
   const [taskRef, taskBottom] = useTallest<HTMLParagraphElement>(key, (el) => el.offsetTop + el.offsetHeight)
   const [trayRef, trayTall] = useTallest<HTMLDivElement>(key, (el) => el.offsetHeight)
   const top = taskBottom ? taskBottom + GAP : taskRoom(size.h)
   const bottom = tray ? Math.max(trayHeight, trayTall ? trayTall + GAP : 0) : 0
-  const fit = fitPainting(size.w, size.h, world, focus, bottom, top)
+  const fit = fitPainting(size.w, size.h, world, focus, bottom, top, play)
   return (
     <div ref={ref} className={`scene ps ps-${id} ${className}`} style={{ background: ground }}>
-      <Backdrop painting={painting} world={world} focus={focus} fit={fit} w={size.w} h={size.h} />
+      <Backdrop painting={painting} world={world} fit={fit} w={size.w} h={size.h} />
       <div
         className="ps-world"
         style={{ width: world.w, height: world.h, transform: `translate(${fit.x}px, ${fit.y}px) scale(${fit.s})` }}
       >
-        <Mirrors painting={painting} world={world} fit={fit} w={size.w} h={size.h} />
-        <img className="ps-painting" src={painting} alt="" draggable={false} />
+        <img className="ps-painting" src={painting} alt="" draggable={false} style={featherStyle(fit, world, size.w, size.h)} />
         {children(id)}
       </div>
       <StagePips done={stage.done} total={stage.total} label={t('scene.progress', { n: stage.done, total: stage.total })} />
@@ -167,58 +184,71 @@ export function uncovered(fit: Fit, world: { w: number; h: number }, w: number, 
   return xs.flatMap((dx) => ys.map((dy) => [dx, dy] as const)).filter(([dx, dy]) => dx || dy)
 }
 
-/** Where the painting leaves part of the screen bare, the same painting softly blurred and big enough to cover it,
- * lined up with the painting around the play, so the room's colours and light go on to the screen's edges. */
-function Backdrop({ painting, world, focus, fit, w, h }: { painting: string; world: { w: number; h: number }; focus: Box; fit: Fit; w: number; h: number }) {
-  if (!uncovered(fit, world, w, h).length) return null
-  const s = Math.max(w / world.w, h / world.h) * 1.06
-  const place = (screen: number, size: number, centre: number, at: number, fs: number) =>
-    Math.min(0, Math.max(screen - size * s, at + centre * fs - centre * s))
-  const cx = focus.x + focus.w / 2
-  const cy = focus.y + focus.h / 2
-  return (
-    <img
-      className="ps-backdrop"
-      src={painting}
-      alt=""
-      draggable={false}
-      style={{ width: world.w * s, height: world.h * s, left: place(w, world.w, cx, fit.x, fit.s), top: place(h, world.h, cy, fit.y, fit.s) }}
-    />
-  )
+/** How far (in screen pixels) the painting's own edge fades into the soft backdrop where the screen goes on past it. */
+const FEATHER = 36
+
+/** Softens the painting's edges that the screen goes on past, so it melts into the backdrop with no hard border. */
+export function featherStyle(fit: Fit, world: { w: number; h: number }, w: number, h: number): CSSProperties | undefined {
+  const sides = uncovered(fit, world, w, h).filter(([dx, dy]) => !dx || !dy)
+  if (!sides.length) return undefined
+  const f = FEATHER / fit.s
+  const dir = ([dx, dy]: readonly [number, number]) => (dx < 0 ? 'to right' : dx > 0 ? 'to left' : dy < 0 ? 'to bottom' : 'to top')
+  const mask = sides.map((side) => `linear-gradient(${dir(side)}, transparent, #000 ${f}px)`).join(', ')
+  return { maskImage: mask, WebkitMaskImage: mask, maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }
 }
 
-/** The painting mirrored a little way past each edge the screen can see, so it has no hard border: each mirror fades
- * out away from the painting into the blurred backdrop. */
-function Mirrors({ painting, world, fit, w, h }: { painting: string; world: { w: number; h: number }; fit: Fit; w: number; h: number }) {
+/** Where the painting leaves part of the screen bare: the painting's own edge drawn out to the screen's edge and
+ * softly blurred, so the wall, floor or sky simply goes on (no copies of things in the picture), over a blurred copy of
+ * the whole painting for the corners. */
+function Backdrop({ painting, world, fit, w, h }: { painting: string; world: { w: number; h: number }; fit: Fit; w: number; h: number }) {
+  const sides = uncovered(fit, world, w, h).filter(([dx, dy]) => !dx || !dy)
+  if (!sides.length) return null
+  const pw = world.w * fit.s
+  const ph = world.h * fit.s
+  const s = Math.max(w / world.w, h / world.h) * 1.1
+  // A thin slice of the painting's edge (this share of it) is drawn out across the bare strip.
+  const SLICE = 0.03
+  const url = `url("${painting}")`
   return (
-    <>
-      {uncovered(fit, world, w, h).map(([dx, dy]) => {
-        // The mirror is flipped, so its seam with the painting is its own far edge: it fades from there outwards.
-        const fade = (dir: string) => `linear-gradient(${dir}, #000 4%, transparent 28%)`
-        const mask = [dx ? fade(dx > 0 ? 'to left' : 'to right') : '', dy ? fade(dy > 0 ? 'to top' : 'to bottom') : ''].filter(Boolean).join(', ')
-        return (
-          <img
-            key={`${dx}${dy}`}
-            className="ps-mirror"
-            src={painting}
-            alt=""
-            draggable={false}
-            style={{
-              // Tucked a hair under the painting so no hairline shows at the seam.
-              left: dx * (world.w - 2),
-              top: dy * (world.h - 2),
-              width: world.w,
-              height: world.h,
-              transform: `scale(${dx ? -1 : 1}, ${dy ? -1 : 1})`,
-              maskImage: mask,
-              WebkitMaskImage: mask,
-              maskComposite: 'intersect',
-              WebkitMaskComposite: 'source-in',
-            }}
-          />
-        )
+    <div className="ps-backdrop" aria-hidden>
+      <img
+        className="ps-backdrop-all"
+        src={painting}
+        alt=""
+        draggable={false}
+        style={{ width: world.w * s, height: world.h * s, left: (w - world.w * s) / 2, top: (h - world.h * s) / 2 }}
+      />
+      {sides.map(([dx, dy]) => {
+        const style: CSSProperties = { backgroundImage: url }
+        if (dx) {
+          // From the screen's edge to a little inside the painting's (the painting fades over it there).
+          const bare = dx < 0 ? fit.x : w - (fit.x + pw)
+          const span = bare + FEATHER
+          Object.assign(style, {
+            left: dx < 0 ? 0 : w - span,
+            width: span,
+            top: fit.y,
+            height: ph,
+            backgroundSize: `${span / SLICE}px ${ph}px`,
+            backgroundPosition: dx < 0 ? 'left top' : 'right top',
+            transform: 'scaleX(-1)',
+          })
+        } else {
+          const bare = dy < 0 ? fit.y : h - (fit.y + ph)
+          const span = bare + FEATHER
+          Object.assign(style, {
+            top: dy < 0 ? 0 : h - span,
+            height: span,
+            left: fit.x,
+            width: pw,
+            backgroundSize: `${pw}px ${span / SLICE}px`,
+            backgroundPosition: dy < 0 ? 'left top' : 'left bottom',
+            transform: 'scaleY(-1)',
+          })
+        }
+        return <div key={`${dx}${dy}`} className="ps-edge" style={style} />
       })}
-    </>
+    </div>
   )
 }
 

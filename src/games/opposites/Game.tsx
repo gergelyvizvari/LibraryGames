@@ -25,7 +25,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The village schoolroom; the word cards are pinned to the cork board. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 200, y: 40, w: 1080, h: 760 }, ground: '#e0893f', sayAt: { x: 640, y: 650 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 200, y: 40, w: 1080, h: 760 }, play: { x: 390, y: 95, w: 620, h: 390 }, ground: '#e0893f', sayAt: { x: 640, y: 650 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 180, w: 720, h: 960 }, ground: '#d1792e', sayAt: { x: 260, y: 1000 } },
 ]
 

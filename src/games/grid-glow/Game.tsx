@@ -23,7 +23,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The twilight pond; the lily pads to remember float on its water. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 120, y: 60, w: 1160, h: 740 }, ground: '#a59c51', sayAt: { x: 1000, y: 180 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 120, y: 60, w: 1160, h: 740 }, play: { x: 340, y: 120, w: 600, h: 620 }, ground: '#a59c51', sayAt: { x: 1000, y: 180 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 180, w: 720, h: 960 }, ground: '#74817a', sayAt: { x: 360, y: 260 } },
 ]
 

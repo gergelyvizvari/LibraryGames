@@ -25,7 +25,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The ship cabin: the blank map lies on the captain table, with the polar bear captain beside it. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 0, y: 40, w: 1280, h: 760 }, ground: '#7a3826', sayAt: { x: 1060, y: 780 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 0, y: 40, w: 1280, h: 760 }, play: { x: 270, y: 160, w: 780, h: 550 }, ground: '#7a3826', sayAt: { x: 1060, y: 780 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 180, w: 720, h: 972 }, ground: '#863c18', sayAt: { x: 40, y: 1130 } },
 ]
 

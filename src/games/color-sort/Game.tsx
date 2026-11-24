@@ -32,6 +32,7 @@ const VIEWS: PaintedView<ViewId>[] = [
     painting: workshop,
     world: { w: 1280, h: 800 },
     focus: { x: 60, y: 250, w: 1160, h: 470 },
+    play: { x: 290, y: 400, w: 810, h: 260 },
     ground: "#a25018",
     sayAt: { x: 130, y: 340 },
   },

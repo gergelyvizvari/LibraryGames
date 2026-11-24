@@ -46,7 +46,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The village square; the pictures fall from the sky above it. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: square, world: { w: 1280, h: 800 }, focus: { x: 140, y: 40, w: 1140, h: 760 }, ground: '#c99f98', sayAt: { x: 640, y: 120 } },
+  { id: 'wide', painting: square, world: { w: 1280, h: 800 }, focus: { x: 140, y: 40, w: 1140, h: 760 }, play: { x: 230, y: 150, w: 820, h: 600 }, ground: '#c99f98', sayAt: { x: 640, y: 120 } },
   { id: 'tall', painting: squareTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 140, w: 720, h: 1000 }, ground: '#d1aaa3', sayAt: { x: 360, y: 220 } },
 ]
 

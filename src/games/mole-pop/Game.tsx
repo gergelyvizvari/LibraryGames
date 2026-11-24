@@ -17,7 +17,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The vegetable garden; the molehills lie on its soil in three rows of three. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: art('garden'), world: { w: 1280, h: 800 }, focus: { x: 200, y: 100, w: 880, h: 640 }, ground: '#aaa92b', sayAt: { x: 640, y: 150 } },
+  { id: 'wide', painting: art('garden'), world: { w: 1280, h: 800 }, focus: { x: 200, y: 100, w: 880, h: 640 }, play: { x: 245, y: 140, w: 770, h: 590 }, ground: '#aaa92b', sayAt: { x: 640, y: 150 } },
   { id: 'tall', painting: art('garden-tall'), world: { w: 720, h: 1152 }, focus: { x: 0, y: 200, w: 720, h: 840 }, ground: '#a29e3d', sayAt: { x: 360, y: 270 } },
 ]
 

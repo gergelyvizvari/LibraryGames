@@ -22,7 +22,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The mountain meadow; the sum bubbles rise into the open sky. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 60, y: 40, w: 1220, h: 760 }, ground: '#9fa635', sayAt: { x: 1000, y: 150 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 60, y: 40, w: 1220, h: 760 }, play: { x: 200, y: 40, w: 820, h: 740 }, ground: '#9fa635', sayAt: { x: 1000, y: 150 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 120, w: 720, h: 1030 }, ground: '#9a9634', sayAt: { x: 360, y: 200 } },
 ]
 

@@ -23,7 +23,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The little railway station; the country card hangs on its noticeboard, the capitals below. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 100, y: 40, w: 1180, h: 760 }, ground: '#a6a03c', sayAt: { x: 1050, y: 200 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 100, y: 40, w: 1180, h: 760 }, play: { x: 440, y: 220, w: 460, h: 560 }, ground: '#a6a03c', sayAt: { x: 1050, y: 200 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 180, w: 720, h: 960 }, ground: '#865138', sayAt: { x: 360, y: 300 } },
 ]
 
