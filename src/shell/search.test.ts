@@ -36,6 +36,17 @@ describe('search', () => {
     expect(search([...list, { item: 'maths', titles: ['Matek kaland'], more: [] }], 'matek')).toEqual(['maths', 'monster', 'shop'])
   })
 
+  it('finds a game by another name, in any language, after title hits', () => {
+    const puzzles = [
+      { item: 'queens', titles: ['Queens Party'], more: [] },
+      { item: 'puppy', titles: ['Puppy Spots', 'Kutyakuckó'], aliases: ['queens, star battle', 'királynők, logikai feladvány'], more: [] },
+      { item: 'chess', titles: ['Chess'], more: ['Move the queens'] },
+    ]
+    expect(search(puzzles, 'queens')).toEqual(['queens', 'puppy', 'chess'])
+    expect(search(puzzles, 'kiralyno')).toEqual(['puppy'])
+    expect(search(puzzles, 'star battle')).toEqual(['puppy'])
+  })
+
   it('returns nothing for an empty query', () => {
     expect(search(list, '  ')).toEqual([])
   })

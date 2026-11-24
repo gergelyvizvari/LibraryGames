@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Even or Odd?',
     howTo: 'Numbers are falling! Swipe even numbers left and odd numbers right, or tap the basket.',
+    aliases: 'even and odd numbers, sorting numbers',
     score: 'Score',
     combo: 'Combo',
     time: 'Time',
@@ -19,6 +20,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Páros-páratlan',
     howTo: 'Hullanak a számok! A párosakat söpörd balra, a páratlanokat jobbra, vagy koppints a kosárra.',
+    aliases: 'páros, páratlan, számok válogatása',
     score: 'Pont',
     combo: 'Kombó',
     time: 'Idő',

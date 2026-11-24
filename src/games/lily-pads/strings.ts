@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Lily Pad Pairs',
     howTo: 'Two lily pads, and one picture is on both. Find it and tap it!',
+    aliases: 'find the same, common picture, matching symbols, spot the match',
     say: 'Which picture is on both lily pads?',
     no: 'That one is only on one pad. Look again!',
     yes: 'Yes, it’s on both!',
@@ -34,6 +35,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Tavirózsa-párok',
     howTo: 'Két tavirózsalevélen van egy közös kép. Keresd meg, és koppints rá!',
+    aliases: 'közös kép, keresd az egyformát, párosító, figyelem',
     say: 'Melyik kép van mindkét levélen?',
     no: 'Ez csak az egyik levélen van. Nézd meg újra!',
     yes: 'Igen, mindkettőn ott van!',

@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Puppy Spots',
     howTo: 'Every puppy wants its own row, its own column and its own colour. Puppies must not touch, not even at the corners!',
+    aliases: 'queens, star battle, logic puzzle, grid puzzle, sudoku-like',
     score: 'Score',
     room: 'Room',
     pups: 'Pups',
@@ -35,6 +36,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Kutyakuckó',
     howTo: 'Minden kutyus saját sort, saját oszlopot és saját színt szeretne. A kutyusok nem érhetnek egymáshoz, még átlósan sem!',
+    aliases: 'királynők, vezérek, logikai feladvány, rácsos fejtörő, sudoku',
     score: 'Pont',
     room: 'Szoba',
     pups: 'Kutyus',

@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'UK Map Hunt',
     howTo: 'A place name pops up. Find it on the map of the UK and tap it! The lines split England, Scotland, Wales and Northern Ireland.',
+    aliases: 'United Kingdom, Britain, England, towns, geography quiz',
     score: 'Score',
     round: 'Place',
     where: 'Where is {place}?',
@@ -20,6 +21,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Brit vaktérkép',
     howTo: 'Felbukkan egy hely neve. Keresd meg az Egyesült Királyság térképén, és koppints rá! A vonalak választják el Angliát, Skóciát, Walest és Észak-Írországot.',
+    aliases: 'Egyesült Királyság, Anglia, Nagy-Britannia, városok, földrajz kvíz',
     score: 'Pont',
     round: 'Hely',
     where: 'Hol van {place}?',

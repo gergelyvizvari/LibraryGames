@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Rhyme Time',
     howTo: 'Say the word in the picture. Then tap the word that rhymes with it, like cat and hat!',
+    aliases: 'rhymes, rhyming words, poems',
     score: 'Score',
     found: 'Rhymes',
     time: 'Time',
@@ -14,6 +15,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Rímelő',
     howTo: 'Mondd ki, mi van a képen. Aztán koppints arra a szóra, amelyik rímel rá, mint a hal és a fal!',
+    aliases: 'rímek, rímelő szavak, versek',
     score: 'Pont',
     found: 'Rímek',
     time: 'Idő',

@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Story Order',
     howTo: 'The pages of a little story got mixed up. Tap them in the order they happen!',
+    aliases: 'story sequencing, picture story, what happened first',
     first: 'What happens first?',
     next: 'What happens next?',
     last: 'And at the end?',
@@ -13,6 +14,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Mesekirakó',
     howTo: 'Összekeveredtek egy kis mese lapjai. Koppints rájuk abban a sorrendben, ahogy a mesében történnek!',
+    aliases: 'mese sorrend, képes történet, mi történt először',
     first: 'Mi történik először?',
     next: 'És aztán?',
     last: 'És a végén?',

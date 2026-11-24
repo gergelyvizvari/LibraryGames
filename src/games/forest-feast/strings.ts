@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Forest Feast',
     howTo: 'Every guest has a little wish: by the window, in front of the cake, next to a friend or not next to someone. Seat them so everyone smiles!',
+    aliases: 'logic puzzle, seating puzzle, zebra puzzle, riddle',
     say: 'Everyone wishes for something. Who sits where?',
     'wish.window': 'I would like to sit by the window.',
     'wish.cake': 'I would like to sit in front of the cake.',
@@ -22,6 +23,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Erdei lakoma',
     howTo: 'Minden vendégnek van egy kis kívánsága: az ablaknál, a torta előtt, a barátja mellett, vagy éppen valaki mellé nem szeretne ülni. Ültesd le őket úgy, hogy mindenki mosolyogjon!',
+    aliases: 'logikai feladvány, ültetés, fejtörő, rejtvény',
     say: 'Mindenki kér valamit. Ki hová üljön?',
     'wish.window': 'Én az ablak mellett szeretnék ülni.',
     'wish.cake': 'Én a torta előtt szeretnék ülni.',

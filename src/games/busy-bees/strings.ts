@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Busy Bees',
     howTo: 'Watch the glowing bee. Keep your eyes on it while the bees buzz around, then tap it!',
+    aliases: 'follow the ball, shell game, tracking, attention',
     score: 'Score',
     turn: 'Turn',
     streak: 'Streak',
@@ -20,6 +21,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Zümmögő méhek',
     howTo: 'Figyeld a világító méhecskét! Kövesd a szemeddel, amíg a méhek repkednek, aztán koppints rá!',
+    aliases: 'kövesd a szemeddel, figyelem, pohárjáték, követés',
     score: 'Pont',
     turn: 'Kör',
     streak: 'Sorozat',

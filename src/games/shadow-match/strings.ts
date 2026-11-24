@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Shadow Match',
     howTo: 'A shadow falls on the sheet. Tap the thing that makes it!',
+    aliases: 'shadows, silhouette, matching shapes',
     say: 'Whose shadow is this?',
     turned: 'Whose shadow is this? It may be turned round!',
     no: 'Not that one. Look at the shape!',
@@ -34,6 +35,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Árnyékszínház',
     howTo: 'Árnyék vetül a vászonra. Koppints arra, ami ezt az árnyékot veti!',
+    aliases: 'árnyék, sziluett, formák párosítása',
     say: 'Kié ez az árnyék?',
     turned: 'Kié ez az árnyék? Lehet, hogy el van forgatva vagy tükrözve van!',
     no: 'Nem ez az. Figyeld meg az alakját!',

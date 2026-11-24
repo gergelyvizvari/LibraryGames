@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Blind Map',
     howTo: 'The map has no names! Find the country you are asked for and tap it. Bigger countries first, then Europe too.',
+    aliases: 'world map, countries, geography quiz',
     find: 'Where is {name}?',
     thatIs: "That's {name}",
     score: 'Score',
@@ -15,6 +16,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Vaktérkép',
     howTo: 'Nincsenek nevek a térképen! Keresd meg a kért országot, és koppints rá. Először a nagy országok jönnek, aztán Európa is.',
+    aliases: 'világtérkép, országok, földrajz kvíz',
     find: 'Hol van {name}?',
     thatIs: 'Ez itt: {name}',
     score: 'Pont',

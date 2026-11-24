@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Clock Catch',
     howTo: 'Look at the clock. The short hand shows the hour, the long hand the minutes. Tap the time it shows!',
+    aliases: 'telling time, clock, hours, minutes',
     score: 'Score',
     caught: 'Caught',
     time: 'Time',
@@ -15,6 +16,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Óraleső',
     howTo: 'Nézd meg az órát! A kis mutató az órát mutatja, a nagy a perceket. Koppints a jó időre!',
+    aliases: 'óra, időmérés, hány óra van, percek, órák',
     score: 'Pont',
     caught: 'Elkapva',
     time: 'Idő',

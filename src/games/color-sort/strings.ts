@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Colour Sort',
     howTo: 'Tap a tube, then another, to pour its top colour onto the same colour or into an empty tube. Make every tube one colour!',
+    aliases: 'water sort, ball sort, liquid sort, pouring puzzle',
     score: 'Score',
     puzzle: 'Puzzle',
     moves: 'Pours',
@@ -21,6 +22,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Színválogató',
     howTo: 'Koppints egy kémcsőre, aztán egy másikra: a felső szín átfolyik ugyanarra a színre vagy egy üres kémcsőbe. Legyen minden kémcső egyszínű!',
+    aliases: 'vízválogató, golyóválogató, folyadék, töltögetős, színrendezés',
     score: 'Pont',
     puzzle: 'Feladvány',
     moves: 'Öntés',

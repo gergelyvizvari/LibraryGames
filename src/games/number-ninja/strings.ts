@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Number Ninja',
     howTo: 'Bubbles float up with sums inside. Pop every bubble that makes the target number. Leave the others!',
+    aliases: 'addition, sums, mental maths, quick maths',
     target: 'Make',
     say: 'Pop the bubbles that make {n}!',
     score: 'Score',
@@ -14,6 +15,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Számnindzsa',
     howTo: 'Buborékok szállnak fel, bennük összeadások. Pukkaszd ki mindegyiket, amelyiknek az eredménye a célszám. A többit hagyd!',
+    aliases: 'összeadás, fejszámolás, gyors matek, eredmény',
     target: 'Cél',
     say: 'Pukkaszd ki, ami ennyit ér: {n}',
     score: 'Pont',

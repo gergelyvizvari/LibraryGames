@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Rainbow Mix',
     howTo: 'A pony wishes for a new mane colour. Drip paint into the bowl, mix it, and see if you made the right colour!',
+    aliases: 'colour mixing, paint, colors, pony, unicorn',
     ask: 'I would love a {colour} mane!',
     askShow: 'I would love a mane just like this!',
     more: 'Add another drop, then mix!',
@@ -50,6 +51,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Szivárványkeverés',
     howTo: 'A póni új sörényszínt szeretne. Csepegtess festéket a tálba, keverd össze, és nézd meg, eltaláltad-e a színt!',
+    aliases: 'színkeverés, festés, színek, póni, unikornis',
     ask: 'Szeretnék {colour} sörényt!',
     askShow: 'Pont ilyen színű sörényt szeretnék!',
     more: 'Tegyél bele még egy cseppet, aztán keverd!',

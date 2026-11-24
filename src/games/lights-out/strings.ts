@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Lights Out',
     howTo: 'Five red lights switch on. When they ALL go out, tap as fast as you can! Tap too early and you start that go again.',
+    aliases: 'reaction time, start lights, race start, quick tap',
     waitForIt: 'Wait for it…',
     tapNow: 'TAP!',
     tooSoon: 'Too soon!',
@@ -19,6 +20,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Lámpaoltás',
     howTo: 'Öt piros lámpa kigyullad. Amikor MIND kialszik, koppints, amilyen gyorsan csak tudsz! Ha túl korán koppintasz, újra kell kezdened azt a kört.',
+    aliases: 'reakcióidő, rajtlámpa, verseny, rajt, gyorsaság',
     waitForIt: 'Várj még…',
     tapNow: 'MOST!',
     tooSoon: 'Túl korán!',

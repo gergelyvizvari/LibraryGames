@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Opposites',
     howTo: 'Tap a word, then tap its opposite, like hot and cold!',
+    aliases: 'antonyms, opposite words, word pairs',
     score: 'Score',
     pairs: 'Pairs',
     time: 'Time',
@@ -16,6 +17,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Ellentétek',
     howTo: 'Koppints egy szóra, aztán az ellentétére, mint a forró és a hideg!',
+    aliases: 'ellentétes szavak, szópárok, ellentét',
     score: 'Pont',
     pairs: 'Párok',
     time: 'Idő',

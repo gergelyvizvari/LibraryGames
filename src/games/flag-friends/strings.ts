@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Flag Friends',
     howTo: 'Turn over two cards. Find each flag and the name of its country!',
+    aliases: 'memory, matching cards, pairs, flags, concentration',
     score: 'Score',
     combo: 'Combo',
     time: 'Time',
@@ -21,6 +22,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Zászlópárok',
     howTo: 'Fordíts fel két kártyát! Keresd meg minden zászlóhoz az ország nevét!',
+    aliases: 'memória, memóriajáték, párosító, kártyák, zászlók',
     score: 'Pont',
     combo: 'Kombó',
     time: 'Idő',

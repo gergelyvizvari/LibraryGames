@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Word Families',
     howTo: 'Words ride along the belt. Tap the basket each word belongs in, before it rides away!',
+    aliases: 'sorting words, categories, word groups',
     score: 'Score',
     combo: 'Combo',
     time: 'Time',
@@ -27,6 +28,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Szócsaládok',
     howTo: 'Szavak jönnek a futószalagon. Koppints arra a kosárra, ahova a szó tartozik, mielőtt elmegy!',
+    aliases: 'szavak válogatása, kategóriák, szócsoportok',
     score: 'Pont',
     combo: 'Kombó',
     time: 'Idő',

@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Feed the Monster',
     howTo: 'The monster is hungry for exactly the number on its belly. Tap number cookies to feed it until it is full. Too much and it will not eat it! Feed every monster to finish the stage.',
+    aliases: 'addition, number bonds, sums, adding up',
     feed: 'I would like exactly {n}!',
     more: 'Yum! {n} more!',
     tooMuch: 'Too much! I only need {n}',
@@ -21,6 +22,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Etesd a szörnyet!',
     howTo: 'A szörny pontosan annyit akar enni, amennyi a hasán áll. Koppints a számos sütikre, amíg jóllakik. Ha túl sokat adsz, nem eszi meg! Etess meg minden szörnyet, és kész a szakasz.',
+    aliases: 'összeadás, számpárok, pótlás, számolás',
     feed: 'Pontosan ennyit kérek: {n}!',
     more: 'Nyami! Még {n} kell!',
     tooMuch: 'Ez túl sok! Csak {n} kell',

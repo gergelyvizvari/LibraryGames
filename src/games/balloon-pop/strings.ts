@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Balloon Pop',
     howTo: 'Remember the numbers on the balloons, then pop them from the smallest to the biggest!',
+    aliases: 'number memory, ordering numbers, smallest to biggest',
     look: 'Look at the numbers and remember them!',
     pop: 'Pop the smallest number first!',
     next: 'Now the next bigger one!',
@@ -14,6 +15,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Lufipukkasztó',
     howTo: 'Jegyezd meg a lufikon a számokat, aztán pukkaszd ki őket a legkisebbtől a legnagyobbig!',
+    aliases: 'számmemória, számsorrend, sorbarendezés, legkisebbtől',
     look: 'Nézd meg jól a számokat, és jegyezd meg őket!',
     pop: 'Először a legkisebbet pukkaszd ki!',
     next: 'Most a következő számot!',
