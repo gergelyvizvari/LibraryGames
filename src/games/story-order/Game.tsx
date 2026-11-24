@@ -48,7 +48,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The seaside reading nook; the story's pages lie on the big desk. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: nook, world: { w: 1280, h: 800 }, focus: { x: 140, y: 40, w: 1140, h: 760 }, ground: '#973d19', sayAt: { x: 1000, y: 230 } },
+  { id: 'wide', painting: nook, world: { w: 1280, h: 800 }, focus: { x: 140, y: 40, w: 1140, h: 760 }, play: { x: 240, y: 230, w: 640, h: 540 }, ground: '#973d19', sayAt: { x: 1000, y: 230 } },
   { id: 'tall', painting: nookTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 160, w: 720, h: 980 }, ground: '#983e10', sayAt: { x: 300, y: 260 } },
 ]
 

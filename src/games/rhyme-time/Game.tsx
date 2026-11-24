@@ -24,7 +24,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The village green with its bandstand; the picture and the rhyme choices stand on the lawn. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 100, y: 60, w: 1180, h: 740 }, ground: '#9ea238', sayAt: { x: 1000, y: 180 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 100, y: 60, w: 1180, h: 740 }, play: { x: 260, y: 180, w: 720, h: 600 }, ground: '#9ea238', sayAt: { x: 1000, y: 180 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 180, w: 720, h: 960 }, ground: '#8d983d', sayAt: { x: 360, y: 260 } },
 ]
 

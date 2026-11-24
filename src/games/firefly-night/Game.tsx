@@ -30,7 +30,7 @@ const BUNNY: [Face, string][] = [
 
 /** The night meadow; the fireflies fly in the open air above the grass, the jar stands on the stump. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: night, world: { w: 1280, h: 800 }, focus: { x: 140, y: 120, w: 1000, h: 680 }, ground: '#2d656f', sayAt: { x: 380, y: 150 } },
+  { id: 'wide', painting: night, world: { w: 1280, h: 800 }, focus: { x: 140, y: 120, w: 1000, h: 680 }, play: { x: 150, y: 120, w: 990, h: 580 }, ground: '#2d656f', sayAt: { x: 380, y: 150 } },
   { id: 'tall', painting: nightTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 220, w: 720, h: 920 }, ground: '#34717f', sayAt: { x: 200, y: 270 } },
 ]
 

@@ -42,7 +42,7 @@ const FROG: [Face, string][] = [
 
 /** The stream with its stepping stones across the middle; the jump cards sit on the far bank above it. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: stream, world: { w: 1280, h: 800 }, focus: { x: 0, y: 120, w: 1280, h: 680 }, ground: '#a2b832', sayAt: { x: 640, y: 210 } },
+  { id: 'wide', painting: stream, world: { w: 1280, h: 800 }, focus: { x: 0, y: 120, w: 1280, h: 680 }, play: { x: 20, y: 380, w: 1240, h: 410 }, ground: '#a2b832', sayAt: { x: 640, y: 210 } },
   { id: 'tall', painting: streamTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 260, w: 720, h: 800 }, ground: '#aeb731', sayAt: { x: 360, y: 380 } },
 ]
 

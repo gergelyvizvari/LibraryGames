@@ -25,7 +25,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The village toy workshop; the letters lie on its workbench. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 100, y: 60, w: 1180, h: 740 }, ground: '#b15421', sayAt: { x: 1000, y: 210 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 100, y: 60, w: 1180, h: 740 }, play: { x: 180, y: 250, w: 860, h: 520 }, ground: '#b15421', sayAt: { x: 1000, y: 210 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 200, w: 720, h: 940 }, ground: '#6d5b37', sayAt: { x: 360, y: 260 } },
 ]
 

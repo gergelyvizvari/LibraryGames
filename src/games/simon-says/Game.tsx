@@ -58,7 +58,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The forest glade; the animals stand on log slices in the clearing, the bear gives the orders. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: glade, world: { w: 1280, h: 800 }, focus: { x: 60, y: 60, w: 1160, h: 740 }, ground: '#9ba538', sayAt: { x: 300, y: 250 } },
+  { id: 'wide', painting: glade, world: { w: 1280, h: 800 }, focus: { x: 60, y: 60, w: 1160, h: 740 }, play: { x: 390, y: 300, w: 780, h: 470 }, ground: '#9ba538', sayAt: { x: 300, y: 250 } },
   { id: 'tall', painting: gladeTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 260, w: 720, h: 892 }, ground: '#9cad2c', sayAt: { x: 300, y: 320 } },
 ]
 

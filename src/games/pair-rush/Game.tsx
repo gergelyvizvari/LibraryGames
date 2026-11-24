@@ -47,7 +47,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The woodland library; the cards lie on its big reading table. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: library, world: { w: 1280, h: 800 }, focus: { x: 120, y: 20, w: 1100, h: 780 }, ground: '#b96839', sayAt: { x: 980, y: 200 } },
+  { id: 'wide', painting: library, world: { w: 1280, h: 800 }, focus: { x: 120, y: 20, w: 1100, h: 780 }, play: { x: 290, y: 190, w: 700, h: 580 }, ground: '#b96839', sayAt: { x: 980, y: 200 } },
   { id: 'tall', painting: libraryTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 160, w: 720, h: 980 }, ground: '#9f4d22', sayAt: { x: 360, y: 250 } },
 ]
 

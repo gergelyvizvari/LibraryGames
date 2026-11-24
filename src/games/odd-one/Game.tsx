@@ -45,7 +45,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The detective's attic; the cards lie on the big table. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: desk, world: { w: 1280, h: 800 }, focus: { x: 120, y: 40, w: 1100, h: 760 }, ground: '#873314', sayAt: { x: 950, y: 200 } },
+  { id: 'wide', painting: desk, world: { w: 1280, h: 800 }, focus: { x: 120, y: 40, w: 1100, h: 760 }, play: { x: 380, y: 210, w: 540, h: 540 }, ground: '#873314', sayAt: { x: 950, y: 200 } },
   { id: 'tall', painting: deskTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 180, w: 720, h: 960 }, ground: '#783219', sayAt: { x: 360, y: 250 } },
 ]
 

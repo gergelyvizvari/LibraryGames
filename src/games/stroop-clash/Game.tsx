@@ -21,7 +21,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The painter's studio; the colour word is painted on the big canvas, the paint pots are the buttons. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 200, y: 40, w: 1080, h: 760 }, ground: '#e58b39', sayAt: { x: 700, y: 640 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 200, y: 40, w: 1080, h: 760 }, play: { x: 380, y: 70, w: 630, h: 460 }, ground: '#e58b39', sayAt: { x: 700, y: 640 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 180, w: 720, h: 960 }, ground: '#de883b', sayAt: { x: 360, y: 300 } },
 ]
 

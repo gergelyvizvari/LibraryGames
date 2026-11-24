@@ -46,7 +46,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The little forest stage; the drum and the bear drummer stand on its log platform. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: stageArt, world: { w: 1280, h: 800 }, focus: { x: 180, y: 120, w: 920, h: 680 }, ground: '#a5a236', sayAt: { x: 640, y: 290 } },
+  { id: 'wide', painting: stageArt, world: { w: 1280, h: 800 }, focus: { x: 180, y: 120, w: 920, h: 680 }, play: { x: 430, y: 380, w: 260, h: 270 }, ground: '#a5a236', sayAt: { x: 640, y: 290 } },
   { id: 'tall', painting: stageTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 260, w: 720, h: 860 }, ground: '#a0a53a', sayAt: { x: 360, y: 400 } },
 ]
 

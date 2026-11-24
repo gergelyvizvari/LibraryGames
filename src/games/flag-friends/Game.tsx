@@ -24,7 +24,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The festival meadow; the cards lie on the picnic blanket. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 100, y: 60, w: 1180, h: 740 }, ground: '#a19d39', sayAt: { x: 1030, y: 240 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 100, y: 60, w: 1180, h: 740 }, play: { x: 330, y: 250, w: 620, h: 540 }, ground: '#a19d39', sayAt: { x: 1030, y: 240 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 180, w: 720, h: 960 }, ground: '#9d9f2b', sayAt: { x: 360, y: 300 } },
 ]
 

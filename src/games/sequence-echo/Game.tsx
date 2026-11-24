@@ -59,7 +59,7 @@ type ViewId = 'wide' | 'tall'
 
 /** Evening at the pond; the four bell flowers hang from the branch arch, the frog conducts. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: pond, world: { w: 1280, h: 800 }, focus: { x: 40, y: 100, w: 1200, h: 700 }, ground: '#a79a2e', sayAt: { x: 680, y: 160 } },
+  { id: 'wide', painting: pond, world: { w: 1280, h: 800 }, focus: { x: 40, y: 100, w: 1200, h: 700 }, play: { x: 316, y: 250, w: 730, h: 320 }, ground: '#a79a2e', sayAt: { x: 680, y: 160 } },
   { id: 'tall', painting: pondTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 180, w: 720, h: 960 }, ground: '#9a9647', sayAt: { x: 360, y: 225 } },
 ]
 

@@ -31,7 +31,7 @@ const BEAR: [Face, string][] = [
 
 /** The flower meadow by the pond; the focus is the open air where the bees fly, and the honey bear beside it. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: meadow, world: { w: 1280, h: 800 }, focus: { x: 40, y: 90, w: 1000, h: 690 }, ground: '#8e9d35', sayAt: { x: 60, y: 300 } },
+  { id: 'wide', painting: meadow, world: { w: 1280, h: 800 }, focus: { x: 40, y: 90, w: 1000, h: 690 }, play: { x: 360, y: 110, w: 620, h: 620 }, ground: '#8e9d35', sayAt: { x: 60, y: 300 } },
   { id: 'tall', painting: meadowTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 200, w: 720, h: 930 }, ground: '#859432', sayAt: { x: 40, y: 290 } },
 ]
 

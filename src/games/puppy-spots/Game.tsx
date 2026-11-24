@@ -45,7 +45,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The puppies' den; the rug lies in the middle of the floor and is the focus. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: den, world: { w: 1280, h: 800 }, focus: { x: 250, y: 90, w: 860, h: 650 }, ground: '#d7823e', sayAt: { x: 900, y: 330 } },
+  { id: 'wide', painting: den, world: { w: 1280, h: 800 }, focus: { x: 250, y: 90, w: 860, h: 650 }, play: { x: 320, y: 140, w: 520, h: 520 }, ground: '#d7823e', sayAt: { x: 900, y: 330 } },
   { id: 'tall', painting: denTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 140, w: 720, h: 920 }, ground: '#a66633', sayAt: { x: 262, y: 402 } },
 ]
 

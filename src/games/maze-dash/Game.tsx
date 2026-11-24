@@ -15,7 +15,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The garden at the edge of the woods; the hedge maze lies on its lawn. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: garden, world: { w: 1280, h: 800 }, focus: { x: 280, y: 150, w: 720, h: 570 }, ground: '#acb42f', sayAt: { x: 1120, y: 300 } },
+  { id: 'wide', painting: garden, world: { w: 1280, h: 800 }, focus: { x: 280, y: 150, w: 720, h: 570 }, play: { x: 300, y: 190, w: 680, h: 460 }, ground: '#acb42f', sayAt: { x: 1120, y: 300 } },
   { id: 'tall', painting: gardenTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 220, w: 720, h: 920 }, ground: '#95ab2e', sayAt: { x: 360, y: 320 } },
 ]
 

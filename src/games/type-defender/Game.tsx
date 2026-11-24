@@ -23,7 +23,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The beach: words drift down from the sky towards the sandcastle, guarded by the seagull knight. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 100, y: 0, w: 1080, h: 800 }, ground: '#e4bf63', sayAt: { x: 60, y: 760 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 100, y: 0, w: 1080, h: 800 }, play: { x: 200, y: 20, w: 880, h: 620 }, ground: '#e4bf63', sayAt: { x: 60, y: 760 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 60, w: 720, h: 1092 }, ground: '#f5bf7c', sayAt: { x: 190, y: 1080 } },
 ]
 

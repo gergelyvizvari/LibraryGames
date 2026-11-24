@@ -19,7 +19,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The post office; the village map hangs on its back wall and is the focus. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: office, world: { w: 1280, h: 800 }, focus: { x: 290, y: 60, w: 600, h: 640 }, ground: '#c67231', sayAt: { x: 880, y: 250 } },
+  { id: 'wide', painting: office, world: { w: 1280, h: 800 }, focus: { x: 290, y: 60, w: 600, h: 640 }, play: { x: 340, y: 120, w: 510, h: 510 }, ground: '#c67231', sayAt: { x: 880, y: 250 } },
   { id: 'tall', painting: officeTall, world: { w: 720, h: 1152 }, focus: { x: 20, y: 200, w: 680, h: 700 }, ground: '#b76b2d', sayAt: { x: 330, y: 250 } },
 ]
 

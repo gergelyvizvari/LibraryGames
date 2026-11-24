@@ -25,7 +25,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The market square: the words ride along above the counter and the baskets stand on it, with the pig seller in front. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 40, y: 0, w: 1240, h: 800 }, ground: '#d6b081', sayAt: { x: 300, y: 150 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 40, y: 0, w: 1240, h: 800 }, play: { x: 160, y: 150, w: 840, h: 340 }, ground: '#d6b081', sayAt: { x: 300, y: 150 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 100, w: 720, h: 1052 }, ground: '#b0a532', sayAt: { x: 60, y: 180 } },
 ]
 

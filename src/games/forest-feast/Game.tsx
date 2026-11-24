@@ -52,7 +52,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The dining room; the focus is the table with the guests' wishes above it (and the fox on the rug when upright). */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: room, world: { w: 1280, h: 800 }, focus: { x: 20, y: 150, w: 1240, h: 500 }, ground: '#bd662f', sayAt: { x: 640, y: 196 } },
+  { id: 'wide', painting: room, world: { w: 1280, h: 800 }, focus: { x: 20, y: 150, w: 1240, h: 500 }, play: { x: 200, y: 170, w: 860, h: 430 }, ground: '#bd662f', sayAt: { x: 640, y: 196 } },
   { id: 'tall', painting: roomTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 290, w: 720, h: 770 }, ground: '#b75f29', sayAt: { x: 380, y: 290 } },
 ]
 

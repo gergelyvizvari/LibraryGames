@@ -28,7 +28,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The explorer study: the world map lies on the big desk, with the koala explorer beside it. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 0, y: 100, w: 1280, h: 700 }, ground: '#a44716', sayAt: { x: 30, y: 350 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 0, y: 100, w: 1280, h: 700 }, play: { x: 270, y: 250, w: 880, h: 540 }, ground: '#a44716', sayAt: { x: 30, y: 350 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 240, w: 720, h: 912 }, ground: '#7d3723', sayAt: { x: 40, y: 1110 } },
 ]
 

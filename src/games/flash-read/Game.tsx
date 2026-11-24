@@ -22,7 +22,7 @@ type ViewId = 'wide' | 'tall'
 
 /** The seaside pier; the words flash on its big signboard. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 120, y: 40, w: 1160, h: 760 }, ground: '#cd9e59', sayAt: { x: 1050, y: 330 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 120, y: 40, w: 1160, h: 760 }, play: { x: 320, y: 165, w: 640, h: 610 }, ground: '#cd9e59', sayAt: { x: 1050, y: 330 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 100, w: 720, h: 1040 }, ground: '#d39c52', sayAt: { x: 360, y: 505 } },
 ]
 

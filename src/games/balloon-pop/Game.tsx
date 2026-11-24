@@ -33,7 +33,7 @@ const OTTER: [Face, string][] = [
 
 /** The lake with its jetty; the balloons float over the water, the otter sits on the jetty. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: lake, world: { w: 1280, h: 800 }, focus: { x: 40, y: 20, w: 1200, h: 780 }, ground: '#d99259', sayAt: { x: 900, y: 150 } },
+  { id: 'wide', painting: lake, world: { w: 1280, h: 800 }, focus: { x: 40, y: 20, w: 1200, h: 780 }, play: { x: 120, y: 110, w: 1000, h: 560 }, ground: '#d99259', sayAt: { x: 900, y: 150 } },
   { id: 'tall', painting: lakeTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 220, w: 720, h: 930 }, ground: '#e79955', sayAt: { x: 360, y: 310 } },
 ]
 
