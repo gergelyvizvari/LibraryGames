@@ -4,7 +4,7 @@ import { useShake, useTimeouts } from '../../kit/hooks'
 import { DOT_HIT_R, DOT_R, dotChoices, dotCount, dotGapFor, nearestDot, pickRound, placesFor as poolFor, pointsForKm, showDots } from '../../kit/mapHunt'
 import { makeRng } from '../../kit/random'
 import { Cast, useMood } from '../../kit/cast'
-import { PaintedScene, type PaintedView } from '../../kit/painted'
+import { PaintedScene, pbBoxStyle, type PaintedView } from '../../kit/painted'
 import { sound, vibrate } from '../../kit/sound'
 import { Emoji } from '../../kit/stickers'
 import type { GameProps } from '../../kit/types'
@@ -160,8 +160,8 @@ export default function RiverMountain({ level, seed, t, onFinish }: GameProps) {
         return (
           <>
             <Cast faces={FACES} mood={mood} at={at.char} aspect={ASPECT} />
-            {/* `zoom` scales the box's own position too, so it is given in zoomed units. */}
-            <div className="pb-box" style={{ left: at.box.x / at.zoom, top: at.box.y / at.zoom, width: at.box.w / at.zoom, height: at.box.h / at.zoom, zoom: at.zoom }}>
+            {/* Scaled with a transform, not `zoom`: Safari sizes the map's container-query units wrongly under `zoom`. */}
+            <div className="pb-box" style={pbBoxStyle(at.box, at.zoom)}>
       <MapStage>
       <div className="rm-wrap map-box" ref={wrapRef} style={{ '--map-ratio': WIDTH / HEIGHT } as CSSProperties}>
         {land ? (

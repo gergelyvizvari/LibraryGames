@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { fitPainting, pickView } from './painted'
+import { fitPainting, pbBoxStyle, pickView, uncovered } from './painted'
 
 const world = { w: 1280, h: 800 }
 const focus = { x: 330, y: 180, w: 620, h: 540 }
@@ -50,3 +50,26 @@ describe('pickView', () => {
   })
 })
 
+
+describe('uncovered', () => {
+  it('finds no bare edge when the painting covers the screen', () => {
+    expect(uncovered(fitPainting(1280, 800, world, focus, 120), world, 1280, 800)).toEqual([])
+  })
+
+  it('names the sides and corners a shrunken painting leaves bare', () => {
+    const sides = uncovered({ s: 0.5, x: 100, y: 0 }, world, 1280, 800)
+    expect(sides).toContainEqual([-1, 0])
+    expect(sides).toContainEqual([1, 0])
+    expect(sides).toContainEqual([1, 1])
+    expect(sides).toContainEqual([0, 1])
+    expect(sides).not.toContainEqual([0, -1])
+  })
+})
+
+describe('pbBoxStyle', () => {
+  it('scales the box with a transform so it still fills its world box', () => {
+    const st = pbBoxStyle({ x: 270, y: 250, w: 880, h: 540 }, 1.25)
+    expect(st).toMatchObject({ left: 270, top: 250, width: 704, height: 432, transform: 'scale(1.25)' })
+    expect(st.zoom).toBeUndefined()
+  })
+})
