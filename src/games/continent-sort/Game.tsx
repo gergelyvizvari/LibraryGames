@@ -28,13 +28,13 @@ type ViewId = 'wide' | 'tall'
 
 /** The explorer study: the world map lies on the big desk, with the koala explorer beside it. */
 const VIEWS: PaintedView<ViewId>[] = [
-  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 0, y: 100, w: 1280, h: 700 }, play: { x: 270, y: 250, w: 880, h: 540 }, ground: '#a44716', sayAt: { x: 30, y: 350 } },
+  { id: 'wide', painting: bg, world: { w: 1280, h: 800 }, focus: { x: 0, y: 100, w: 1280, h: 700 }, play: { x: 290, y: 200, w: 840, h: 500 }, ground: '#a44716', sayAt: { x: 30, y: 350 } },
   { id: 'tall', painting: bgTall, world: { w: 720, h: 1152 }, focus: { x: 0, y: 240, w: 720, h: 912 }, ground: '#7d3723', sayAt: { x: 40, y: 1110 } },
 ]
 
 /** Where the play sits in each painting (its content zoomed to suit the painting's scale), and the character. */
 const SPOTS: Record<ViewId, { box: { x: number; y: number; w: number; h: number }; zoom: number; char: { x: number; bottom: number; h: number } }> = {
-  wide: { box: { x: 270, y: 250, w: 880, h: 540 }, zoom: 1.3, char: { x: 130, bottom: 640, h: 290 } },
+  wide: { box: { x: 290, y: 200, w: 840, h: 500 }, zoom: 1.3, char: { x: 130, bottom: 640, h: 290 } },
   tall: { box: { x: 20, y: 380, w: 680, h: 560 }, zoom: 1.3, char: { x: 600, bottom: 1135, h: 300 } },
 }
 
