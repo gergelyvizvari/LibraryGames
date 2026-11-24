@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Number Line Jump',
     howTo: 'The frog jumps along the number line. Tap the number where it will land!',
+    aliases: 'number line, addition, subtraction, counting on',
     score: 'Score',
     combo: 'Combo',
     time: 'Time',
@@ -14,6 +15,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Békaugrás',
     howTo: 'A béka ugrál a számegyenesen. Koppints arra a számra, ahol megáll!',
+    aliases: 'számegyenes, összeadás, kivonás, ugrálás',
     score: 'Pont',
     combo: 'Kombó',
     time: 'Idő',

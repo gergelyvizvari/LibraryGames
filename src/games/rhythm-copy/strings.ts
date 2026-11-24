@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Rhythm Copy',
     howTo: 'Listen to the drum and watch the rhythm. Then it hides: tap the drum to play the same rhythm back, nice and even!',
+    aliases: 'rhythm, music, drum, beat',
     listen: 'Listen…',
     yourTurn: 'Your turn! Play it back',
     drum: 'Drum',
@@ -18,6 +19,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Ritmusmásoló',
     howTo: 'Hallgasd a dobot és nézd a ritmust! Utána elbújik: koppints a dobra, és játszd vissza ugyanazt a ritmust, szép egyenletesen!',
+    aliases: 'ritmus, zene, dob, ütem',
     listen: 'Figyelj…',
     yourTurn: 'Te jössz! Játszd vissza!',
     drum: 'Dob',

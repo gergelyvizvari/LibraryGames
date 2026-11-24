@@ -17,6 +17,9 @@ describe('game registry', () => {
     expect(g.meta.added).toMatch(/^\d{4}-\d{2}-\d{2}$/)
     expect(g.strings.en.title).toBeTruthy()
     expect(g.strings.en.howTo).toBeTruthy()
+    // Other names for the search box, comma separated, in both languages (e.g. "queens, star battle").
+    expect(g.strings.en.aliases).toBeTruthy()
+    expect(g.strings.hu?.aliases).toBeTruthy()
   })
 
   it.each(games.map((g) => [g.meta.id, g] as const))('%s has a drawn icon', (_, g) => {

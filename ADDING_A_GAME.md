@@ -183,7 +183,10 @@ fails when a new game does not fit, so add a spot (map units, clear of the drawi
 The app speaks English (`en`) and Hungarian (`hu`); the EN/HU button is on the map and on the "All games" screen (`?lang=hu` in the address also works).
 Every new game must ship both:
 
-- `strings.ts` has an `en` and a `hu` block with the same keys and the same `{placeholders}`. Write natural,
+- `strings.ts` has an `en` and a `hu` block with the same keys and the same `{placeholders}`. Besides `title` and
+  `howTo`, give `aliases`: comma-separated other names parents might type in the search box, in that language, such as
+  the generic puzzle type ("queens, star battle, logic puzzle" / "királynők, logikai feladvány"). Generic words only,
+  no brand names. Write natural,
   child-friendly Hungarian (tegezés: "Koppints…", "Keresd…"), not word-for-word English. `src/i18n/i18n.test.ts`
   fails if a key is missing.
 - Hungarian grammar changes words: avoid gluing suffixes onto placeholders (`{n}-t`), rephrase instead

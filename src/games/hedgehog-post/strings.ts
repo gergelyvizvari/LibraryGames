@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Hedgehog Post',
     howTo: 'Lay out arrow cards to show the hedgehog the way to the house with the letter, then press Go! Every card is one step.',
+    aliases: 'coding, programming, directions, arrows, robot',
     say: 'Where is the house with the letter? Lay out the way with arrows!',
     ready: 'Ready? Press Go!',
     walking: 'Off I go…',
@@ -25,6 +26,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Süni postás',
     howTo: 'Rakd ki nyílkártyákból, merre menjen a süni a borítékos házhoz, aztán nyomd meg az Indulj gombot! Minden kártya egy lépés.',
+    aliases: 'kódolás, programozás, irányok, nyilak, robot',
     say: 'Merre van a borítékos ház? Rakd ki az utat nyilakkal!',
     ready: 'Kész? Nyomd meg az Indulj gombot!',
     walking: 'Megyek, megyek…',

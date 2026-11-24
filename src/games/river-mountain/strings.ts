@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'River & Mountain Hunt',
     howTo: 'A river, a mountain range or a sea of Europe pops up. Find it on the blind map and tap it! Blue lines are rivers, brown ones are mountains.',
+    aliases: 'rivers, mountains, seas, Europe map, geography quiz',
     score: 'Score',
     round: 'Place',
     where: 'Find {place} on the map!',
@@ -25,6 +26,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Folyók és hegyek',
     howTo: 'Felbukkan Európa egyik folyója, hegysége vagy tengere. Keresd meg a vaktérképen, és koppints rá! A kék vonalak a folyók, a barnák a hegyek.',
+    aliases: 'folyók, hegységek, tengerek, Európa térkép, földrajz kvíz',
     score: 'Pont',
     round: 'Hely',
     where: 'Keresd meg a térképen: {place}!',

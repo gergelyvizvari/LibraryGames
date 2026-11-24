@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Colour Clash',
     howTo: 'A colour word appears in a colour. Tap the colour of the INK, not the word! Watch out: sometimes the rule flips.',
+    aliases: 'stroop, colour words, ink colour, brain teaser',
     tapInk: 'Tap the INK colour',
     tapWord: 'Tap what the WORD says',
     red: 'RED',
@@ -20,6 +21,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Színzavar',
     howTo: 'Egy szín neve jelenik meg, valamilyen színnel írva. Koppints a BETŰK színére, ne arra, amit a szó mond! Vigyázz: néha megfordul a szabály.',
+    aliases: 'stroop, színnevek, betűszín, agytorna',
     tapInk: 'Koppints a BETŰK színére',
     tapWord: 'Koppints arra, amit a SZÓ mond',
     red: 'PIROS',

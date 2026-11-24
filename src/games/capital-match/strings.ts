@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Capital Match',
     howTo: 'Every country has a capital city. Look at the flag and tap the capital of that country!',
+    aliases: 'capitals, flags, cities, geography quiz',
     question: 'What is the capital of {country}?',
     score: 'Score',
     question_n: 'Question',
@@ -14,6 +15,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Fővárosvadász',
     howTo: 'Minden országnak van fővárosa. Nézd meg a zászlót, és koppints az ország fővárosára!',
+    aliases: 'fővárosok, zászlók, városok, földrajz kvíz',
     question: 'Mi {country} fővárosa?',
     score: 'Pont',
     question_n: 'Kérdés',

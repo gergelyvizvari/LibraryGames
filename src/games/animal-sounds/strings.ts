@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Animal Sounds',
     howTo: 'Listen to the animals call one after another. Then tap them in the same order!',
+    aliases: 'simon, sound memory, repeat the order, animals',
     score: 'Score',
     round: 'Round',
     lives: 'Lives',
@@ -26,6 +27,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Állathangok',
     howTo: 'Hallgasd meg, ahogy az állatok egymás után megszólalnak. Aztán koppints rájuk ugyanebben a sorrendben!',
+    aliases: 'hangmemória, sorrend, ismételd, állatok, simon',
     score: 'Pont',
     round: 'Kör',
     lives: 'Életek',

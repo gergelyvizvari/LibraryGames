@@ -12,6 +12,8 @@ export interface Searchable<T> {
   item: T
   /** The game's name in every language: a hit here ranks first. */
   titles: string[]
+  /** Other names parents and kids know the game by, such as a puzzle type ("queens", "memory"): ranks after titles. */
+  aliases?: string[]
   /** Everything else a kid might type: what the game is about, its skill and its place on the map. */
   more: string[]
 }
@@ -26,7 +28,7 @@ const inWord = (h: string, w: string) => (w.length >= 3 ? h.includes(w) : h.star
 
 /**
  * The items every typed word is found in, the best first: a title that starts with the query, then one
- * where every word is found in the title, then the rest. An empty query returns nothing.
+ * where every word is found in the title, then one where every word is in the title or another name, then the rest. An empty query returns nothing.
  */
 export function search<T>(list: Searchable<T>[], query: string): T[] {
   const typed = words(query)
@@ -36,9 +38,16 @@ export function search<T>(list: Searchable<T>[], query: string): T[] {
   return list
     .map((e, i) => {
       const title = e.titles.flatMap(words)
-      const all = [...title, ...e.more.flatMap(words)]
+      const named = [...title, ...(e.aliases ?? []).flatMap(words)]
+      const all = [...named, ...e.more.flatMap(words)]
       if (!typed.every((w) => has(all, w))) return null
-      const rank = e.titles.some((t) => fold(t).startsWith(start)) ? 0 : typed.every((w) => has(title, w)) ? 1 : 2
+      const rank = e.titles.some((t) => fold(t).startsWith(start))
+        ? 0
+        : typed.every((w) => has(title, w))
+          ? 1
+          : typed.every((w) => has(named, w))
+            ? 2
+            : 3
       return { item: e.item, rank, i }
     })
     .filter((x) => x !== null)

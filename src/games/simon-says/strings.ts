@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Simon Says',
     howTo: 'Only tap when you hear "Simon says"! If the order does not start with Simon says, wait and do nothing.',
+    aliases: 'listening, instructions, follow the rules, attention',
     simonSays: 'Simon says: tap the {animal}!',
     plain: 'Tap the {animal}!',
     dog: 'dog',
@@ -29,6 +30,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Simon mondja',
     howTo: 'Csak akkor koppints, ha azt hallod: „Simon mondja”! Ha az utasítás nem így kezdődik, várj, és ne csinálj semmit.',
+    aliases: 'figyelem, utasítás, szabálykövetés, hallgatás',
     simonSays: 'Simon mondja: koppints {animal}!',
     plain: 'Koppints {animal}!',
     dog: 'kutya',

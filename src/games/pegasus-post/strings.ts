@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Pegasus Post',
     howTo: 'Fly from cloud to cloud and pick up every letter. You may land on each cloud only once, so plan your way!',
+    aliases: 'path puzzle, one way, route planning, unicorn',
     say: 'I need every letter! I can land on each cloud only once.',
     sayGate: 'I need every letter, then home through the rainbow gate!',
     far: 'I can only fly to the cloud right next to me.',
@@ -29,6 +30,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Pegazus-posta',
     howTo: 'Repülj felhőről felhőre, és szedd össze az összes levelet. Minden felhőre csak egyszer szállhatsz le, úgyhogy tervezd meg az utat!',
+    aliases: 'útvonal, tervezés, egy vonallal, unikornis, pegazus',
     say: 'Kell minden levél! Egy felhőre csak egyszer szállhatok le.',
     sayGate: 'Kell minden levél, aztán haza a szivárványkapun át!',
     far: 'Csak a mellettem lévő felhőre tudok átrepülni.',

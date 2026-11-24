@@ -106,8 +106,8 @@ export function Home({
   const favourites = (progress.favourites ?? []).flatMap((f) => shown.find((g) => g.meta.id === f.id) ?? [])
   const recent = useMemo(() => recentGames(shown, progress), [shown, progress])
 
-  // What the search box looks through: every game's name in every language, and in the player's language what it
-  // is about, its skill and its place on the map.
+  // What the search box looks through: every game's name and other names (like "queens") in every language, and in
+  // the player's language what it is about, its skill and its place on the map.
   const [query, setQuery] = useState('')
   const [place, setPlace] = useState<string | null>(null)
   const index = useMemo<Searchable<GameDef>[]>(
@@ -117,6 +117,7 @@ export function Home({
         return {
           item: g,
           titles: locales.map((l) => makeGameT(g.strings, l)('title')),
+          aliases: locales.flatMap((l) => g.strings[l]?.aliases ?? []),
           more: [makeGameT(g.strings, locale)('howTo'), t(`skill.${g.meta.skill}`), region ? t(region.name) : ''],
         }
       }),

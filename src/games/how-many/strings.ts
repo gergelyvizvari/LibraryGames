@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'How Many?',
     howTo: 'Pictures flash up for a moment. No time to count them one by one! Guess how many there were.',
+    aliases: 'estimating, guessing, counting, subitizing',
     look: 'Look!',
     howMany: 'How many were there?',
     score: 'Score',
@@ -15,6 +16,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Hány darab?',
     howTo: 'Képek villannak fel egy pillanatra. Nincs idő egyesével megszámolni őket! Tippeld meg, hány volt.',
+    aliases: 'becslés, tippelés, számolás, mennyiség',
     look: 'Figyelj!',
     howMany: 'Hány darab volt?',
     score: 'Pont',

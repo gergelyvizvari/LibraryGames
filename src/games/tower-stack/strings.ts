@@ -4,6 +4,7 @@ const strings: GameStrings = {
   en: {
     title: 'Tower Stack',
     howTo: 'A block slides across. Tap to drop it on the tower! Anything hanging over the edge falls off. Line it up perfectly to grow it back.',
+    aliases: 'stacking, tower, timing, blocks',
     floors: 'Floors',
     score: 'Score',
     lives: 'Lives',
@@ -13,6 +14,7 @@ const strings: GameStrings = {
   hu: {
     title: 'Toronyépítő',
     howTo: 'Egy kocka csúszik oda-vissza. Koppints, és ejtsd rá a toronyra! Ami lelóg a széléről, leesik. Ha tökéletesen illeszted, újra nagyobb lesz.',
+    aliases: 'toronyépítés, építőkocka, időzítés, pakolás',
     floors: 'Emelet',
     score: 'Pont',
     lives: 'Életek',
