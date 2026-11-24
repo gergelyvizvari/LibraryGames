@@ -766,7 +766,9 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 /* Painted scenes (kit/painted.tsx): one painting as the whole room, things placed on it in its own units. */
 .ps { flex: 1; min-height: 0; position: relative; overflow: hidden; color: var(--story-ink); --ink: var(--story-ink); }
 .ps-world { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
-.ps-painting { position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; -webkit-user-drag: none; mask-image: linear-gradient(to bottom, #000 90%, transparent); }
+.ps-painting { position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; -webkit-user-drag: none; }
+.ps-backdrop { position: absolute; max-width: none; display: block; pointer-events: none; user-select: none; filter: blur(14px) saturate(1.05) brightness(0.93); }
+.ps-mirror { position: absolute; max-width: none; display: block; pointer-events: none; user-select: none; -webkit-user-drag: none; }
 /* The play area of a painted scene that keeps its game's own pieces. */
 .pb-box { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; }
 /* A painted character (kit/cast.tsx). */

@@ -3,7 +3,7 @@ import { useLocale } from '../../i18n'
 import { useShake, useTimeouts } from '../../kit/hooks'
 import { makeRng } from '../../kit/random'
 import { Cast, useMood } from '../../kit/cast'
-import { PaintedScene, type PaintedView } from '../../kit/painted'
+import { PaintedScene, pbBoxStyle, type PaintedView } from '../../kit/painted'
 import { sound, vibrate } from '../../kit/sound'
 import type { GameProps } from '../../kit/types'
 import { MapStage } from '../../kit/ui'
@@ -139,8 +139,8 @@ export default function BlindMap({ level, seed, t, onFinish }: GameProps) {
         return (
           <>
             <Cast faces={FACES} mood={mood} at={at.char} aspect={ASPECT} />
-            {/* `zoom` scales the box's own position too, so it is given in zoomed units. */}
-            <div className="pb-box" style={{ left: at.box.x / at.zoom, top: at.box.y / at.zoom, width: at.box.w / at.zoom, height: at.box.h / at.zoom, zoom: at.zoom }}>
+            {/* Scaled with a transform, not `zoom`: Safari sizes the map's container-query units wrongly under `zoom`. */}
+            <div className="pb-box" style={pbBoxStyle(at.box, at.zoom)}>
       <MapStage>
       <div className="bm-sea map-box" ref={shakeRef} style={{ '--map-ratio': map ? WIDTH / map.height : 1 } as CSSProperties}>
         {map && shapes ? (
