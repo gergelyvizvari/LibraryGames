@@ -26,6 +26,11 @@ const strings: GameStrings = {
     wellWaited: 'Well waited!',
     tooSlow: 'Too slow!',
     wrong: 'Wrong animal!',
+    'sticker.bear': 'King bear',
+    'sticker.monkey': 'Monkey',
+    'sticker.penguin': 'Penguin',
+    'sticker.elephant': 'Elephant',
+    'sticker.lion': 'Lion',
   },
   hu: {
     title: 'Simon mondja',
@@ -65,6 +70,11 @@ const strings: GameStrings = {
     wellWaited: 'Ügyesen vártál!',
     tooSlow: 'Túl lassú!',
     wrong: 'Rossz állat!',
+    'sticker.bear': 'Király maci',
+    'sticker.monkey': 'Majom',
+    'sticker.penguin': 'Pingvin',
+    'sticker.elephant': 'Elefánt',
+    'sticker.lion': 'Oroszlán',
   },
 }
 

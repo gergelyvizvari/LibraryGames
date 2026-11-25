@@ -18,6 +18,11 @@ const strings: GameStrings = {
     'group.northAmerica': 'North America',
     'group.southAmerica': 'South America',
     'group.oceania': 'Oceania',
+    'sticker.piglet': 'Piglet with a flag',
+    'sticker.basket': 'Picnic basket',
+    'sticker.strawberry': 'Strawberry',
+    'sticker.kite': 'Kite',
+    'sticker.bow': 'Bow',
   },
   hu: {
     title: 'Zászlópárok',
@@ -36,6 +41,11 @@ const strings: GameStrings = {
     'group.northAmerica': 'Észak-Amerika',
     'group.southAmerica': 'Dél-Amerika',
     'group.oceania': 'Óceánia',
+    'sticker.piglet': 'Zászlós malac',
+    'sticker.basket': 'Piknikkosár',
+    'sticker.strawberry': 'Eper',
+    'sticker.kite': 'Sárkány',
+    'sticker.bow': 'Masni',
   },
 }
 

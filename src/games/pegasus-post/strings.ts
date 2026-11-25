@@ -23,9 +23,11 @@ const strings: GameStrings = {
     start: 'First cloud',
     home: 'Rainbow gate',
     here: 'the pegasus is here',
-    'sticker.letter': 'Winged letter',
-    'sticker.house': 'Cloud house',
     'sticker.pegasus': 'Pegasus',
+    'sticker.letter': 'Winged letter',
+    'sticker.cloud': 'Cloud',
+    'sticker.gate': 'Rainbow gate',
+    'sticker.gold': 'Golden cloud',
   },
   hu: {
     title: 'Pegazus-posta',
@@ -49,9 +51,11 @@ const strings: GameStrings = {
     start: 'Első felhő',
     home: 'Szivárványkapu',
     here: 'itt van a pegazus',
-    'sticker.letter': 'Szárnyas levél',
-    'sticker.house': 'Felhőház',
     'sticker.pegasus': 'Pegazus',
+    'sticker.letter': 'Szárnyas levél',
+    'sticker.cloud': 'Felhő',
+    'sticker.gate': 'Szivárványkapu',
+    'sticker.gold': 'Aranyfelhő',
   },
 }
 

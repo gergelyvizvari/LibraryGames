@@ -9,6 +9,11 @@ const strings: GameStrings = {
     score: 'Score',
     sentences: 'Sentences',
     time: 'Time',
+    'sticker.crab': 'Crab',
+    'sticker.shell': 'Shell',
+    'sticker.boat': 'Sailing boat',
+    'sticker.dolphin': 'Dolphin',
+    'sticker.beach': 'Beach',
   },
   hu: {
     title: 'Mondatépítő',
@@ -18,6 +23,11 @@ const strings: GameStrings = {
     score: 'Pont',
     sentences: 'Mondatok',
     time: 'Idő',
+    'sticker.crab': 'Rák',
+    'sticker.shell': 'Kagyló',
+    'sticker.boat': 'Vitorlás',
+    'sticker.dolphin': 'Delfin',
+    'sticker.beach': 'Strand',
   },
 }
 

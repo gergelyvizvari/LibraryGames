@@ -53,7 +53,8 @@ import { icon } from './icon'
 const game: GameDef = {
   meta: { id: 'my-game', skill: 'logic', icon, color: '#ff9f43', added: '2026-10-27', scene: true },
   strings,
-  stickers: medals(icon), // from kit/SceneShell
+  stickers: [{ name: 'sticker.owl', art: owlHappy }, { name: 'sticker.map', art: paintedSticker('🗺') } /* …five in all */],
+  album: place, // the game's painted background, e.g. import place from './art/shop.webp'
   load: () => import('./Game'), // never import Game directly: each game is its own download
 }
 ```
@@ -102,7 +103,7 @@ export const icon: GameIcon = [
 
 - `hooks.ts`: `useGameLoop(dt => …, running)`, `useTimeouts()`, `useShake()`, `useInterval()`, `useLatest()`.
   (`useCountdown` and `usePops` are from the old timed rounds; do not use them in a new game.)
-- `SceneShell.tsx`: `<SceneShell>`, `useStage()`, `medals()`; see "Scene games" below. `places.tsx` holds the rooms and characters.
+- `SceneShell.tsx`: `<SceneShell>`, `useStage()`; see "Scene games" below. `places.tsx` holds the rooms and characters.
 - `scene.tsx`: `<SceneTool>` is the round drawn button for tools and arrows (undo, restart, hint, mark, listen, up/down/left/right).
 - `critters.tsx`: `<Critter kind mood body>` draws small forest animals (owl, bunny, bear, hedgehog, squirrel, mouse, fox) with happy, idle or sad faces; `<CritterGuide>` makes one the scene's character through `<SceneShell guide>`.
 - `ponies.tsx`: `<Pony kind mood mane motion>` draws a unicorn, a pegasus or an alicorn from the side, with a mane in any colours; it stands, trots (`walk`) or flies by itself, every part turning on its own joint. `<PonyGuide>` makes one the scene's character. `RAINBOW` holds the rainbow's seven colours in order.
@@ -147,9 +148,11 @@ a character who says what to do, a short stage with a clear goal, and a quiet en
   the character hop and ends the stage after the last one, returning true), `stage.slip()` for a wrong try, and
   `stage.miss()` when a task that cannot be retried went wrong. It calls `onFinish` once, by itself. A game with
   its own bookkeeping can pass `stage={{ done, total, over, mood }}` instead.
-- Give the game `stickers` in `index.ts`. `medals(icon)` makes five medals from the game's icon (bronze, silver,
-  gold, ruby, diamond); a game with its own drawn stickers lists `{ name, icon }` entries (`name` a key in
-  `strings.ts`) followed by `...medals(icon)`. They are won in order, at most one per finished stage, and spread
+- Give the game five `stickers` in `index.ts`, shown as painted stamps in a row across its painted place (`album`, the
+  game's own background) in the album. Each is `{ name, art }`: `name` a key in `strings.ts` (English and Hungarian),
+  `art` a cut-out from the game's `art/` folder (the character first, in its happy face) or `paintedSticker('🗺')`
+  from kit/stickers for things the game has no painting of. The fifth stamp is gold, so make it the special one. They
+  are won in order, at most one per finished stage, and spread
   over the levels (`stickerLevel()` in `progress.ts`): the first comes with the first stage, the last only at
   level 10, so the album fills as the player climbs. The end card says at which level the next one waits.
 - Make the board an object in the room, not tiles on paper: pass `bare` and draw it (a rug, a pond, a crate, a framed

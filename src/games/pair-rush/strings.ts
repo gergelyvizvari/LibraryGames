@@ -11,6 +11,11 @@ const strings: GameStrings = {
     time: 'Time',
     board: 'Board',
     cleared: 'Board cleared!',
+    'sticker.mouse': 'Librarian mouse',
+    'sticker.card': 'Memory card',
+    'sticker.books': 'Books',
+    'sticker.candle': 'Candle',
+    'sticker.owl': 'Owl',
   },
   hu: {
     title: 'Párkereső',
@@ -22,6 +27,11 @@ const strings: GameStrings = {
     time: 'Idő',
     board: 'Tábla',
     cleared: 'Kiürült a tábla!',
+    'sticker.mouse': 'Könyvtáros egér',
+    'sticker.card': 'Memóriakártya',
+    'sticker.books': 'Könyvek',
+    'sticker.candle': 'Gyertya',
+    'sticker.owl': 'Bagoly',
   },
 }
 

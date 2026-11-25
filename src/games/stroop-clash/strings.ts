@@ -17,6 +17,11 @@ const strings: GameStrings = {
     combo: 'Combo',
     time: 'Time',
     flip: 'Rule flip!',
+    'sticker.chameleon': 'Chameleon painter',
+    'sticker.brush': 'Paintbrush',
+    'sticker.palette': 'Palette',
+    'sticker.crayon': 'Crayon',
+    'sticker.picture': 'Painting',
   },
   hu: {
     title: 'Színzavar',
@@ -34,6 +39,11 @@ const strings: GameStrings = {
     combo: 'Kombó',
     time: 'Idő',
     flip: 'Fordul a szabály!',
+    'sticker.chameleon': 'Festő kaméleon',
+    'sticker.brush': 'Ecset',
+    'sticker.palette': 'Paletta',
+    'sticker.crayon': 'Zsírkréta',
+    'sticker.picture': 'Festmény',
   },
 }
 

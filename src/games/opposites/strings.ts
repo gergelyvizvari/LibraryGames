@@ -13,6 +13,11 @@ const strings: GameStrings = {
     yes: '{a} and {b} are opposites!',
     no: 'Not opposites. Try another one!',
     cleared: 'All done!',
+    'sticker.lamb': 'Lamb',
+    'sticker.sun': 'Sun',
+    'sticker.moon': 'Moon',
+    'sticker.elephant': 'Elephant',
+    'sticker.balloon': 'Balloon',
   },
   hu: {
     title: 'Ellentétek',
@@ -26,6 +31,11 @@ const strings: GameStrings = {
     yes: '{a} és {b}: ezek ellentétek!',
     no: 'Ez a kettő nem ellentét. Próbálj egy másikat!',
     cleared: 'Mind megvan!',
+    'sticker.lamb': 'Bárányka',
+    'sticker.sun': 'Nap',
+    'sticker.moon': 'Hold',
+    'sticker.elephant': 'Elefánt',
+    'sticker.balloon': 'Lufi',
   },
 }
 

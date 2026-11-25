@@ -11,6 +11,11 @@ const strings: GameStrings = {
     ask: 'What rhymes with this?',
     yes: '{a} and {b} rhyme!',
     no: 'Say them both out loud. Do they sound alike?',
+    'sticker.robin': 'Robin poet',
+    'sticker.book': 'Book of rhymes',
+    'sticker.note': 'Music note',
+    'sticker.bee': 'Bee',
+    'sticker.sunflower': 'Sunflower',
   },
   hu: {
     title: 'Rímelő',
@@ -22,6 +27,11 @@ const strings: GameStrings = {
     ask: 'Mi rímel erre?',
     yes: '{a} és {b}: ez rímel!',
     no: 'Mondd ki mindkettőt hangosan! Hasonlóan csengenek?',
+    'sticker.robin': 'Költő vörösbegy',
+    'sticker.book': 'Verseskönyv',
+    'sticker.note': 'Hangjegy',
+    'sticker.bee': 'Méhecske',
+    'sticker.sunflower': 'Napraforgó',
   },
 }
 

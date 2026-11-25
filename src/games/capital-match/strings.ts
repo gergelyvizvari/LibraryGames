@@ -11,6 +11,11 @@ const strings: GameStrings = {
     combo: 'Combo',
     correct: 'Yes! {capital}',
     itIs: 'It is {capital}',
+    'sticker.giraffe': 'Giraffe traveller',
+    'sticker.train': 'Train',
+    'sticker.ticket': 'Ticket',
+    'sticker.suitcase': 'Suitcase',
+    'sticker.castle': 'Castle',
   },
   hu: {
     title: 'Fővárosvadász',
@@ -22,6 +27,11 @@ const strings: GameStrings = {
     combo: 'Kombó',
     correct: 'Igen! {capital}',
     itIs: 'A helyes válasz: {capital}',
+    'sticker.giraffe': 'Zsiráf utazó',
+    'sticker.train': 'Vonat',
+    'sticker.ticket': 'Jegy',
+    'sticker.suitcase': 'Bőrönd',
+    'sticker.castle': 'Vár',
   },
 }
 

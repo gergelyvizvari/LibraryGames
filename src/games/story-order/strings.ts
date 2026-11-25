@@ -10,6 +10,11 @@ const strings: GameStrings = {
     last: 'And at the end?',
     notYet: 'Not yet! Look again.',
     theEnd: 'The end!',
+    'sticker.owl': 'Storyteller owl',
+    'sticker.book': 'Storybook',
+    'sticker.candle': 'Candle',
+    'sticker.fairy': 'Fairy',
+    'sticker.dragon': 'Dragon',
   },
   hu: {
     title: 'Mesekirakó',
@@ -20,6 +25,11 @@ const strings: GameStrings = {
     last: 'És a végén?',
     notYet: 'Még nem! Nézd meg újra.',
     theEnd: 'Vége!',
+    'sticker.owl': 'Mesélő bagoly',
+    'sticker.book': 'Mesekönyv',
+    'sticker.candle': 'Gyertya',
+    'sticker.fairy': 'Tündér',
+    'sticker.dragon': 'Sárkány',
   },
 }
 

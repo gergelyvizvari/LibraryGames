@@ -22,6 +22,11 @@ const strings: GameStrings = {
     'kind.ocean': 'Ocean',
     'kind.bay': 'Bay',
     'kind.channel': 'Channel',
+    'sticker.marmot': 'Marmot hiker',
+    'sticker.backpack': 'Backpack',
+    'sticker.pine': 'Pine tree',
+    'sticker.tent': 'Tent',
+    'sticker.peak': 'Mountain peak',
   },
   hu: {
     title: 'Folyók és hegyek',
@@ -44,6 +49,11 @@ const strings: GameStrings = {
     'kind.ocean': 'Óceán',
     'kind.bay': 'Öböl',
     'kind.channel': 'Csatorna',
+    'sticker.marmot': 'Túrázó mormota',
+    'sticker.backpack': 'Hátizsák',
+    'sticker.pine': 'Fenyőfa',
+    'sticker.tent': 'Sátor',
+    'sticker.peak': 'Hegycsúcs',
   },
 }
 

@@ -31,6 +31,11 @@ const strings: GameStrings = {
     'shape.squirrel': 'squirrel',
     'shape.mouse': 'mouse',
     'shape.fox': 'fox',
+    'sticker.raccoon': 'Raccoon',
+    'sticker.candle': 'Candle',
+    'sticker.ticket': 'Ticket',
+    'sticker.masks': 'Theatre masks',
+    'sticker.star': 'Star',
   },
   hu: {
     title: 'Árnyékszínház',
@@ -62,6 +67,11 @@ const strings: GameStrings = {
     'shape.squirrel': 'mókus',
     'shape.mouse': 'egér',
     'shape.fox': 'róka',
+    'sticker.raccoon': 'Mosómedve',
+    'sticker.candle': 'Gyertya',
+    'sticker.ticket': 'Belépőjegy',
+    'sticker.masks': 'Színházi maszkok',
+    'sticker.star': 'Csillag',
   },
 }
 

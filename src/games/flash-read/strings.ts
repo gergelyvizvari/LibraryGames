@@ -14,6 +14,11 @@ const strings: GameStrings = {
     correct: 'Correct!',
     notQuite: 'Not quite! It was: {answer}',
     next: 'Next story',
+    'sticker.seal': 'Sailor seal',
+    'sticker.book': 'Book',
+    'sticker.shell': 'Shell',
+    'sticker.anchor': 'Anchor',
+    'sticker.whale': 'Whale',
   },
   hu: {
     title: 'Villámolvasó',
@@ -28,6 +33,11 @@ const strings: GameStrings = {
     correct: 'Helyes!',
     notQuite: 'Nem egészen! A jó válasz: {answer}',
     next: 'Következő történet',
+    'sticker.seal': 'Matróz fóka',
+    'sticker.book': 'Könyv',
+    'sticker.shell': 'Kagyló',
+    'sticker.anchor': 'Horgony',
+    'sticker.whale': 'Bálna',
   },
 }
 

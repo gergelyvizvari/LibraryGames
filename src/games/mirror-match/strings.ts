@@ -10,6 +10,11 @@ const strings: GameStrings = {
     patterns: 'Patterns',
     time: 'Time',
     perfect: 'Perfect mirror!',
+    'sticker.fawn': 'Fawn',
+    'sticker.butterfly': 'Butterfly',
+    'sticker.tulip': 'Tulip',
+    'sticker.duck': 'Duck',
+    'sticker.rainbow': 'Rainbow',
   },
   hu: {
     title: 'Tükörkép',
@@ -20,6 +25,11 @@ const strings: GameStrings = {
     patterns: 'Minták',
     time: 'Idő',
     perfect: 'Tökéletes tükörkép!',
+    'sticker.fawn': 'Őzike',
+    'sticker.butterfly': 'Pillangó',
+    'sticker.tulip': 'Tulipán',
+    'sticker.duck': 'Kacsa',
+    'sticker.rainbow': 'Szivárvány',
   },
 }
 

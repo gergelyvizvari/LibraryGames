@@ -10,6 +10,11 @@ const strings: GameStrings = {
     combo: 'Combo',
     time: 'Time',
     flipped: 'That one is flipped!',
+    'sticker.woodpecker': 'Carpenter woodpecker',
+    'sticker.hammer': 'Hammer',
+    'sticker.ruler': 'Ruler',
+    'sticker.triangle': 'Triangle',
+    'sticker.chair': 'Chair',
   },
   hu: {
     title: 'Forgó formák',
@@ -20,6 +25,11 @@ const strings: GameStrings = {
     combo: 'Kombó',
     time: 'Idő',
     flipped: 'Ez tükrözve van!',
+    'sticker.woodpecker': 'Asztalos harkály',
+    'sticker.hammer': 'Kalapács',
+    'sticker.ruler': 'Vonalzó',
+    'sticker.triangle': 'Háromszög',
+    'sticker.chair': 'Szék',
   },
 }
 

@@ -17,6 +17,11 @@ const strings: GameStrings = {
     scotland: 'Scotland',
     wales: 'Wales',
     northernIreland: 'Northern Ireland',
+    'sticker.hedgehog': 'Hedgehog traveller',
+    'sticker.tea': 'Cup of tea',
+    'sticker.umbrella': 'Umbrella',
+    'sticker.map': 'Map',
+    'sticker.castle': 'Castle',
   },
   hu: {
     title: 'Brit vaktérkép',
@@ -34,6 +39,11 @@ const strings: GameStrings = {
     scotland: 'Skócia',
     wales: 'Wales',
     northernIreland: 'Észak-Írország',
+    'sticker.hedgehog': 'Utazó süni',
+    'sticker.tea': 'Teáscsésze',
+    'sticker.umbrella': 'Esernyő',
+    'sticker.map': 'Térkép',
+    'sticker.castle': 'Vár',
   },
 }
 

@@ -1,13 +1,23 @@
-import { medals } from '../../kit/SceneShell'
+import { paintedSticker } from '../../kit/stickers'
 import type { GameDef } from '../../kit/types'
 import thumb from './art/thumb.webp'
+import albumScene from './art/bg.webp'
+import stampOctopus from './art/char-happy.webp'
 import { icon } from './icon'
 import strings from './strings'
 
 const game: GameDef = {
   meta: { id: 'letter-pop', skill: 'typing', icon, color: '#00d2d3', added: '2026-10-27', scene: true, keyboard: true, thumb },
   strings,
-  stickers: medals(icon),
+  // Five painted stamps for the album, stuck on the game's own place.
+  stickers: [
+    { name: 'sticker.octopus', art: stampOctopus },
+    { name: 'sticker.fish', art: paintedSticker('🐠') },
+    { name: 'sticker.shell', art: paintedSticker('🐚') },
+    { name: 'sticker.bubbles', art: paintedSticker('🫧') },
+    { name: 'sticker.coral', art: paintedSticker('🪸') },
+  ],
+  album: albumScene,
   // The game's code is only downloaded when someone opens it.
   load: () => import('./Game'),
 }

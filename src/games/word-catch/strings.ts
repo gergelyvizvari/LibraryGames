@@ -11,6 +11,11 @@ const strings: GameStrings = {
     time: 'Time',
     great: 'Great!',
     oops: 'Oops!',
+    'sticker.fox': 'Fox with a net',
+    'sticker.butterfly': 'Butterfly',
+    'sticker.ladybird': 'Ladybird',
+    'sticker.bee': 'Bee',
+    'sticker.flower': 'Daisy',
   },
   hu: {
     title: 'Szófogó',
@@ -22,6 +27,11 @@ const strings: GameStrings = {
     time: 'Idő',
     great: 'Szuper!',
     oops: 'Hoppá!',
+    'sticker.fox': 'Hálós róka',
+    'sticker.butterfly': 'Pillangó',
+    'sticker.ladybird': 'Katica',
+    'sticker.bee': 'Méhecske',
+    'sticker.flower': 'Margaréta',
   },
 }
 

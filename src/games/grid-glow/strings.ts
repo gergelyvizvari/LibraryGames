@@ -10,6 +10,11 @@ const strings: GameStrings = {
     score: 'Score',
     squares: 'Squares',
     lives: 'Lives',
+    'sticker.turtle': 'Lantern turtle',
+    'sticker.pad': 'Lily pad',
+    'sticker.frog': 'Frog',
+    'sticker.moon': 'Moon',
+    'sticker.sparkle': 'Twinkles',
   },
   hu: {
     title: 'Villanó négyzetek',
@@ -20,6 +25,11 @@ const strings: GameStrings = {
     score: 'Pont',
     squares: 'Négyzetek',
     lives: 'Életek',
+    'sticker.turtle': 'Lámpás teknős',
+    'sticker.pad': 'Tavirózsalevél',
+    'sticker.frog': 'Béka',
+    'sticker.moon': 'Hold',
+    'sticker.sparkle': 'Csillogás',
   },
 }
 

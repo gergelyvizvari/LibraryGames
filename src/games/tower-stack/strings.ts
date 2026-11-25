@@ -10,6 +10,11 @@ const strings: GameStrings = {
     lives: 'Lives',
     perfect: 'Perfect!',
     tap: 'Tap to drop!',
+    'sticker.beaver': 'Builder beaver',
+    'sticker.log': 'Log',
+    'sticker.hammer': 'Hammer',
+    'sticker.brick': 'Brick',
+    'sticker.castle': 'Castle',
   },
   hu: {
     title: 'Toronyépítő',
@@ -20,6 +25,11 @@ const strings: GameStrings = {
     lives: 'Életek',
     perfect: 'Tökéletes!',
     tap: 'Koppints, és ejtsd le!',
+    'sticker.beaver': 'Építő hód',
+    'sticker.log': 'Farönk',
+    'sticker.hammer': 'Kalapács',
+    'sticker.brick': 'Tégla',
+    'sticker.castle': 'Vár',
   },
 }
 

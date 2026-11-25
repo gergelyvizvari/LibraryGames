@@ -3,14 +3,13 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { isFavourite, loadProgress } from './progress'
 import { SceneFrame } from './SceneFrame'
-import { medals } from './SceneShell'
 import type { GameDef } from './types'
 
 const icon: GameDef['meta']['icon'] = [['base', '#ffcc00', <circle cx="24" cy="24" r="20" />]]
 const quick: GameDef = {
   meta: { id: 'quick-scene', skill: 'logic', icon, color: '#54a0ff', added: '2026-11-10', scene: true },
-  strings: { en: { title: 'Quick', howTo: 'It ends.' } },
-  stickers: medals(icon),
+  strings: { en: { title: 'Quick', howTo: 'It ends.', 'sticker.one': 'One', 'sticker.two': 'Two', 'sticker.three': 'Three', 'sticker.four': 'Four', 'sticker.five': 'Five' } },
+  stickers: ['one', 'two', 'three', 'four', 'five'].map((n) => ({ name: `sticker.${n}`, art: `${n}.webp` })),
   load: async () => ({
     default: ({ onFinish }) => {
       useEffect(() => onFinish({ score: 10, accuracy: 1 }), [])

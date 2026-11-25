@@ -15,6 +15,11 @@ const strings: GameStrings = {
     great: 'Great!',
     good: 'Good!',
     oops: 'Oops! Listen again next time',
+    'sticker.bear': 'Drummer bear',
+    'sticker.drum': 'Drum',
+    'sticker.trumpet': 'Trumpet',
+    'sticker.violin': 'Violin',
+    'sticker.piano': 'Piano',
   },
   hu: {
     title: 'Ritmusmásoló',
@@ -30,6 +35,11 @@ const strings: GameStrings = {
     great: 'Szuper!',
     good: 'Jó!',
     oops: 'Hoppá! Legközelebb figyelj jobban',
+    'sticker.bear': 'Dobos maci',
+    'sticker.drum': 'Dob',
+    'sticker.trumpet': 'Trombita',
+    'sticker.violin': 'Hegedű',
+    'sticker.piano': 'Zongora',
   },
 }
 

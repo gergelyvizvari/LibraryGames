@@ -12,6 +12,11 @@ const strings: GameStrings = {
     typeHere: 'Type here…',
     zap: 'Zap!',
     ouch: 'Ouch!',
+    'sticker.seagull': 'Seagull knight',
+    'sticker.shell': 'Shell',
+    'sticker.crab': 'Crab',
+    'sticker.castle': 'Castle',
+    'sticker.crown': 'Crown',
   },
   hu: {
     title: 'Gépelő védő',
@@ -24,6 +29,11 @@ const strings: GameStrings = {
     typeHere: 'Ide gépelj…',
     zap: 'Bumm!',
     ouch: 'Jaj!',
+    'sticker.seagull': 'Sirály lovag',
+    'sticker.shell': 'Kagyló',
+    'sticker.crab': 'Rák',
+    'sticker.castle': 'Vár',
+    'sticker.crown': 'Korona',
   },
 }
 

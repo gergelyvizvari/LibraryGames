@@ -23,6 +23,11 @@ const strings: GameStrings = {
     pig: 'pig',
     rooster: 'rooster',
     horse: 'horse',
+    'sticker.cow': 'Cow',
+    'sticker.sheep': 'Sheep',
+    'sticker.pig': 'Piglet',
+    'sticker.duck': 'Duck',
+    'sticker.rooster': 'Rooster',
   },
   hu: {
     title: 'Állathangok',
@@ -46,6 +51,11 @@ const strings: GameStrings = {
     pig: 'malac',
     rooster: 'kakas',
     horse: 'ló',
+    'sticker.cow': 'Tehén',
+    'sticker.sheep': 'Bárány',
+    'sticker.pig': 'Malacka',
+    'sticker.duck': 'Kacsa',
+    'sticker.rooster': 'Kakas',
   },
 }
 

@@ -12,6 +12,11 @@ const strings: GameStrings = {
     combo: 'Combo',
     loading: 'Unfolding the map…',
     hereItIs: 'Here it is!',
+    'sticker.captain': 'Polar bear captain',
+    'sticker.map': 'Map',
+    'sticker.anchor': 'Anchor',
+    'sticker.telescope': 'Telescope',
+    'sticker.boat': 'Sailing boat',
   },
   hu: {
     title: 'Vaktérkép',
@@ -24,6 +29,11 @@ const strings: GameStrings = {
     combo: 'Kombó',
     loading: 'Kiterítjük a térképet…',
     hereItIs: 'Itt van!',
+    'sticker.captain': 'Jegesmedve kapitány',
+    'sticker.map': 'Térkép',
+    'sticker.anchor': 'Horgony',
+    'sticker.telescope': 'Távcső',
+    'sticker.boat': 'Vitorlás',
   },
 }
 

@@ -11,6 +11,11 @@ const strings: GameStrings = {
     combo: 'Combo',
     time: 'Time',
     newTarget: 'New number!',
+    'sticker.panda': 'Red panda ninja',
+    'sticker.melon': 'Watermelon',
+    'sticker.orange': 'Orange',
+    'sticker.suit': 'Ninja suit',
+    'sticker.medal': 'Gold medal',
   },
   hu: {
     title: 'Számnindzsa',
@@ -22,6 +27,11 @@ const strings: GameStrings = {
     combo: 'Kombó',
     time: 'Idő',
     newTarget: 'Új szám!',
+    'sticker.panda': 'Vörös panda nindzsa',
+    'sticker.melon': 'Görögdinnye',
+    'sticker.orange': 'Narancs',
+    'sticker.suit': 'Nindzsaruha',
+    'sticker.medal': 'Aranyérem',
   },
 }
 

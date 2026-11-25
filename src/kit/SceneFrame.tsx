@@ -8,8 +8,7 @@ import { Icon } from './icon'
 import { OopsCard, gameComponent } from './lazyGame'
 import { awardSticker, gameProgress, isFavourite, loadProgress, recordRound, stickerCount, stickerLevel, toggleFavourite } from './progress'
 import { randomSeed } from './random'
-import { stickerName } from './SceneShell'
-import { StickerGrid } from './StickerGrid'
+import { Stamp, StickerGrid } from './StickerGrid'
 import { sound } from './sound'
 import { gameColorVars } from './theme'
 import type { GameDef, RoundResult } from './types'
@@ -89,12 +88,18 @@ export function SceneFrame({
         <div className="scene-end" role="dialog" aria-label={t('scene.done')}>
           {/* With stickers the card is a button: it shows every sticker of the game. */}
           <EndCard onOpen={stickers ? () => (sound.tap(), setAlbum(true)) : undefined}>
-            <span className="scene-end-sticker">
-              <Icon icon={won?.icon ?? game.meta.icon} />
-            </span>
+            {won && end?.sticker != null ? (
+              <span className="scene-end-stamp">
+                <Stamp sticker={won} index={end.sticker} last={end.sticker === stickers!.length - 1} />
+              </span>
+            ) : (
+              <span className="scene-end-sticker">
+                <Icon icon={game.meta.icon} />
+              </span>
+            )}
             <span className="scene-end-text">
               <span className="scene-end-kicker">{won ? t('scene.newSticker') : gt('title')}</span>
-              <span className="scene-end-name">{won ? stickerName(won, gt, t) : t('scene.done')}</span>
+              <span className="scene-end-name">{won ? gt(won.name) : t('scene.done')}</span>
               {stickers ? (
                 <span className="scene-end-more">
                   {!won && have < stickers.length && <span className="scene-end-next">{t('stickers.nextAt', { level: stickerLevel(have, stickers.length) })}</span>}
@@ -126,7 +131,7 @@ export function SceneFrame({
               </button>
             </h2>
             <p className="scene-album-count">{t('stickers.count', { n: have, total: stickers.length })}</p>
-            <StickerGrid stickers={stickers} have={have} gt={gt} fresh={end?.sticker} />
+            <StickerGrid stickers={stickers} have={have} gt={gt} fresh={end?.sticker} scene={game.album} />
           </div>
         </div>
       )}
