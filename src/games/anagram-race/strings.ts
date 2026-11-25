@@ -9,6 +9,11 @@ const strings: GameStrings = {
     score: 'Score',
     words: 'Words',
     time: 'Time',
+    'sticker.goat': 'Goat toymaker',
+    'sticker.letters': 'Letter blocks',
+    'sticker.teddy': 'Teddy bear',
+    'sticker.kite': 'Kite',
+    'sticker.gift': 'Present',
   },
   hu: {
     title: 'Betűkeverő',
@@ -18,6 +23,11 @@ const strings: GameStrings = {
     score: 'Pont',
     words: 'Szavak',
     time: 'Idő',
+    'sticker.goat': 'Kecske játékkészítő',
+    'sticker.letters': 'Betűkockák',
+    'sticker.teddy': 'Mackó',
+    'sticker.kite': 'Sárkány',
+    'sticker.gift': 'Ajándék',
   },
 }
 

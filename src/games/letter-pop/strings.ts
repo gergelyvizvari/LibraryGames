@@ -10,6 +10,11 @@ const strings: GameStrings = {
     combo: 'Combo',
     time: 'Time',
     typeHere: 'Tap here, then type',
+    'sticker.octopus': 'Octopus sailor',
+    'sticker.fish': 'Fish',
+    'sticker.shell': 'Shell',
+    'sticker.bubbles': 'Bubbles',
+    'sticker.coral': 'Coral',
   },
   hu: {
     title: 'Betűpukkasztó',
@@ -20,6 +25,11 @@ const strings: GameStrings = {
     combo: 'Kombó',
     time: 'Idő',
     typeHere: 'Koppints ide, aztán gépelj',
+    'sticker.octopus': 'Polip matróz',
+    'sticker.fish': 'Hal',
+    'sticker.shell': 'Kagyló',
+    'sticker.bubbles': 'Buborékok',
+    'sticker.coral': 'Korall',
   },
 }
 

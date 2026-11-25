@@ -11,6 +11,11 @@ const strings: GameStrings = {
     no: 'Not that one yet. Which number is smaller?',
     yes: 'Pop, pop, hooray! All in order!',
     balloon: 'balloon',
+    'sticker.otter': 'Otter',
+    'sticker.red': 'Red balloon',
+    'sticker.mint': 'Mint balloon',
+    'sticker.lilac': 'Lilac balloon',
+    'sticker.yellow': 'Yellow balloon',
   },
   hu: {
     title: 'Lufipukkasztó',
@@ -22,6 +27,11 @@ const strings: GameStrings = {
     no: 'Ez még nem az. Melyik szám kisebb?',
     yes: 'Pukk, pukk, hurrá! Mind jó sorrendben!',
     balloon: 'lufi',
+    'sticker.otter': 'Vidra',
+    'sticker.red': 'Piros lufi',
+    'sticker.mint': 'Mentazöld lufi',
+    'sticker.lilac': 'Lila lufi',
+    'sticker.yellow': 'Sárga lufi',
   },
 }
 

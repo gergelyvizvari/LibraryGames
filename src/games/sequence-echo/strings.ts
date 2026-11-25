@@ -11,6 +11,11 @@ const strings: GameStrings = {
     lives: 'Lives',
     score: 'Score',
     oops: 'Oops! Watch again',
+    'sticker.frog': 'Conductor frog',
+    'sticker.red': 'Red bellflower',
+    'sticker.blue': 'Blue bellflower',
+    'sticker.green': 'Green bellflower',
+    'sticker.yellow': 'Golden bellflower',
   },
   hu: {
     title: 'Visszhang',
@@ -22,6 +27,11 @@ const strings: GameStrings = {
     lives: 'Életek',
     score: 'Pont',
     oops: 'Hoppá! Figyeld újra',
+    'sticker.frog': 'Karmester béka',
+    'sticker.red': 'Piros harangvirág',
+    'sticker.blue': 'Kék harangvirág',
+    'sticker.green': 'Zöld harangvirág',
+    'sticker.yellow': 'Arany harangvirág',
   },
 }
 

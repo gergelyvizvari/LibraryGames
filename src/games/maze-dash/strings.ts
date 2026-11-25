@@ -14,6 +14,11 @@ const strings: GameStrings = {
     mazes: 'Mazes',
     time: 'Time',
     yum: 'Yum!',
+    'sticker.mouse': 'Mouse',
+    'sticker.cheese': 'Cheese',
+    'sticker.snail': 'Snail',
+    'sticker.strawberry': 'Strawberry',
+    'sticker.sunflower': 'Sunflower',
   },
   hu: {
     title: 'Labirintus',
@@ -28,6 +33,11 @@ const strings: GameStrings = {
     mazes: 'Labirintusok',
     time: 'Idő',
     yum: 'Nyami!',
+    'sticker.mouse': 'Egérke',
+    'sticker.cheese': 'Sajt',
+    'sticker.snail': 'Csiga',
+    'sticker.strawberry': 'Eper',
+    'sticker.sunflower': 'Napraforgó',
   },
 }
 

@@ -16,6 +16,11 @@ const strings: GameStrings = {
     whyOne: '1 is odd: it has no partner.',
     digitEven: 'The last digit is {d}, so {n} is even.',
     digitOdd: 'The last digit is {d}, so {n} is odd.',
+    'sticker.hedgehog': 'Hedgehog gardener',
+    'sticker.basket': 'Basket',
+    'sticker.apple': 'Apple',
+    'sticker.pear': 'Pear',
+    'sticker.cherries': 'Cherries',
   },
   hu: {
     title: 'Páros-páratlan',
@@ -32,6 +37,11 @@ const strings: GameStrings = {
     whyOne: 'Az 1 páratlan: nincs párja.',
     digitEven: 'Az utolsó számjegy {d}, ezért {n} páros.',
     digitOdd: 'Az utolsó számjegy {d}, ezért {n} páratlan.',
+    'sticker.hedgehog': 'Kertész süni',
+    'sticker.basket': 'Kosár',
+    'sticker.apple': 'Alma',
+    'sticker.pear': 'Körte',
+    'sticker.cherries': 'Cseresznye',
   },
 }
 

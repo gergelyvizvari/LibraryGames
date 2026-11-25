@@ -43,14 +43,12 @@ export interface GameMeta {
   thumb?: string
 }
 
-/** A sticker a player collects by finishing a stage of a scene game. */
+/** A sticker a player collects by finishing a stage of a scene game, shown as a painted stamp in the album. */
 export interface Sticker {
-  /** Key of the sticker's name in the game's `strings.ts`. Not needed for a medal. */
-  name?: string
-  /** A medal made from the game's icon by `medals()`: 0 bronze, 1 silver, 2 gold, 3 ruby, 4 diamond. Named by the app. */
-  medal?: 0 | 1 | 2 | 3 | 4
-  /** Drawn like a game icon, on the 48 × 48 grid. */
-  icon: GameIcon
+  /** Key of the stamp's name in the game's `strings.ts`. */
+  name: string
+  /** URL of its painting: a cut-out from the game's `art/` folder, or `paintedSticker('🗺')` from kit/stickers. */
+  art: string
 }
 
 export interface GameDef {
@@ -59,6 +57,8 @@ export interface GameDef {
   strings: GameStrings
   /** Loads the game's component on demand: `() => import('./Game')`, so the home screen stays small. */
   load: () => Promise<{ default: ComponentType<GameProps> }>
-  /** Scene games only: handed out one per finished stage, in this order, until all are collected. */
+  /** Scene games only: five stamps, handed out one per finished stage, in this order, until all are collected. */
   stickers?: Sticker[]
+  /** The game's painted place (its `art/` background): the stamps of its album page are stuck on it. */
+  album?: string
 }

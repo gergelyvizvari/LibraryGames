@@ -18,6 +18,11 @@ const strings: GameStrings = {
     stuck: 'No pours left! Try Undo or Restart.',
     solved: 'Sorted! 🎉',
     tubeDone: 'Done!',
+    'sticker.owl': 'Painter owl',
+    'sticker.palette': 'Palette',
+    'sticker.brush': 'Paintbrush',
+    'sticker.crayon': 'Crayon',
+    'sticker.rainbow': 'Rainbow',
   },
   hu: {
     title: 'Színválogató',
@@ -36,6 +41,11 @@ const strings: GameStrings = {
     stuck: 'Nincs több lépés! Próbáld a Vissza vagy az Újra gombot.',
     solved: 'Kész! 🎉',
     tubeDone: 'Kész!',
+    'sticker.owl': 'Festő bagoly',
+    'sticker.palette': 'Paletta',
+    'sticker.brush': 'Ecset',
+    'sticker.crayon': 'Zsírkréta',
+    'sticker.rainbow': 'Szivárvány',
   },
 }
 

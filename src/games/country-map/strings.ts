@@ -13,6 +13,11 @@ const strings: GameStrings = {
     near: 'Nearly there!',
     miss: 'It was here!',
     off: '{km} km off',
+    'sticker.stork': 'Stork explorer',
+    'sticker.map': 'Map',
+    'sticker.backpack': 'Backpack',
+    'sticker.church': 'Church',
+    'sticker.castle': 'Castle',
   },
   hu: {
     title: 'Magyar vaktérkép',
@@ -26,6 +31,11 @@ const strings: GameStrings = {
     near: 'Majdnem!',
     miss: 'Itt van!',
     off: 'Eltérés: {km} km',
+    'sticker.stork': 'Gólya felfedező',
+    'sticker.map': 'Térkép',
+    'sticker.backpack': 'Hátizsák',
+    'sticker.church': 'Templom',
+    'sticker.castle': 'Vár',
   },
 }
 

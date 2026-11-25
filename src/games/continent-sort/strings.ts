@@ -13,6 +13,11 @@ const strings: GameStrings = {
     no: 'That is {continent}. Try again!',
     reveal: 'It is here: {continent}',
     loading: 'Spinning the globe…',
+    'sticker.koala': 'Koala explorer',
+    'sticker.globe': 'Globe',
+    'sticker.kangaroo': 'Kangaroo',
+    'sticker.elephant': 'Elephant',
+    'sticker.penguin': 'Penguin',
   },
   hu: {
     title: 'Kontinens-kereső',
@@ -26,6 +31,11 @@ const strings: GameStrings = {
     no: 'Ez {continent}. Próbáld újra!',
     reveal: 'Itt van: {continent}',
     loading: 'Pörgetem a földgömböt…',
+    'sticker.koala': 'Koala felfedező',
+    'sticker.globe': 'Földgömb',
+    'sticker.kangaroo': 'Kenguru',
+    'sticker.elephant': 'Elefánt',
+    'sticker.penguin': 'Pingvin',
   },
 }
 

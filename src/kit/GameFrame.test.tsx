@@ -81,7 +81,7 @@ describe('GameFrame', () => {
       ...broken,
       meta: { ...broken.meta, id: 'scene', scene: true },
       strings: { en: { title: 'Scene', howTo: 'It ends.', 'sticker.one': 'First sticker' } },
-      stickers: [{ name: 'sticker.one', icon: [] }],
+      stickers: [{ name: 'sticker.one', art: 'one.webp' }],
       load: async () => ({
         default: ({ onFinish }) => {
           useEffect(() => onFinish({ score: 10, accuracy: 1 }), [])

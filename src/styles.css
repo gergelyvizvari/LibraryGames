@@ -729,6 +729,8 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .scene-end-card { display: flex; align-items: center; gap: 14px; max-width: min(440px, calc(100% - 32px)); padding: 14px 24px 14px 14px; border-radius: 28px; background: var(--story-paper); box-shadow: 0 4px 10px rgba(20, 15, 50, 0.4); pointer-events: auto; animation: popIn 0.4s; }
 .scene-end-sticker { flex: none; display: grid; place-items: center; width: 88px; height: 88px; border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 2px #e6dcc8; }
 .scene-end-sticker .game-icon { width: 62px; height: 62px; }
+.scene-end-stamp { flex: none; }
+.scene-end-stamp .stamp { --t: 8px; animation: popIn 0.5s 0.2s both; }
 .scene-end-text { display: grid; gap: 3px; }
 .scene-end-kicker { font-style: italic; opacity: 0.8; }
 .scene-end-name { font-family: var(--story); font-weight: 800; font-size: 1.5rem; line-height: 1.05; letter-spacing: 1.5px; text-transform: uppercase; }
@@ -744,7 +746,6 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .scene-album-card { width: min(460px, 100%); max-height: calc(100dvh - 32px); overflow: auto; animation: popIn 0.3s; }
 .scene-album-close { margin-left: auto; flex: none; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border-radius: 50%; background: #f1e6cf; font-size: 1.1rem; }
 .scene-album-count { margin: 6px 0 0; font-weight: 600; opacity: 0.8; }
-.album-fresh .game-icon { animation: popIn 0.5s 0.15s both; }
 .scene-link { padding: 8px 16px; background: none; color: var(--story-ink); font-weight: 700; opacity: 0.8; }
 
 /* The shared scene of a game (kit/SceneShell.tsx): the room of its place, its character, the board on a sheet. */
@@ -846,11 +847,37 @@ button.wm-pill:active, .wm-arrow:active, .scene-back:active { transform: transla
 .album-title { flex: 1; min-width: 0; }
 .album-play { flex: none; padding: 8px 16px; border-radius: 22px; background: #7c5ce0; color: #fff; font-weight: 700; font-size: 1rem; box-shadow: 0 3px 0 #5a3fc0; }
 .album-play:active { transform: translateY(2px); box-shadow: 0 1px 0 #5a3fc0; }
-.album-grid { list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 14px 10px; }
-.album-grid li { display: grid; justify-items: center; align-content: start; gap: 6px; text-align: center; font-weight: 600; font-size: 0.95rem; line-height: 1.15; }
-.album-grid .game-icon, .album-hole { width: 72px; height: 72px; }
-.album-hole { display: grid; place-items: center; border-radius: 50%; border: 3px dashed #cfc4ad; color: #b9ad93; font-size: 1.6rem; font-weight: 700; }
-.album-missing { opacity: 0.75; }
+/* A game's album page: its painted place, with its stamps in a straight row on a clear strip, like a stamp collection.
+   A stamp is --t × (10 by 12) with a hole of the perforation every --t along its edge, so the edge always ends on a hole. */
+.stamp-scene { margin-top: 12px; padding-top: 110px; border-radius: 16px; overflow: hidden; background: #e9dfc6 center 35% / cover no-repeat; }
+.stamp-strip { list-style: none; margin: 0 0 14px; padding: 12px 8px 8px; display: flex; justify-content: space-evenly; gap: 6px; background: rgba(255, 250, 238, 0.74); border-block: 2px solid rgba(255, 255, 255, 0.95); }
+.stamp-strip li { flex: 1 1 0; min-width: 0; display: grid; justify-items: center; align-content: start; gap: 6px; text-align: center; font-weight: 700; font-size: 0.9rem; line-height: 1.15; }
+.stamp-name { overflow-wrap: anywhere; }
+.album-missing .stamp-name { color: #9c8f70; font-weight: 600; }
+.stamp, .stamp-hole { --t: 11px; flex: none; width: calc(var(--t) * 10); height: calc(var(--t) * 12); }
+.stamp { position: relative; display: block; padding: calc(var(--t) * 0.65); background: #fff; filter: drop-shadow(0 2px 2px rgba(40, 25, 10, 0.3));
+  --perf: radial-gradient(circle at calc(var(--t) / 2) calc(var(--t) / 2), transparent calc(var(--t) * 0.36), #000 calc(var(--t) * 0.36 + 0.7px)) calc(var(--t) / -2) calc(var(--t) / -2) / var(--t) var(--t);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, var(--perf); mask: linear-gradient(#000 0 0) content-box, var(--perf); }
+.stamp-in { position: relative; display: block; height: 100%; overflow: hidden; background: var(--tint); }
+.stamp-in img { position: absolute; left: 6%; bottom: 17%; width: 88%; height: 72%; object-fit: contain; object-position: bottom; }
+.stamp-stars { position: absolute; inset: auto 0 2px; text-align: center; font-size: calc(var(--t) * 1.05); letter-spacing: 1px; color: #d99a12; line-height: 1.2; }
+.stamp-gold { background: linear-gradient(135deg, #f6d36b, #fff3c4 50%, #eebe45); }
+.stamp-gold .stamp-in::after { content: ""; position: absolute; inset: 0; background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.6) 45%, transparent 60%); }
+.stamp-hole { display: grid; place-items: center; border: 2px dashed #c9b88f; border-radius: 4px; background: rgba(255, 255, 255, 0.45); color: #c0ad80; font-size: calc(var(--t) * 3); font-weight: 800; }
+.album-fresh .stamp { animation: popIn 0.5s 0.15s both; }
+.scene-album .stamp, .scene-album .stamp-hole { --t: 7px; }
+.scene-album .stamp-scene { padding-top: 80px; }
+.scene-album .stamp-strip li { font-size: 0.8rem; }
+@media (max-width: 640px) {
+  .stamp, .stamp-hole { --t: 8px; }
+  .stamp-scene { padding-top: 80px; }
+}
+@media (max-width: 480px) {
+  .stamp, .stamp-hole, .scene-album .stamp, .scene-album .stamp-hole { --t: 5.5px; }
+  .stamp-strip { padding-inline: 4px; gap: 4px; }
+  .stamp-strip li { font-size: 0.72rem; }
+  .stamp-scene, .scene-album .stamp-scene { padding-top: 64px; }
+}
 
 /* Feed the Monster: the painted monster on the rug of its kitchen */
 .fm-stand { position: absolute; pointer-events: none; animation: fmArrive 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.15); }

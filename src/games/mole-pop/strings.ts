@@ -10,6 +10,11 @@ const strings: GameStrings = {
     combo: 'Combo',
     time: 'Time',
     bunny: 'Not the bunny!',
+    'sticker.mole': 'Mole',
+    'sticker.bunny': 'Bunny',
+    'sticker.carrot': 'Carrot',
+    'sticker.tulip': 'Tulip',
+    'sticker.gold': 'Golden mole',
   },
   hu: {
     title: 'Vakondcsapda',
@@ -20,6 +25,11 @@ const strings: GameStrings = {
     combo: 'Kombó',
     time: 'Idő',
     bunny: 'A nyuszit ne!',
+    'sticker.mole': 'Vakond',
+    'sticker.bunny': 'Nyuszi',
+    'sticker.carrot': 'Répa',
+    'sticker.tulip': 'Tulipán',
+    'sticker.gold': 'Aranyvakond',
   },
 }
 

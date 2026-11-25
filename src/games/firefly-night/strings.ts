@@ -11,6 +11,11 @@ const strings: GameStrings = {
     done: 'Your jar glows like a little lantern!',
     lit: 'Glowing firefly',
     dark: 'Sleeping firefly',
+    'sticker.bunny': 'Bunny in pyjamas',
+    'sticker.firefly': 'Firefly',
+    'sticker.jar': 'Glass jar',
+    'sticker.moon': 'Moon',
+    'sticker.star': 'Star',
   },
   hu: {
     title: 'Fénybogarak',
@@ -22,6 +27,11 @@ const strings: GameStrings = {
     done: 'Úgy világít az üveged, mint egy kis lámpás!',
     lit: 'Világító szentjánosbogár',
     dark: 'Alvó szentjánosbogár',
+    'sticker.bunny': 'Pizsamás nyuszi',
+    'sticker.firefly': 'Szentjánosbogár',
+    'sticker.jar': 'Befőttesüveg',
+    'sticker.moon': 'Hold',
+    'sticker.star': 'Csillag',
   },
 }
 

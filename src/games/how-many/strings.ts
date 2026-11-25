@@ -12,6 +12,11 @@ const strings: GameStrings = {
     exact: 'Exactly!',
     close: 'So close! It was {n}',
     itWas: 'It was {n}',
+    'sticker.badger': 'Badger',
+    'sticker.abacus': 'Abacus',
+    'sticker.dice': 'Dice',
+    'sticker.teddy': 'Teddy bear',
+    'sticker.trophy': 'Trophy',
   },
   hu: {
     title: 'Hány darab?',
@@ -24,6 +29,11 @@ const strings: GameStrings = {
     exact: 'Pontosan!',
     close: 'Majdnem! {n} volt',
     itWas: '{n} volt',
+    'sticker.badger': 'Borz',
+    'sticker.abacus': 'Golyós számoló',
+    'sticker.dice': 'Dobókocka',
+    'sticker.teddy': 'Mackó',
+    'sticker.trophy': 'Kupa',
   },
 }
 

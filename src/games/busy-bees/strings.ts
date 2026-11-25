@@ -17,6 +17,11 @@ const strings: GameStrings = {
     yes: 'Yes! Sharp eyes!',
     no: 'Oops! Your bee was this one.',
     noTwo: 'Oops! Your bees were these two.',
+    'sticker.bee': 'Bee',
+    'sticker.bear': 'Beekeeper bear',
+    'sticker.sunflower': 'Sunflower',
+    'sticker.flower': 'Daisy',
+    'sticker.honey': 'Honey pot',
   },
   hu: {
     title: 'Zümmögő méhek',
@@ -34,6 +39,11 @@ const strings: GameStrings = {
     yes: 'Ügyes! Sasszemed van!',
     no: 'Hoppá! Ez volt a te méhecskéd.',
     noTwo: 'Hoppá! Ezt a kettőt kellett volna megtalálni.',
+    'sticker.bee': 'Méhecske',
+    'sticker.bear': 'Méhész maci',
+    'sticker.sunflower': 'Napraforgó',
+    'sticker.flower': 'Margaréta',
+    'sticker.honey': 'Mézesbödön',
   },
 }
 

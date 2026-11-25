@@ -124,11 +124,6 @@ const hu: Record<keyof typeof en, string> = {
   'stickers.title': 'Matricaalbum',
   'stickers.open': 'Matricaalbum ({n})',
   'stickers.empty': 'Fejezz be egy szakaszt valamelyik játékban, és megkapod az első matricádat!',
-  'stickers.medal0': 'Bronzérem: {title}',
-  'stickers.medal1': 'Ezüstérem: {title}',
-  'stickers.medal2': 'Aranyérem: {title}',
-  'stickers.medal3': 'Rubinérem: {title}',
-  'stickers.medal4': 'Gyémántérem: {title}',
   // "Szint" after the number, so no a/az before it.
   'stickers.nextAt': 'Következő matrica: {level}. szinten',
   'stickers.count': 'Matricák: {n} / {total}',

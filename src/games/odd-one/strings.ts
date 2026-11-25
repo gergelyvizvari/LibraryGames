@@ -9,6 +9,11 @@ const strings: GameStrings = {
     score: 'Score',
     found: 'Found',
     time: 'Time',
+    'sticker.magpie': 'Magpie detective',
+    'sticker.key': 'Key',
+    'sticker.coin': 'Coin',
+    'sticker.ring': 'Ring',
+    'sticker.gem': 'Gem',
   },
   hu: {
     title: 'Melyik a kakukktojás?',
@@ -18,6 +23,11 @@ const strings: GameStrings = {
     score: 'Pont',
     found: 'Megvan',
     time: 'Idő',
+    'sticker.magpie': 'Szarka nyomozó',
+    'sticker.key': 'Kulcs',
+    'sticker.coin': 'Érme',
+    'sticker.ring': 'Gyűrű',
+    'sticker.gem': 'Drágakő',
   },
 }
 

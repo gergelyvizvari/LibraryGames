@@ -15,6 +15,13 @@ export const stickerKey = (e: string) =>
 /** The URL of an emoji's painted sticker, if there is one. */
 export const stickerUrl = (e: string): string | undefined => ART[`./stickers/${stickerKey(e)}.webp`]
 
+/** The painted sticker of an emoji as a picture of its own, such as a game's album stamp. Throws when there is none. */
+export function paintedSticker(e: string): string {
+  const url = stickerUrl(e)
+  if (!url) throw new Error(`No painted sticker for ${e}`)
+  return url
+}
+
 const graphemes = new Intl.Segmenter(undefined, { granularity: 'grapheme' })
 
 /** Emoji drawn as painted stickers, sized like the text around them (1em, set by `font-size`). A string of several

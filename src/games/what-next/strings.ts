@@ -10,6 +10,11 @@ const strings: GameStrings = {
     score: 'Score',
     combo: 'Combo',
     time: 'Time',
+    'sticker.mole': 'Mole in an apron',
+    'sticker.carrot': 'Carrot',
+    'sticker.egg': 'Egg',
+    'sticker.bread': 'Bread',
+    'sticker.cupcake': 'Cupcake',
   },
   hu: {
     option: '{n}. lehetőség',
@@ -20,6 +25,11 @@ const strings: GameStrings = {
     score: 'Pont',
     combo: 'Kombó',
     time: 'Idő',
+    'sticker.mole': 'Kötényes vakond',
+    'sticker.carrot': 'Répa',
+    'sticker.egg': 'Tojás',
+    'sticker.bread': 'Kenyér',
+    'sticker.cupcake': 'Muffin',
   },
 }
 

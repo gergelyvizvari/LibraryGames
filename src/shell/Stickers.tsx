@@ -40,7 +40,7 @@ export function Stickers({ onHome, onPlay }: { onHome: () => void; onPlay: (id: 
                   {t('play')} <span aria-hidden>▶</span>
                 </button>
               </h2>
-              <StickerGrid stickers={g.stickers!} have={stickerCount(progress, g.meta.id)} gt={gt} />
+              <StickerGrid stickers={g.stickers!} have={stickerCount(progress, g.meta.id)} gt={gt} scene={g.album} />
             </section>
           )
         })}

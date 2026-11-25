@@ -24,6 +24,11 @@ const strings: GameStrings = {
     'group.home': 'Home',
     'group.school': 'School',
     'group.sports': 'Sports',
+    'sticker.piglet': 'Gardener piglet',
+    'sticker.carrot': 'Carrot',
+    'sticker.tomato': 'Tomato',
+    'sticker.sunflower': 'Sunflower',
+    'sticker.house': 'House',
   },
   hu: {
     title: 'Szócsaládok',
@@ -48,6 +53,11 @@ const strings: GameStrings = {
     'group.home': 'Otthon',
     'group.school': 'Iskola',
     'group.sports': 'Sport',
+    'sticker.piglet': 'Kertész malac',
+    'sticker.carrot': 'Répa',
+    'sticker.tomato': 'Paradicsom',
+    'sticker.sunflower': 'Napraforgó',
+    'sticker.house': 'Házikó',
   },
 }
 

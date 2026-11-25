@@ -29,6 +29,17 @@ describe('game registry', () => {
       expect(color).toMatch(/^#[0-9a-f]{3,6}$/i)
     })
   })
+
+  it.each(games.filter((g) => g.meta.scene).map((g) => [g.meta.id, g] as const))('%s has five named, painted stamps on its own place', (_, g) => {
+    expect(g.stickers).toHaveLength(5)
+    expect(g.album).toBeTruthy()
+    for (const s of g.stickers!) {
+      expect(s.art).toBeTruthy()
+      expect(g.strings.en[s.name]).toBeTruthy()
+      expect(g.strings.hu?.[s.name]).toBeTruthy()
+    }
+    expect(new Set(g.stickers!.map((s) => s.name)).size).toBe(5)
+  })
 })
 
 describe('every game mounts and runs', () => {

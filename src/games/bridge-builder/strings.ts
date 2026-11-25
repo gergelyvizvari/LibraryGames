@@ -10,6 +10,11 @@ const strings: GameStrings = {
     long: 'Too long! It doesn’t fit in the gap.',
     yes: 'It fits! Off we go across the bridge.',
     plank: 'Plank {n}',
+    'sticker.fox': 'Fox builder',
+    'sticker.log': 'Log',
+    'sticker.hammer': 'Hammer',
+    'sticker.brick': 'Brick',
+    'sticker.bridge': 'Bridge',
   },
   hu: {
     title: 'Hídépítő',
@@ -20,6 +25,11 @@ const strings: GameStrings = {
     long: 'Ez túl hosszú, nem fér bele a lyukba!',
     yes: 'Pont illik! Mehetünk át a hídon.',
     plank: '{n}. deszka',
+    'sticker.fox': 'Róka építész',
+    'sticker.log': 'Farönk',
+    'sticker.hammer': 'Kalapács',
+    'sticker.brick': 'Tégla',
+    'sticker.bridge': 'Híd',
   },
 }
 

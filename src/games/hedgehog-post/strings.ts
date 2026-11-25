@@ -19,9 +19,11 @@ const strings: GameStrings = {
     down: 'Down',
     left: 'Left',
     right: 'Right',
+    'sticker.postman': 'Hedgehog postman',
     'sticker.letter': 'Love letter',
     'sticker.box': 'Post box',
-    'sticker.cap': 'Postman’s cap',
+    'sticker.bunny': 'Bunny',
+    'sticker.cottage': 'Rose cottage',
   },
   hu: {
     title: 'Süni postás',
@@ -41,9 +43,11 @@ const strings: GameStrings = {
     down: 'Le',
     left: 'Balra',
     right: 'Jobbra',
+    'sticker.postman': 'Süni postás',
     'sticker.letter': 'Szívecskés levél',
     'sticker.box': 'Postaláda',
-    'sticker.cap': 'Postássapka',
+    'sticker.bunny': 'Nyuszi',
+    'sticker.cottage': 'Rózsás házikó',
   },
 }
 

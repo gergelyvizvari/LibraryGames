@@ -31,6 +31,11 @@ const strings: GameStrings = {
     'pic.squirrel': 'squirrel',
     'pic.mouse': 'mouse',
     'pic.fox': 'fox',
+    'sticker.frog': 'Frog',
+    'sticker.pad': 'Lily pad',
+    'sticker.ladybird': 'Ladybird',
+    'sticker.butterfly': 'Butterfly',
+    'sticker.blossom': 'Pink flower',
   },
   hu: {
     title: 'Tavirózsa-párok',
@@ -62,6 +67,11 @@ const strings: GameStrings = {
     'pic.squirrel': 'mókus',
     'pic.mouse': 'egér',
     'pic.fox': 'róka',
+    'sticker.frog': 'Béka',
+    'sticker.pad': 'Tavirózsalevél',
+    'sticker.ladybird': 'Katica',
+    'sticker.butterfly': 'Pillangó',
+    'sticker.blossom': 'Rózsaszín virág',
   },
 }
 

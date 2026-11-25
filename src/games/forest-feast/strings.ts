@@ -16,9 +16,11 @@ const strings: GameStrings = {
     allSeated: 'Everyone is at the table',
     guest: 'Guest {n}',
     seat: 'Chair {n}',
+    'sticker.fox': 'Fox host',
+    'sticker.cup': 'Teacup',
+    'sticker.bunny': 'Bunny',
+    'sticker.owl': 'Owl',
     'sticker.cake': 'Strawberry cake',
-    'sticker.fox': 'Fox the host',
-    'sticker.tea': 'Cup of tea',
   },
   hu: {
     title: 'Erdei lakoma',
@@ -35,9 +37,11 @@ const strings: GameStrings = {
     allSeated: 'Mindenki asztalnál ül',
     guest: '{n}. vendég',
     seat: '{n}. szék',
-    'sticker.cake': 'Epres torta',
-    'sticker.fox': 'Róka, a házigazda',
-    'sticker.tea': 'Egy csésze tea',
+    'sticker.fox': 'Róka vendéglátó',
+    'sticker.cup': 'Teáscsésze',
+    'sticker.bunny': 'Nyuszi',
+    'sticker.owl': 'Bagoly',
+    'sticker.cake': 'Epertorta',
   },
 }
 

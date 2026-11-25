@@ -10,6 +10,11 @@ const strings: GameStrings = {
     yes: 'Exactly right! Enjoy!',
     coin: 'Acorn coin worth {n}',
     back: 'Take back the coin worth {n}',
+    'sticker.squirrel': 'Squirrel shopkeeper',
+    'sticker.acorn': 'Acorn',
+    'sticker.honey': 'Honey',
+    'sticker.hedgehog': 'Hedgehog shopper',
+    'sticker.jam': 'Strawberry jam',
   },
   hu: {
     title: 'Makkbolt',
@@ -20,6 +25,11 @@ const strings: GameStrings = {
     yes: 'Pont annyi! Jó étvágyat!',
     coin: '{n} makkos pénz',
     back: 'Visszaveszem: {n} makkos pénz',
+    'sticker.squirrel': 'Mókus boltos',
+    'sticker.acorn': 'Makk',
+    'sticker.honey': 'Méz',
+    'sticker.hedgehog': 'Süni vevő',
+    'sticker.jam': 'Eperlekvár',
   },
 }
 

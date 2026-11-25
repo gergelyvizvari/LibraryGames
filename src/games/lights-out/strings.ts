@@ -16,6 +16,11 @@ const strings: GameStrings = {
     cat: 'Cat reflexes! 🐈',
     turtle: 'Steady turtle 🐢',
     tapToStart: 'Tap to start the lights',
+    'sticker.rabbit': 'Racing rabbit',
+    'sticker.lights': 'Start lights',
+    'sticker.flag': 'Chequered flag',
+    'sticker.medal': 'Gold medal',
+    'sticker.trophy': 'Trophy',
   },
   hu: {
     title: 'Lámpaoltás',
@@ -32,6 +37,11 @@ const strings: GameStrings = {
     cat: 'Macskareflexek! 🐈',
     turtle: 'Kitartó teknős 🐢',
     tapToStart: 'Koppints, és kigyulladnak a lámpák',
+    'sticker.rabbit': 'Versenyző nyuszi',
+    'sticker.lights': 'Rajtlámpa',
+    'sticker.flag': 'Kockás zászló',
+    'sticker.medal': 'Aranyérem',
+    'sticker.trophy': 'Kupa',
   },
 }
 
